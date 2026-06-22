@@ -146,7 +146,7 @@ function ProfessionalSignupContent() {
         onClose={() => setIsSuccessOpen(false)}
         onContinue={() => {
           setIsSuccessOpen(false);
-          router.push("/");
+          router.push(`/professional/business-form?email=${encodeURIComponent(emailParam)}&type=${visitType}`);
         }}
       />
     </div>
