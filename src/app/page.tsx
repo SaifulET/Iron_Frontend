@@ -7,6 +7,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Car04Icon, Clock01Icon, DashboardSquare02Icon, FootballIcon, HealtcareIcon, Location01Icon, Location05Icon, PartyIcon, SailboatOffshoreIcon, Search01Icon, StarIcon, WellnessIcon } from "@hugeicons/core-free-icons";
 import ServiceCard, { Recommendation } from "@/components/ServiceCard";
 import Carousel from "@/components/Carousel";
+import TrustedBusinessCard, { TrustedBusiness } from "@/components/TrustedBusinessCard";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -276,6 +277,22 @@ export default function LandingPage() {
       hasDiamond: true,
       noDeposit: true,
     },
+  ];
+
+  // Mock trusted businesses data
+  const trustedBusinesses: TrustedBusiness[] = [
+    { id: 1, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedOne.svg" },
+    { id: 2, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedOne.svg" },
+    { id: 3, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedOne.svg" },
+    { id: 4, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedTwo.svg" },
+    { id: 5, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedTwo.svg" },
+    { id: 6, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedTwo.svg" },
+    { id: 7, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedTwo.svg" },
+    { id: 8, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedOne.svg" },
+    { id: 9, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedOne.svg" },
+    { id: 10, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedTwo.svg" },
+    { id: 11, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedTwo.svg" },
+    { id: 12, name: "PhysioPlus", location: "Larnaca", role: "Founding Partners", image: "/Icons/trustedOne.svg" },
   ];
 
   return (
@@ -776,7 +793,7 @@ export default function LandingPage() {
       </section>
 
       {/* 8. Trending Services Section */}
-      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px] mb-24">
+      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px]">
 
         {/* Section Header */}
         <div className="flex justify-between items-center mb-6">
@@ -816,6 +833,38 @@ export default function LandingPage() {
           </div>
         )}
 
+      </section>
+
+      {/* 9. Trusted Businesses Section */}
+      <section className="w-full bg-[#FCFCFD] py-12 md:py-[72px] border-y border-neutral-100 mt-[24px] mb-24">
+        <div className="w-full px-4 md:px-8 xl:px-[68px] flex flex-col items-center justify-center gap-10 md:gap-[80px]">
+          {/* Container */}
+          <div className="flex flex-col items-center gap-4 text-center max-w-[1312px] w-full">
+            <h2 className="text-3xl md:text-[36px] font-medium leading-[36px] md:leading-[48px] text-[#1F2937] tracking-tight">
+              Trusted by local businesses across Cyprus
+            </h2>
+            <p className="text-lg md:text-[24px] font-normal leading-[24px] text-[#757575]">
+              Join the businesses already growing with Bookly.
+            </p>
+          </div>
+
+          {/* Carousel / Grid Container */}
+          <div className="w-full">
+            {trustedBusinesses.length > 5 ? (
+              <Carousel gapClass="gap-[40px] md:gap-[80px]">
+                {trustedBusinesses.map((biz) => (
+                  <TrustedBusinessCard key={biz.id} business={biz} />
+                ))}
+              </Carousel>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 justify-items-center">
+                {trustedBusinesses.map((biz) => (
+                  <TrustedBusinessCard key={biz.id} business={biz} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </section>
 
     </div>

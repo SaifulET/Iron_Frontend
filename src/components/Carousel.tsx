@@ -4,9 +4,10 @@ import React, { useState, useRef } from "react";
 
 interface CarouselProps {
   children: React.ReactNode;
+  gapClass?: string;
 }
 
-export default function Carousel({ children }: CarouselProps) {
+export default function Carousel({ children, gapClass = "gap-6" }: CarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -42,7 +43,7 @@ export default function Carousel({ children }: CarouselProps) {
       onMouseLeave={handleMouseLeave}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
-      className={`flex overflow-x-auto scrollbar-hide gap-6 flex-nowrap w-full pb-4 items-stretch select-none ${
+      className={`flex overflow-x-auto scrollbar-hide flex-nowrap w-full pb-4 items-stretch select-none ${gapClass} ${
         isDown ? "cursor-grabbing" : "cursor-grab snap-x snap-mandatory scroll-smooth"
       }`}
     >
