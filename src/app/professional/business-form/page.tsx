@@ -14,14 +14,15 @@ import {
 } from "@hugeicons/core-free-icons";
 import BusinessFormStep1 from "@/components/BusinessFormStep1";
 import CategorySelectorStep2 from "@/components/CategorySelectorStep2";
+import SuccessPendingApprovalStep3 from "@/components/SuccessPendingApprovalStep3";
 
 function BusinessFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const emailParam = searchParams.get("email") || "sfsd@gmail.com";
 
-  // Form Screen 1 State
-  const [step, setStep] = useState<1 | 2>(1);
+  // Form Steps State (1: Info Form, 2: Category Selector, 3: Success Screen)
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [businessName, setBusinessName] = useState("Moakhali");
   const [ownerName, setOwnerName] = useState("John Doe");
   const [city, setCity] = useState("Larnaca");
@@ -71,7 +72,10 @@ function BusinessFormContent() {
   };
 
   const handleDone = () => {
-    alert("Business Setup Complete! Redirection to Dashboard.");
+    setStep(3);
+  };
+
+  const handleGoToDashboard = () => {
     router.push("/");
   };
 
@@ -90,7 +94,7 @@ function BusinessFormContent() {
         </button>
       )}
 
-      {step === 1 ? (
+      {step === 1 && (
         <BusinessFormStep1
           emailParam={emailParam}
           businessName={businessName}
@@ -121,7 +125,9 @@ function BusinessFormContent() {
           setSearchQuery={setSearchQuery}
           onSubmit={handleNext}
         />
-      ) : (
+      )}
+
+      {step === 2 && (
         <CategorySelectorStep2
           categories={categories}
           selectedCategory={selectedCategory}
@@ -129,6 +135,12 @@ function BusinessFormContent() {
           selectedSubcategories={selectedSubcategories}
           handleSubcategoryToggle={handleSubcategoryToggle}
           onDone={handleDone}
+        />
+      )}
+
+      {step === 3 && (
+        <SuccessPendingApprovalStep3
+          onGoToDashboard={handleGoToDashboard}
         />
       )}
     </div>

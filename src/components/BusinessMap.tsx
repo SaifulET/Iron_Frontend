@@ -98,8 +98,7 @@ export default function BusinessMap({
     }
   }, [lat, lng]);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearchSubmit = async () => {
     if (!searchQuery.trim()) return;
 
     setSearching(true);
@@ -145,13 +144,12 @@ export default function BusinessMap({
   };
 
   return (
-    <div className="relative w-full h-[485px] rounded-2xl overflow-hidden shadow-inner border border-[#E8E8E4]">
+    <div className="relative w-full h-[320px] sm:h-[400px] md:h-[485px] rounded-2xl overflow-hidden shadow-inner border border-[#E8E8E4]">
       {/* Map Element */}
       <div ref={mapContainerRef} className="w-full h-full z-0" />
 
       {/* Floating Search Bar */}
-      <form
-        onSubmit={handleSearch}
+      <div
         className="absolute top-4 left-4 z-10 flex items-center bg-white border border-[#D3D1C7] rounded-lg px-3 py-1.5 shadow-md w-full max-w-[280px] gap-2 transition-all duration-200 focus-within:border-[#8EBAC5] focus-within:ring-2 focus-within:ring-[#8EBAC5]/20"
       >
         <svg
@@ -171,15 +169,16 @@ export default function BusinessMap({
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleSearchSubmit();
+            }
+          }}
           placeholder="Location"
           className="w-full bg-transparent text-sm text-[#1A1A1A] placeholder-[#1A1A1A]/50 focus:outline-none"
         />
-        <button
-          type="submit"
-          className="hidden"
-          disabled={searching}
-        />
-      </form>
+      </div>
 
       {/* Floating GPS Button */}
       <button

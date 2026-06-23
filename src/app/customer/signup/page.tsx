@@ -10,12 +10,14 @@ import AuthLayout from "@/components/AuthLayout";
 import AuthCard from "@/components/AuthCard";
 import { InputField, SelectField, PhoneInputField } from "@/components/InputField";
 import SuccessModal from "@/components/SuccessModal";
+import PhoneVerificationStep2 from "@/components/PhoneVerificationStep2";
 
 function SignupFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const emailParam = searchParams.get("email") || "";
 
+  const [step, setStep] = useState<1 | 2>(1);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("male");
@@ -37,106 +39,127 @@ function SignupFormContent() {
       return;
     }
     setPasswordError("");
+    setStep(2);
+  };
+
+  const handlePhoneVerifySuccess = () => {
     setIsSuccessOpen(true);
+  };
+
+  const handleBack = () => {
+    if (step === 2) {
+      setStep(1);
+    } else {
+      router.push("/customer");
+    }
   };
 
   return (
     <div className="w-full">
-      <AuthLayout onBack={() => router.push("/customer")} imageSrc="/img/authImg.png">
-        <AuthCard
-          title="Finish signing up"
-          subtitle="Fill the information to complete the setup"
-        >
-          <form onSubmit={handleFinishSignupSubmit} className="flex flex-col gap-5 w-full">
-            {/* Names side by side */}
-            <div className="flex flex-col sm:flex-row gap-4 w-full max-w-[520px]">
+      <AuthLayout onBack={handleBack} imageSrc="/img/authImg.png">
+        {step === 1 ? (
+          <AuthCard
+            title="Finish signing up"
+            subtitle="Fill the information to complete the setup"
+          >
+            <form onSubmit={handleFinishSignupSubmit} className="flex flex-col gap-5 w-full">
+              {/* Names side by side */}
+              <div className="flex flex-col sm:flex-row gap-4 w-full max-w-[520px]">
+                <InputField
+                  label="First name"
+                  placeholder="John"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+                <InputField
+                  label="Last name"
+                  placeholder="Doe"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Gender */}
+              <SelectField
+                label="Gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                options={[
+                  { value: "male", label: "Male" },
+                  { value: "female", label: "Female" },
+                  { value: "other", label: "Other" },
+                ]}
+              />
+
+              {/* Phone number */}
+              <PhoneInputField
+                label="Mobile number"
+                countryCode={countryCode}
+                onCountryCodeChange={setCountryCode}
+                placeholder="123456666"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+              />
+
+              {/* Email (disabled) */}
               <InputField
-                label="First name"
-                placeholder="John"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
+                label="Email"
+                type="email"
+                value={emailParam || "example@gmail.com"}
+                disabled
+                icon={<HugeiconsIcon icon={Mail01Icon} size={20} />}
               />
+
+              {/* Password */}
               <InputField
-                label="Last name"
-                placeholder="Doe"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                label="Password"
+                placeholder="Password"
+                isPassword
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                error={passwordError}
+                icon={<HugeiconsIcon icon={SquareLock01Icon} size={20} />}
                 required
               />
-            </div>
 
-            {/* Gender */}
-            <SelectField
-              label="Gender"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              options={[
-                { value: "male", label: "Male" },
-                { value: "female", label: "Female" },
-                { value: "other", label: "Other" },
-              ]}
-            />
+              {/* Terms checkbox */}
+              <div className="flex items-center gap-2 mt-2">
+                <input
+                  type="checkbox"
+                  id="agree-terms"
+                  checked={agreeTerms}
+                  onChange={(e) => setAgreeTerms(e.target.checked)}
+                  className="w-4.5 h-4.5 rounded border-[#DAD6FF] text-[#240183] focus:ring-[#240183] cursor-pointer"
+                  required
+                />
+                <label
+                  htmlFor="agree-terms"
+                  className="text-xs font-semibold text-[#1A1A1A] cursor-pointer select-none"
+                >
+                  I agree to the Bookly Terms & Conditions
+                </label>
+              </div>
 
-            {/* Phone number */}
-            <PhoneInputField
-              label="Mobile number"
-              countryCode={countryCode}
-              onCountryCodeChange={setCountryCode}
-              placeholder="123456666"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
-
-            {/* Email (disabled) */}
-            <InputField
-              label="Email"
-              type="email"
-              value={emailParam || "example@gmail.com"}
-              disabled
-              icon={<HugeiconsIcon icon={Mail01Icon} size={20} />}
-            />
-
-            {/* Password */}
-            <InputField
-              label="Password"
-              placeholder="Password"
-              isPassword
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              error={passwordError}
-              icon={<HugeiconsIcon icon={SquareLock01Icon} size={20} />}
-              required
-            />
-
-            {/* Terms checkbox */}
-            <div className="flex items-center gap-2 mt-2">
-              <input
-                type="checkbox"
-                id="agree-terms"
-                checked={agreeTerms}
-                onChange={(e) => setAgreeTerms(e.target.checked)}
-                className="w-4.5 h-4.5 rounded border-[#DAD6FF] text-[#240183] focus:ring-[#240183] cursor-pointer"
-                required
-              />
-              <label
-                htmlFor="agree-terms"
-                className="text-xs font-semibold text-[#1A1A1A] cursor-pointer select-none"
+              <button
+                type="submit"
+                disabled={!agreeTerms}
+                className="w-full max-w-[520px] h-12 bg-[#1A1A1A] hover:bg-black text-white font-semibold rounded-xl text-sm transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed mt-4"
               >
-                I agree to the Bookly Terms & Conditions
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              disabled={!agreeTerms}
-              className="w-full max-w-[520px] h-12 bg-[#1A1A1A] hover:bg-black text-white font-semibold rounded-xl text-sm transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-            >
-              Agree & create account
-            </button>
-          </form>
-        </AuthCard>
+                Agree & create account
+              </button>
+            </form>
+          </AuthCard>
+        ) : (
+          <PhoneVerificationStep2
+            countryCode={countryCode}
+            mobileNumber={phone}
+            onVerify={handlePhoneVerifySuccess}
+            onBack={handleBack}
+          />
+        )}
       </AuthLayout>
 
       {/* Successfully Created Modal */}

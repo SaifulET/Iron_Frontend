@@ -159,7 +159,23 @@ export default function BusinessFormStep1({
           <div className="flex w-full h-12">
             {/* Selector */}
             <div className="relative flex items-center bg-[#E0E0E0] rounded-l-xl px-4 py-3.5 border-r border-[#D2D2D2] gap-1.5 min-w-[141px]">
-              <span className="text-2xl">🇺🇸</span>
+              <span className="text-xl leading-none">
+                {(() => {
+                  const countriesList = [
+                    { code: "+357", emoji: "🇨🇾", name: "Cyprus (+357)" },
+                    { code: "+880", emoji: "🇧🇩", name: "Bangladesh (+880)" },
+                    { code: "+1", emoji: "🇺🇸", name: "United States (+1)" },
+                    { code: "+44", emoji: "🇬🇧", name: "United Kingdom (+44)" },
+                    { code: "+30", emoji: "🇬🇷", name: "Greece (+30)" },
+                    { code: "+91", emoji: "🇮🇳", name: "India (+91)" },
+                    { code: "+61", emoji: "🇦🇺", name: "Australia (+61)" },
+                    { code: "+971", emoji: "🇦🇪", name: "United Arab Emirates (+971)" },
+                    { code: "+49", emoji: "🇩🇪", name: "Germany (+49)" },
+                    { code: "+33", emoji: "🇫🇷", name: "France (+33)" },
+                  ];
+                  return countriesList.find((c) => c.code === countryCode)?.emoji || "🇺🇸";
+                })()}
+              </span>
               <span className="text-sm text-[#808080] font-normal">{countryCode}</span>
               <HugeiconsIcon icon={ArrowDown01Icon} size={20} className="text-[#666666] ml-auto cursor-pointer" />
               <select
@@ -167,16 +183,23 @@ export default function BusinessFormStep1({
                 onChange={(e) => setCountryCode(e.target.value)}
                 className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
               >
+                <option value="+357">Cyprus (+357)</option>
                 <option value="+880">Bangladesh (+880)</option>
                 <option value="+1">United States (+1)</option>
-                <option value="+357">Cyprus (+357)</option>
+                <option value="+44">United Kingdom (+44)</option>
+                <option value="+30">Greece (+30)</option>
+                <option value="+91">India (+91)</option>
+                <option value="+61">Australia (+61)</option>
+                <option value="+971">United Arab Emirates (+971)</option>
+                <option value="+49">Germany (+49)</option>
+                <option value="+33">France (+33)</option>
               </select>
             </div>
             {/* Input */}
             <input
               type="tel"
               value={mobileNumber}
-              onChange={(e) => setMobileNumber(e.target.value)}
+              onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ""))}
               required
               placeholder="1234556666"
               className="flex-1 bg-[#E0E0E0] rounded-r-xl px-4 text-sm text-[#808080] font-normal focus:outline-none"

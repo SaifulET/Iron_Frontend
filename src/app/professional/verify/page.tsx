@@ -13,6 +13,7 @@ function ProfessionalVerifyContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
   const visitType = searchParams.get("type") || "travel";
+  const flow = searchParams.get("flow") || "";
 
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
   const [activeBox, setActiveBox] = useState<number>(0);
@@ -55,12 +56,24 @@ function ProfessionalVerifyContent() {
     e.preventDefault();
     const otpValue = otp.join("");
     if (otpValue.length === 4) {
-      router.push(`/professional/signup?email=${encodeURIComponent(email)}&type=${visitType}`);
+      if (flow === "reset") {
+        router.push(`/professional/new-password?email=${encodeURIComponent(email)}&type=${visitType}`);
+      } else {
+        router.push(`/professional/signup?email=${encodeURIComponent(email)}&type=${visitType}`);
+      }
+    }
+  };
+
+  const handleBack = () => {
+    if (flow === "reset") {
+      router.push(`/professional/forgot-password?email=${encodeURIComponent(email)}&type=${visitType}`);
+    } else {
+      router.push(`/professional/auth?type=${visitType}`);
     }
   };
 
   return (
-    <AuthLayout onBack={() => router.push(`/professional/auth?type=${visitType}`)} imageSrc="/img/authImg2.png">
+    <AuthLayout onBack={handleBack} imageSrc="/img/authImg2.png">
       <div className="w-full max-w-[600px] bg-white border border-[#E8E6FF] rounded-[24px] p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative">
         <form onSubmit={handleSubmit} className="flex flex-col items-center">
           <h2 className="text-2xl sm:text-[28px] font-semibold text-[#1A1A1A] tracking-tight leading-tight mb-2 text-center">

@@ -102,6 +102,19 @@ export function SelectField({
   );
 }
 
+const countriesList = [
+  { code: "+357", flag: "https://flagcdn.com/w20/cy.png", emoji: "🇨🇾", name: "Cyprus (+357)" },
+  { code: "+880", flag: "https://flagcdn.com/w20/bd.png", emoji: "🇧🇩", name: "Bangladesh (+880)" },
+  { code: "+1", flag: "https://flagcdn.com/w20/us.png", emoji: "🇺🇸", name: "United States (+1)" },
+  { code: "+44", flag: "https://flagcdn.com/w20/gb.png", emoji: "🇬🇧", name: "United Kingdom (+44)" },
+  { code: "+30", flag: "https://flagcdn.com/w20/gr.png", emoji: "🇬🇷", name: "Greece (+30)" },
+  { code: "+91", flag: "https://flagcdn.com/w20/in.png", emoji: "🇮🇳", name: "India (+91)" },
+  { code: "+61", flag: "https://flagcdn.com/w20/au.png", emoji: "🇦🇺", name: "Australia (+61)" },
+  { code: "+971", flag: "https://flagcdn.com/w20/ae.png", emoji: "🇦🇪", name: "United Arab Emirates (+971)" },
+  { code: "+49", flag: "https://flagcdn.com/w20/de.png", emoji: "🇩🇪", name: "Germany (+49)" },
+  { code: "+33", flag: "https://flagcdn.com/w20/fr.png", emoji: "🇫🇷", name: "France (+33)" },
+];
+
 interface PhoneInputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   countryCode: string;
@@ -117,6 +130,22 @@ export function PhoneInputField({
   className = "",
   ...props
 }: PhoneInputFieldProps) {
+  const currentCountry = countriesList.find((c) => c.code === countryCode) || countriesList[0];
+
+  const handlePhoneInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digitsOnly = e.target.value.replace(/\D/g, "");
+    if (props.onChange) {
+      const fakeEvent = {
+        ...e,
+        target: {
+          ...e.target,
+          value: digitsOnly,
+        },
+      } as React.ChangeEvent<HTMLInputElement>;
+      props.onChange(fakeEvent);
+    }
+  };
+
   return (
     <div className={`flex flex-col gap-2 w-full max-w-[520px] ${className}`}>
       <label className="text-[13px] font-semibold text-[#1A1A1A] tracking-wide">
@@ -127,7 +156,7 @@ export function PhoneInputField({
         <div className="relative flex items-center bg-[#F5F5F7] rounded-xl border border-transparent focus-within:bg-white focus-within:border-[#240183] px-3 h-12 transition-all duration-200">
           <div className="flex items-center gap-1.5 cursor-pointer">
             <Image
-              src={countryCode === "+880" ? "https://flagcdn.com/w20/bd.png" : "https://flagcdn.com/w20/us.png"}
+              src={currentCountry.flag}
               loader={({ src }) => src}
               unoptimized
               alt="Country Flag"
@@ -144,10 +173,11 @@ export function PhoneInputField({
             onChange={(e) => onCountryCodeChange?.(e.target.value)}
             className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
           >
-            <option value="+880">Bangladesh (+880)</option>
-            <option value="+1">United States (+1)</option>
-            <option value="+44">United Kingdom (+44)</option>
-            <option value="+357">Cyprus (+357)</option>
+            {countriesList.map((c) => (
+              <option key={c.code} value={c.code}>
+                {c.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -156,6 +186,7 @@ export function PhoneInputField({
           type="tel"
           className="flex-1 h-12 bg-[#F5F5F7] text-sm text-[#1A1A1A] placeholder-[#9E9E9E] rounded-xl px-4 transition-all duration-200 border border-transparent focus:bg-white focus:border-[#240183] focus:outline-none"
           {...props}
+          onChange={handlePhoneInputChange}
         />
       </div>
       {error && <span className="text-xs text-red-500 pl-1">{error}</span>}
