@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Car04Icon, Clock01Icon, DashboardSquare02Icon, FootballIcon, HealtcareIcon, Location01Icon, Location05Icon, PartyIcon, SailboatOffshoreIcon, Search01Icon, StarIcon, WellnessIcon } from "@hugeicons/core-free-icons";
+import { Car04Icon, Clock01Icon, DashboardSquare02Icon, FootballIcon, HealtcareIcon, Location01Icon, Location05Icon, PartyIcon, SailboatOffshoreIcon, Search01Icon, StarIcon, WellnessIcon, SquareLock01Icon } from "@hugeicons/core-free-icons";
 import ServiceCard, { Recommendation } from "@/components/ServiceCard";
 import Carousel from "@/components/Carousel";
 import TrustedBusinessCard, { TrustedBusiness } from "@/components/TrustedBusinessCard";
@@ -836,7 +836,7 @@ export default function LandingPage() {
       </section>
 
       {/* 9. Trusted Businesses Section */}
-      <section className="w-full bg-[#FCFCFD] py-12 md:py-[72px] border-y border-neutral-100 mt-[24px] mb-24">
+      <section className="w-full bg-[#FCFCFD] py-12 md:py-[72px] border-y border-neutral-100 mt-[24px]">
         <div className="w-full px-4 md:px-8 xl:px-[68px] flex flex-col items-center justify-center gap-10 md:gap-[80px]">
           {/* Container */}
           <div className="flex flex-col items-center gap-4 text-center max-w-[1312px] w-full">
@@ -863,6 +863,69 @@ export default function LandingPage() {
                 ))}
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* 10. Book in 3 Simple Steps Section */}
+      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[120px] mb-24">
+        <div className="w-full flex flex-col items-center gap-10 md:gap-[40px]">
+          {/* Header Container */}
+          <div className="flex flex-col items-center gap-5 text-center max-w-[730px]">
+            <h2 className="text-3xl md:text-[36px] font-medium leading-[48px] text-[#16123E] tracking-tight">
+              Book in 3 simple steps
+            </h2>
+            <p className="text-lg md:text-[24px] font-normal leading-[32px] text-[#757575]">
+              Simple, transparent, and built for Cyprus
+            </p>
+          </div>
+
+          {/* Cards Frame */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
+            {/* Step 1 */}
+            <div className="flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-shadow duration-200">
+              <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
+                <HugeiconsIcon icon={Search01Icon} className="w-9 h-9 text-[#111111]" />
+              </div>
+              <div className="flex flex-col gap-3 w-full">
+                <h3 className="text-[24px] font-medium leading-[32px] text-[#212121]">
+                  Discover
+                </h3>
+                <p className="text-[16px] font-normal leading-[24px] text-[#757575]">
+                  Browse local services and book instantly. Find exactly what you need, when you need it
+                </p>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-shadow duration-200">
+              <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
+                <HugeiconsIcon icon={SquareLock01Icon} className="w-9 h-9 text-[#111111]" />
+              </div>
+              <div className="flex flex-col gap-3 w-full">
+                <h3 className="text-[24px] font-medium leading-[32px] text-[#212121]">
+                  Secure your spot
+                </h3>
+                <p className="text-[16px] font-normal leading-[24px] text-[#757575]">
+                  Confirm your booking instantly. First visit? A small deposit is required. Returning customer? No deposit — your slot is held automatically
+                </p>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-shadow duration-200">
+              <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
+                <img src="/Icons/glasses.svg" alt="Cheers" className="w-9 h-9 object-contain" draggable="false" />
+              </div>
+              <div className="flex flex-col gap-3 w-full">
+                <h3 className="text-[24px] font-medium leading-[32px] text-[#212121]">
+                  Show up and enjoy
+                </h3>
+                <p className="text-[16px] font-normal leading-[24px] text-[#757575]">
+                  Pay the remaining balance at the venue by cash or card. That's it!
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
