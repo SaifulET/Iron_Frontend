@@ -6,6 +6,7 @@ import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Car04Icon, Clock01Icon, DashboardSquare02Icon, FootballIcon, HealtcareIcon, Location01Icon, Location05Icon, PartyIcon, SailboatOffshoreIcon, Search01Icon, StarIcon, WellnessIcon } from "@hugeicons/core-free-icons";
 import ServiceCard, { Recommendation } from "@/components/ServiceCard";
+import Carousel from "@/components/Carousel";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -29,37 +30,6 @@ export default function LandingPage() {
       prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
     );
   };
-
-  // Carousel Drag to Scroll Ref & States
-  const scrollRef = React.useRef<HTMLDivElement>(null);
-  const [isDown, setIsDown] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeftState, setScrollLeftState] = useState(0);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!scrollRef.current) return;
-    setIsDown(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeftState(scrollRef.current.scrollLeft);
-  };
-
-  const handleMouseLeave = () => {
-    setIsDown(false);
-  };
-
-  const handleMouseUp = () => {
-    setIsDown(false);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDown || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; // scroll speed multiplier
-    scrollRef.current.scrollLeft = scrollLeftState - walk;
-  };
-
-
 
   // Mock recommendations data
   const recommendations: Recommendation[] = [
@@ -138,6 +108,170 @@ export default function LandingPage() {
       distance: "3km away",
       lastVisited: "Last visited 2 months ago",
       startingPrice: 12,
+      image: "/img/service_demo.jpg",
+      hasDiamond: true,
+      noDeposit: true,
+    },
+  ];
+
+  // Mock services near you data
+  const servicesNearYou: Recommendation[] = [
+    {
+      id: 11,
+      title: "Zara Hair & Beauty Salon | Nicosia Center",
+      rating: 4.7,
+      reviews: 142,
+      categories: ["Salon", "Beauty"],
+      location: "Ledra Street, Nicosia",
+      distance: "0.8km away",
+      lastVisited: "Last visited 2 months ago",
+      startingPrice: 25,
+      image: "/img/service_demo.jpg",
+      hasDiamond: true,
+    },
+    {
+      id: 12,
+      title: "Zen Spa & Massage | Limassol Marina",
+      rating: 4.9,
+      reviews: 88,
+      categories: ["Spa", "Wellness"],
+      location: "Marina Road, Limassol",
+      distance: "1.5km away",
+      lastVisited: "Last visited 3 months ago",
+      startingPrice: 60,
+      image: "/img/service_demo.jpg",
+      noDeposit: true,
+    },
+    {
+      id: 13,
+      title: "Elite Barber Studio | Larnaca Bay",
+      rating: 4.8,
+      reviews: 210,
+      categories: ["Barber"],
+      travelsToYou: true,
+      travelLocations: ["Larnaca", "Dekhelia"],
+      lastVisited: "Last visited 2 months ago",
+      startingPrice: 18,
+      image: "/img/service_demo.jpg",
+    },
+    {
+      id: 14,
+      title: "Dynamic Fitness Coach | Paphos District",
+      rating: 5.0,
+      reviews: 45,
+      categories: ["Sports", "Fitness"],
+      travelsToYou: true,
+      travelLocations: ["Paphos", "Peyia"],
+      lastVisited: "Last visited 3 months ago",
+      startingPrice: 30,
+      image: "/img/service_demo.jpg",
+      noDeposit: true,
+    },
+    {
+      id: 15,
+      title: "Luxury Nails & Lashes | Limassol",
+      rating: 4.6,
+      reviews: 95,
+      categories: ["Beauty", "Salon"],
+      location: "Anexartisias, Limassol",
+      distance: "2.1km away",
+      lastVisited: "Last visited 2 months ago",
+      startingPrice: 20,
+      image: "/img/service_demo.jpg",
+    },
+    {
+      id: 16,
+      title: "Pet Care & Grooming | Nicosia",
+      rating: 4.9,
+      reviews: 120,
+      categories: ["Pets"],
+      location: "Strovolos, Nicosia",
+      distance: "3.5km away",
+      lastVisited: "Last visited 2 months ago",
+      startingPrice: 40,
+      image: "/img/service_demo.jpg",
+      hasDiamond: true,
+      noDeposit: true,
+    },
+  ];
+
+  // Mock trending services data
+  const trendingServices: Recommendation[] = [
+    {
+      id: 21,
+      title: "The Classic Barber | Old Town Limassol",
+      rating: 4.9,
+      reviews: 512,
+      categories: ["Barber"],
+      location: "Castle Area, Limassol",
+      distance: "0.5km away",
+      lastVisited: "Last visited 3 months ago",
+      startingPrice: 15,
+      image: "/img/service_demo.jpg",
+      noDeposit: true,
+    },
+    {
+      id: 22,
+      title: "Serenity Yoga & Pilates | Nicosia",
+      rating: 4.9,
+      reviews: 130,
+      categories: ["Wellness", "Fitness"],
+      location: "Athalassa Ave, Nicosia",
+      distance: "1.9km away",
+      lastVisited: "Last visited 2 months ago",
+      startingPrice: 12,
+      image: "/img/service_demo.jpg",
+      hasDiamond: true,
+    },
+    {
+      id: 23,
+      title: "Absolute Tattoo Studio | Ayia Napa",
+      rating: 4.8,
+      reviews: 320,
+      categories: ["Beauty", "Experience"],
+      location: "Nissi Avenue, Ayia Napa",
+      distance: "0.7km away",
+      lastVisited: "Last visited 2 months ago",
+      startingPrice: 80,
+      image: "/img/service_demo.jpg",
+    },
+    {
+      id: 24,
+      title: "Royal Thai Massage | Larnaca Center",
+      rating: 4.7,
+      reviews: 198,
+      categories: ["Spa", "Wellness"],
+      location: "Finikoudes, Larnaca",
+      distance: "0.2km away",
+      lastVisited: "Last visited 3 months ago",
+      startingPrice: 45,
+      image: "/img/service_demo.jpg",
+      travelsToYou: true,
+      travelLocations: ["Larnaca"],
+      noDeposit: true,
+    },
+    {
+      id: 25,
+      title: "Modern Cuts & Fades | Paphos",
+      rating: 4.6,
+      reviews: 84,
+      categories: ["Barber"],
+      location: "Tombs of Kings, Paphos",
+      distance: "2.4km away",
+      lastVisited: "Last visited 2 months ago",
+      startingPrice: 10,
+      image: "/img/service_demo.jpg",
+    },
+    {
+      id: 26,
+      title: "Ultimate Car Detailers | Limassol",
+      rating: 4.9,
+      reviews: 175,
+      categories: ["Automotive"],
+      travelsToYou: true,
+      travelLocations: ["Limassol", "Larnaca"],
+      lastVisited: "Last visited 2 months ago",
+      startingPrice: 50,
       image: "/img/service_demo.jpg",
       hasDiamond: true,
       noDeposit: true,
@@ -556,7 +690,7 @@ export default function LandingPage() {
       </section>
 
       {/* 6. Recommended Section */}
-      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-16 mb-24">
+      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-16">
 
         {/* Section Header */}
         <div className="flex justify-between items-center mb-6">
@@ -570,16 +704,7 @@ export default function LandingPage() {
 
         {/* Card Grid / Carousel */}
         {recommendations.length > 5 ? (
-          <div
-            ref={scrollRef}
-            onMouseDown={handleMouseDown}
-            onMouseLeave={handleMouseLeave}
-            onMouseUp={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            className={`flex overflow-x-auto scrollbar-hide gap-6 flex-nowrap w-full pb-4 items-stretch select-none ${
-              isDown ? "cursor-grabbing" : "cursor-grab snap-x snap-mandatory scroll-smooth"
-            }`}
-          >
+          <Carousel>
             {recommendations.map((rec) => (
               <div key={rec.id} className="w-[406px] shrink-0 snap-start">
                 <ServiceCard
@@ -590,10 +715,96 @@ export default function LandingPage() {
                 />
               </div>
             ))}
-          </div>
+          </Carousel>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
             {recommendations.map((rec) => (
+              <ServiceCard
+                key={rec.id}
+                rec={rec}
+                isFavorite={favorites.includes(rec.id)}
+                onToggleFavorite={toggleFavorite}
+                onBookNow={(id) => console.log("Booking item", id)}
+              />
+            ))}
+          </div>
+        )}
+
+      </section>
+
+      {/* 7. Services Near You Section */}
+      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px]">
+
+        {/* Section Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl md:text-[28px] font-medium tracking-tight text-[#1C1B1C]">
+            Services near you
+          </h2>
+          <a href="#" className="text-sm md:text-base font-medium text-[#1C1B1C] hover:underline transition-all">
+            See all
+          </a>
+        </div>
+
+        {/* Card Grid / Carousel */}
+        {servicesNearYou.length > 5 ? (
+          <Carousel>
+            {servicesNearYou.map((rec) => (
+              <div key={rec.id} className="w-[406px] shrink-0 snap-start">
+                <ServiceCard
+                  rec={rec}
+                  isFavorite={favorites.includes(rec.id)}
+                  onToggleFavorite={toggleFavorite}
+                  onBookNow={(id) => console.log("Booking item", id)}
+                />
+              </div>
+            ))}
+          </Carousel>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+            {servicesNearYou.map((rec) => (
+              <ServiceCard
+                key={rec.id}
+                rec={rec}
+                isFavorite={favorites.includes(rec.id)}
+                onToggleFavorite={toggleFavorite}
+                onBookNow={(id) => console.log("Booking item", id)}
+              />
+            ))}
+          </div>
+        )}
+
+      </section>
+
+      {/* 8. Trending Services Section */}
+      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px] mb-24">
+
+        {/* Section Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl md:text-[28px] font-medium tracking-tight text-[#1C1B1C]">
+            Trending services
+          </h2>
+          <a href="#" className="text-sm md:text-base font-medium text-[#1C1B1C] hover:underline transition-all">
+            See all
+          </a>
+        </div>
+
+        {/* Card Grid / Carousel */}
+        {trendingServices.length > 5 ? (
+          <Carousel>
+            {trendingServices.map((rec) => (
+              <div key={rec.id} className="w-[406px] shrink-0 snap-start">
+                <ServiceCard
+                  rec={rec}
+                  isFavorite={favorites.includes(rec.id)}
+                  onToggleFavorite={toggleFavorite}
+                  onBookNow={(id) => console.log("Booking item", id)}
+                />
+              </div>
+            ))}
+          </Carousel>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+            {trendingServices.map((rec) => (
               <ServiceCard
                 key={rec.id}
                 rec={rec}

@@ -119,21 +119,26 @@ export default function ServiceCard({
 
         {/* Location details */}
         {travelsToYou ? (
-          <div className="flex items-center gap-[8px] flex-nowrap w-full">
-            <div className="flex items-center gap-[8px] shrink-0">
-              <img src="/Icons/colorfulVan.svg" alt="Van" className="w-[16px] h-[16px] object-contain" draggable="false" />
-              <span className="font-poppins font-medium text-[12px] leading-[20px] tracking-[0.01em] text-[#2E9DA7] block">
-                Travels to you
-              </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-[8px] flex-nowrap w-full">
+              <div className="flex items-center gap-[8px] shrink-0">
+                <img src="/Icons/colorfulVan.svg" alt="Van" className="w-[16px] h-[16px] object-contain" draggable="false" />
+                <span className="font-poppins font-medium text-[12px] leading-[20px] tracking-[0.01em] text-[#2E9DA7] block">
+                  Travels to you
+                </span>
+              </div>
+              {rec.travelLocations?.map((loc, i) => (
+                <span
+                  key={i}
+                  className="text-[12px] font-normal leading-[20px] text-[#757575] bg-white border border-neutral-100 px-[8px] py-[2px] rounded-[99px] shrink-0"
+                >
+                  {loc}
+                </span>
+              ))}
             </div>
-            {rec.travelLocations?.map((loc, i) => (
-              <span
-                key={i}
-                className="text-[12px] font-normal leading-[20px] text-[#757575] bg-white border border-neutral-100 px-[8px] py-[2px] rounded-[99px] shrink-0"
-              >
-                {loc}
-              </span>
-            ))}
+            {rec.lastVisited && (
+              <span className="text-[11px] text-[#757575] font-medium pl-6">{rec.lastVisited}</span>
+            )}
           </div>
         ) : (
           <div className="flex flex-col gap-1">
