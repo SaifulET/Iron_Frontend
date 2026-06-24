@@ -12,6 +12,7 @@ import WhyChooseUs from "@/components/WhyChooseUs";
 import AddToHomeScreenButton from "@/components/AddToHomeScreenButton";
 import BusinessMockup from "@/components/BusinessMockup";
 import FaqSection from "@/components/FaqSection";
+import Footer from "@/components/Footer";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -1049,6 +1050,7 @@ export default function LandingPage() {
 
       <BusinessMockup />
       <FaqSection />
+      <Footer />
     </div>
   );
 }
