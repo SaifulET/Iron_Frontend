@@ -27,17 +27,103 @@ body {
 
 /* Scrollbar Hide Utility */
 @utility scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+
+  /* Firefox */
   &::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
+    display: none;
+    /* Safari and Chrome */
   }
 }
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Edge Soft Orbs Animation Styles */
+.edge-orb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  /* Responsive sizing defaults to base variables */
+  --orb-size-actual: var(--orb-size);
+  --orb-half-actual: var(--orb-half);
+}
+
+@media (max-width: 1024px) {
+  .edge-orb {
+    --orb-size-actual: calc(var(--orb-size) * 0.75);
+    --orb-half-actual: calc(var(--orb-half) * 0.75);
+  }
+}
+
+@media (max-width: 640px) {
+  .edge-orb {
+    --orb-size-actual: calc(var(--orb-size) * 0.55);
+    --orb-half-actual: calc(var(--orb-half) * 0.55);
+  }
+}
+
+.edge-orb {
+  width: var(--orb-size-actual);
+  height: var(--orb-size-actual);
+  border-radius: 9999px;
+  will-change: transform;
+  animation: edge-orbit var(--orb-duration) linear infinite both;
+}
+
+.edge-orb-soft {
+  opacity: var(--orb-opacity, 0.55);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(46, 157, 167, 0.8) 0%,
+    rgba(46, 157, 167, 0.55) 45%,
+    rgba(46, 157, 167, 0.3) 70%,
+    rgba(46, 157, 167, 0) 90%
+  );
+  box-shadow: 0 0 35px 15px rgba(46, 157, 167, 0.25);
+  filter: blur(0.8px) saturate(1.3);
+}
+
+.edge-orb-b {
+  animation-delay: calc(var(--orb-duration) / -2);
+}
+
+@keyframes edge-orbit {
+  0% {
+    left: calc(-0.2 * var(--orb-size-actual));
+    top: calc(-0.1 * var(--orb-size-actual));
+  }
+  25% {
+    left: calc(100% - 0.8 * var(--orb-size-actual));
+    top: calc(-0.1 * var(--orb-size-actual));
+  }
+  50% {
+    left: calc(100% - 0.8 * var(--orb-size-actual));
+    top: calc(100% - 0.9 * var(--orb-size-actual));
+  }
+  75% {
+    left: calc(-0.2 * var(--orb-size-actual));
+    top: calc(100% - 0.9 * var(--orb-size-actual));
+  }
+  100% {
+    left: calc(-0.2 * var(--orb-size-actual));
+    top: calc(-0.1 * var(--orb-size-actual));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edge-orb {
+    animation: none;
+  }
 }

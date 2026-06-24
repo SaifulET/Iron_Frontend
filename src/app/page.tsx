@@ -13,6 +13,7 @@ import AddToHomeScreenButton from "@/components/AddToHomeScreenButton";
 import BusinessMockup from "@/components/BusinessMockup";
 import FaqSection from "@/components/FaqSection";
 import Footer from "@/components/Footer";
+import EdgeSoftOrbsTop from "@/components/EdgeSoftOrbsTop";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -302,6 +303,12 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#FDFBF9] font-poppins relative overflow-x-hidden text-[#1C1B1C]">
+      <EdgeSoftOrbsTop
+        size={380}
+        duration={56}
+        intensity={0.45}
+        blend="screen"
+      />
 
       {/* Design Background Blobs */}
       <div className="absolute top-0 left-0 -z-10 w-full pointer-events-none opacity-40">
@@ -336,7 +343,7 @@ export default function LandingPage() {
       )}
 
       {/* 2. Navbar */}
-      <header className="w-full px-4 md:px-8 xl:px-[68px] py-4 md:py-[40px] relative z-40">
+        <header className="w-full px-4 md:px-8 xl:px-[68px] py-4 md:py-[40px] relative z-40">
         <div className="w-full bg-gradient-to-r from-[#E6F3F9] to-[rgba(255,255,255,0.5)] backdrop-blur-md rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-white/40 px-4 sm:px-6 py-3 md:py-[16px] flex items-center justify-between gap-4">
 
           {/* Left Side: Logo */}
@@ -704,7 +711,7 @@ export default function LandingPage() {
       </section>
 
       {/* 6. Recommended Section */}
-      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-16">
+      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-16 relative z-10">
 
         {/* Section Header */}
         <div className="flex justify-between items-center mb-6">

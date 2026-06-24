@@ -4,7 +4,7 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-transparent mt-[66px] pb-14 font-poppins">
+    <footer className="w-full bg-transparent mt-[120px] md:mt-[200px] lg:mt-[300px] xl:mt-[400px] pb-14 font-poppins">
       {/* Centered Content Wrapper */}
       <div className="max-w-[1440px] mx-auto w-full px-4 md:px-[32px] flex flex-col items-start gap-[40px]">
         
