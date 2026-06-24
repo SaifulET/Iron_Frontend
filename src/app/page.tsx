@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -31,6 +31,23 @@ export default function LandingPage() {
   const [selectedTime, setSelectedTime] = useState("Any Time");
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
+
+  // Search dropdown states
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const [dropdownFilter, setDropdownFilter] = useState("All");
+  const searchBarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
+        setShowSearchDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleFavorite = (id: number) => {
     setFavorites((prev) =>
@@ -302,12 +319,16 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FDFBF9] font-poppins relative overflow-x-hidden text-[#1C1B1C]">
+    <div className="min-h-screen font-poppins relative overflow-x-hidden text-[#1C1B1C]">
+      {/* Root Solid Background Layer */}
+      <div className="absolute inset-0 -z-20 bg-[#FDFBF9] pointer-events-none" />
+
       <EdgeSoftOrbsTop
         size={380}
         duration={56}
-        intensity={0.45}
+        intensity={0.85}
         blend="screen"
+        zIndex={-5}
       />
 
       {/* Design Background Blobs */}
@@ -344,12 +365,12 @@ export default function LandingPage() {
 
       {/* 2. Navbar */}
         <header className="w-full px-4 md:px-8 xl:px-[68px] py-4 md:py-[40px] relative z-40">
-        <div className="w-full bg-gradient-to-r from-[#E6F3F9] to-[rgba(255,255,255,0.5)] backdrop-blur-md rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-white/40 px-4 sm:px-6 py-3 md:py-[16px] flex items-center justify-between gap-4">
+        <div className="w-full bg-gradient-to-r from-white/90 via-[rgba(230,243,249,0.65)] to-white/90 backdrop-blur-md rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-white/60 px-4 sm:px-6 py-3 md:py-[16px] flex items-center justify-between gap-4">
 
           {/* Left Side: Logo */}
           <div className="flex items-center">
             <div className="cursor-pointer shrink-0" onClick={() => router.push("/")}>
-              <img src="/img/logo.png" alt="Bookly" className="h-8 md:h-[44px] w-[120px] object-contain" />
+              <img src="/img/logoo.svg" alt="Bookly" className="h-8 md:h-[44px] w-[120px] object-contain" />
             </div>
           </div>
 
@@ -516,7 +537,7 @@ export default function LandingPage() {
         </p>
 
         {/* 4. Hero Search Bar */}
-        <div className="w-full max-w-[900px] bg-white rounded-2xl md:rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.05)] border border-[#E8E6FF] p-2 md:p-3 flex flex-col md:flex-row items-center gap-2 md:gap-0 relative z-30">
+        <div ref={searchBarRef} className="w-full max-w-[900px] bg-white rounded-2xl md:rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.05)] border border-[#E8E6FF] p-2 md:p-3 flex flex-col md:flex-row items-center gap-2 md:gap-0 relative z-30">
 
           {/* Search Input */}
           <div className="flex-1 w-full flex items-center gap-3 px-4 py-2.5 md:py-0 border-b md:border-b-0 md:border-r border-[#EBEBEB]">
@@ -526,6 +547,7 @@ export default function LandingPage() {
               placeholder="What are you looking for?"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setShowSearchDropdown(true)}
               className="w-full h-10 text-sm text-[#1C1B1C] placeholder-[#9E9E9E] bg-transparent outline-none"
             />
           </div>
@@ -538,6 +560,7 @@ export default function LandingPage() {
               placeholder="Anywhere in Cyprus"
               value={locationQuery}
               onChange={(e) => setLocationQuery(e.target.value)}
+              onFocus={() => setShowSearchDropdown(true)}
               className="w-full h-10 text-sm text-[#1C1B1C] placeholder-[#9E9E9E] bg-transparent outline-none"
             />
           </div>
@@ -590,6 +613,278 @@ export default function LandingPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </button>
+
+          {/* Search Results Dropdown Overlay */}
+          {showSearchDropdown && (
+            <div className="absolute top-[110%] left-0 w-full md:w-[761px] max-h-[80vh] md:max-h-[900px] overflow-y-auto bg-white rounded-xl shadow-2xl p-6 md:p-10 flex flex-col items-start gap-10 z-50 text-left border border-neutral-200/80 animate-in fade-in slide-in-from-top-4 duration-300 scrollbar-hide">
+              
+              {/* Frame 2147239451: Filter Pills */}
+              <div className="flex flex-row items-center p-0 gap-2 overflow-x-auto w-full scrollbar-hide shrink-0 pb-1 border-b border-neutral-100">
+                {[
+                  { id: "All", label: "All" },
+                  { id: "Nearby", label: "Nearby" },
+                  { id: "Trending", label: "Trending" },
+                  { id: "Recents", label: "Recents" },
+                  { id: "Services", label: "Services" },
+                  { id: "We come to you", label: "We come to you" }
+                ].map((pill) => {
+                  const isActive = dropdownFilter === pill.id;
+                  return (
+                    <button
+                      key={pill.id}
+                      type="button"
+                      onClick={() => setDropdownFilter(pill.id)}
+                      className={`flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 rounded-full font-poppins font-medium text-xs tracking-[0.7px] transition-all duration-200 cursor-pointer whitespace-nowrap ${
+                        isActive
+                          ? "bg-[#111111] text-white border-transparent"
+                          : "border border-[#111111] text-[#111111] hover:bg-neutral-50"
+                      }`}
+                    >
+                      {pill.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Section: Trending searches */}
+              {(dropdownFilter === "All" || dropdownFilter === "Trending") && (
+                <div className="flex flex-col items-start p-0 gap-5 w-full">
+                  <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
+                    Trending searches
+                  </h3>
+                  <div className="flex flex-row flex-wrap items-start content-start p-0 gap-2 w-full">
+                    {[
+                      "Hair Salon",
+                      "Physiotherapy",
+                      "Massage",
+                      "Car dealing",
+                      "Photography",
+                      "Tennis Lesson"
+                    ].map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery(item);
+                          setShowSearchDropdown(false);
+                        }}
+                        className="flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 border border-[#111111] rounded-full text-[#111111] font-poppins font-medium text-xs tracking-[0.7px] whitespace-nowrap hover:bg-neutral-50 transition-colors cursor-pointer"
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Section: Search Suggestions */}
+              {(dropdownFilter === "All" || dropdownFilter === "We come to you" || dropdownFilter === "Nearby") && (
+                <div className="flex flex-col items-start p-0 gap-5 w-full">
+                  <div className="flex flex-col items-start p-0 gap-4 w-full">
+                    
+                    {/* Row 1: Search Icon + Hair & styling + Founding Partner */}
+                    {dropdownFilter !== "We come to you" && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery("Hair & styling");
+                          setShowSearchDropdown(false);
+                        }}
+                        className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                          <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                        </div>
+                        <div className="flex flex-col justify-center items-start p-0">
+                          <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                            Hair & styling
+                          </span>
+                          <span className="font-poppins font-normal text-[10px] leading-[10px] tracking-[0.01em] text-[#757575]">
+                            Founding Partner
+                          </span>
+                        </div>
+                      </button>
+                    )}
+
+                    {/* Row 2: Search Icon + Hair & styling */}
+                    {dropdownFilter !== "We come to you" && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery("Hair & styling");
+                          setShowSearchDropdown(false);
+                        }}
+                        className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                          <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                        </div>
+                        <div className="flex flex-col justify-center items-start p-0">
+                          <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                            Hair & styling
+                          </span>
+                        </div>
+                      </button>
+                    )}
+
+                    {/* Row 3: Van Icon + Hair & styling */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery("Hair & styling");
+                        setShowSearchDropdown(false);
+                      }}
+                      className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10H8V6c0-1.1-.9-2-2-2H2v13h2" />
+                          <circle cx="7" cy="18" r="2" />
+                          <circle cx="17" cy="18" r="2" />
+                          <path d="M13 6h3l4 4v3h-7V6z" />
+                        </svg>
+                      </div>
+                      <div className="flex flex-col justify-center items-start p-0">
+                        <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                          Hair & styling
+                        </span>
+                      </div>
+                    </button>
+
+                    {/* Row 4: Search Icon + Hair & styling */}
+                    {dropdownFilter !== "We come to you" && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery("Hair & styling");
+                          setShowSearchDropdown(false);
+                        }}
+                        className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                          <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                        </div>
+                        <div className="flex flex-col justify-center items-start p-0">
+                          <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                            Hair & styling
+                          </span>
+                        </div>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Section: Recents */}
+              {(dropdownFilter === "All" || dropdownFilter === "Recents" || dropdownFilter === "Nearby") && (
+                <div className="flex flex-col items-start p-0 gap-5 w-full">
+                  <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
+                    Recents
+                  </h3>
+                  <div className="flex flex-col items-start p-0 gap-4 w-full">
+                    {/* Recent Item 1 */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery("Hair & styling");
+                        setLocationQuery("Larnaca");
+                        setSelectedTime("Any Time");
+                        setShowSearchDropdown(false);
+                      }}
+                      className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                        <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                      </div>
+                      <div className="flex flex-col items-start gap-1">
+                        <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                          Hair & styling
+                        </span>
+                        <div className="flex items-center gap-1 text-[#757575] text-xs">
+                          <span>Larnaca</span>
+                          <span className="w-1 h-1 rounded-full bg-[#757575]"></span>
+                          <span>Any time</span>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Divider */}
+                    <div className="w-full h-0 border-t border-[#837C7C]/40"></div>
+
+                    {/* Recent Item 2 */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery("Hair & styling");
+                        setLocationQuery("Larnaca");
+                        setSelectedTime("Any Time");
+                        setShowSearchDropdown(false);
+                      }}
+                      className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                        <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                      </div>
+                      <div className="flex flex-col items-start gap-1">
+                        <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                          Hair & styling
+                        </span>
+                        <div className="flex items-center gap-1 text-[#757575] text-xs">
+                          <span>Larnaca</span>
+                          <span className="w-1 h-1 rounded-full bg-[#757575]"></span>
+                          <span>Any time</span>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Section: Services */}
+              {(dropdownFilter === "All" || dropdownFilter === "Services") && (
+                <div className="flex flex-col items-start p-0 gap-5 w-full">
+                  <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
+                    Services
+                  </h3>
+                  <div className="flex flex-col items-start p-0 gap-3 w-full">
+                    <span className="font-poppins font-semibold text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                      Category
+                    </span>
+                    {["Sub Category 1", "Sub Category 1", "Sub Category 1", "Sub Category 1", "Sub Category 1Subxzzzzzzzza Category 1"].map((subCat, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery(subCat);
+                          setShowSearchDropdown(false);
+                        }}
+                        className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111] hover:text-neutral-600 pl-4 text-left cursor-pointer"
+                      >
+                        {subCat}
+                      </button>
+                    ))}
+
+                    <span className="font-poppins font-semibold text-sm leading-[22px] tracking-[0.01em] text-[#111111] mt-3">
+                      Category
+                    </span>
+                    {["Sub Category 1x", "Sub Category 1"].map((subCat, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery(subCat);
+                          setShowSearchDropdown(false);
+                        }}
+                        className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111] hover:text-neutral-600 pl-4 text-left cursor-pointer"
+                      >
+                        {subCat}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
