@@ -8,6 +8,8 @@ import { Car04Icon, Clock01Icon, DashboardSquare02Icon, FootballIcon, HealtcareI
 import ServiceCard, { Recommendation } from "@/components/ServiceCard";
 import Carousel from "@/components/Carousel";
 import TrustedBusinessCard, { TrustedBusiness } from "@/components/TrustedBusinessCard";
+import WhyChooseUs from "@/components/WhyChooseUs";
+import AddToHomeScreenButton from "@/components/AddToHomeScreenButton";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -315,15 +317,7 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-            <button
-              onClick={() => console.log("Add to Home Screen clicked")}
-              className="bg-white hover:bg-neutral-100 text-[#1C1B1C] px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold shadow-sm transition-all active:scale-95 cursor-pointer flex items-center gap-1 sm:gap-1.5"
-            >
-              <span className="hidden sm:inline">Add to Home Screen</span>
-              <span className="inline sm:hidden">Install</span>
-              <img src="/Icons/appleSmall.svg" alt="Apple" className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-              <img src="/Icons/android.svg" alt="Android" className="w-3.5 h-3.5" />
-            </button>
+            <AddToHomeScreenButton size="small" className="px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs" />
             <button
               onClick={() => setShowBanner(false)}
               className="text-[#1C1B1C] hover:opacity-75 transition-opacity cursor-pointer p-1"
@@ -723,7 +717,7 @@ export default function LandingPage() {
         {recommendations.length > 5 ? (
           <Carousel>
             {recommendations.map((rec) => (
-              <div key={rec.id} className="w-[406px] shrink-0 snap-start">
+              <div key={rec.id} className="w-[280px] xs:w-[320px] sm:w-[360px] md:w-[406px] shrink-0 snap-start">
                 <ServiceCard
                   rec={rec}
                   isFavorite={favorites.includes(rec.id)}
@@ -766,7 +760,7 @@ export default function LandingPage() {
         {servicesNearYou.length > 5 ? (
           <Carousel>
             {servicesNearYou.map((rec) => (
-              <div key={rec.id} className="w-[406px] shrink-0 snap-start">
+              <div key={rec.id} className="w-[280px] xs:w-[320px] sm:w-[360px] md:w-[406px] shrink-0 snap-start">
                 <ServiceCard
                   rec={rec}
                   isFavorite={favorites.includes(rec.id)}
@@ -809,7 +803,7 @@ export default function LandingPage() {
         {trendingServices.length > 5 ? (
           <Carousel>
             {trendingServices.map((rec) => (
-              <div key={rec.id} className="w-[406px] shrink-0 snap-start">
+              <div key={rec.id} className="w-[280px] xs:w-[320px] sm:w-[360px] md:w-[406px] shrink-0 snap-start">
                 <ServiceCard
                   rec={rec}
                   isFavorite={favorites.includes(rec.id)}
@@ -868,11 +862,11 @@ export default function LandingPage() {
       </section>
 
       {/* 10. Book in 3 Simple Steps Section */}
-      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[120px] mb-24">
+      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[120px]">
         <div className="w-full flex flex-col items-center gap-10 md:gap-[40px]">
           {/* Header Container */}
           <div className="flex flex-col items-center gap-5 text-center max-w-[730px]">
-            <h2 className="text-3xl md:text-[36px] font-medium leading-[48px] text-[#16123E] tracking-tight">
+            <h2 className="text-3xl md:text-[36px] font-medium leading-tight md:leading-[48px] text-[#16123E] tracking-tight">
               Book in 3 simple steps
             </h2>
             <p className="text-lg md:text-[24px] font-normal leading-[32px] text-[#757575]">
@@ -927,6 +921,82 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* 11. Why Customers Choose Bookly Section */}
+      <WhyChooseUs />
+
+      {/* 12. Add Bookly to Your Home Screen Section */}
+      <section className="w-full mt-[204px] py-16 lg:py-0 lg:h-[484px] relative mb-24 flex items-center overflow-hidden lg:overflow-visible">
+        
+        {/* Inner Background starting after 38px */}
+        <div className="absolute inset-y-0 left-0 top-[38px] right-0 bg-[#2A9CA6] z-0" />
+
+        <div className="w-full max-w-[1312px] mx-auto px-4 md:px-8 xl:px-[68px] flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-0 h-full relative z-10">
+          
+          {/* Left Side: Content & Button */}
+          <div className="flex flex-col items-start gap-[20px] lg:max-w-[636px] text-white z-10 py-6 relative">
+            <h2 className="text-3xl sm:text-4xl md:text-[54px] font-medium leading-tight md:leading-[64px] text-[#FCFAF9] tracking-tight">
+              Add Bookly to your <br /> home screen
+            </h2>
+            
+            {/* Subtitle tick frame */}
+            <div className="flex items-center gap-2">
+              <span className="text-lg md:text-[18px] font-medium leading-[26px] text-[#FCFAF9]">
+                Book any local services instantly
+              </span>
+              <div className="w-6 h-6 border-[1.5px] border-[#FCFAF9] rounded-full flex items-center justify-center shrink-0">
+                <svg className="w-3.5 h-3.5 text-[#FCFAF9]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Arrow & Button Container */}
+            <div className="flex items-center mt-8 relative w-full pl-0 lg:pl-[120px]">
+              {/* Hand-drawn style curved arrow SVG */}
+              <div className="absolute left-0 top-[-30px] lg:top-[-20px] w-24 h-16 pointer-events-none text-[#FCFAF9] opacity-95 hidden lg:block">
+                <svg viewBox="0 0 100 60" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+                  <path d="M10,10 C15,45 40,60 85,45" />
+                  <path d="M72,35 L85,45 L75,55" />
+                </svg>
+              </div>
+
+              {/* Install Button */}
+              <AddToHomeScreenButton 
+                className="z-10" 
+                showTextOnMobile={true} 
+                size="large"
+              />
+            </div>
+          </div>
+
+          {/* Right Side: Mockup Image with grouped Glow */}
+          <div className="relative lg:absolute lg:right-[68px] lg:bottom-0 w-[280px] sm:w-[320px] lg:w-[360px] xl:w-[400px] h-[340px] lg:h-[460px] flex items-end justify-center z-20">
+            {/* Figma Ellipse 133 Glow Light (grouped behind the phone) */}
+            <div 
+              className="absolute pointer-events-none -z-10 hidden lg:block opacity-90"
+              style={{
+                width: "244.85px",
+                height: "478.55px",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%) rotate(6.83deg)",
+                background: "rgba(255, 255, 255, 0.8)",
+                filter: "blur(100px)",
+              }}
+            />
+
+            {/* Phone Image */}
+            <img
+              src="/img/mobile.png"
+              alt="Bookly App Mockup"
+              className="w-full h-auto object-contain max-h-[380px] lg:max-h-[500px] xl:max-h-[540px] transform lg:translate-y-8"
+              draggable="false"
+            />
+          </div>
+
         </div>
       </section>
 
