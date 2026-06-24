@@ -10,6 +10,7 @@ import Carousel from "@/components/Carousel";
 import TrustedBusinessCard, { TrustedBusiness } from "@/components/TrustedBusinessCard";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import AddToHomeScreenButton from "@/components/AddToHomeScreenButton";
+import BusinessMockup from "@/components/BusinessMockup";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -1042,6 +1043,8 @@ export default function LandingPage() {
 
         </div>
       </section>
+
+      <BusinessMockup />
 
     </div>
   );
