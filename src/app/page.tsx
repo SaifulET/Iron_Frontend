@@ -11,6 +11,7 @@ import TrustedBusinessCard, { TrustedBusiness } from "@/components/TrustedBusine
 import WhyChooseUs from "@/components/WhyChooseUs";
 import AddToHomeScreenButton from "@/components/AddToHomeScreenButton";
 import BusinessMockup from "@/components/BusinessMockup";
+import FaqSection from "@/components/FaqSection";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -930,18 +931,18 @@ export default function LandingPage() {
 
       {/* 12. Add Bookly to Your Home Screen Section */}
       <section className="w-full mt-[204px] py-16 lg:py-0 lg:h-[484px] relative mb-24 flex items-center overflow-hidden lg:overflow-visible">
-        
+
         {/* Inner Background starting after 38px */}
         <div className="absolute inset-y-0 left-0 top-[38px] right-0 bg-[#2A9CA6] z-0" />
 
         <div className="w-full max-w-[1312px] mx-auto px-4 md:px-8 xl:px-[68px] flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-0 h-full relative z-10">
-          
+
           {/* Left Side: Content & Button */}
           <div className="flex flex-col items-start gap-[20px] lg:max-w-[636px] text-white z-10 py-6 relative">
             <h2 className="text-3xl sm:text-4xl md:text-[54px] font-medium leading-tight md:leading-[64px] text-[#FCFAF9] tracking-tight">
               Add Bookly to your <br /> home screen
             </h2>
-            
+
             {/* Subtitle tick frame */}
             <div className="flex items-center gap-2">
               <span className="text-lg md:text-[18px] font-medium leading-[26px] text-[#FCFAF9]">
@@ -965,9 +966,9 @@ export default function LandingPage() {
               </div>
 
               {/* Install Button */}
-              <AddToHomeScreenButton 
-                className="z-10" 
-                showTextOnMobile={true} 
+              <AddToHomeScreenButton
+                className="z-10"
+                showTextOnMobile={true}
                 size="large"
               />
             </div>
@@ -976,7 +977,7 @@ export default function LandingPage() {
           {/* Right Side: Mockup Image with grouped Glow */}
           <div className="relative lg:absolute lg:right-[68px] lg:bottom-0 w-[280px] sm:w-[320px] lg:w-[360px] xl:w-[400px] h-[340px] lg:h-[460px] flex items-end justify-center z-20">
             {/* Figma Ellipse 133 Glow Light (grouped behind the phone) */}
-            <div 
+            <div
               className="absolute pointer-events-none -z-10 hidden lg:block opacity-90"
               style={{
                 width: "244.85px",
@@ -1004,7 +1005,7 @@ export default function LandingPage() {
       {/* 13. Bookly for Business Section */}
       <section className="w-full mt-[98px] mb-24 px-4 md:px-8 xl:px-0">
         <div className=" flex flex-col items-center gap-[40px] text-center">
-          
+
           {/* Header Block (Title and Subtitle) */}
           <div className="flex flex-col items-center gap-[20px] max-w-[607px]">
             <h2 className="text-3xl md:text-[36px] font-medium leading-tight md:leading-[48px] text-[#16123E] tracking-tight font-poppins">
@@ -1027,13 +1028,13 @@ export default function LandingPage() {
           >
             <span>List your Business - It’s free</span>
             {/* White arrow icon */}
-            <svg 
-              className="w-[18px] h-[18px] text-white shrink-0" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2.5" 
-              strokeLinecap="round" 
+            <svg
+              className="w-[18px] h-[18px] text-white shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
               strokeLinejoin="round"
             >
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1044,8 +1045,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <BusinessMockup />
 
+
+      <BusinessMockup />
+      <FaqSection />
     </div>
   );
 }
