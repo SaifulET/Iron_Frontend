@@ -587,8 +587,8 @@ export default function LandingPage() {
       </section>
 
       {/* 5. Category Section */}
-      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-16">
-        <div className="flex flex-wrap items-center justify-center lg:justify-between pb-4 gap-4 lg:gap-2 xl:gap-4">
+      <section className="w-full max-w-[1440px] mx-auto px-4 md:px-[64px] mt-16">
+        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-4 justify-items-center pb-4 w-full">
 
           {/* ALL Category Card */}
           <button
@@ -931,7 +931,7 @@ export default function LandingPage() {
       <WhyChooseUs />
 
       {/* 12. Add Bookly to Your Home Screen Section */}
-      <section className="w-full mt-[204px] py-16 lg:py-0 lg:h-[484px] relative mb-24 flex items-center overflow-hidden lg:overflow-visible">
+      <section className="w-full mt-[166px] py-16 lg:py-0 lg:h-[484px] relative mb-24 flex items-center overflow-hidden lg:overflow-visible">
 
         {/* Inner Background starting after 38px */}
         <div className="absolute inset-y-0 left-0 top-[38px] right-0 bg-[#2A9CA6] z-0" />
