@@ -802,7 +802,7 @@ export default function LandingPage() {
             ref={timeSelectorRef}
             onMouseEnter={() => setHoveredSegment("time")}
             onMouseLeave={() => setHoveredSegment(null)}
-            className={`relative flex-1 w-full flex items-center justify-between px-6 py-2.5 md:py-1.5 transition-all duration-300 ${
+            className={`relative flex-1 w-full flex items-center justify-between px-6 py-2.5 md:py-1.5 md:mr-2 transition-all duration-300 ${
               activeSegment === "time" 
                 ? "bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-full z-10" 
                 : activeSegment !== null 
