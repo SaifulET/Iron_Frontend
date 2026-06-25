@@ -29,18 +29,53 @@ export default function LandingPage() {
   // Time selector states
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState("Any Time");
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date(2026, 7, 17)); // Default to Aug 17, 2026
+  const [currentYear, setCurrentYear] = useState(2026);
+  const [currentMonth, setCurrentMonth] = useState(7); // August (0-indexed)
+  const [selectedTimeOption, setSelectedTimeOption] = useState<"Any time" | "Morning" | "Afternoon" | "Evening" | "Custom">("Any time");
+  const [customStartTime, setCustomStartTime] = useState("04:00");
+  const [customStartAmPm, setCustomStartAmPm] = useState<"AM" | "PM">("PM");
+  const [customEndTime, setCustomEndTime] = useState("04:00");
+  const [customEndAmPm, setCustomEndAmPm] = useState<"AM" | "PM">("PM");
+  
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
 
   // Search dropdown states
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [dropdownFilter, setDropdownFilter] = useState("All");
+  const [activeSegment, setActiveSegment] = useState<"search" | "location" | "time" | null>(null);
+  const [hoveredSegment, setHoveredSegment] = useState<"search" | "location" | "time" | null>(null);
   const searchBarRef = useRef<HTMLDivElement>(null);
+  const timeSelectorRef = useRef<HTMLDivElement>(null);
+  const [dropdownWidth, setDropdownWidth] = useState<number | null>(null);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (searchBarRef.current && timeSelectorRef.current) {
+        const searchRect = searchBarRef.current.getBoundingClientRect();
+        const timeRect = timeSelectorRef.current.getBoundingClientRect();
+        const width = (timeRect.left + timeRect.width / 2) - searchRect.left;
+        setDropdownWidth(width);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    // Also update on a slight delay to ensure browser layout is settled
+    const timer = setTimeout(updateWidth, 100);
+
+    return () => {
+      window.removeEventListener("resize", updateWidth);
+      clearTimeout(timer);
+    };
+  }, [showSearchDropdown]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
         setShowSearchDropdown(false);
+        setActiveSegment(null);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -48,6 +83,62 @@ export default function LandingPage() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Calendar helper functions
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  
+  const getDaysInMonth = (year: number, month: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (year: number, month: number) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const getFormattedHeaderDate = (date: Date) => {
+    const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${weekdays[date.getDay()]}, ${monthNames[date.getMonth()]} ${date.getDate()}`;
+  };
+
+  const handlePrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear((prev) => prev - 1);
+    } else {
+      setCurrentMonth((prev) => prev - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear((prev) => prev + 1);
+    } else {
+      setCurrentMonth((prev) => prev + 1);
+    }
+  };
+
+  const updateSelectedTimeDisplay = (
+    date: Date, 
+    option: "Any time" | "Morning" | "Afternoon" | "Evening" | "Custom",
+    startTime?: string,
+    startAmPm?: string,
+    endTime?: string,
+    endAmPm?: string
+  ) => {
+    const formattedDate = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const currentStart = startTime || customStartTime;
+    const currentStartAmPm = startAmPm || customStartAmPm;
+    const currentEnd = endTime || customEndTime;
+    const currentEndAmPm = endAmPm || customEndAmPm;
+
+    if (option === "Custom") {
+      setSelectedTime(`${formattedDate}, ${currentStart} ${currentStartAmPm} - ${currentEnd} ${currentEndAmPm}`);
+    } else {
+      setSelectedTime(`${formattedDate}, ${option}`);
+    }
+  };
 
   const toggleFavorite = (id: number) => {
     setFavorites((prev) =>
@@ -537,66 +628,330 @@ export default function LandingPage() {
         </p>
 
         {/* 4. Hero Search Bar */}
-        <div ref={searchBarRef} className="w-full max-w-[900px] bg-white rounded-2xl md:rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.05)] border border-[#E8E6FF] p-2 md:p-3 flex flex-col md:flex-row items-center gap-2 md:gap-0 relative z-30">
+        <div ref={searchBarRef} className={`w-full max-w-[900px] rounded-2xl md:rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.05)] border border-[#E8E6FF] p-2 md:p-3 flex flex-col md:flex-row items-center gap-2 md:gap-0 relative z-30 transition-colors duration-300 ${
+          activeSegment !== null ? "bg-[#F2F2F2]" : "bg-white"
+        }`}>
 
           {/* Search Input */}
-          <div className="flex-1 w-full flex items-center gap-3 px-4 py-2.5 md:py-0 border-b md:border-b-0 md:border-r border-[#EBEBEB]">
-            <HugeiconsIcon icon={Search01Icon} className="text-[#9E9E9E]" />
+          <div 
+            onMouseEnter={() => setHoveredSegment("search")}
+            onMouseLeave={() => setHoveredSegment(null)}
+            className={`flex-1 w-full flex items-center gap-3 px-6 py-2.5 md:py-1.5 transition-all duration-300 ${
+              activeSegment === "search" 
+                ? "bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-full z-10" 
+                : activeSegment !== null 
+                  ? "hover:bg-black/5 rounded-full" 
+                  : "hover:bg-[#F2F2F2] rounded-full"
+            }`}
+          >
+            <HugeiconsIcon icon={Search01Icon} className="text-[#111111]" />
             <input
               type="text"
-              placeholder="What are you looking for?"
+              placeholder="All treatments"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setShowSearchDropdown(true)}
-              className="w-full h-10 text-sm text-[#1C1B1C] placeholder-[#9E9E9E] bg-transparent outline-none"
+              onFocus={() => {
+                setShowSearchDropdown(true);
+                setActiveSegment("search");
+              }}
+              className="w-full h-10 text-sm text-[#1C1B1C] placeholder-[#757575] bg-transparent outline-none font-medium"
             />
           </div>
+
+          {/* Divider 1 */}
+          {activeSegment !== "search" && activeSegment !== "location" && hoveredSegment !== "search" && hoveredSegment !== "location" && (
+            <div className="hidden md:block w-[1px] h-8 bg-[#EBEBEB]" />
+          )}
 
           {/* Location Selector */}
-          <div className="flex-1 w-full flex items-center gap-3 px-4 py-2.5 md:py-0 border-b md:border-b-0 md:border-r border-[#EBEBEB]">
-            <HugeiconsIcon icon={Location05Icon} className="text-[#9E9E9E]" />
+          <div 
+            onMouseEnter={() => setHoveredSegment("location")}
+            onMouseLeave={() => setHoveredSegment(null)}
+            className={`flex-1 w-full flex items-center gap-3 px-6 py-2.5 md:py-1.5 transition-all duration-300 ${
+              activeSegment === "location" 
+                ? "bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-full z-10" 
+                : activeSegment !== null 
+                  ? "hover:bg-black/5 rounded-full" 
+                  : "hover:bg-[#F2F2F2] rounded-full"
+            }`}
+          >
+            <HugeiconsIcon icon={Location05Icon} className="text-[#111111]" />
             <input
               type="text"
-              placeholder="Anywhere in Cyprus"
+              placeholder="Current location"
               value={locationQuery}
               onChange={(e) => setLocationQuery(e.target.value)}
-              onFocus={() => setShowSearchDropdown(true)}
-              className="w-full h-10 text-sm text-[#1C1B1C] placeholder-[#9E9E9E] bg-transparent outline-none"
+              onFocus={() => {
+                setShowSearchDropdown(true);
+                setActiveSegment("location");
+              }}
+              className="w-full h-10 text-sm text-[#1C1B1C] placeholder-[#757575] bg-transparent outline-none font-medium"
             />
           </div>
 
+          {/* Divider 2 */}
+          {activeSegment !== "location" && activeSegment !== "time" && hoveredSegment !== "location" && hoveredSegment !== "time" && (
+            <div className="hidden md:block w-[1px] h-8 bg-[#EBEBEB]" />
+          )}
+
           {/* Time Selector */}
-          <div className="relative flex-1 w-full flex items-center justify-between px-4 py-2.5 md:py-0 border-b md:border-b-0 border-[#EBEBEB] md:border-transparent">
+          <div 
+            ref={timeSelectorRef}
+            onMouseEnter={() => setHoveredSegment("time")}
+            onMouseLeave={() => setHoveredSegment(null)}
+            className={`relative flex-1 w-full flex items-center justify-between px-6 py-2.5 md:py-1.5 transition-all duration-300 ${
+              activeSegment === "time" 
+                ? "bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-full z-10" 
+                : activeSegment !== null 
+                  ? "hover:bg-black/5 rounded-full" 
+                  : "hover:bg-[#F2F2F2] rounded-full"
+            }`}
+          >
             <button
               type="button"
-              onClick={() => setShowTimePicker(!showTimePicker)}
+              onClick={() => {
+                setShowTimePicker(!showTimePicker);
+                setActiveSegment("time");
+              }}
               className="w-full flex items-center gap-3 text-left py-2 text-sm text-[#757575] hover:text-[#1C1B1C] transition-colors cursor-pointer"
             >
-              <HugeiconsIcon icon={Clock01Icon} className="text-[#9E9E9E]" />
-              <span className="text-[#1C1B1C] truncate">{selectedTime}</span>
+              <HugeiconsIcon icon={Clock01Icon} className="text-[#111111]" />
+              <span className="text-[#1C1B1C] font-medium truncate">{selectedTime === "Any Time" ? "Any time" : selectedTime}</span>
             </button>
 
             {/* Time Picker Popup Dropdown */}
             {showTimePicker && (
-              <div className="absolute top-[110%] left-0 right-0 bg-white border border-[#E8E6FF] rounded-2xl shadow-xl z-50 p-4 min-w-[260px] animate-in fade-in slide-in-from-top-2 duration-200">
-                <h4 className="text-xs font-semibold text-[#757575] uppercase tracking-wider mb-2">Select Booking Time</h4>
-                <div className="grid grid-cols-3 gap-2">
-                  {["Morning", "Afternoon", "Evening", "Any Time", "9:00 AM", "12:00 PM", "3:00 PM", "6:00 PM"].map((t) => (
-                    <button
-                      key={t}
-                      type="button"
-                      onClick={() => {
-                        setSelectedTime(t);
-                        setShowTimePicker(false);
-                      }}
-                      className={`text-xs py-2 rounded-lg font-medium border text-center transition-all cursor-pointer ${selectedTime === t
-                        ? "bg-[#1C1B1C] text-white border-transparent"
-                        : "border-neutral-200 text-[#1C1B1C] hover:bg-neutral-50"
+              <div className="absolute top-[110%] right-[-100px] md:right-[-250px] w-[95vw] max-w-[812px] md:w-[812px] md:h-[704px] p-5 bg-white rounded-[12px] shadow-2xl z-50 border border-neutral-200/80 animate-in fade-in slide-in-from-top-2 duration-200 flex flex-col gap-10 overflow-y-auto font-roboto">
+                
+                {/* Calendar Selection Section */}
+                <div className="flex flex-col items-start gap-4 w-full">
+                  {/* Month Selection Row */}
+                  <div className="flex flex-row justify-between items-center w-full py-1">
+                    <div className="flex items-center gap-1 cursor-pointer">
+                      <span className="font-roboto font-medium text-sm text-[#111111]">{months[currentMonth]} {currentYear}</span>
+                      <svg className="w-4 h-4 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                    {/* Month Nav Buttons */}
+                    <div className="flex items-center gap-0">
+                      <button 
+                        type="button" 
+                        onClick={handlePrevMonth}
+                        className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
+                      >
+                        <svg className="w-6 h-6 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <button 
+                        type="button" 
+                        onClick={handleNextMonth}
+                        className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
+                      >
+                        <svg className="w-6 h-6 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Header: Week day, Day */}
+                  <div className="w-full pt-0 pr-3 pb-3 pl-6 border-b border-[#CAC4D0]">
+                    <h3 className="font-roboto font-normal text-[32px] leading-10 text-[#111111] text-left">
+                      {getFormattedHeaderDate(selectedDate)}
+                    </h3>
+                  </div>
+
+                  {/* Weekdays Row */}
+                  <div className="grid grid-cols-7 w-full text-center px-3">
+                    {["S", "M", "T", "W", "T", "F", "S"].map((d, index) => (
+                      <span key={index} className="font-roboto font-normal text-base leading-6 text-[#111111] py-2">{d}</span>
+                    ))}
+                  </div>
+
+                  {/* Calendar Grid */}
+                  {(() => {
+                    const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+                    const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
+                    const cells = [];
+                    // Empty cells
+                    for (let i = 0; i < firstDay; i++) {
+                      cells.push(<div key={`empty-${i}`} className="w-10 h-10" />);
+                    }
+                    // Day cells
+                    for (let day = 1; day <= daysInMonth; day++) {
+                      const dateObj = new Date(currentYear, currentMonth, day);
+                      const isSelected = selectedDate && 
+                        selectedDate.getDate() === day && 
+                        selectedDate.getMonth() === currentMonth && 
+                        selectedDate.getFullYear() === currentYear;
+                      
+                      cells.push(
+                        <div key={`day-${day}`} className="h-10 flex items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedDate(dateObj);
+                              updateSelectedTimeDisplay(dateObj, selectedTimeOption);
+                            }}
+                            className={`w-10 h-10 flex items-center justify-center rounded-full font-roboto text-base transition-colors ${
+                              isSelected 
+                                ? "bg-[#666666] text-white font-medium" 
+                                : "text-[#111111] hover:bg-neutral-100"
+                            }`}
+                          >
+                            {day}
+                          </button>
+                        </div>
+                      );
+                    }
+                    return <div className="grid grid-cols-7 w-full text-center gap-y-1 px-3">{cells}</div>;
+                  })()}
+                </div>
+
+                {/* Time Selection Section */}
+                <div className="flex flex-col items-start gap-4 w-full mt-auto pt-4 border-t border-neutral-100">
+                  <div className="flex flex-row items-center justify-between w-full">
+                    <span className="font-roboto font-bold text-sm text-[#111111] shrink-0">Select time</span>
+                    <div className="flex flex-row items-center justify-between flex-1 ml-10">
+                      {[
+                        { id: "Any time", label: "Any time", sub: "" },
+                        { id: "Morning", label: "Morning", sub: "9am - 12pm" },
+                        { id: "Afternoon", label: "Afternoon", sub: "12pm - 5pm" },
+                        { id: "Evening", label: "Evening", sub: "5pm - 12am" }
+                      ].map((opt) => {
+                        const isActive = selectedTimeOption === opt.id;
+                        return (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedTimeOption(opt.id as any);
+                              updateSelectedTimeDisplay(selectedDate, opt.id as any);
+                            }}
+                            className={`flex flex-col items-center justify-center transition-all ${
+                              isActive 
+                                ? "border border-[#3A506B] rounded-xl px-5 py-2.5 bg-white text-[#111111] font-bold shadow-sm" 
+                                : "border border-transparent text-[#4A607A] hover:bg-neutral-50 p-2"
+                            }`}
+                          >
+                            <span className="text-sm font-semibold">{opt.label}</span>
+                            {opt.sub && <span className={`text-xs ${isActive ? 'text-[#111111] font-semibold' : 'text-[#7A8B9E]'}`}>{opt.sub}</span>}
+                          </button>
+                        );
+                      })}
+                      {/* Custom option */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedTimeOption("Custom");
+                          updateSelectedTimeDisplay(selectedDate, "Custom");
+                        }}
+                        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                          selectedTimeOption === "Custom"
+                            ? "bg-[#666666] text-white"
+                            : "bg-[#E8EAEF] text-[#111111] hover:bg-neutral-200"
                         }`}
-                    >
-                      {t}
-                    </button>
-                  ))}
+                      >
+                        Custom
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Custom Time Option Section */}
+                  {selectedTimeOption === "Custom" && (
+                    <div className="w-full mt-4 flex flex-col gap-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                      <h4 className="font-roboto font-bold text-sm text-[#111111]">Custom Time</h4>
+                      <div className="flex flex-row gap-6 w-full">
+                        {/* Start Time */}
+                        <div className="flex-1 flex flex-col gap-2">
+                          <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Start Time</span>
+                          <div className="flex items-center gap-3 px-4 py-2.5 border border-neutral-300 rounded-xl bg-white">
+                            <HugeiconsIcon icon={Clock01Icon} className="text-neutral-500 w-5 h-5" />
+                            <input
+                              type="text"
+                              value={customStartTime}
+                              onChange={(e) => {
+                                setCustomStartTime(e.target.value);
+                                updateSelectedTimeDisplay(selectedDate, "Custom", e.target.value, customStartAmPm, customEndTime, customEndAmPm);
+                              }}
+                              className="w-16 text-sm text-[#1C1B1C] bg-transparent outline-none font-medium text-left"
+                            />
+                            <div className="flex bg-[#E8EAEF] rounded-full p-1 ml-auto">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCustomStartAmPm("AM");
+                                  updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, "AM", customEndTime, customEndAmPm);
+                                }}
+                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${
+                                  customStartAmPm === "AM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
+                                }`}
+                              >
+                                AM
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCustomStartAmPm("PM");
+                                  updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, "PM", customEndTime, customEndAmPm);
+                                }}
+                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${
+                                  customStartAmPm === "PM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
+                                }`}
+                              >
+                                PM
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* End Time */}
+                        <div className="flex-1 flex flex-col gap-2">
+                          <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">End Time</span>
+                          <div className="flex items-center gap-3 px-4 py-2.5 border border-neutral-300 rounded-xl bg-white">
+                            <HugeiconsIcon icon={Clock01Icon} className="text-neutral-500 w-5 h-5" />
+                            <input
+                              type="text"
+                              value={customEndTime}
+                              onChange={(e) => {
+                                setCustomEndTime(e.target.value);
+                                updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, customStartAmPm, e.target.value, customEndAmPm);
+                              }}
+                              className="w-16 text-sm text-[#1C1B1C] bg-transparent outline-none font-medium text-left"
+                            />
+                            <div className="flex bg-[#E8EAEF] rounded-full p-1 ml-auto">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCustomEndAmPm("AM");
+                                  updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, customStartAmPm, customEndTime, "AM");
+                                }}
+                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${
+                                  customEndAmPm === "AM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
+                                }`}
+                              >
+                                AM
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCustomEndAmPm("PM");
+                                  updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, customStartAmPm, customEndTime, "PM");
+                                }}
+                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${
+                                  customEndAmPm === "PM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
+                                }`}
+                              >
+                                PM
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -616,274 +971,592 @@ export default function LandingPage() {
 
           {/* Search Results Dropdown Overlay */}
           {showSearchDropdown && (
-            <div className="absolute top-[110%] left-0 w-full md:w-[761px] max-h-[80vh] md:max-h-[900px] overflow-y-auto bg-white rounded-xl shadow-2xl p-6 md:p-10 flex flex-col items-start gap-10 z-50 text-left border border-neutral-200/80 animate-in fade-in slide-in-from-top-4 duration-300 scrollbar-hide">
-              
-              {/* Frame 2147239451: Filter Pills */}
-              <div className="flex flex-row items-center p-0 gap-2 overflow-x-auto w-full scrollbar-hide shrink-0 pb-1 border-b border-neutral-100">
-                {[
-                  { id: "All", label: "All" },
-                  { id: "Nearby", label: "Nearby" },
-                  { id: "Trending", label: "Trending" },
-                  { id: "Recents", label: "Recents" },
-                  { id: "Services", label: "Services" },
-                  { id: "We come to you", label: "We come to you" }
-                ].map((pill) => {
-                  const isActive = dropdownFilter === pill.id;
-                  return (
-                    <button
-                      key={pill.id}
-                      type="button"
-                      onClick={() => setDropdownFilter(pill.id)}
-                      className={`flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 rounded-full font-poppins font-medium text-xs tracking-[0.7px] transition-all duration-200 cursor-pointer whitespace-nowrap ${
-                        isActive
-                          ? "bg-[#111111] text-white border-transparent"
-                          : "border border-[#111111] text-[#111111] hover:bg-neutral-50"
-                      }`}
-                    >
-                      {pill.label}
-                    </button>
-                  );
-                })}
+            <>
+              {/* Desktop Dropdown */}
+              <div 
+                style={dropdownWidth ? { width: `${dropdownWidth}px` } : undefined}
+                className="hidden md:flex absolute top-[105%] left-0 w-full md:w-[761px] max-h-[40vh] md:max-h-[500px] overflow-y-auto bg-white rounded-xl shadow-2xl p-6 md:p-10 flex-col items-start gap-10 z-50 text-left border border-neutral-200/80 animate-in fade-in slide-in-from-top-4 duration-300 search-dropdown-scrollbar"
+              >
+                
+                {/* Frame 2147239451: Filter Pills */}
+                <div className="flex flex-row flex-wrap items-center gap-2 w-full pb-2 border-b border-neutral-100">
+                  {[
+                    { id: "All", label: "All" },
+                    { id: "Nearby", label: "Nearby" },
+                    { id: "Trending", label: "Trending" },
+                    { id: "Recents", label: "Recents" },
+                    { id: "Services", label: "Services" },
+                    { id: "We come to you", label: "We come to you" }
+                  ].map((pill) => {
+                    const isActive = dropdownFilter === pill.id;
+                    return (
+                      <button
+                        key={pill.id}
+                        type="button"
+                        onClick={() => setDropdownFilter(pill.id)}
+                        className={`flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 rounded-full font-poppins font-medium text-xs tracking-[0.7px] transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
+                          isActive
+                            ? "bg-[#111111] text-white border-transparent"
+                            : "border border-[#111111] text-[#111111] hover:bg-neutral-50"
+                        }`}
+                      >
+                        {pill.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Section: Trending searches */}
+                {(dropdownFilter === "All" || dropdownFilter === "Trending") && (
+                  <div className="flex flex-col items-start p-0 gap-5 w-full">
+                    <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
+                      Trending searches
+                    </h3>
+                    <div className="flex flex-row flex-wrap items-start content-start p-0 gap-2 w-full">
+                      {[
+                        "Hair Salon",
+                        "Physiotherapy",
+                        "Massage",
+                        "Car dealing",
+                        "Photography",
+                        "Tennis Lesson"
+                      ].map((item) => (
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery(item);
+                            setShowSearchDropdown(false);
+                            setActiveSegment(null);
+                          }}
+                          className="flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 border border-[#111111] rounded-full text-[#111111] font-poppins font-medium text-xs tracking-[0.7px] whitespace-nowrap hover:bg-neutral-50 transition-colors cursor-pointer"
+                        >
+                          {item}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Section: Search Suggestions */}
+                {(dropdownFilter === "All" || dropdownFilter === "We come to you" || dropdownFilter === "Nearby") && (
+                  <div className="flex flex-col items-start p-0 gap-5 w-full">
+                    <div className="flex flex-col items-start p-0 gap-4 w-full">
+                      
+                      {/* Row 1: Search Icon + Hair & styling + Founding Partner */}
+                      {dropdownFilter !== "We come to you" && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery("Hair & styling");
+                            setShowSearchDropdown(false);
+                            setActiveSegment(null);
+                          }}
+                          className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                            <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                          </div>
+                          <div className="flex flex-col justify-center items-start p-0">
+                            <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                              Hair & styling
+                            </span>
+                            <span className="font-poppins font-normal text-[10px] leading-[10px] tracking-[0.01em] text-[#757575]">
+                              Founding Partner
+                            </span>
+                          </div>
+                        </button>
+                      )}
+
+                      {/* Row 2: Search Icon + Hair & styling */}
+                      {dropdownFilter !== "We come to you" && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery("Hair & styling");
+                            setShowSearchDropdown(false);
+                            setActiveSegment(null);
+                          }}
+                          className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                            <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                          </div>
+                          <div className="flex flex-col justify-center items-start p-0">
+                            <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                              Hair & styling
+                            </span>
+                          </div>
+                        </button>
+                      )}
+
+                      {/* Row 3: Van Icon + Hair & styling */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery("Hair & styling");
+                          setShowSearchDropdown(false);
+                          setActiveSegment(null);
+                        }}
+                        className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10H8V6c0-1.1-.9-2-2-2H2v13h2" />
+                            <circle cx="7" cy="18" r="2" />
+                            <circle cx="17" cy="18" r="2" />
+                            <path d="M13 6h3l4 4v3h-7V6z" />
+                          </svg>
+                        </div>
+                        <div className="flex flex-col justify-center items-start p-0">
+                          <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                            Hair & styling
+                          </span>
+                        </div>
+                      </button>
+
+                      {/* Row 4: Search Icon + Hair & styling */}
+                      {dropdownFilter !== "We come to you" && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery("Hair & styling");
+                            setShowSearchDropdown(false);
+                            setActiveSegment(null);
+                          }}
+                          className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                            <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                          </div>
+                          <div className="flex flex-col justify-center items-start p-0">
+                            <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                              Hair & styling
+                            </span>
+                          </div>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Section: Recents */}
+                {(dropdownFilter === "All" || dropdownFilter === "Recents" || dropdownFilter === "Nearby") && (
+                  <div className="flex flex-col items-start p-0 gap-5 w-full">
+                    <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
+                      Recents
+                    </h3>
+                    <div className="flex flex-col items-start p-0 gap-4 w-full">
+                      {/* Recent Item 1 */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery("Hair & styling");
+                          setLocationQuery("Larnaca");
+                          setSelectedTime("Any Time");
+                          setShowSearchDropdown(false);
+                          setActiveSegment(null);
+                        }}
+                        className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                          <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                        </div>
+                        <div className="flex flex-col items-start gap-1">
+                          <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                            Hair & styling
+                          </span>
+                          <div className="flex items-center gap-1 text-[#757575] text-xs">
+                            <span>Larnaca</span>
+                            <span className="w-1 h-1 rounded-full bg-[#757575]"></span>
+                            <span>Any time</span>
+                          </div>
+                        </div>
+                      </button>
+
+                      {/* Divider */}
+                      <div className="w-full h-0 border-t border-[#837C7C]/40"></div>
+
+                      {/* Recent Item 2 */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery("Hair & styling");
+                          setLocationQuery("Larnaca");
+                          setSelectedTime("Any Time");
+                          setShowSearchDropdown(false);
+                          setActiveSegment(null);
+                        }}
+                        className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                          <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                        </div>
+                        <div className="flex flex-col items-start gap-1">
+                          <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                            Hair & styling
+                          </span>
+                          <div className="flex items-center gap-1 text-[#757575] text-xs">
+                            <span>Larnaca</span>
+                            <span className="w-1 h-1 rounded-full bg-[#757575]"></span>
+                            <span>Any time</span>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Section: Services */}
+                {(dropdownFilter === "All" || dropdownFilter === "Services") && (
+                  <div className="flex flex-col items-start p-0 gap-5 w-full">
+                    <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
+                      Services
+                    </h3>
+                    <div className="flex flex-col items-start p-0 gap-3 w-full">
+                      <span className="font-poppins font-semibold text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                        Category
+                      </span>
+                      {["Sub Category 1", "Sub Category 1", "Sub Category 1", "Sub Category 1", "Sub Category 1Subxzzzzzzzza Category 1"].map((subCat, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery(subCat);
+                            setShowSearchDropdown(false);
+                            setActiveSegment(null);
+                          }}
+                          className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111] hover:text-neutral-600 pl-4 text-left cursor-pointer"
+                        >
+                          {subCat}
+                        </button>
+                      ))}
+
+                      <span className="font-poppins font-semibold text-sm leading-[22px] tracking-[0.01em] text-[#111111] mt-3">
+                        Category
+                      </span>
+                      {["Sub Category 1x", "Sub Category 1"].map((subCat, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery(subCat);
+                            setShowSearchDropdown(false);
+                            setActiveSegment(null);
+                          }}
+                          className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111] hover:text-neutral-600 pl-4 text-left cursor-pointer"
+                        >
+                          {subCat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Section: Trending searches */}
-              {(dropdownFilter === "All" || dropdownFilter === "Trending") && (
-                <div className="flex flex-col items-start p-0 gap-5 w-full">
-                  <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
-                    Trending searches
-                  </h3>
-                  <div className="flex flex-row flex-wrap items-start content-start p-0 gap-2 w-full">
+              {/* Mobile Fullscreen Search Modal Overlay */}
+              <div className="md:hidden fixed inset-0 bg-white z-[100] flex flex-col p-5 animate-in fade-in slide-in-from-bottom duration-300">
+                {/* Modal Header */}
+                <div className="flex items-center gap-4 mb-5 shrink-0">
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setShowSearchDropdown(false);
+                      setActiveSegment(null);
+                    }}
+                    className="p-2 hover:bg-neutral-100 rounded-full transition-colors cursor-pointer"
+                  >
+                    <svg className="w-6 h-6 text-neutral-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                  </button>
+                  <h2 className="text-2xl font-bold text-neutral-900 font-poppins">Search</h2>
+                </div>
+
+                {/* Mobile Search input wrapper */}
+                <div className="flex items-center gap-3 px-4 py-1 border border-neutral-300 rounded-xl mb-5 shrink-0 bg-white">
+                  <HugeiconsIcon icon={Search01Icon} className="text-neutral-500 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="All treatments"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full h-10 text-sm text-[#1C1B1C] placeholder-[#757575] bg-transparent outline-none font-medium"
+                    autoFocus
+                  />
+                </div>
+
+                {/* Mobile Scrollable Suggestion List */}
+                <div className="flex-1 overflow-y-auto space-y-8 pb-10 search-dropdown-scrollbar text-left">
+                  {/* Pills row */}
+                  <div className="flex flex-row flex-wrap items-center gap-2 w-full pb-2 border-b border-neutral-100">
                     {[
-                      "Hair Salon",
-                      "Physiotherapy",
-                      "Massage",
-                      "Car dealing",
-                      "Photography",
-                      "Tennis Lesson"
-                    ].map((item) => (
-                      <button
-                        key={item}
-                        type="button"
-                        onClick={() => {
-                          setSearchQuery(item);
-                          setShowSearchDropdown(false);
-                        }}
-                        className="flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 border border-[#111111] rounded-full text-[#111111] font-poppins font-medium text-xs tracking-[0.7px] whitespace-nowrap hover:bg-neutral-50 transition-colors cursor-pointer"
-                      >
-                        {item}
-                      </button>
-                    ))}
+                      { id: "All", label: "All" },
+                      { id: "Nearby", label: "Nearby" },
+                      { id: "Trending", label: "Trending" },
+                      { id: "Recents", label: "Recents" },
+                      { id: "Services", label: "Services" },
+                      { id: "We come to you", label: "We come to you" }
+                    ].map((pill) => {
+                      const isActive = dropdownFilter === pill.id;
+                      return (
+                        <button
+                          key={pill.id}
+                          type="button"
+                          onClick={() => setDropdownFilter(pill.id)}
+                          className={`flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 rounded-full font-poppins font-medium text-xs tracking-[0.7px] transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
+                            isActive
+                              ? "bg-[#111111] text-white border-transparent"
+                              : "border border-[#111111] text-[#111111] hover:bg-neutral-50"
+                          }`}
+                        >
+                          {pill.label}
+                        </button>
+                      );
+                    })}
                   </div>
-                </div>
-              )}
 
-              {/* Section: Search Suggestions */}
-              {(dropdownFilter === "All" || dropdownFilter === "We come to you" || dropdownFilter === "Nearby") && (
-                <div className="flex flex-col items-start p-0 gap-5 w-full">
-                  <div className="flex flex-col items-start p-0 gap-4 w-full">
-                    
-                    {/* Row 1: Search Icon + Hair & styling + Founding Partner */}
-                    {dropdownFilter !== "We come to you" && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSearchQuery("Hair & styling");
-                          setShowSearchDropdown(false);
-                        }}
-                        className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
-                      >
-                        <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                          <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
-                        </div>
-                        <div className="flex flex-col justify-center items-start p-0">
-                          <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
-                            Hair & styling
-                          </span>
-                          <span className="font-poppins font-normal text-[10px] leading-[10px] tracking-[0.01em] text-[#757575]">
-                            Founding Partner
-                          </span>
-                        </div>
-                      </button>
-                    )}
-
-                    {/* Row 2: Search Icon + Hair & styling */}
-                    {dropdownFilter !== "We come to you" && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSearchQuery("Hair & styling");
-                          setShowSearchDropdown(false);
-                        }}
-                        className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
-                      >
-                        <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                          <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
-                        </div>
-                        <div className="flex flex-col justify-center items-start p-0">
-                          <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
-                            Hair & styling
-                          </span>
-                        </div>
-                      </button>
-                    )}
-
-                    {/* Row 3: Van Icon + Hair & styling */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery("Hair & styling");
-                        setShowSearchDropdown(false);
-                      }}
-                      className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10H8V6c0-1.1-.9-2-2-2H2v13h2" />
-                          <circle cx="7" cy="18" r="2" />
-                          <circle cx="17" cy="18" r="2" />
-                          <path d="M13 6h3l4 4v3h-7V6z" />
-                        </svg>
+                  {/* Section: Trending searches */}
+                  {(dropdownFilter === "All" || dropdownFilter === "Trending") && (
+                    <div className="flex flex-col items-start p-0 gap-5 w-full">
+                      <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
+                        Trending searches
+                      </h3>
+                      <div className="flex flex-row flex-wrap items-start content-start p-0 gap-2 w-full">
+                        {[
+                          "Hair Salon",
+                          "Physiotherapy",
+                          "Massage",
+                          "Car dealing",
+                          "Photography",
+                          "Tennis Lesson"
+                        ].map((item) => (
+                          <button
+                            key={item}
+                            type="button"
+                            onClick={() => {
+                              setSearchQuery(item);
+                              setShowSearchDropdown(false);
+                              setActiveSegment(null);
+                            }}
+                            className="flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 border border-[#111111] rounded-full text-[#111111] font-poppins font-medium text-xs tracking-[0.7px] whitespace-nowrap hover:bg-neutral-50 transition-colors cursor-pointer"
+                          >
+                            {item}
+                          </button>
+                        ))}
                       </div>
-                      <div className="flex flex-col justify-center items-start p-0">
-                        <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
-                          Hair & styling
+                    </div>
+                  )}
+
+                  {/* Section: Suggestions */}
+                  {(dropdownFilter === "All" || dropdownFilter === "We come to you" || dropdownFilter === "Nearby") && (
+                    <div className="flex flex-col items-start p-0 gap-5 w-full">
+                      <div className="flex flex-col items-start p-0 gap-4 w-full">
+                        {dropdownFilter !== "We come to you" && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSearchQuery("Hair & styling");
+                              setShowSearchDropdown(false);
+                              setActiveSegment(null);
+                            }}
+                            className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                          >
+                            <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                              <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                            </div>
+                            <div className="flex flex-col justify-center items-start p-0">
+                              <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                                Hair & styling
+                              </span>
+                              <span className="font-poppins font-normal text-[10px] leading-[10px] tracking-[0.01em] text-[#757575]">
+                                Founding Partner
+                              </span>
+                            </div>
+                          </button>
+                        )}
+
+                        {dropdownFilter !== "We come to you" && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSearchQuery("Hair & styling");
+                              setShowSearchDropdown(false);
+                              setActiveSegment(null);
+                            }}
+                            className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                          >
+                            <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                              <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                            </div>
+                            <div className="flex flex-col justify-center items-start p-0">
+                              <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                                Hair & styling
+                              </span>
+                            </div>
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery("Hair & styling");
+                            setShowSearchDropdown(false);
+                            setActiveSegment(null);
+                          }}
+                          className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10H8V6c0-1.1-.9-2-2-2H2v13h2" />
+                              <circle cx="7" cy="18" r="2" />
+                              <circle cx="17" cy="18" r="2" />
+                              <path d="M13 6h3l4 4v3h-7V6z" />
+                            </svg>
+                          </div>
+                          <div className="flex flex-col justify-center items-start p-0">
+                            <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                              Hair & styling
+                            </span>
+                          </div>
+                        </button>
+
+                        {dropdownFilter !== "We come to you" && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSearchQuery("Hair & styling");
+                              setShowSearchDropdown(false);
+                              setActiveSegment(null);
+                            }}
+                            className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                          >
+                            <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                              <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                            </div>
+                            <div className="flex flex-col justify-center items-start p-0">
+                              <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                                Hair & styling
+                              </span>
+                            </div>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Section: Recents */}
+                  {(dropdownFilter === "All" || dropdownFilter === "Recents" || dropdownFilter === "Nearby") && (
+                    <div className="flex flex-col items-start p-0 gap-5 w-full">
+                      <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
+                        Recents
+                      </h3>
+                      <div className="flex flex-col items-start p-0 gap-4 w-full">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery("Hair & styling");
+                            setLocationQuery("Larnaca");
+                            setSelectedTime("Any Time");
+                            setShowSearchDropdown(false);
+                            setActiveSegment(null);
+                          }}
+                          className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                            <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                          </div>
+                          <div className="flex flex-col items-start gap-1">
+                            <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                              Hair & styling
+                            </span>
+                            <div className="flex items-center gap-1 text-[#757575] text-xs">
+                              <span>Larnaca</span>
+                              <span className="w-1 h-1 rounded-full bg-[#757575]"></span>
+                              <span>Any time</span>
+                            </div>
+                          </div>
+                        </button>
+
+                        <div className="w-full h-0 border-t border-[#837C7C]/40"></div>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery("Hair & styling");
+                            setLocationQuery("Larnaca");
+                            setSelectedTime("Any Time");
+                            setShowSearchDropdown(false);
+                            setActiveSegment(null);
+                          }}
+                          className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                            <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
+                          </div>
+                          <div className="flex flex-col items-start gap-1">
+                            <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                              Hair & styling
+                            </span>
+                            <div className="flex items-center gap-1 text-[#757575] text-xs">
+                              <span>Larnaca</span>
+                              <span className="w-1 h-1 rounded-full bg-[#757575]"></span>
+                              <span>Any time</span>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Section: Services */}
+                  {(dropdownFilter === "All" || dropdownFilter === "Services") && (
+                    <div className="flex flex-col items-start p-0 gap-5 w-full">
+                      <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
+                        Services
+                      </h3>
+                      <div className="flex flex-col items-start p-0 gap-3 w-full">
+                        <span className="font-poppins font-semibold text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
+                          Category
                         </span>
-                      </div>
-                    </button>
+                        {["Sub Category 1", "Sub Category 1", "Sub Category 1", "Sub Category 1", "Sub Category 1Subxzzzzzzzza Category 1"].map((subCat, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            onClick={() => {
+                              setSearchQuery(subCat);
+                              setShowSearchDropdown(false);
+                              setActiveSegment(null);
+                            }}
+                            className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111] hover:text-neutral-600 pl-4 text-left cursor-pointer"
+                          >
+                            {subCat}
+                          </button>
+                        ))}
 
-                    {/* Row 4: Search Icon + Hair & styling */}
-                    {dropdownFilter !== "We come to you" && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSearchQuery("Hair & styling");
-                          setShowSearchDropdown(false);
-                        }}
-                        className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
-                      >
-                        <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                          <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
-                        </div>
-                        <div className="flex flex-col justify-center items-start p-0">
-                          <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
-                            Hair & styling
-                          </span>
-                        </div>
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Section: Recents */}
-              {(dropdownFilter === "All" || dropdownFilter === "Recents" || dropdownFilter === "Nearby") && (
-                <div className="flex flex-col items-start p-0 gap-5 w-full">
-                  <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
-                    Recents
-                  </h3>
-                  <div className="flex flex-col items-start p-0 gap-4 w-full">
-                    {/* Recent Item 1 */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery("Hair & styling");
-                        setLocationQuery("Larnaca");
-                        setSelectedTime("Any Time");
-                        setShowSearchDropdown(false);
-                      }}
-                      className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                        <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
-                      </div>
-                      <div className="flex flex-col items-start gap-1">
-                        <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
-                          Hair & styling
+                        <span className="font-poppins font-semibold text-sm leading-[22px] tracking-[0.01em] text-[#111111] mt-3">
+                          Category
                         </span>
-                        <div className="flex items-center gap-1 text-[#757575] text-xs">
-                          <span>Larnaca</span>
-                          <span className="w-1 h-1 rounded-full bg-[#757575]"></span>
-                          <span>Any time</span>
-                        </div>
+                        {["Sub Category 1x", "Sub Category 1"].map((subCat, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            onClick={() => {
+                              setSearchQuery(subCat);
+                              setShowSearchDropdown(false);
+                              setActiveSegment(null);
+                            }}
+                            className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111] hover:text-neutral-600 pl-4 text-left cursor-pointer"
+                          >
+                            {subCat}
+                          </button>
+                        ))}
                       </div>
-                    </button>
-
-                    {/* Divider */}
-                    <div className="w-full h-0 border-t border-[#837C7C]/40"></div>
-
-                    {/* Recent Item 2 */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery("Hair & styling");
-                        setLocationQuery("Larnaca");
-                        setSelectedTime("Any Time");
-                        setShowSearchDropdown(false);
-                      }}
-                      className="flex flex-row items-center p-0 gap-6 w-full text-left hover:bg-neutral-50/50 p-2 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                        <HugeiconsIcon icon={Search01Icon} className="text-[#111111] w-5 h-5" />
-                      </div>
-                      <div className="flex flex-col items-start gap-1">
-                        <span className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
-                          Hair & styling
-                        </span>
-                        <div className="flex items-center gap-1 text-[#757575] text-xs">
-                          <span>Larnaca</span>
-                          <span className="w-1 h-1 rounded-full bg-[#757575]"></span>
-                          <span>Any time</span>
-                        </div>
-                      </div>
-                    </button>
-                  </div>
+                    </div>
+                  )}
                 </div>
-              )}
-
-              {/* Section: Services */}
-              {(dropdownFilter === "All" || dropdownFilter === "Services") && (
-                <div className="flex flex-col items-start p-0 gap-5 w-full">
-                  <h3 className="font-poppins font-medium text-lg leading-[22px] tracking-[0.01em] text-[#111111]">
-                    Services
-                  </h3>
-                  <div className="flex flex-col items-start p-0 gap-3 w-full">
-                    <span className="font-poppins font-semibold text-sm leading-[22px] tracking-[0.01em] text-[#111111]">
-                      Category
-                    </span>
-                    {["Sub Category 1", "Sub Category 1", "Sub Category 1", "Sub Category 1", "Sub Category 1Subxzzzzzzzza Category 1"].map((subCat, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => {
-                          setSearchQuery(subCat);
-                          setShowSearchDropdown(false);
-                        }}
-                        className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111] hover:text-neutral-600 pl-4 text-left cursor-pointer"
-                      >
-                        {subCat}
-                      </button>
-                    ))}
-
-                    <span className="font-poppins font-semibold text-sm leading-[22px] tracking-[0.01em] text-[#111111] mt-3">
-                      Category
-                    </span>
-                    {["Sub Category 1x", "Sub Category 1"].map((subCat, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => {
-                          setSearchQuery(subCat);
-                          setShowSearchDropdown(false);
-                        }}
-                        className="font-poppins font-normal text-sm leading-[22px] tracking-[0.01em] text-[#111111] hover:text-neutral-600 pl-4 text-left cursor-pointer"
-                      >
-                        {subCat}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+              </div>
+            </>
           )}
         </div>
       </section>

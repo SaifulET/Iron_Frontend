@@ -126,3 +126,18 @@ body {
     animation: none;
   }
 }
+
+/* Elegant scrollbar style for the search dropdown container */
+.search-dropdown-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.search-dropdown-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.search-dropdown-scrollbar::-webkit-scrollbar-thumb {
+  background: #E8E6FF;
+  border-radius: 999px;
+}
+.search-dropdown-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ACAAB4;
+}
