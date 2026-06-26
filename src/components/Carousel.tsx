@@ -7,7 +7,7 @@ interface CarouselProps {
   gapClass?: string;
 }
 
-export default function Carousel({ children, gapClass = "gap-6" }: CarouselProps) {
+export default function Carousel({ children, gapClass = "gap-[15px] sm:gap-6" }: CarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = useState(false);
   const [startX, setStartX] = useState(0);

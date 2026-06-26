@@ -29,7 +29,7 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[152px] mb-0">
+    <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[120px] mb-0">
       <div className="w-full flex flex-col items-center gap-10 md:gap-[40px]">
         {/* Header Container */}
         <div className="flex flex-col items-center gap-5 text-center max-w-[553px]">
