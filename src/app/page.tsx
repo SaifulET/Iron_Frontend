@@ -25,6 +25,20 @@ export default function LandingPage() {
   const [selectedLanguage, setSelectedLanguage] = useState("ENG");
   const [showLangDropdown, setShowLangDropdown] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("isLoggedIn");
+      if (saved === "true") {
+        setIsLoggedIn(true);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("isLoggedIn", isLoggedIn ? "true" : "false");
+  }, [isLoggedIn]);
+
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const userDropdownRef = useRef<HTMLDivElement>(null);
   const [selectedCategory, setSelectedCategory] = useState("all");

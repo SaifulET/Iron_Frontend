@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Car04Icon,
@@ -35,11 +36,48 @@ export default function Navbar({
   const [showLangDropdown, setShowLangDropdown] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [avatar, setAvatar] = useState("/img/authImg.png");
   const userDropdownRef = useRef<HTMLDivElement>(null);
+  const mobileModalRef = useRef<HTMLDivElement>(null);
+
+  // Sync avatar with localStorage and custom profileUpdate events
+  useEffect(() => {
+    const loadAvatar = () => {
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("profileData");
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (parsed.avatar) {
+              setAvatar(parsed.avatar);
+            }
+          } catch (e) {
+            console.error("Error parsing profileData in Navbar", e);
+          }
+        }
+      }
+    };
+
+    loadAvatar();
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("storage", loadAvatar);
+      window.addEventListener("profileUpdate", loadAvatar);
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("storage", loadAvatar);
+        window.removeEventListener("profileUpdate", loadAvatar);
+      }
+    };
+  }, [isLoggedIn]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent | TouchEvent) {
-      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+      const clickedDesktop = userDropdownRef.current && userDropdownRef.current.contains(event.target as Node);
+      const clickedMobile = mobileModalRef.current && mobileModalRef.current.contains(event.target as Node);
+      
+      if (!clickedDesktop && !clickedMobile) {
         setShowUserDropdown(false);
       }
     }
@@ -52,7 +90,7 @@ export default function Navbar({
   }, []);
 
   return (
-    <header className="w-full px-4 md:px-8 xl:px-[68px] py-4 md:py-[40px] relative z-40">
+    <header className={`w-full px-4 md:px-8 xl:px-[68px] py-4 md:py-[40px] relative ${showMobileMenu || showUserDropdown ? "z-[250]" : "z-40"}`}>
       <div className="w-full bg-gradient-to-r from-white/90 via-[rgba(230,243,249,0.65)] to-white/90 backdrop-blur-md rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-white/60 px-4 sm:px-6 py-3 md:py-[16px] flex items-center justify-between gap-4">
 
         {/* Left Side: Logo */}
@@ -143,7 +181,7 @@ export default function Navbar({
                   className="flex items-center gap-2 p-1 rounded-full hover:bg-neutral-100 transition-colors cursor-pointer"
                 >
                   <img
-                    src="/img/authImg.png"
+                    src={avatar}
                     alt="User Avatar"
                     className="w-9 h-9 rounded-full object-cover border border-[#ACAAB4]/40"
                   />
@@ -155,7 +193,7 @@ export default function Navbar({
                 {/* Dropdown Menu (Desktop absolute) */}
                 {showUserDropdown && (
                   <div className="absolute right-0 mt-3 w-[247px] bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] border border-[#ACAAB4]/30 p-5 flex flex-col gap-4 z-50 font-['Poppins']">
-                    
+
                     {/* 1. Language selector */}
                     <div className="relative">
                       <button
@@ -172,8 +210,8 @@ export default function Navbar({
                             <button
                               key={lang}
                               onClick={() => {
-                                  setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
-                                  setShowLangDropdown(false);
+                                setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
+                                setShowLangDropdown(false);
                               }}
                               className="w-full text-left px-3 py-1.5 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
                             >
@@ -187,10 +225,20 @@ export default function Navbar({
                     <div className="border-t border-[#ACAAB4] w-full"></div>
 
                     {/* 2. Profile */}
-                    <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+                    <Link
+                      href="/customer/profile"
+                      className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        router.push("/customer/profile");
+                        setTimeout(() => {
+                          setShowUserDropdown(false);
+                        }, 100);
+                      }}
+                    >
                       <HugeiconsIcon icon={User02Icon} className="w-5 h-5 text-[#141B34]" />
                       <span className="font-medium text-base text-[#1C1B1C]">Profile</span>
-                    </button>
+                    </Link>
 
                     <div className="border-t border-[#ACAAB4] w-full"></div>
 
@@ -256,7 +304,7 @@ export default function Navbar({
                         setShowUserDropdown(false);
                         router.push("/professional");
                       }}
-                      className="flex items-center justify-between cursor-pointer w-full hover:opacity-85"
+                      className="flex items-between justify-between cursor-pointer w-full hover:opacity-85"
                     >
                       <div className="flex items-center gap-3">
                         <HugeiconsIcon icon={ProfileIcon} className="w-[18px] h-[18px] text-[#141B34]" />
@@ -295,7 +343,7 @@ export default function Navbar({
               className="flex items-center gap-1.5 p-1 rounded-full hover:bg-neutral-100 transition-colors cursor-pointer mr-1 relative z-40"
             >
               <img
-                src="/img/authImg.png"
+                src={avatar}
                 alt="User Avatar"
                 className="w-8 h-8 rounded-full object-cover border border-[#ACAAB4]/40"
               />
@@ -396,17 +444,27 @@ export default function Navbar({
               </>
             ) : (
               <>
-                <div className="flex items-center gap-3 py-2 border-b border-neutral-100">
+                <Link
+                  href="/customer/profile"
+                  className="flex items-center gap-3 py-2 border-b border-neutral-100 cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push("/customer/profile");
+                    setTimeout(() => {
+                      setShowMobileMenu(false);
+                    }, 100);
+                  }}
+                >
                   <img
-                    src="/img/authImg.png"
+                    src={avatar}
                     alt="User Avatar"
                     className="w-10 h-10 rounded-full object-cover border border-[#ACAAB4]/40"
                   />
                   <div>
-                    <div className="font-semibold text-sm text-[#1C1B1C]">Logged In User</div>
+                    <div className="font-semibold text-sm text-[#1C1B1C]">Logged In User (Profile)</div>
                     <div className="text-xs text-[#757575]">{selectedLanguage}</div>
                   </div>
-                </div>
+                </Link>
                 <button
                   onClick={() => {
                     setShowMobileMenu(false);
@@ -424,8 +482,11 @@ export default function Navbar({
 
       {/* Mobile Full-Screen User Dropdown Modal */}
       {isLoggedIn && showUserDropdown && (
-        <div className="fixed inset-0 bg-white overflow-y-auto p-6 flex flex-col gap-4 z-[100] font-['Poppins'] animate-in fade-in zoom-in-95 duration-200 md:hidden">
-          
+        <div 
+          ref={mobileModalRef}
+          className="fixed inset-0 bg-white overflow-y-auto p-6 flex flex-col gap-4 z-[100] font-['Poppins'] animate-in fade-in zoom-in-95 duration-200 md:hidden"
+        >
+
           {/* Mobile Modal Header */}
           <div className="flex items-center justify-between pb-2 border-b border-neutral-100">
             <span className="font-semibold text-lg text-[#1C1B1C]">Account Menu</span>
@@ -439,7 +500,7 @@ export default function Navbar({
               </svg>
             </button>
           </div>
-          
+
           {/* 1. Language selector */}
           <div className="relative">
             <button
@@ -471,10 +532,20 @@ export default function Navbar({
           <div className="border-t border-[#ACAAB4] w-full"></div>
 
           {/* 2. Profile */}
-          <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+          <Link
+            href="/customer/profile"
+            onClick={(e) => {
+              e.preventDefault();
+              router.push("/customer/profile");
+              setTimeout(() => {
+                setShowUserDropdown(false);
+              }, 100);
+            }}
+            className="flex items-center gap-3 w-full hover:opacity-85"
+          >
             <HugeiconsIcon icon={User02Icon} className="w-5 h-5 text-[#141B34]" />
             <span className="font-medium text-base text-[#1C1B1C]">Profile</span>
-          </button>
+          </Link>
 
           <div className="border-t border-[#ACAAB4] w-full"></div>
 
