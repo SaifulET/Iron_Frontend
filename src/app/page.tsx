@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Car04Icon, Clock01Icon, DashboardSquare02Icon, FootballIcon, HealtcareIcon, Location01Icon, Location05Icon, PartyIcon, SailboatOffshoreIcon, Search01Icon, StarIcon, WellnessIcon, SquareLock01Icon } from "@hugeicons/core-free-icons";
+import { Car04Icon, Clock01Icon, DashboardSquare02Icon, FootballIcon, HealtcareIcon, Location01Icon, Location05Icon, PartyIcon, SailboatOffshoreIcon, Search01Icon, StarIcon, WellnessIcon, SquareLock01Icon, User02Icon, File01Icon, FavouriteIcon, CreditCardPosIcon, Home01Icon, HeadsetIcon, ProfileIcon, Logout01Icon, ArrowDown01Icon, ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import ServiceCard, { Recommendation } from "@/components/ServiceCard";
 import Carousel from "@/components/Carousel";
 import TrustedBusinessCard, { TrustedBusiness } from "@/components/TrustedBusinessCard";
@@ -22,6 +22,9 @@ export default function LandingPage() {
   const [showBanner, setShowBanner] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("ENG");
   const [showLangDropdown, setShowLangDropdown] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [locationQuery, setLocationQuery] = useState("");
@@ -37,7 +40,7 @@ export default function LandingPage() {
   const [customStartAmPm, setCustomStartAmPm] = useState<"AM" | "PM">("PM");
   const [customEndTime, setCustomEndTime] = useState("04:00");
   const [customEndAmPm, setCustomEndAmPm] = useState<"AM" | "PM">("PM");
-  
+
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
   const [currentLocationActive, setCurrentLocationActive] = useState(false);
@@ -82,6 +85,9 @@ export default function LandingPage() {
         setShowTimePicker(false);
         setActiveSegment((prev) => (prev === "time" ? null : prev));
       }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+        setShowUserDropdown(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("touchstart", handleClickOutside);
@@ -93,7 +99,7 @@ export default function LandingPage() {
 
   // Calendar helper functions
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  
+
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
@@ -127,7 +133,7 @@ export default function LandingPage() {
   };
 
   const updateSelectedTimeDisplay = (
-    date: Date, 
+    date: Date,
     option: "Any time" | "Morning" | "Afternoon" | "Evening" | "Custom",
     startTime?: string,
     startAmPm?: string,
@@ -152,6 +158,105 @@ export default function LandingPage() {
       prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
     );
   };
+
+  // Mock Book Again services data
+  const bookAgainServices: Recommendation[] = [
+    {
+      id: 101,
+      title: "Soho Vintage Barbers | Sheikh Zayed Road",
+      rating: 4.9,
+      reviews: 120,
+      categories: ["Barber", "Salon"],
+      lastVisited: "Last visited 1 week ago",
+      startingPrice: 15,
+      image: "/img/service_demo.jpg",
+      travelsToYou: true,
+      travelLocations: ["Larnaca"],
+      hasDiamond: true,
+    },
+    {
+      id: 102,
+      title: "Zara Hair & Beauty | Limassol Marina",
+      rating: 4.8,
+      reviews: 85,
+      categories: ["Hair", "Salon"],
+      lastVisited: "Last visited 3 weeks ago",
+      startingPrice: 25,
+      image: "/img/service_demo.jpg",
+      noDeposit: true,
+    },
+    {
+      id: 103,
+      title: "Gold Gym Spa & Massage | Nicosia",
+      rating: 4.7,
+      reviews: 310,
+      categories: ["Massage", "Wellness"],
+      lastVisited: "Last visited 1 month ago",
+      startingPrice: 40,
+      image: "/img/service_demo.jpg",
+      hasDiamond: true,
+    },
+    {
+      id: 104,
+      title: "Elite Car Detailing | Paphos",
+      rating: 4.9,
+      reviews: 145,
+      categories: ["Automotive"],
+      lastVisited: "Last visited 2 months ago",
+      startingPrice: 50,
+      image: "/img/service_demo.jpg",
+      noDeposit: true,
+    },
+    {
+      id: 105,
+      title: "Precision Men's Grooming | Larnaca",
+      rating: 4.6,
+      reviews: 92,
+      categories: ["Barber"],
+      lastVisited: "Last visited 2 weeks ago",
+      startingPrice: 18,
+      image: "/img/service_demo.jpg",
+      travelsToYou: true,
+      travelLocations: ["Larnaca", "Nicosia"],
+    },
+    {
+      id: 106,
+      title: "Serenity Yoga Studio | Limassol",
+      rating: 5.0,
+      reviews: 74,
+      categories: ["Wellness"],
+      lastVisited: "Last visited 3 days ago",
+      startingPrice: 30,
+      image: "/img/service_demo.jpg",
+      noDeposit: true,
+    }
+  ];
+
+  // Mock Recommended for You services data
+  const recommendedForYouServices: Recommendation[] = [
+    {
+      id: 201,
+      title: "Gold Gym Spa & Massage | Nicosia",
+      rating: 4.7,
+      reviews: 310,
+      categories: ["Massage", "Wellness"],
+      lastVisited: "Recommended for you",
+      startingPrice: 40,
+      image: "/img/service_demo.jpg",
+      hasDiamond: true,
+    },
+    {
+      id: 202,
+      title: "Elite Car Detailing | Paphos",
+      rating: 4.9,
+      reviews: 145,
+      categories: ["Automotive"],
+      lastVisited: "98% match for you",
+      startingPrice: 50,
+      image: "/img/service_demo.jpg",
+      noDeposit: true,
+    }
+  ];
 
   // Mock recommendations data
   const recommendations: Recommendation[] = [
@@ -462,13 +567,17 @@ export default function LandingPage() {
       )}
 
       {/* 2. Navbar */}
-        <header className="w-full px-4 md:px-8 xl:px-[68px] py-4 md:py-[40px] relative z-40">
+      <header className="w-full px-4 md:px-8 xl:px-[68px] py-4 md:py-[40px] relative z-40">
         <div className="w-full bg-gradient-to-r from-white/90 via-[rgba(230,243,249,0.65)] to-white/90 backdrop-blur-md rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-white/60 px-4 sm:px-6 py-3 md:py-[16px] flex items-center justify-between gap-4">
 
           {/* Left Side: Logo */}
           <div className="flex items-center">
             <div className="cursor-pointer shrink-0" onClick={() => router.push("/")}>
-              <img src="/img/logoo.svg" alt="Bookly" className="h-8 md:h-[44px] w-[120px] object-contain" />
+              {isLoggedIn ? (
+                <img src="/image/smallBlacklogo.svg" alt="Bookly" className="h-8 md:h-[44px] w-9 object-contain" />
+              ) : (
+                <img src="/img/logoo.svg" alt="Bookly" className="h-8 md:h-[44px] w-[120px] object-contain" />
+              )}
             </div>
           </div>
 
@@ -484,83 +593,263 @@ export default function LandingPage() {
 
           {/* Right Side Options (Desktop) */}
           <div className="hidden md:flex items-center gap-3 sm:gap-4">
-            {/* Login button */}
-            <button
-              onClick={() => router.push("/customer")}
-              className="border-2 border-[#ACAAB4] hover:bg-neutral-50 text-[#1C1B1C] px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer active:scale-95"
-            >
-              Login
-            </button>
+            {!isLoggedIn ? (
+              <>
+                {/* Login button */}
+                <button
+                  onClick={() => setIsLoggedIn(true)}
+                  className="border-2 border-[#ACAAB4] hover:bg-neutral-50 text-[#1C1B1C] px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer active:scale-95"
+                >
+                  Login
+                </button>
 
-            {/* List your business button */}
-            <button
-              onClick={() => router.push("/professional")}
-              className="bg-[#1C1B1C] hover:bg-black text-[#F9FAFB] px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer active:scale-95 whitespace-nowrap"
-            >
-              List your business
-            </button>
+                {/* List your business button */}
+                <button
+                  onClick={() => router.push("/professional")}
+                  className="bg-[#1C1B1C] hover:bg-black text-[#F9FAFB] px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer active:scale-95 whitespace-nowrap"
+                >
+                  List your business
+                </button>
 
-            {/* Language Selector */}
-            <div className="relative">
-              <button
-                onClick={() => setShowLangDropdown(!showLangDropdown)}
-                className="flex items-center gap-1 text-xs font-medium text-[#111111] hover:opacity-75 transition-opacity px-2 py-1 rounded cursor-pointer"
-              >
-                <span>{selectedLanguage}</span>
-                <svg className="w-3 h-3 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+                {/* Language Selector */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowLangDropdown(!showLangDropdown)}
+                    className="flex items-center gap-1 text-xs font-medium text-[#111111] hover:opacity-75 transition-opacity px-2 py-1 rounded cursor-pointer"
+                  >
+                    <span>{selectedLanguage}</span>
+                    <svg className="w-3 h-3 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
 
-              {showLangDropdown && (
-                <div className="absolute right-0 mt-2 w-32 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 overflow-hidden py-1">
-                  {["English", "Bengali", "Greek", "German"].map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => {
-                        setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
-                        setShowLangDropdown(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
-                    >
-                      {lang}
-                    </button>
-                  ))}
+                  {showLangDropdown && (
+                    <div className="absolute right-0 mt-2 w-32 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 overflow-hidden py-1">
+                      {["English", "Bengali", "Greek", "German"].map((lang) => (
+                        <button
+                          key={lang}
+                          onClick={() => {
+                            setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
+                            setShowLangDropdown(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
+                        >
+                          {lang}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            ) : (
+              <>
+                {/* List your business button */}
+                <button
+                  onClick={() => router.push("/professional")}
+                  className="bg-[#1C1B1C] hover:bg-black text-[#F9FAFB] px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer active:scale-95 whitespace-nowrap"
+                >
+                  List your business
+                </button>
+
+                {/* Logged in user avatar and dropdown toggle */}
+                <div className="relative" ref={userDropdownRef}>
+                  <button
+                    onClick={() => setShowUserDropdown(!showUserDropdown)}
+                    className="flex items-center gap-2 p-1 rounded-full hover:bg-neutral-100 transition-colors cursor-pointer"
+                  >
+                    <img
+                      src="/img/authImg.png"
+                      alt="User Avatar"
+                      className="w-9 h-9 rounded-full object-cover border border-[#ACAAB4]/40"
+                    />
+                    <svg className="w-3.5 h-3.5 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {showUserDropdown && (
+                    <div className="absolute right-0 mt-3 w-[247px] bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] border border-[#ACAAB4]/30 p-5 flex flex-col gap-4 z-50 font-['Poppins']">
+
+                      {/* 1. Language selector */}
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowLangDropdown(!showLangDropdown)}
+                          className="flex items-center gap-2 cursor-pointer text-[#111111]"
+                        >
+                          <span className="font-medium text-xs leading-5">{selectedLanguage}</span>
+                          <HugeiconsIcon icon={ArrowDown01Icon} className="w-4 h-4 text-[#111111]" />
+                        </button>
+
+                        {showLangDropdown && (
+                          <div className="absolute left-0 mt-2 w-32 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 overflow-hidden py-1">
+                            {["English", "Bengali", "Greek", "German"].map((lang) => (
+                              <button
+                                key={lang}
+                                onClick={() => {
+                                  setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
+                                  setShowLangDropdown(false);
+                                }}
+                                className="w-full text-left px-3 py-1.5 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
+                              >
+                                {lang}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="border-t border-[#ACAAB4] w-full"></div>
+
+                      {/* 2. Profile */}
+                      <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85">
+                        <HugeiconsIcon icon={User02Icon} className="w-5 h-5 text-[#141B34]" />
+                        <span className="font-medium text-base text-[#1C1B1C]">Profile</span>
+                      </button>
+
+                      <div className="border-t border-[#ACAAB4] w-full"></div>
+
+                      {/* 3. My Bookings */}
+                      <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85">
+                        <HugeiconsIcon icon={File01Icon} className="w-[18px] h-[18px] text-[#0C0C0C]" />
+                        <span className="font-medium text-base text-[#1C1B1C]">My Bookings</span>
+                      </button>
+
+                      <div className="border-t border-[#ACAAB4] w-full"></div>
+
+                      {/* 4. Favorites */}
+                      <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85">
+                        <HugeiconsIcon icon={FavouriteIcon} className="w-5 h-5 text-[#141B34]" />
+                        <span className="font-medium text-base text-[#1C1B1C]">Favorites</span>
+                      </button>
+
+                      <div className="border-t border-[#ACAAB4] w-full"></div>
+
+                      {/* 5. Payment card */}
+                      <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85">
+                        <HugeiconsIcon icon={CreditCardPosIcon} className="w-[18px] h-[18px] text-[#111111]" />
+                        <span className="font-medium text-base text-[#1C1B1C]">Payment card</span>
+                      </button>
+
+                      <div className="border-t border-[#ACAAB4] w-full"></div>
+
+                      {/* 6. Book again */}
+                      <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85">
+                        <HugeiconsIcon icon={Clock01Icon} className="w-[18px] h-[18px] text-[#111111]" />
+                        <span className="font-medium text-base text-[#1C1B1C]">Book again</span>
+                      </button>
+
+                      <div className="border-t border-[#ACAAB4] w-full"></div>
+
+                      {/* 7. Setting */}
+                      <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85">
+                        <HugeiconsIcon icon={Clock01Icon} className="w-[18px] h-[18px] text-[#111111]" />
+                        <span className="font-medium text-base text-[#1C1B1C]">Setting</span>
+                      </button>
+
+                      <div className="border-t border-[#ACAAB4] w-full"></div>
+
+                      {/* 8. Add to Home Screen */}
+                      <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85">
+                        <HugeiconsIcon icon={Home01Icon} className="w-5 h-5 text-[#141B34]" />
+                        <span className="font-medium text-base text-[#1C1B1C]">Add to Home Screen</span>
+                      </button>
+
+                      <div className="border-t border-[#ACAAB4] w-full"></div>
+
+                      {/* 9. Help & Support */}
+                      <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85">
+                        <HugeiconsIcon icon={HeadsetIcon} className="w-5 h-5 text-[#141B34]" />
+                        <span className="font-medium text-base text-[#1C1B1C]">Help & Support</span>
+                      </button>
+
+                      <div className="border-t border-[#ACAAB4] w-full"></div>
+
+                      {/* 10. List your Business */}
+                      <button
+                        onClick={() => {
+                          setShowUserDropdown(false);
+                          router.push("/professional");
+                        }}
+                        className="flex items-center justify-between cursor-pointer w-full hover:opacity-85"
+                      >
+                        <div className="flex items-center gap-3">
+                          <HugeiconsIcon icon={ProfileIcon} className="w-[18px] h-[18px] text-[#141B34]" />
+                          <span className="font-medium text-base text-[#1C1B1C]">List your Business</span>
+                        </div>
+                        <HugeiconsIcon icon={ArrowRight02Icon} className="w-6 h-6 text-[#111111]" />
+                      </button>
+
+                      <div className="border-t border-[#ACAAB4] w-full"></div>
+
+                      {/* 11. Logout */}
+                      <button
+                        onClick={() => {
+                          setIsLoggedIn(false);
+                          setShowUserDropdown(false);
+                        }}
+                        className="flex items-center gap-3 cursor-pointer text-left w-full text-red-600 hover:text-red-700"
+                      >
+                        <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#141B34]" />
+                        <span className="font-medium text-base">Logout</span>
+                      </button>
+
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Hamburger Menu Toggle (Mobile) */}
           <div className="flex md:hidden items-center gap-2">
-            {/* Language Selector (Mobile view, simplified) */}
-            <div className="relative mr-1">
+            {/* Logged in avatar trigger with down arrow */}
+            {isLoggedIn && (
               <button
-                onClick={() => setShowLangDropdown(!showLangDropdown)}
-                className="flex items-center gap-0.5 text-xs font-medium text-[#111111] hover:opacity-75 transition-opacity px-2 py-1 rounded cursor-pointer"
+                onClick={() => setShowUserDropdown(!showUserDropdown)}
+                className="flex items-center gap-1.5 p-1 rounded-full hover:bg-neutral-100 transition-colors cursor-pointer mr-1 relative z-40"
               >
-                <span>{selectedLanguage}</span>
-                <svg className="w-2.5 h-2.5 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <img
+                  src="/img/authImg.png"
+                  alt="User Avatar"
+                  className="w-8 h-8 rounded-full object-cover border border-[#ACAAB4]/40"
+                />
+                <svg className="w-3.5 h-3.5 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              {showLangDropdown && (
-                <div className="absolute right-0 mt-2 w-28 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 overflow-hidden py-1">
-                  {["English", "Bengali", "Greek", "German"].map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => {
-                        setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
-                        setShowLangDropdown(false);
-                      }}
-                      className="w-full text-left px-3 py-1.5 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            )}
+
+            {/* Language Selector (Mobile view, simplified) */}
+            {!isLoggedIn && (
+              <div className="relative mr-1">
+                <button
+                  onClick={() => setShowLangDropdown(!showLangDropdown)}
+                  className="flex items-center gap-0.5 text-xs font-medium text-[#111111] hover:opacity-75 transition-opacity px-2 py-1 rounded cursor-pointer"
+                >
+                  <span>{selectedLanguage}</span>
+                  <svg className="w-2.5 h-2.5 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {showLangDropdown && (
+                  <div className="absolute right-0 mt-2 w-28 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 overflow-hidden py-1">
+                    {["English", "Bengali", "Greek", "German"].map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => {
+                          setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
+                          setShowLangDropdown(false);
+                        }}
+                        className="w-full text-left px-3 py-1.5 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
+                      >
+                        {lang}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -599,25 +888,196 @@ export default function LandingPage() {
             </a>
 
             <div className="flex flex-col gap-3 pt-2">
+              {!isLoggedIn ? (
+                <>
+                  <button
+                    onClick={() => {
+                      setShowMobileMenu(false);
+                      setIsLoggedIn(true);
+                    }}
+                    className="w-full text-center border-2 border-[#ACAAB4] hover:bg-neutral-50 text-[#1C1B1C] py-2.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowMobileMenu(false);
+                      router.push("/professional");
+                    }}
+                    className="w-full text-center bg-[#1C1B1C] hover:bg-black text-[#F9FAFB] py-2.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer"
+                  >
+                    List your business
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3 py-2 border-b border-neutral-100">
+                    <img
+                      src="/img/authImg.png"
+                      alt="User Avatar"
+                      className="w-10 h-10 rounded-full object-cover border border-[#ACAAB4]/40"
+                    />
+                    <div>
+                      <div className="font-semibold text-sm text-[#1C1B1C]">Logged In User</div>
+                      <div className="text-xs text-[#757575]">{selectedLanguage}</div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowMobileMenu(false);
+                      setIsLoggedIn(false);
+                    }}
+                    className="w-full text-center border-2 border-red-200 text-red-600 hover:bg-red-50 py-2.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Full-Screen User Dropdown Modal */}
+        {isLoggedIn && showUserDropdown && (
+          <div className="fixed inset-0 bg-white overflow-y-auto p-6 flex flex-col gap-4 z-[100] font-['Poppins'] animate-in fade-in zoom-in-95 duration-200 md:hidden">
+            
+            {/* Mobile Modal Header */}
+            <div className="flex items-center justify-between pb-2 border-b border-neutral-100">
+              <span className="font-semibold text-lg text-[#1C1B1C]">Account Menu</span>
               <button
-                onClick={() => {
-                  setShowMobileMenu(false);
-                  router.push("/customer");
-                }}
-                className="w-full text-center border-2 border-[#ACAAB4] hover:bg-neutral-50 text-[#1C1B1C] py-2.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer"
+                onClick={() => setShowUserDropdown(false)}
+                className="p-1 text-[#1C1B1C] hover:opacity-70 cursor-pointer"
+                aria-label="Close Account Menu"
               >
-                Login
-              </button>
-              <button
-                onClick={() => {
-                  setShowMobileMenu(false);
-                  router.push("/professional");
-                }}
-                className="w-full text-center bg-[#1C1B1C] hover:bg-black text-[#F9FAFB] py-2.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer"
-              >
-                List your business
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
+            
+            {/* 1. Language selector */}
+            <div className="relative">
+              <button
+                onClick={() => setShowLangDropdown(!showLangDropdown)}
+                className="flex items-center gap-2 cursor-pointer text-[#111111]"
+              >
+                <span className="font-medium text-xs leading-5">{selectedLanguage}</span>
+                <HugeiconsIcon icon={ArrowDown01Icon} className="w-4 h-4 text-[#111111]" />
+              </button>
+
+              {showLangDropdown && (
+                <div className="absolute left-0 mt-2 w-32 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 overflow-hidden py-1">
+                  {["English", "Bengali", "Greek", "German"].map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => {
+                        setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
+                        setShowLangDropdown(false);
+                      }}
+                      className="w-full text-left px-3 py-1.5 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
+                    >
+                      {lang}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-[#ACAAB4] w-full"></div>
+
+            {/* 2. Profile */}
+            <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+              <HugeiconsIcon icon={User02Icon} className="w-5 h-5 text-[#141B34]" />
+              <span className="font-medium text-base text-[#1C1B1C]">Profile</span>
+            </button>
+
+            <div className="border-t border-[#ACAAB4] w-full"></div>
+
+            {/* 3. My Bookings */}
+            <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+              <HugeiconsIcon icon={File01Icon} className="w-[18px] h-[18px] text-[#0C0C0C]" />
+              <span className="font-medium text-base text-[#1C1B1C]">My Bookings</span>
+            </button>
+
+            <div className="border-t border-[#ACAAB4] w-full"></div>
+
+            {/* 4. Favorites */}
+            <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+              <HugeiconsIcon icon={FavouriteIcon} className="w-5 h-5 text-[#141B34]" />
+              <span className="font-medium text-base text-[#1C1B1C]">Favorites</span>
+            </button>
+
+            <div className="border-t border-[#ACAAB4] w-full"></div>
+
+            {/* 5. Payment card */}
+            <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+              <HugeiconsIcon icon={CreditCardPosIcon} className="w-[18px] h-[18px] text-[#111111]" />
+              <span className="font-medium text-base text-[#1C1B1C]">Payment card</span>
+            </button>
+
+            <div className="border-t border-[#ACAAB4] w-full"></div>
+
+            {/* 6. Book again */}
+            <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+              <HugeiconsIcon icon={Clock01Icon} className="w-[18px] h-[18px] text-[#111111]" />
+              <span className="font-medium text-base text-[#1C1B1C]">Book again</span>
+            </button>
+
+            <div className="border-t border-[#ACAAB4] w-full"></div>
+
+            {/* 7. Setting */}
+            <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+              <HugeiconsIcon icon={Clock01Icon} className="w-[18px] h-[18px] text-[#111111]" />
+              <span className="font-medium text-base text-[#1C1B1C]">Setting</span>
+            </button>
+
+            <div className="border-t border-[#ACAAB4] w-full"></div>
+
+            {/* 8. Add to Home Screen */}
+            <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+              <HugeiconsIcon icon={Home01Icon} className="w-5 h-5 text-[#141B34]" />
+              <span className="font-medium text-base text-[#1C1B1C]">Add to Home Screen</span>
+            </button>
+
+            <div className="border-t border-[#ACAAB4] w-full"></div>
+
+            {/* 9. Help & Support */}
+            <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+              <HugeiconsIcon icon={HeadsetIcon} className="w-5 h-5 text-[#141B34]" />
+              <span className="font-medium text-base text-[#1C1B1C]">Help & Support</span>
+            </button>
+
+            <div className="border-t border-[#ACAAB4] w-full"></div>
+
+            {/* 10. List your Business */}
+            <button
+              onClick={() => {
+                setShowUserDropdown(false);
+                router.push("/professional");
+              }}
+              className="flex items-center justify-between cursor-pointer w-full hover:opacity-85"
+            >
+              <div className="flex items-center gap-3">
+                <HugeiconsIcon icon={ProfileIcon} className="w-[18px] h-[18px] text-[#141B34]" />
+                <span className="font-medium text-base text-[#1C1B1C]">List your Business</span>
+              </div>
+              <HugeiconsIcon icon={ArrowRight02Icon} className="w-6 h-6 text-[#111111]" />
+            </button>
+
+            <div className="border-t border-[#ACAAB4] w-full"></div>
+
+            {/* 11. Logout */}
+            <button
+              onClick={() => {
+                setIsLoggedIn(false);
+                setShowUserDropdown(false);
+              }}
+              className="flex items-center gap-3 cursor-pointer text-left w-full text-red-600 hover:text-red-700"
+            >
+              <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#141B34]" />
+              <span className="font-medium text-base">Logout</span>
+            </button>
+
           </div>
         )}
       </header>
@@ -635,21 +1095,19 @@ export default function LandingPage() {
         </p>
 
         {/* 4. Hero Search Bar */}
-        <div ref={searchBarRef} className={`w-full max-w-[900px] rounded-2xl md:rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.05)] border border-[#E8E6FF] p-2 md:p-3 flex flex-col md:flex-row items-center gap-2 md:gap-0 relative transition-colors duration-300 ${
-          activeSegment !== null ? "bg-[#F2F2F2]" : "bg-white"
-        } ${showSearchDropdown ? "z-[200]" : "z-30"}`}>
+        <div ref={searchBarRef} className={`w-full max-w-[900px] rounded-2xl md:rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.05)] border border-[#E8E6FF] p-2 md:p-3 flex flex-col md:flex-row items-center gap-2 md:gap-0 relative transition-colors duration-300 ${activeSegment !== null ? "bg-[#F2F2F2]" : "bg-white"
+          } ${showSearchDropdown ? "z-[200]" : "z-30"}`}>
 
           {/* Search Input */}
-          <div 
+          <div
             onMouseEnter={() => setHoveredSegment("search")}
             onMouseLeave={() => setHoveredSegment(null)}
-            className={`flex-1 w-full flex items-center gap-3 px-6 py-2.5 md:py-1.5 transition-all duration-300 ${
-              activeSegment === "search" 
-                ? "bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-full z-10" 
-                : activeSegment !== null 
-                  ? "hover:bg-black/5 rounded-full" 
+            className={`flex-1 w-full flex items-center gap-3 px-6 py-2.5 md:py-1.5 transition-all duration-300 ${activeSegment === "search"
+                ? "bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-full z-10"
+                : activeSegment !== null
+                  ? "hover:bg-black/5 rounded-full"
                   : "hover:bg-[#F2F2F2] rounded-full"
-            }`}
+              }`}
           >
             <HugeiconsIcon icon={Search01Icon} className="text-[#111111]" />
             <input
@@ -672,16 +1130,15 @@ export default function LandingPage() {
           )}
 
           {/* Location Selector */}
-          <div 
+          <div
             onMouseEnter={() => setHoveredSegment("location")}
             onMouseLeave={() => setHoveredSegment(null)}
-            className={`relative flex-1 w-full flex items-center gap-3 px-6 py-2.5 md:py-1.5 transition-all duration-300 ${
-              activeSegment === "location" 
-                ? "bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-full z-10" 
-                : activeSegment !== null 
-                  ? "hover:bg-black/5 rounded-full" 
+            className={`relative flex-1 w-full flex items-center gap-3 px-6 py-2.5 md:py-1.5 transition-all duration-300 ${activeSegment === "location"
+                ? "bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-full z-10"
+                : activeSegment !== null
+                  ? "hover:bg-black/5 rounded-full"
                   : "hover:bg-[#F2F2F2] rounded-full"
-            }`}
+              }`}
           >
             <HugeiconsIcon icon={Location05Icon} className="text-[#111111]" />
             <input
@@ -706,7 +1163,7 @@ export default function LandingPage() {
                 {/* Current Location Row - Frame 2147239300 */}
                 <div className="flex flex-row justify-between items-center w-[310px] h-10 shrink-0 gap-[83px]">
                   <span className="font-poppins font-medium text-[18px] leading-[26px] text-[#111111] select-none">Current Location</span>
-                  <button 
+                  <button
                     type="button"
                     onClick={() => {
                       setCurrentLocationActive(!currentLocationActive);
@@ -716,9 +1173,8 @@ export default function LandingPage() {
                         setLocationQuery("");
                       }
                     }}
-                    className={`w-[78px] h-10 rounded-[20px] flex items-center transition-all duration-300 ${
-                      currentLocationActive ? "pl-[40px] pr-[6px] bg-[#3586B8]" : "pl-[6px] pr-[40px] bg-[#D3D3D3]"
-                    }`}
+                    className={`w-[78px] h-10 rounded-[20px] flex items-center transition-all duration-300 ${currentLocationActive ? "pl-[40px] pr-[6px] bg-[#3586B8]" : "pl-[6px] pr-[40px] bg-[#D3D3D3]"
+                      }`}
                   >
                     <div className="w-8 h-8 rounded-full bg-[rgba(0,0,0,0.2)] transition-all duration-200" />
                   </button>
@@ -759,7 +1215,7 @@ export default function LandingPage() {
                 {/* Recent Section - Frame 2147239305 */}
                 <div className="flex flex-col items-start gap-[16px] w-[310px] shrink-0">
                   <span className="font-poppins font-medium text-[18px] leading-[30px] text-[#111111] select-none">Recent</span>
-                  
+
                   {/* Recent List - Frame 2147239304 */}
                   <div className="flex flex-col items-start gap-[12px] w-[310px]">
                     {[
@@ -798,17 +1254,16 @@ export default function LandingPage() {
           )}
 
           {/* Time Selector */}
-          <div 
+          <div
             ref={timeSelectorRef}
             onMouseEnter={() => setHoveredSegment("time")}
             onMouseLeave={() => setHoveredSegment(null)}
-            className={`relative flex-1 w-full flex items-center justify-between px-6 py-2.5 md:py-1.5 md:mr-2 transition-all duration-300 ${
-              activeSegment === "time" 
-                ? "bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-full z-10" 
-                : activeSegment !== null 
-                  ? "hover:bg-black/5 rounded-full" 
+            className={`relative flex-1 w-full flex items-center justify-between px-6 py-2.5 md:py-1.5 md:mr-2 transition-all duration-300 ${activeSegment === "time"
+                ? "bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] rounded-full z-10"
+                : activeSegment !== null
+                  ? "hover:bg-black/5 rounded-full"
                   : "hover:bg-[#F2F2F2] rounded-full"
-            }`}
+              }`}
           >
             <button
               type="button"
@@ -837,7 +1292,7 @@ export default function LandingPage() {
             {/* Time Picker Popup Dropdown */}
             {showTimePicker && (
               <div className="hidden md:flex absolute top-[110%] right-[-100px] md:right-[-250px] w-[95vw] max-w-[812px] md:w-[812px] md:h-[704px] p-5 bg-white rounded-[12px] shadow-2xl z-50 border border-neutral-200/80 animate-in fade-in slide-in-from-top-2 duration-200 flex-col gap-10 overflow-y-auto font-roboto">
-                
+
                 {/* Calendar Selection Section */}
                 <div className="flex flex-col items-start gap-4 w-full">
                   {/* Month Selection Row */}
@@ -850,8 +1305,8 @@ export default function LandingPage() {
                     </div>
                     {/* Month Nav Buttons */}
                     <div className="flex items-center gap-0">
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={handlePrevMonth}
                         className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
                       >
@@ -859,8 +1314,8 @@ export default function LandingPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                         </svg>
                       </button>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={handleNextMonth}
                         className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
                       >
@@ -897,11 +1352,11 @@ export default function LandingPage() {
                     // Day cells
                     for (let day = 1; day <= daysInMonth; day++) {
                       const dateObj = new Date(currentYear, currentMonth, day);
-                      const isSelected = selectedDate && 
-                        selectedDate.getDate() === day && 
-                        selectedDate.getMonth() === currentMonth && 
+                      const isSelected = selectedDate &&
+                        selectedDate.getDate() === day &&
+                        selectedDate.getMonth() === currentMonth &&
                         selectedDate.getFullYear() === currentYear;
-                      
+
                       cells.push(
                         <div key={`day-${day}`} className="h-10 flex items-center justify-center">
                           <button
@@ -910,11 +1365,10 @@ export default function LandingPage() {
                               setSelectedDate(dateObj);
                               updateSelectedTimeDisplay(dateObj, selectedTimeOption);
                             }}
-                            className={`w-10 h-10 flex items-center justify-center rounded-full font-roboto text-base transition-colors ${
-                              isSelected 
-                                ? "bg-[#666666] text-white font-medium" 
+                            className={`w-10 h-10 flex items-center justify-center rounded-full font-roboto text-base transition-colors ${isSelected
+                                ? "bg-[#666666] text-white font-medium"
                                 : "text-[#111111] hover:bg-neutral-100"
-                            }`}
+                              }`}
                           >
                             {day}
                           </button>
@@ -945,11 +1399,10 @@ export default function LandingPage() {
                               setSelectedTimeOption(opt.id as any);
                               updateSelectedTimeDisplay(selectedDate, opt.id as any);
                             }}
-                            className={`flex flex-col items-center justify-center transition-all ${
-                              isActive 
-                                ? "border border-[#3A506B] rounded-xl px-5 py-2.5 bg-white text-[#111111] font-bold shadow-sm" 
+                            className={`flex flex-col items-center justify-center transition-all ${isActive
+                                ? "border border-[#3A506B] rounded-xl px-5 py-2.5 bg-white text-[#111111] font-bold shadow-sm"
                                 : "border border-transparent text-[#4A607A] hover:bg-neutral-50 p-2"
-                            }`}
+                              }`}
                           >
                             <span className="text-sm font-semibold">{opt.label}</span>
                             {opt.sub && <span className={`text-xs ${isActive ? 'text-[#111111] font-semibold' : 'text-[#7A8B9E]'}`}>{opt.sub}</span>}
@@ -963,11 +1416,10 @@ export default function LandingPage() {
                           setSelectedTimeOption("Custom");
                           updateSelectedTimeDisplay(selectedDate, "Custom");
                         }}
-                        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                          selectedTimeOption === "Custom"
+                        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${selectedTimeOption === "Custom"
                             ? "bg-[#666666] text-white"
                             : "bg-[#E8EAEF] text-[#111111] hover:bg-neutral-200"
-                        }`}
+                          }`}
                       >
                         Custom
                       </button>
@@ -1000,9 +1452,8 @@ export default function LandingPage() {
                                   setCustomStartAmPm("AM");
                                   updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, "AM", customEndTime, customEndAmPm);
                                 }}
-                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${
-                                  customStartAmPm === "AM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
-                                }`}
+                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${customStartAmPm === "AM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
+                                  }`}
                               >
                                 AM
                               </button>
@@ -1012,9 +1463,8 @@ export default function LandingPage() {
                                   setCustomStartAmPm("PM");
                                   updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, "PM", customEndTime, customEndAmPm);
                                 }}
-                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${
-                                  customStartAmPm === "PM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
-                                }`}
+                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${customStartAmPm === "PM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
+                                  }`}
                               >
                                 PM
                               </button>
@@ -1043,9 +1493,8 @@ export default function LandingPage() {
                                   setCustomEndAmPm("AM");
                                   updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, customStartAmPm, customEndTime, "AM");
                                 }}
-                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${
-                                  customEndAmPm === "AM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
-                                }`}
+                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${customEndAmPm === "AM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
+                                  }`}
                               >
                                 AM
                               </button>
@@ -1055,9 +1504,8 @@ export default function LandingPage() {
                                   setCustomEndAmPm("PM");
                                   updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, customStartAmPm, customEndTime, "PM");
                                 }}
-                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${
-                                  customEndAmPm === "PM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
-                                }`}
+                                className={`w-9 h-7 flex items-center justify-center text-xs font-semibold rounded-full transition-all ${customEndAmPm === "PM" ? "bg-[#666666] text-white shadow-sm" : "text-neutral-500"
+                                  }`}
                               >
                                 PM
                               </button>
@@ -1093,11 +1541,11 @@ export default function LandingPage() {
           {showSearchDropdown && (
             <>
               {/* Desktop Dropdown */}
-              <div 
+              <div
                 style={dropdownWidth ? { width: `${dropdownWidth}px` } : undefined}
                 className="hidden md:flex absolute top-[105%] left-0 w-full md:w-[761px] max-h-[40vh] md:max-h-[500px] overflow-y-auto bg-white rounded-xl shadow-2xl p-6 md:p-10 flex-col items-start gap-10 z-50 text-left border border-neutral-200/80 animate-in fade-in slide-in-from-top-4 duration-300 search-dropdown-scrollbar"
               >
-                
+
                 {/* Frame 2147239451: Filter Pills */}
                 <div className="flex flex-row flex-wrap items-center gap-2 w-full pb-2 border-b border-neutral-100">
                   {[
@@ -1114,11 +1562,10 @@ export default function LandingPage() {
                         key={pill.id}
                         type="button"
                         onClick={() => setDropdownFilter(pill.id)}
-                        className={`flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 rounded-full font-poppins font-medium text-xs tracking-[0.7px] transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
-                          isActive
+                        className={`flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 rounded-full font-poppins font-medium text-xs tracking-[0.7px] transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${isActive
                             ? "bg-[#111111] text-white border-transparent"
                             : "border border-[#111111] text-[#111111] hover:bg-neutral-50"
-                        }`}
+                          }`}
                       >
                         {pill.label}
                       </button>
@@ -1162,7 +1609,7 @@ export default function LandingPage() {
                 {(dropdownFilter === "All" || dropdownFilter === "We come to you" || dropdownFilter === "Nearby") && (
                   <div className="flex flex-col items-start p-0 gap-5 w-full">
                     <div className="flex flex-col items-start p-0 gap-4 w-full">
-                      
+
                       {/* Row 1: Search Icon + Hair & styling + Founding Partner */}
                       {dropdownFilter !== "We come to you" && (
                         <button
@@ -1378,8 +1825,8 @@ export default function LandingPage() {
               <div className="md:hidden fixed inset-0 bg-white z-[100] flex flex-col p-5 animate-in fade-in slide-in-from-bottom duration-300">
                 {/* Modal Header */}
                 <div className="flex items-center gap-4 mb-5 shrink-0">
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => {
                       setShowSearchDropdown(false);
                       setActiveSegment(null);
@@ -1413,7 +1860,7 @@ export default function LandingPage() {
                     {/* Current Location Row - Frame 2147239300 */}
                     <div className="flex flex-row justify-between items-center w-full h-10 shrink-0 border-b border-neutral-100 pb-4">
                       <span className="font-poppins font-medium text-[18px] leading-[26px] text-[#111111] select-none">Current Location</span>
-                      <button 
+                      <button
                         type="button"
                         onClick={() => {
                           setCurrentLocationActive(!currentLocationActive);
@@ -1423,9 +1870,8 @@ export default function LandingPage() {
                             setLocationQuery("");
                           }
                         }}
-                        className={`w-[78px] h-10 rounded-[20px] flex items-center transition-all duration-300 ${
-                          currentLocationActive ? "pl-[40px] pr-[6px] bg-[#3586B8]" : "pl-[6px] pr-[40px] bg-[#D3D3D3]"
-                        }`}
+                        className={`w-[78px] h-10 rounded-[20px] flex items-center transition-all duration-300 ${currentLocationActive ? "pl-[40px] pr-[6px] bg-[#3586B8]" : "pl-[6px] pr-[40px] bg-[#D3D3D3]"
+                          }`}
                       >
                         <div className="w-8 h-8 rounded-full bg-[rgba(0,0,0,0.2)] transition-all duration-200" />
                       </button>
@@ -1467,7 +1913,7 @@ export default function LandingPage() {
                     {/* Recent Section - Frame 2147239305 */}
                     <div className="flex flex-col items-start gap-[16px] w-full shrink-0">
                       <span className="font-poppins font-medium text-[18px] leading-[30px] text-[#111111] select-none">Recent</span>
-                      
+
                       {/* Recent List - Frame 2147239304 */}
                       <div className="flex flex-col items-start gap-[12px] w-full">
                         {[
@@ -1510,8 +1956,8 @@ export default function LandingPage() {
                         </svg>
                       </div>
                       <div className="flex items-center gap-0">
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           onClick={handlePrevMonth}
                           className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-neutral-100"
                         >
@@ -1519,8 +1965,8 @@ export default function LandingPage() {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                           </svg>
                         </button>
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           onClick={handleNextMonth}
                           className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-neutral-100"
                         >
@@ -1556,11 +2002,11 @@ export default function LandingPage() {
                         }
                         for (let day = 1; day <= daysInMonth; day++) {
                           const dateObj = new Date(currentYear, currentMonth, day);
-                          const isSelected = selectedDate && 
-                            selectedDate.getDate() === day && 
-                            selectedDate.getMonth() === currentMonth && 
+                          const isSelected = selectedDate &&
+                            selectedDate.getDate() === day &&
+                            selectedDate.getMonth() === currentMonth &&
                             selectedDate.getFullYear() === currentYear;
-                          
+
                           cells.push(
                             <div key={`day-${day}`} className="h-9 flex items-center justify-center">
                               <button
@@ -1569,11 +2015,10 @@ export default function LandingPage() {
                                   setSelectedDate(dateObj);
                                   updateSelectedTimeDisplay(dateObj, selectedTimeOption);
                                 }}
-                                className={`w-9 h-9 flex items-center justify-center rounded-full font-roboto text-sm transition-colors ${
-                                  isSelected 
-                                    ? "bg-[#666666] text-white font-medium" 
+                                className={`w-9 h-9 flex items-center justify-center rounded-full font-roboto text-sm transition-colors ${isSelected
+                                    ? "bg-[#666666] text-white font-medium"
                                     : "text-[#111111] hover:bg-neutral-100"
-                                }`}
+                                  }`}
                               >
                                 {day}
                               </button>
@@ -1603,11 +2048,10 @@ export default function LandingPage() {
                                 setSelectedTimeOption(opt.id as any);
                                 updateSelectedTimeDisplay(selectedDate, opt.id as any);
                               }}
-                              className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all ${
-                                isActive 
-                                  ? "border-[#3A506B] bg-white text-[#111111] font-bold shadow-sm" 
+                              className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all ${isActive
+                                  ? "border-[#3A506B] bg-white text-[#111111] font-bold shadow-sm"
                                   : "border-transparent text-[#4A607A] hover:bg-neutral-50"
-                              }`}
+                                }`}
                             >
                               <span className="text-xs font-semibold">{opt.label}</span>
                               {opt.sub && <span className="text-[10px] text-neutral-400">{opt.sub}</span>}
@@ -1620,11 +2064,10 @@ export default function LandingPage() {
                             setSelectedTimeOption("Custom");
                             updateSelectedTimeDisplay(selectedDate, "Custom");
                           }}
-                          className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                            selectedTimeOption === "Custom"
+                          className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${selectedTimeOption === "Custom"
                               ? "bg-[#666666] text-white"
                               : "bg-[#E8EAEF] text-[#111111] hover:bg-neutral-200"
-                          }`}
+                            }`}
                         >
                           Custom
                         </button>
@@ -1657,9 +2100,8 @@ export default function LandingPage() {
                                     setCustomStartAmPm("AM");
                                     updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, "AM", customEndTime, customEndAmPm);
                                   }}
-                                  className={`px-2 py-1 text-[10px] font-semibold rounded-full transition-all ${
-                                    customStartAmPm === "AM" ? "bg-[#666666] text-white shadow-sm" : "text-[#4A607A]"
-                                  }`}
+                                  className={`px-2 py-1 text-[10px] font-semibold rounded-full transition-all ${customStartAmPm === "AM" ? "bg-[#666666] text-white shadow-sm" : "text-[#4A607A]"
+                                    }`}
                                 >
                                   AM
                                 </button>
@@ -1669,9 +2111,8 @@ export default function LandingPage() {
                                     setCustomStartAmPm("PM");
                                     updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, "PM", customEndTime, customEndAmPm);
                                   }}
-                                  className={`px-2 py-1 text-[10px] font-semibold rounded-full transition-all ${
-                                    customStartAmPm === "PM" ? "bg-[#666666] text-white shadow-sm" : "text-[#4A607A]"
-                                  }`}
+                                  className={`px-2 py-1 text-[10px] font-semibold rounded-full transition-all ${customStartAmPm === "PM" ? "bg-[#666666] text-white shadow-sm" : "text-[#4A607A]"
+                                    }`}
                                 >
                                   PM
                                 </button>
@@ -1700,9 +2141,8 @@ export default function LandingPage() {
                                     setCustomEndAmPm("AM");
                                     updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, customStartAmPm, customEndTime, "AM");
                                   }}
-                                  className={`px-2 py-1 text-[10px] font-semibold rounded-full transition-all ${
-                                    customEndAmPm === "AM" ? "bg-[#666666] text-white shadow-sm" : "text-[#4A607A]"
-                                  }`}
+                                  className={`px-2 py-1 text-[10px] font-semibold rounded-full transition-all ${customEndAmPm === "AM" ? "bg-[#666666] text-white shadow-sm" : "text-[#4A607A]"
+                                    }`}
                                 >
                                   AM
                                 </button>
@@ -1712,9 +2152,8 @@ export default function LandingPage() {
                                     setCustomEndAmPm("PM");
                                     updateSelectedTimeDisplay(selectedDate, "Custom", customStartTime, customStartAmPm, customEndTime, "PM");
                                   }}
-                                  className={`px-2 py-1 text-[10px] font-semibold rounded-full transition-all ${
-                                    customEndAmPm === "PM" ? "bg-[#666666] text-white shadow-sm" : "text-[#4A607A]"
-                                  }`}
+                                  className={`px-2 py-1 text-[10px] font-semibold rounded-full transition-all ${customEndAmPm === "PM" ? "bg-[#666666] text-white shadow-sm" : "text-[#4A607A]"
+                                    }`}
                                 >
                                   PM
                                 </button>
@@ -1759,11 +2198,10 @@ export default function LandingPage() {
                               key={pill.id}
                               type="button"
                               onClick={() => setDropdownFilter(pill.id)}
-                              className={`flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 rounded-full font-poppins font-medium text-xs tracking-[0.7px] transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
-                                isActive
+                              className={`flex flex-row justify-center items-center py-1.5 px-6 gap-2.5 h-8 rounded-full font-poppins font-medium text-xs tracking-[0.7px] transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${isActive
                                   ? "bg-[#111111] text-white border-transparent"
                                   : "border border-[#111111] text-[#111111] hover:bg-neutral-50"
-                              }`}
+                                }`}
                             >
                               {pill.label}
                             </button>
@@ -2134,6 +2572,49 @@ export default function LandingPage() {
 
         </div>
       </section>
+
+      {/* Book Again Section (Logged In Only) */}
+      {isLoggedIn && (
+        <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px]">
+          {/* Section Header */}
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl md:text-[28px] font-medium tracking-tight text-[#1C1B1C]">
+              Book Again
+            </h2>
+            <a href="#" className="text-sm md:text-base font-medium text-[#1C1B1C] hover:underline transition-all">
+              See all
+            </a>
+          </div>
+
+          {/* Card Grid / Carousel */}
+          {bookAgainServices.length > 5 ? (
+            <Carousel>
+              {bookAgainServices.map((rec) => (
+                <div key={rec.id} className="w-[280px] xs:w-[320px] sm:w-[360px] md:w-[406px] shrink-0 snap-start">
+                  <ServiceCard
+                    rec={rec}
+                    isFavorite={favorites.includes(rec.id)}
+                    onToggleFavorite={toggleFavorite}
+                    onBookNow={(id) => console.log("Booking item", id)}
+                  />
+                </div>
+              ))}
+            </Carousel>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+              {bookAgainServices.map((rec) => (
+                <ServiceCard
+                  key={rec.id}
+                  rec={rec}
+                  isFavorite={favorites.includes(rec.id)}
+                  onToggleFavorite={toggleFavorite}
+                  onBookNow={(id) => console.log("Booking item", id)}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* 6. Recommended Section */}
       <section className="w-full px-4 md:px-8 xl:px-[68px] mt-16 relative z-10">
