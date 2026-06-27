@@ -251,7 +251,13 @@ export default function Navbar({
                     <div className="border-t border-[#ACAAB4] w-full"></div>
 
                     {/* 4. Favorites */}
-                    <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+                    <button 
+                      className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" 
+                      onClick={() => {
+                        setShowUserDropdown(false);
+                        router.push("/customer/favorites");
+                      }}
+                    >
                       <HugeiconsIcon icon={FavouriteIcon} className="w-5 h-5 text-[#141B34]" />
                       <span className="font-medium text-base text-[#1C1B1C]">Favorites</span>
                     </button>
@@ -281,7 +287,13 @@ export default function Navbar({
                     <div className="border-t border-[#ACAAB4] w-full"></div>
 
                     {/* 7. Setting */}
-                    <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+                    <button 
+                      className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" 
+                      onClick={() => {
+                        setShowUserDropdown(false);
+                        router.push("/customer/settings");
+                      }}
+                    >
                       <HugeiconsIcon icon={Clock01Icon} className="w-[18px] h-[18px] text-[#111111]" />
                       <span className="font-medium text-base text-[#1C1B1C]">Setting</span>
                     </button>
@@ -564,7 +576,13 @@ export default function Navbar({
           <div className="border-t border-[#ACAAB4] w-full"></div>
 
           {/* 4. Favorites */}
-          <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+          <button 
+            className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" 
+            onClick={() => {
+              setShowUserDropdown(false);
+              router.push("/customer/favorites");
+            }}
+          >
             <HugeiconsIcon icon={FavouriteIcon} className="w-5 h-5 text-[#141B34]" />
             <span className="font-medium text-base text-[#1C1B1C]">Favorites</span>
           </button>
@@ -594,7 +612,13 @@ export default function Navbar({
           <div className="border-t border-[#ACAAB4] w-full"></div>
 
           {/* 7. Setting */}
-          <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+          <button 
+            className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" 
+            onClick={() => {
+              setShowUserDropdown(false);
+              router.push("/customer/settings");
+            }}
+          >
             <HugeiconsIcon icon={Clock01Icon} className="w-[18px] h-[18px] text-[#111111]" />
             <span className="font-medium text-base text-[#1C1B1C]">Setting</span>
           </button>

@@ -265,7 +265,7 @@ export default function BookAgainPage() {
         </div>
 
         {/* Grid Layout of Book Again items */}
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-[20px] justify-items-center w-full mt-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-[20px] justify-items-start w-full mt-4">
           {currentItems.map((item) => {
             const isFav = favorites.includes(item.id);
             return (
