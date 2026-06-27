@@ -90,7 +90,7 @@ export default function Navbar({
   }, []);
 
   return (
-    <header className={`w-full px-4 md:px-8 xl:px-[68px] py-4 md:py-[40px] relative ${showMobileMenu || showUserDropdown ? "z-[250]" : "z-40"}`}>
+    <header className={`w-full px-4 md:px-8  py-4 md:py-[40px] relative ${showMobileMenu || showUserDropdown ? "z-[250]" : "z-40"}`}>
       <div className="w-full bg-gradient-to-r from-white/90 via-[rgba(230,243,249,0.65)] to-white/90 backdrop-blur-md rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-white/60 px-4 sm:px-6 py-3 md:py-[16px] flex items-center justify-between gap-4">
 
         {/* Left Side: Logo */}
@@ -267,7 +267,13 @@ export default function Navbar({
                     <div className="border-t border-[#ACAAB4] w-full"></div>
 
                     {/* 6. Book again */}
-                    <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+                    <button
+                      className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85"
+                      onClick={() => {
+                        setShowUserDropdown(false);
+                        router.push("/customer/book-again");
+                      }}
+                    >
                       <HugeiconsIcon icon={Clock01Icon} className="w-[18px] h-[18px] text-[#111111]" />
                       <span className="font-medium text-base text-[#1C1B1C]">Book again</span>
                     </button>
@@ -574,7 +580,13 @@ export default function Navbar({
           <div className="border-t border-[#ACAAB4] w-full"></div>
 
           {/* 6. Book again */}
-          <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+          <button
+            className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85"
+            onClick={() => {
+              setShowUserDropdown(false);
+              router.push("/customer/book-again");
+            }}
+          >
             <HugeiconsIcon icon={Clock01Icon} className="w-[18px] h-[18px] text-[#111111]" />
             <span className="font-medium text-base text-[#1C1B1C]">Book again</span>
           </button>

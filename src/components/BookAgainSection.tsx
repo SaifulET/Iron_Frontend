@@ -16,7 +16,7 @@ export default function BookAgainSection({
   toggleFavorite
 }: BookAgainSectionProps) {
   return (
-    <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px]">
+    <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[40x]">
       {/* Section Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl md:text-[28px] font-medium tracking-tight text-[#1C1B1C]">
