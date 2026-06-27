@@ -73,6 +73,7 @@ function PasswordPageContent() {
         onClose={() => setIsSuccessOpen(false)}
         onContinue={() => {
           setIsSuccessOpen(false);
+          localStorage.setItem("isLoggedIn", "true");
           // Redirect to main select screen or a mock landing page
           router.push("/");
         }}
