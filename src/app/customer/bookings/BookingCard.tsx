@@ -43,6 +43,7 @@ export default function BookingCard({
   handleReviewSubmit,
   onReschedule
 }: BookingCardProps) {
+  const router = useRouter();
   const isPolicyOpen = !!openPolicies[booking.id];
   const submitted = submittedReviews[booking.id];
   const hasReviewLeft = booking.isReviewed || !!submitted;
@@ -196,7 +197,10 @@ export default function BookingCard({
 
         {/* Right Side Buttons Layout */}
         <div className="w-full md:w-[209px] flex flex-col gap-3 flex-shrink-0">
-          <button className="w-full py-2 bg-[#FCF8F8] border border-[#C6C6CB] rounded-lg text-sm font-medium text-[#020305] hover:bg-neutral-100 transition-colors">
+          <button 
+            onClick={() => router.push(`/customer/bookings/view?id=${booking.id}`)}
+            className="w-full py-2 bg-[#FCF8F8] border border-[#C6C6CB] rounded-lg text-sm font-medium text-[#020305] hover:bg-neutral-100 transition-colors"
+          >
             View
           </button>
           
