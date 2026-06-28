@@ -243,7 +243,13 @@ export default function Navbar({
                     <div className="border-t border-[#ACAAB4] w-full"></div>
 
                     {/* 3. My Bookings */}
-                    <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+                    <button
+                      className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85"
+                      onClick={() => {
+                        setShowUserDropdown(false);
+                        router.push("/customer/bookings");
+                      }}
+                    >
                       <HugeiconsIcon icon={File01Icon} className="w-[18px] h-[18px] text-[#0C0C0C]" />
                       <span className="font-medium text-base text-[#1C1B1C]">My Bookings</span>
                     </button>
@@ -568,7 +574,13 @@ export default function Navbar({
           <div className="border-t border-[#ACAAB4] w-full"></div>
 
           {/* 3. My Bookings */}
-          <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+          <button
+            className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85"
+            onClick={() => {
+              setShowUserDropdown(false);
+              router.push("/customer/bookings");
+            }}
+          >
             <HugeiconsIcon icon={File01Icon} className="w-[18px] h-[18px] text-[#0C0C0C]" />
             <span className="font-medium text-base text-[#1C1B1C]">My Bookings</span>
           </button>
