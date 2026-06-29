@@ -1,0 +1,369 @@
+"use client";
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Image from "next/image";
+
+// Define Blog post interface
+interface BlogPost {
+  id: string;
+  title: string;
+  date: string;
+  readTime: string;
+  category: "Bookly news" | "Meet the partners" | "For business" | "Customer tips";
+  snippet: string;
+  imageUrl: string;
+}
+
+// Full blog posts mock list (multiple posts to make pagination & filtering functional)
+const allBlogPosts: BlogPost[] = [
+  {
+    id: "post-featured",
+    title: "Why Self-Care Is No Longer a Luxury",
+    date: "April 9, 2026",
+    readTime: "5 min read",
+    category: "Bookly news",
+    snippet: "In today’s fast-moving world, people are constantly balancing work, relationships, health, and personal goals. Taking care of your mind and body is vital...",
+    imageUrl: "/image/blogProfile.png",
+  },
+  {
+    id: "post-1",
+    title: "Why Self-Care Is No Longer a Luxury",
+    date: "April 9, 2026",
+    readTime: "5 min read",
+    category: "Bookly news",
+    snippet: "In today’s fast-moving world, people are constantly balancing work, relationships, health, and personal goals....",
+    imageUrl: "/image/blogProfile.png",
+  },
+  {
+    id: "post-2",
+    title: "Why Self-Care Is No Longer a Luxury",
+    date: "April 9, 2026",
+    readTime: "5 min read",
+    category: "Meet the partners",
+    snippet: "In today’s fast-moving world, people are constantly balancing work, relationships, health, and personal goals....",
+    imageUrl: "/image/blogProfile.png",
+  },
+  {
+    id: "post-3",
+    title: "Why Self-Care Is No Longer a Luxury",
+    date: "April 9, 2026",
+    readTime: "5 min read",
+    category: "For business",
+    snippet: "In today’s fast-moving world, people are constantly balancing work, relationships, health, and personal goals....",
+    imageUrl: "/image/blogProfile.png",
+  },
+  {
+    id: "post-4",
+    title: "Why Self-Care Is No Longer a Luxury",
+    date: "April 9, 2026",
+    readTime: "5 min read",
+    category: "Bookly news",
+    snippet: "In today’s fast-moving world, people are constantly balancing work, relationships, health, and personal goals....",
+    imageUrl: "/image/blogProfile.png",
+  },
+  {
+    id: "post-5",
+    title: "Why Self-Care Is No Longer a Luxury",
+    date: "April 9, 2026",
+    readTime: "5 min read",
+    category: "Meet the partners",
+    snippet: "In today’s fast-moving world, people are constantly balancing work, relationships, health, and personal goals....",
+    imageUrl: "/image/blogProfile.png",
+  },
+  {
+    id: "post-6",
+    title: "Why Self-Care Is No Longer a Luxury",
+    date: "April 9, 2026",
+    readTime: "5 min read",
+    category: "Customer tips",
+    snippet: "In today’s fast-moving world, people are constantly balancing work, relationships, health, and personal goals....",
+    imageUrl: "/image/blogProfile.png",
+  },
+  // Extra page 2 items for testing pagination
+  {
+    id: "post-7",
+    title: "Navigating Growth: Tips for Local Salons & Barber Shops",
+    date: "April 12, 2026",
+    readTime: "4 min read",
+    category: "For business",
+    snippet: "Discover key marketing tools, booking optimization practices, and techniques to maintain customer retention levels in a highly competitive market...",
+    imageUrl: "/image/blogProfile.png",
+  },
+  {
+    id: "post-8",
+    title: "Healthy Hair, Healthy Mind: Daily Grooming Habits",
+    date: "April 15, 2026",
+    readTime: "6 min read",
+    category: "Customer tips",
+    snippet: "A deep dive into how small modifications to your hair and skin care routines can significantly boost your overall mood and everyday confidence...",
+    imageUrl: "/image/blogProfile.png",
+  },
+  {
+    id: "post-9",
+    title: "Partner Showcase: How Uncle Sam Gents Salon Expanded Bookings",
+    date: "April 18, 2026",
+    readTime: "8 min read",
+    category: "Meet the partners",
+    snippet: "An exclusive interview on automation, online deposits, and customer convenience with the founder of Larnaca's top-rated gentlemen's grooming establishment...",
+    imageUrl: "/image/blogProfile.png",
+  }
+];
+
+// Helper to get category badge background styling
+const getCategoryBadgeStyles = (category: string) => {
+  switch (category.toLowerCase()) {
+    case "bookly news":
+      return "bg-[#DBDDFF] text-[#0C0C0C]";
+    case "meet the partners":
+      return "bg-[#C3E8C5] text-[#0C0C0C]";
+    case "for business":
+      return "bg-[#FEDFC9] text-[#0C0C0C]";
+    case "customer tips":
+      return "bg-[#FFDBF7] text-[#0C0C0C]";
+    default:
+      return "bg-gray-100 text-[#0C0C0C]";
+  }
+};
+
+export default function BlogPage() {
+  const router = useRouter();
+  const [selectedCategory, setSelectedCategory] = useState<string>("All Topics");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  
+  // States for Navbar
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [selectedLanguage, setSelectedLanguage] = useState("ENG");
+
+  // Filtering Logic
+  const filteredPosts = allBlogPosts.filter(post => {
+    if (selectedCategory === "All Topics") return true;
+    return post.category.toLowerCase() === selectedCategory.toLowerCase();
+  });
+
+  // Featured post logic: The first post in the filtered list is displayed at the top in horizontal card format
+  const featuredPost = filteredPosts[0];
+  const gridPosts = filteredPosts.slice(1);
+
+  // Pagination Logic (Show 6 grid posts per page)
+  const postsPerPage = 6;
+  const totalPages = Math.ceil(gridPosts.length / postsPerPage) || 1;
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentGridPosts = gridPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const categoriesList = [
+    "All Topics",
+    "Meet the Partners",
+    "Customer Tips",
+    "For Business",
+    "Bookly News"
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#FCFAF9] flex flex-col relative overflow-x-hidden">
+      {/* Navbar */}
+      <Navbar
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+        selectedLanguage={selectedLanguage}
+        setSelectedLanguage={setSelectedLanguage}
+      />
+
+      {/* Hero Header */}
+      <header className="w-full max-w-[1310px] mx-auto px-4 md:px-16 mt-[8px] mb-8 flex flex-col items-center gap-[8px]">
+        <span className="w-full h-[24px] font-poppins font-normal text-[14px] leading-[24px] text-center tracking-[0.075em] uppercase text-[#000000]">
+          Resources & Stories
+        </span>
+        
+        {/* Frame 2147240011 */}
+        <div className="w-full flex flex-col items-center gap-[12px]">
+          <h1 className="w-full h-[36px] font-poppins font-medium text-[40px] leading-[36px] text-center tracking-[0.01em] text-[#000000]">
+            The Bookly Blog
+          </h1>
+          <p className="w-full h-[24px] font-poppins font-normal text-[16px] leading-[24px] text-center tracking-[0.01em] text-[rgba(17,17,17,0.6)]">
+            Tips for local business , partner stories, and updates from the team
+          </p>
+        </div>
+      </header>
+
+      {/* Category Pills Selector */}
+      <nav className="w-full flex justify-center px-4 mb-12">
+        <div className="flex flex-wrap items-center justify-center gap-3 max-w-4xl">
+          {categoriesList.map((category) => {
+            const isActive = selectedCategory === category;
+            return (
+              <button
+                key={category}
+                type="button"
+                onClick={() => {
+                  setSelectedCategory(category);
+                  setCurrentPage(1); // reset to page 1 on filter change
+                }}
+                className={`py-2 px-6 rounded-full text-sm font-medium transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-[#0C0C0C] text-[#FFFFFF]"
+                    : "bg-[#FFFFFF] border border-[#C6C6CB] text-[#0c0c0c] hover:bg-neutral-50"
+                }`}
+              >
+                {category}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* Main Blog Content Area */}
+      <main className="flex-1 w-full max-w-[1310px] mx-auto px-4 sm:px-6 lg:px-8 pb-24 flex flex-col gap-8">
+        
+        {filteredPosts.length > 0 ? (
+          <div className="w-full flex flex-col gap-10">
+            
+            {/* Featured Post Card (Horizontal Layout) */}
+            {featuredPost && (
+              <article 
+                onClick={() => router.push(`/blog/view?id=${featuredPost.id}`)}
+                className="w-full bg-[#FFFFFF] border border-[#C6C6CB]/60 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col md:flex-row p-0 md:h-[150px] transition-transform duration-200 hover:scale-[1.005] cursor-pointer"
+              >
+                {/* Featured Image */}
+                <div className="w-full md:w-[300px] h-[150px] relative flex-shrink-0">
+                  <Image
+                    src={featuredPost.imageUrl}
+                    alt={featuredPost.title}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+
+                {/* Featured Content Area */}
+                <div className="flex-grow p-4 md:px-6 md:py-3 flex flex-col justify-between gap-3">
+                  <div className="flex flex-col gap-2">
+                    <h2 className="font-poppins font-semibold text-lg sm:text-xl text-[#0C0C0C] leading-snug">
+                      {featuredPost.title}
+                    </h2>
+                    
+                    {/* Meta Row */}
+                    <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
+                      <span className="font-poppins text-[#4E5F78]">{featuredPost.date}</span>
+                      <span className="w-1 h-1 rounded-full bg-black/60" />
+                      <span className="font-poppins text-[#4E5F78]">{featuredPost.readTime}</span>
+                      <span className={`py-0.5 px-4 rounded-full text-xs font-semibold uppercase tracking-wider ${getCategoryBadgeStyles(featuredPost.category)}`}>
+                        {featuredPost.category}
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="font-poppins text-xs sm:text-sm text-[#4E5F78] line-clamp-2 md:line-clamp-1 leading-relaxed">
+                    {featuredPost.snippet}
+                  </p>
+                </div>
+              </article>
+            )}
+
+            {/* Grid Posts List */}
+            {currentGridPosts.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                {currentGridPosts.map((post) => (
+                  <article 
+                    key={post.id} 
+                    onClick={() => router.push(`/blog/view?id=${post.id}`)}
+                    className="flex flex-col bg-[#FFFFFF] border border-[#C6C6CB]/60 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-transform duration-200 hover:scale-[1.015] cursor-pointer"
+                  >
+                    {/* Grid Card Image */}
+                    <div className="w-full h-[240px] sm:h-[300px] relative">
+                      <Image
+                        src={post.imageUrl}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    {/* Grid Card Content Wrapper */}
+                    <div className="p-4 sm:p-5 flex flex-col gap-4 flex-1 justify-between">
+                      <div className="flex flex-col gap-3">
+                        <h3 className="font-poppins font-semibold text-lg text-[#0C0C0C] leading-snug line-clamp-2">
+                          {post.title}
+                        </h3>
+
+                        {/* Meta row */}
+                        <div className="flex flex-wrap items-center gap-2 text-xs">
+                          <span className="font-poppins text-[#4E5F78]">{post.date}</span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-black/60" />
+                          <span className="font-poppins text-[#4E5F78]">{post.readTime}</span>
+                          <span className={`py-0.5 px-3 rounded-full text-[10px] font-semibold uppercase tracking-wider ${getCategoryBadgeStyles(post.category)}`}>
+                            {post.category}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="font-poppins text-sm text-[#4E5F78] line-clamp-2 leading-relaxed">
+                        {post.snippet}
+                      </p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <footer className="w-full flex justify-end gap-2 mt-6">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  className={`w-10 h-10 rounded-full border border-[#C6C6CB] flex items-center justify-center font-bold text-lg transition-all ${
+                    currentPage === 1
+                      ? "text-gray-300 border-gray-200 cursor-not-allowed"
+                      : "text-black hover:bg-neutral-50 cursor-pointer"
+                  }`}
+                >
+                  ‹
+                </button>
+                {Array.from({ length: totalPages }).map((_, idx) => {
+                  const pageNum = idx + 1;
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-10 h-10 rounded-full border flex items-center justify-center text-sm font-semibold transition-all cursor-pointer ${
+                        currentPage === pageNum
+                          ? "bg-black border-black text-white"
+                          : "border-[#C6C6CB] text-black hover:bg-neutral-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  className={`w-10 h-10 rounded-full border border-[#C6C6CB] flex items-center justify-center font-bold text-lg transition-all ${
+                    currentPage === totalPages
+                      ? "text-gray-300 border-gray-200 cursor-not-allowed"
+                      : "text-black hover:bg-neutral-50 cursor-pointer"
+                  }`}
+                >
+                  ›
+                </button>
+              </footer>
+            )}
+
+          </div>
+        ) : (
+          <div className="w-full text-center py-24 bg-white border border-[#C6C6CB]/60 rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+            <p className="text-gray-500 text-lg">No blog posts found in this category.</p>
+          </div>
+        )}
+
+      </main>
+
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
+}

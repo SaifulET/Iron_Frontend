@@ -163,7 +163,7 @@ export default function FavoritesPage() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full px-4 md:px-8 xl:px-[65px] mt-[40px] flex flex-col z-10 relative">
+      <main className="flex-1 w-full px-4 md:px-8 xl:px-[65px] mt-[8px] flex flex-col z-10 relative">
         
         {/* Reusable Search Bar with same dropdown behavior and styling */}
         <div className="w-full flex justify-center mb-[72px]">

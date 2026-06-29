@@ -1,19 +1,16 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-
 // Hugeicons
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Location05Icon,
   Calendar01Icon,
   Tick01Icon,
-  ArrowRight02Icon
 } from "@hugeicons/core-free-icons";
 
 // Mock Data
-import { bookingsList, BookingItem } from "./mockBookings";
+import { bookingsList } from "./mockBookings";
 
 interface RescheduleModalProps {
   bookingId: string;
@@ -38,7 +35,7 @@ export default function RescheduleModal({
   const booking = bookingsList.find((b) => b.id === bookingId) || bookingsList[0];
 
   // States for date/time selection
-  const [selectedDate, setSelectedDate] = useState<number>(17); // default selected day
+  const [selectedDate, setSelectedDate] = useState<number>(18); // default selected day is 18 (Tue)
   const [selectedTime, setSelectedTime] = useState<string>("14:00"); // default selected time
   const [newNote, setNewNote] = useState<string>("");
 
@@ -50,14 +47,47 @@ export default function RescheduleModal({
   const daysInMonth = Array.from({ length: 31 }, (_, i) => i + 1);
 
   // Time Slot Options
-  const morningSlots = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"];
-  const afternoonSlots = ["13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"];
+  const morningSlots = [
+    { time: "09:00", disabled: true },
+    { time: "09:30", disabled: false },
+    { time: "10:00", disabled: false },
+    { time: "10:30", disabled: true },
+    { time: "11:00", disabled: false },
+    { time: "11:30", disabled: true },
+    { time: "12:00", disabled: false },
+    { time: "12:30", disabled: true }
+  ];
+  
+  const afternoonSlots = [
+    { time: "13:00", disabled: true },
+    { time: "13:30", disabled: false },
+    { time: "14:00", disabled: false },
+    { time: "14:30", disabled: true },
+    { time: "15:00", disabled: false },
+    { time: "15:30", disabled: true },
+    { time: "16:00", disabled: false },
+    { time: "16:30", disabled: true },
+    { time: "17:00", disabled: false },
+    { time: "17:30", disabled: true },
+    { time: "18:00", disabled: false },
+    { time: "18:30", disabled: true },
+    { time: "19:00", disabled: false }
+  ];
+
+  // Helper to format the large selected date display
+  const getSelectedDateHeader = () => {
+    // August 2026: Aug 1 is Saturday
+    // Day 17 is Monday, Day 18 is Tuesday, etc.
+    const dateObj = new Date(2026, 7, selectedDate);
+    const options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+    return dateObj.toLocaleDateString('en-US', options);
+  };
 
   return (
     <div className="fixed inset-0 bg-black/55 backdrop-blur-sm flex justify-center items-start overflow-y-auto z-50 sm:p-4 p-0 md:py-10">
       
       {/* Frame 2147239609: Main Content Card */}
-      <div className="w-full max-w-[794px] bg-[#FFFFFF] sm:rounded-xl rounded-none border-x-0 sm:border-x border-y sm:border-y border-[#C6C6CB] shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1)] p-6 md:p-10 flex flex-col gap-8 relative my-auto animate-in fade-in zoom-in-95 duration-200">
+      <div className="w-full max-w-[794px] bg-[#FFFFFF] sm:rounded-xl rounded-none border-x-0 sm:border-x border-y sm:border-y border-[#C6C6CB] shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1)] p-6 md:p-10 flex flex-col gap-6 relative my-auto animate-in fade-in zoom-in-95 duration-200">
         
         {/* Close button top right */}
         <button
@@ -68,20 +98,24 @@ export default function RescheduleModal({
         </button>
 
         {/* Header Title: Reschedule booking */}
-        <div className="w-full border-b border-gray-100 pb-4">
-          <h1 className="font-poppins font-medium text-3xl leading-[40px] text-[#111111] flex items-center">
+        <div className="w-full text-center pb-2">
+          <h1 className="font-poppins font-medium text-3xl leading-[40px] text-[#111111]">
             Reschedule booking
           </h1>
-          <p className="text-xs font-poppins text-[#4E5F78] mt-2 uppercase tracking-wider font-semibold">
+        </div>
+
+        {/* SELECT DATE & TIME Section Header */}
+        <div className="w-full">
+          <p className="text-xs font-poppins text-[#111111] uppercase tracking-wider font-bold">
             Select Date & Time
           </p>
         </div>
 
         {/* Salon Details Section */}
-        <div className="flex flex-col md:flex-row items-start gap-4 w-full">
+        <div className="flex flex-row items-start gap-4 w-full">
           
           {/* Salon Profile Picture */}
-          <div className="w-[106px] h-[106px] rounded-lg overflow-hidden border border-[#C6C6CB] flex-shrink-0 relative">
+          <div className="w-[80px] h-[80px] rounded-lg overflow-hidden border border-[#C6C6CB] flex-shrink-0 relative">
             <Image
               src="/image/profile.jpg"
               alt="Uncle SAM Gents Salon"
@@ -91,37 +125,37 @@ export default function RescheduleModal({
           </div>
 
           {/* Salon Info */}
-          <div className="flex-1 flex flex-col gap-1.5 font-poppins">
-            <h2 className="font-semibold text-2xl text-black">
+          <div className="flex-1 flex flex-col gap-1 font-poppins">
+            <h2 className="font-semibold text-lg text-black leading-tight">
               {booking.businessName}
             </h2>
             
             {/* Rating Row */}
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm text-black">5.0</span>
+            <div className="flex items-center gap-1.5 text-xs text-black">
+              <span className="font-semibold">5.0</span>
               <div className="flex items-center">
                 {Array.from({ length: 5 }).map((_, idx) => (
                   <img
                     key={idx}
                     src="/Icons/rattingfull.svg"
-                    className="w-4 h-4 object-contain"
+                    className="w-3.5 h-3.5 object-contain"
                     alt="star"
                   />
                 ))}
               </div>
-              <span className="text-sm text-black font-medium">(589)</span>
+              <span className="font-medium">(589)</span>
               <span className="text-gray-400">•</span>
-              <span className="text-sm text-black font-medium">Reschedule 1 of 2</span>
+              <span className="font-medium">Reschedule 1 of 2</span>
             </div>
 
             {/* Location Badge */}
-            <div className="flex items-center gap-1.5 text-sm text-[#4E5F78] font-medium">
-              <HugeiconsIcon icon={Location05Icon} className="w-4 h-4 text-[#4E5F78]" />
+            <div className="flex items-center gap-1 text-xs text-[#4E5F78] font-medium">
+              <HugeiconsIcon icon={Location05Icon} className="w-3.5 h-3.5 text-[#4E5F78]" />
               <span>Marasi Drive, Marquise Square Tower, Ground</span>
             </div>
 
             {/* Booking Reference ID */}
-            <div className="text-sm text-[#4E5F78] font-medium mt-1">
+            <div className="text-xs text-[#3A97D1] font-semibold">
               Booking ID: {booking.bookingCode}
             </div>
 
@@ -130,49 +164,43 @@ export default function RescheduleModal({
         </div>
 
         {/* Horizontal Line separating sections */}
-        <hr className="border-t border-[rgba(17,17,17,0.2)] w-full" />
+        <hr className="border-t border-[#EBEBEB] w-full" />
 
-        {/* Appointment Comparison block */}
-        <div className="flex flex-col gap-4 w-full font-poppins">
-          <h3 className="text-[#111111] font-medium text-lg">
+        {/* Appointment details comparison */}
+        <div className="flex flex-col gap-3 w-full font-poppins">
+          <h3 className="text-[#111111] font-semibold text-base">
             {booking.serviceTitle}
           </h3>
 
-          {/* Date Comparison Grid */}
-          <div className="flex flex-wrap items-center gap-3 text-sm font-medium">
-            <HugeiconsIcon icon={Calendar01Icon} className="w-5 h-5 text-[#141B34]" />
-            
-            {/* Old date-time (Strikethrough) */}
-            <span className="line-through text-[#111111]">
-              {booking.date} • {booking.time}
+          {/* Date Comparison Row */}
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <HugeiconsIcon icon={Calendar01Icon} className="w-4 h-4 text-gray-500" />
+            <span className="line-through text-gray-500">
+              Fri, 16 Aug • 10:00 AM
             </span>
-
-            <HugeiconsIcon icon={ArrowRight02Icon} className="w-5 h-5 text-[#141B34]" />
-
-            {/* New selected date-time */}
+            <span className="text-gray-500">→</span>
             <span className="text-[#1F8900] font-semibold">
               Mon, {selectedDate} Aug • {selectedTime}
             </span>
           </div>
 
-          {/* Payment breakdowns (Type 1 and Type 2) */}
-          <div className="flex flex-col gap-3 border border-gray-100 rounded-lg p-4 bg-gray-50/50 mt-2">
+          {/* Clean row-based payment comparison */}
+          <div className="flex flex-col gap-2 mt-1">
             {isDepositType ? (
-              // Type 1: Deposit Paid
               <>
-                <div className="flex justify-between items-center text-sm font-medium text-[#111111]">
-                  <span>Deposit paid</span>
-                  <span>{depositValue}</span>
+                <div className="flex justify-between items-center text-sm font-medium">
+                  <span className="text-[#111111]">Deposit</span>
+                  <span className="text-gray-500">{depositValue}</span>
                 </div>
-                <div className="flex justify-between items-center text-sm font-medium text-[#111111]">
-                  <span>Balance due at venue</span>
-                  <span>{balanceValue}</span>
+                <div className="flex justify-between items-center text-sm font-medium">
+                  <span className="text-[#111111]">Balance due at venue</span>
+                  <span className="text-[#111111] font-semibold">{balanceValue}</span>
                 </div>
 
                 {/* Tick Alert Banner Type 1 */}
-                <div className="flex items-center gap-3 bg-[#E5F5EF] border border-[#2A6D16]/20 rounded-xl p-3 mt-1 text-[#2A6D16] text-sm font-semibold">
-                  <div className="w-5 h-5 rounded-full border border-[#2A6D16] flex items-center justify-center flex-shrink-0">
-                    <HugeiconsIcon icon={Tick01Icon} className="w-3.5 h-3.5 text-[#2A6D16]" />
+                <div className="flex items-center gap-2 bg-[#E5F5EF] border border-[#2A6D16]/10 rounded-xl p-3.5 mt-1 text-[#2A6D16] text-xs font-semibold">
+                  <div className="w-4 h-4 rounded-full border border-[#2A6D16] flex items-center justify-center flex-shrink-0">
+                    <HugeiconsIcon icon={Tick01Icon} className="w-2.5 h-2.5 text-[#2A6D16]" />
                   </div>
                   <span>
                     Rescheduling is free. Your deposit of {depositValue} carries forward to your new appointment.
@@ -180,21 +208,20 @@ export default function RescheduleModal({
                 </div>
               </>
             ) : (
-              // Type 2: Returning Customer / No Deposit
               <>
-                <div className="flex justify-between items-center text-sm font-medium text-[#111111]">
-                  <span>Deposit</span>
+                <div className="flex justify-between items-center text-sm font-medium">
+                  <span className="text-[#111111]">Deposit</span>
                   <span className="text-[#1F8900] font-semibold">None - returning customer</span>
                 </div>
-                <div className="flex justify-between items-center text-sm font-medium text-[#111111]">
-                  <span>Full amount due at venue</span>
-                  <span>{booking.atVenueAmount}</span>
+                <div className="flex justify-between items-center text-sm font-medium">
+                  <span className="text-[#111111]">Full amount due at venue</span>
+                  <span className="text-[#111111] font-semibold">{booking.atVenueAmount}</span>
                 </div>
 
                 {/* Tick Alert Banner Type 2 */}
-                <div className="flex items-center gap-3 bg-[#E5F5EF] border border-[#2A6D16]/20 rounded-xl p-3 mt-1 text-[#2A6D16] text-sm font-semibold">
-                  <div className="w-5 h-5 rounded-full border border-[#2A6D16] flex items-center justify-center flex-shrink-0">
-                    <HugeiconsIcon icon={Tick01Icon} className="w-3.5 h-3.5 text-[#2A6D16]" />
+                <div className="flex items-center gap-2 bg-[#E5F5EF] border border-[#2A6D16]/10 rounded-xl p-3.5 mt-1 text-[#2A6D16] text-xs font-semibold">
+                  <div className="w-4 h-4 rounded-full border border-[#2A6D16] flex items-center justify-center flex-shrink-0 animate-pulse">
+                    <span className="text-[10px] text-[#2A6D16] font-bold">✓</span>
                   </div>
                   <span>
                     Rescheduling is free. No deposit required - you pay the full amount at the venue as usual.
@@ -207,17 +234,26 @@ export default function RescheduleModal({
         </div>
 
         {/* Calendar Picker Section */}
-        <div className="w-full flex flex-col gap-4 font-poppins">
+        <div className="w-full flex flex-col gap-3 font-poppins mt-2">
+          
+          {/* Calendar Header matching screenshot */}
           <div className="flex justify-between items-center w-full">
-            <span className="font-semibold text-base text-[#111111]">August 2026</span>
-            <div className="flex gap-2">
-              <button className="p-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-700">◀</button>
-              <button className="p-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-700">▶</button>
+            <button className="flex items-center gap-1 font-semibold text-sm text-[#111111] hover:opacity-80">
+              August 2026 <span className="text-[10px]">▼</span>
+            </button>
+            <div className="flex gap-4">
+              <button className="text-gray-400 hover:text-black font-semibold">‹</button>
+              <button className="text-gray-400 hover:text-black font-semibold">›</button>
             </div>
           </div>
 
+          {/* Large display of selected date */}
+          <div className="text-3xl font-normal text-black my-1">
+            {getSelectedDateHeader()}
+          </div>
+
           {/* Weekdays */}
-          <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-400 pb-2 border-b border-gray-100">
+          <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-400 pb-1">
             <span>S</span>
             <span>M</span>
             <span>T</span>
@@ -236,12 +272,13 @@ export default function RescheduleModal({
 
             {daysInMonth.map((day) => {
               const isSelected = selectedDate === day;
-              const isPreviousDate = day === 17; // mock highlight
+              const isPreviousDate = day === 17; // mock highlight from screenshot
               return (
                 <button
                   key={day}
+                  type="button"
                   onClick={() => setSelectedDate(day)}
-                  className={`mx-auto w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
+                  className={`mx-auto w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
                     isSelected
                       ? "bg-black text-white"
                       : isPreviousDate
@@ -258,25 +295,29 @@ export default function RescheduleModal({
         </div>
 
         {/* Time Picker Section */}
-        <div className="w-full flex flex-col gap-6 font-poppins">
+        <div className="w-full flex flex-col gap-4 font-poppins">
           
           {/* Morning */}
-          <div className="flex flex-col gap-3">
-            <h4 className="text-xs uppercase font-bold tracking-wider text-gray-400">Morning</h4>
+          <div className="flex flex-col gap-2">
+            <h4 className="text-[10px] uppercase font-bold tracking-wider text-gray-400">Morning</h4>
             <div className="grid grid-cols-4 gap-2">
-              {morningSlots.map((time) => {
-                const isSelected = selectedTime === time;
+              {morningSlots.map((slot) => {
+                const isSelected = selectedTime === slot.time;
                 return (
                   <button
-                    key={time}
-                    onClick={() => setSelectedTime(time)}
-                    className={`py-2 px-3 border rounded-lg text-sm font-medium transition-all ${
+                    key={slot.time}
+                    type="button"
+                    disabled={slot.disabled}
+                    onClick={() => setSelectedTime(slot.time)}
+                    className={`py-2 px-3 border rounded-lg text-xs font-semibold transition-all ${
                       isSelected
                         ? "bg-black border-black text-white"
-                        : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                        : slot.disabled
+                        ? "border-transparent text-gray-300 line-through cursor-not-allowed"
+                        : "border-gray-200 text-[#111111] hover:bg-gray-50"
                     }`}
                   >
-                    {time}
+                    {slot.time}
                   </button>
                 );
               })}
@@ -284,22 +325,26 @@ export default function RescheduleModal({
           </div>
 
           {/* Afternoon */}
-          <div className="flex flex-col gap-3">
-            <h4 className="text-xs uppercase font-bold tracking-wider text-gray-400">Afternoon</h4>
+          <div className="flex flex-col gap-2">
+            <h4 className="text-[10px] uppercase font-bold tracking-wider text-gray-400">Afternoon</h4>
             <div className="grid grid-cols-4 gap-2">
-              {afternoonSlots.map((time) => {
-                const isSelected = selectedTime === time;
+              {afternoonSlots.map((slot) => {
+                const isSelected = selectedTime === slot.time;
                 return (
                   <button
-                    key={time}
-                    onClick={() => setSelectedTime(time)}
-                    className={`py-2 px-3 border rounded-lg text-sm font-medium transition-all ${
+                    key={slot.time}
+                    type="button"
+                    disabled={slot.disabled}
+                    onClick={() => setSelectedTime(slot.time)}
+                    className={`py-2 px-3 border rounded-lg text-xs font-semibold transition-all ${
                       isSelected
                         ? "bg-black border-black text-white"
-                        : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                        : slot.disabled
+                        ? "border-transparent text-gray-300 line-through cursor-not-allowed"
+                        : "border-gray-200 text-[#111111] hover:bg-gray-50"
                     }`}
                   >
-                    {time}
+                    {slot.time}
                   </button>
                 );
               })}
@@ -309,36 +354,36 @@ export default function RescheduleModal({
         </div>
 
         {/* Appointment Notes section */}
-        <div className="w-full flex flex-col gap-3 font-poppins border border-[#C6C6CB] rounded-xl p-4">
-          <div className="flex justify-between items-center text-xs text-gray-500 font-medium uppercase tracking-wider">
+        <div className="w-full flex flex-col gap-3 font-poppins border border-[#C6C6CB]/80 rounded-xl p-4">
+          <div className="flex justify-between items-center text-[10px] text-gray-400 font-semibold uppercase tracking-wider">
             <span>Notes for your appointment</span>
             <span>Update if anything changed</span>
           </div>
 
-          <div className="bg-[#F6F5F3] p-3 rounded-lg flex flex-col gap-1.5 text-sm text-[#111111] font-medium leading-relaxed">
-            <span className="text-[10px] text-gray-400 uppercase tracking-widest block font-bold">Your previous note</span>
+          <div className="bg-[#F5F4EE] p-4 rounded-lg flex flex-col gap-1 text-xs text-[#111111] font-medium leading-relaxed border-l-2 border-gray-300">
+            <span className="text-[9px] text-gray-400 uppercase tracking-widest block font-bold">Your previous note</span>
             <span>Please use organic products only, allergic to strong fragrances</span>
           </div>
 
           <textarea
-            placeholder="Leave a new note or leave blank to keep your previous note ..."
+            placeholder="Leave a new note or leave blank to keep your previous note . . ."
             value={newNote}
             onChange={(e) => setNewNote(e.target.value)}
-            className="w-full p-3 border border-[#C6C6CB] rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-gray-600 resize-none h-20"
+            className="w-full p-3 border border-[#C6C6CB]/80 rounded-lg text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-gray-500 resize-none h-16"
           />
         </div>
 
         {/* Footer Action buttons */}
-        <div className="flex gap-4 justify-end font-poppins">
+        <div className="flex gap-4 justify-end font-poppins mt-2">
           <button
             onClick={onClose}
-            className="py-2.5 px-6 border border-[#C6C6CB] rounded-lg text-sm font-semibold text-[#020305] hover:bg-neutral-50 transition-colors"
+            className="py-2 px-6 border border-[#C6C6CB] rounded-lg text-xs font-semibold text-[#020305] hover:bg-neutral-50 transition-colors bg-white"
           >
             Cancel
           </button>
           <button
             onClick={onSave}
-            className="py-2.5 px-6 rounded-lg text-sm font-semibold bg-[#8EBAC5] text-[#020305] hover:bg-[#7ba9b4] transition-colors"
+            className="py-2 px-6 rounded-lg text-xs font-semibold bg-[#67B2C5] text-white hover:bg-[#57a1b4] transition-colors"
           >
             Save changes
           </button>
