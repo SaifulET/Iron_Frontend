@@ -7,14 +7,35 @@ import Footer from "@/components/Footer";
 import Image from "next/image";
 import { mockVenueDetails, ServiceItem } from "./mockVenue";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowLeft01Icon, ArrowLeft02Icon, ArrowRight01Icon, ArrowRight02Icon, Clock04Icon, Location05Icon, SquareLock01Icon, InformationCircleIcon, Location01Icon } from "@hugeicons/core-free-icons";
+import { ArrowLeft01Icon, ArrowLeft02Icon, ArrowRight01Icon, ArrowRight02Icon, Clock04Icon, Location05Icon, SquareLock01Icon, InformationCircleIcon, Location01Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import ServiceCard, { Recommendation } from "@/components/ServiceCard";
 import Carousel from "@/components/Carousel";
+import AddonsStep from "./components/AddonsStep";
+import ProfessionalsStep from "./components/ProfessionalsStep";
+import TimeStep from "./components/TimeStep";
+import PaymentStep from "./components/PaymentStep";
+import ConfirmedStep from "./components/ConfirmedStep";
+import CheckoutSummaryAside from "./components/CheckoutSummaryAside";
 
 export default function VenueDetailsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const venueId = searchParams.get("id") || "1";
+
+  // Booking Wizard Steps States
+  const [bookingStep, setBookingStep] = useState<"addons" | "professionals" | "time" | "payment" | "confirmed" | null>(null);
+  const [selectedAddons, setSelectedAddons] = useState<number[]>([]);
+  const [selectedProfessional, setSelectedProfessional] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState("Mon, Aug 18");
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState("14:30");
+  const [selectedDayNum, setSelectedDayNum] = useState(18);
+  const [hasSavedCard, setHasSavedCard] = useState(true);
+  const [isReplacingCard, setIsReplacingCard] = useState(false);
+  const [showPolicy, setShowPolicy] = useState(false);
+
+  // Sticky Sidebar State Selector (Screenshot 1, 2, or 3)
+  const [sidebarVariant, setSidebarVariant] = useState<"1" | "2" | "3">("1");
+  const isReturningCustomer = sidebarVariant === "3";
 
   // Tab State
   const [activeTab, setActiveTab] = useState<"services" | "about" | "reviews" | "team" | "gallery">("services");
@@ -774,7 +795,7 @@ export default function VenueDetailsPage() {
 
                 {/* Continue Button */}
                 <button
-                  onClick={() => router.push(`/customer/bookings`)}
+                  onClick={() => setBookingStep("addons")}
                   className="w-full h-12 bg-[#8EBAC5] text-white font-poppins font-semibold text-base rounded-[12px] hover:opacity-95 transition-opacity cursor-pointer flex items-center justify-center gap-2 shadow-sm mt-2"
                 >
                   <span>Continue →</span>
@@ -865,7 +886,7 @@ export default function VenueDetailsPage() {
                   /* SS 1: User Logged In Card State */
                   <>
                     <button
-                      onClick={() => router.push(`/customer/bookings`)}
+                      onClick={() => setBookingStep("addons")}
                       className="w-full h-12 bg-[#8EBAC5] border border-[#D5D7DA] text-white font-poppins font-medium text-base rounded-[12px] hover:opacity-90 transition-opacity cursor-pointer flex items-center justify-center shadow-sm"
                     >
                       <span className="w-[78px] h-[24px] flex items-center justify-center">Book now</span>
@@ -939,7 +960,7 @@ export default function VenueDetailsPage() {
                   /* SS 2: User Not Logged In Card State (With blurred footer & Lock icon overlay) */
                   <>
                     <button
-                      onClick={() => router.push(`/customer/bookings`)}
+                      onClick={() => setBookingStep("addons")}
                       className="w-full h-12 bg-[#0D0D0D] border border-[#0D0D0D] text-white font-poppins font-medium text-base rounded-[12px] hover:opacity-95 transition-opacity cursor-pointer flex items-center justify-center gap-2 shadow-sm"
                     >
                       <img src="/image/smallBlacklogo.svg" alt="Bookly" className="w-5 h-5 object-contain invert brightness-0" />
@@ -1114,6 +1135,134 @@ export default function VenueDetailsPage() {
 
       {/* Footer */}
       <Footer />
+
+      {bookingStep && (
+        <div className="fixed inset-0 bg-[#FCFAF9] z-50 overflow-y-auto font-poppins flex flex-col">
+          {/* Header Bar */}
+          {bookingStep !== "confirmed" && (
+            <header className="w-full bg-[#FCFAF9] border-b border-neutral-200 py-6 px-4 md:px-16 flex justify-between items-center sticky top-0 z-30">
+              {/* Left Back Arrow and Breadcrumbs */}
+              <div className="flex items-center gap-5 w-full max-w-[1440px] mx-auto relative">
+                {/* Back Button */}
+                <button
+                  onClick={() => {
+                    if (bookingStep === "addons") {
+                      setBookingStep(null);
+                    } else if (bookingStep === "professionals") {
+                      setBookingStep("addons");
+                    } else if (bookingStep === "time") {
+                      setBookingStep("professionals");
+                    } else if (bookingStep === "payment") {
+                      setBookingStep("time");
+                    }
+                  }}
+                  className="w-11 h-11 bg-[#E2E2E0] rounded-[4px] flex items-center justify-center cursor-pointer text-[#141B34] hover:bg-neutral-300 transition-colors shrink-0"
+                  aria-label="Go back"
+                >
+                  <HugeiconsIcon icon={ArrowLeft01Icon} size={24} />
+                </button>
+
+                {/* Breadcrumbs List */}
+                <div className="flex items-center gap-3 text-sm font-medium font-poppins">
+                  <span className="text-[#ACAAB4] cursor-pointer" onClick={() => setBookingStep(null)}>Services</span>
+                  <HugeiconsIcon icon={ArrowRight01Icon} size={14} className="text-[#ACAAB4]" />
+                  
+                  <span className={bookingStep === "addons" ? "text-black font-semibold" : "text-[#ACAAB4]"}>Add-ons</span>
+                  <HugeiconsIcon icon={ArrowRight01Icon} size={14} className={bookingStep === "addons" ? "text-black" : "text-[#ACAAB4]"} />
+                  
+                  <span className={bookingStep === "professionals" ? "text-black font-semibold" : "text-[#ACAAB4]"}>Professionals</span>
+                  <HugeiconsIcon icon={ArrowRight01Icon} size={14} className={bookingStep === "professionals" ? "text-black" : "text-[#ACAAB4]"} />
+                  
+                  <span className={bookingStep === "time" ? "text-black font-semibold" : "text-[#ACAAB4]"}>Time</span>
+                  <HugeiconsIcon icon={ArrowRight01Icon} size={14} className={bookingStep === "time" ? "text-black" : "text-[#ACAAB4]"} />
+                  
+                  <span className={bookingStep === "payment" ? "text-black font-semibold" : "text-[#ACAAB4]"}>Payment</span>
+                  <HugeiconsIcon icon={ArrowRight01Icon} size={14} className={bookingStep === "payment" ? "text-black" : "text-[#ACAAB4]"} />
+                  
+                  <span className="text-[#ACAAB4]">Confirm</span>
+                </div>
+
+                {/* Close button on the right */}
+                <button
+                  onClick={() => setBookingStep(null)}
+                  className="absolute right-0 text-neutral-400 hover:text-black transition-colors cursor-pointer p-1"
+                  aria-label="Close modal"
+                >
+                  <HugeiconsIcon icon={Cancel01Icon} size={24} />
+                </button>
+              </div>
+            </header>
+          )}
+
+          {/* Modal Main Content Container */}
+          <div className={`flex-1 w-full max-w-[1440px] mx-auto px-4 md:px-16 py-10 flex flex-col ${bookingStep === "confirmed" ? "items-center justify-center" : "lg:flex-row gap-16 items-start"} relative`}>
+            
+            {/* Left Side: Step Content */}
+            <div className="flex-grow w-full lg:max-w-[700px] flex flex-col gap-10">
+              {bookingStep === "addons" && (
+                <AddonsStep selectedAddons={selectedAddons} setSelectedAddons={setSelectedAddons} />
+              )}
+
+              {bookingStep === "professionals" && (
+                <ProfessionalsStep selectedProfessional={selectedProfessional} setSelectedProfessional={setSelectedProfessional} />
+              )}
+
+              {bookingStep === "time" && (
+                <TimeStep
+                  selectedDate={selectedDate}
+                  setSelectedDate={setSelectedDate}
+                  selectedTimeSlot={selectedTimeSlot}
+                  setSelectedTimeSlot={setSelectedTimeSlot}
+                  selectedDayNum={selectedDayNum}
+                  setSelectedDayNum={setSelectedDayNum}
+                />
+              )}
+
+              {bookingStep === "payment" && (
+                <PaymentStep
+                  hasSavedCard={hasSavedCard}
+                  setHasSavedCard={setHasSavedCard}
+                  isReplacingCard={isReplacingCard}
+                  setIsReplacingCard={setIsReplacingCard}
+                  setBookingStep={setBookingStep}
+                />
+              )}
+
+              {bookingStep === "confirmed" && (
+                <ConfirmedStep
+                  selectedDayNum={selectedDayNum}
+                  selectedTimeSlot={selectedTimeSlot}
+                  totalPrice={totalPrice}
+                  selectedAddons={selectedAddons}
+                  isReturningCustomer={isReturningCustomer}
+                  selectedList={selectedList}
+                  setBookingStep={setBookingStep}
+                />
+              )}
+            </div>
+
+            {/* Right Side: Sticky Checkout Summary Card */}
+            {bookingStep !== "confirmed" && (
+              <CheckoutSummaryAside
+                bookingStep={bookingStep}
+                selectedDayNum={selectedDayNum}
+                selectedTimeSlot={selectedTimeSlot}
+                selectedList={selectedList}
+                totalDurationText={totalDurationText}
+                totalPriceText={totalPriceText}
+                selectedAddons={selectedAddons}
+                selectedProfessional={selectedProfessional}
+                totalPrice={totalPrice}
+                isReturningCustomer={isReturningCustomer}
+                showPolicy={showPolicy}
+                setShowPolicy={setShowPolicy}
+                setBookingStep={setBookingStep}
+              />
+            )}
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }
