@@ -33,6 +33,18 @@ export default function VenueDetailsPage() {
   const [isReplacingCard, setIsReplacingCard] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
 
+  // Lock screen body scroll when bookingStep is active
+  React.useEffect(() => {
+    if (bookingStep) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [bookingStep]);
+
   // Sticky Sidebar State Selector (Screenshot 1, 2, or 3)
   const [sidebarVariant, setSidebarVariant] = useState<"1" | "2" | "3">("1");
   const isReturningCustomer = sidebarVariant === "3";
@@ -248,12 +260,12 @@ export default function VenueDetailsPage() {
           <div className="flex-grow w-full lg:max-w-[868px] flex flex-col gap-8">
 
             {/* Tabs Navigation */}
-            <div className="flex border-b border-[#ACAAB4] w-full">
+            <div className="flex border-b border-[#ACAAB4] w-full justify-between">
               {(["services", "about", "reviews", "team", "gallery"] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`py-3 px-6 text-[14.8px] font-inter font-semibold transition-all border-b-[4px] capitalize cursor-pointer ${activeTab === tab
+                  className={`py-3 px-1 sm:px-6 text-[11px] xs:text-xs sm:text-[14.8px] font-inter font-semibold transition-all border-b-[4px] capitalize cursor-pointer flex-1 text-center shrink-0 ${activeTab === tab
                     ? "border-[#1C1B1C] text-[#0D0D0D] font-bold"
                     : "border-transparent text-[#757575] hover:text-black"
                     }`}
@@ -558,11 +570,11 @@ export default function VenueDetailsPage() {
               )}
 
               {activeTab === "reviews" && (
-                <div className="flex flex-col pt-6 w-[862px] font-inter">
+                <div className="flex flex-col pt-6 w-full max-w-[862px] font-inter">
 
                   {/* Reviews Title Row */}
-                  <div className="flex justify-between items-baseline w-[862px] h-[36px] mb-3">
-                    <h3 className="w-[697px] font-semibold text-[25.2px] leading-[36px] text-[#0D0D0D]">
+                  <div className="flex flex-wrap justify-between items-baseline w-full mb-3 gap-2">
+                    <h3 className="font-semibold text-[25.2px] leading-[36px] text-[#0D0D0D]">
                       Reviews
                     </h3>
 
@@ -594,9 +606,9 @@ export default function VenueDetailsPage() {
                   </div>
 
                   {/* Reviews stack */}
-                  <div className="flex flex-col py-3 gap-6 w-[862px]">
+                  <div className="flex flex-col py-3 gap-6 w-full">
                     {mockVenueDetails.reviews.map((review) => (
-                      <div key={review.id} className="flex flex-col items-start py-5 gap-2 w-[862px] border-b border-neutral-100">
+                      <div key={review.id} className="flex flex-col items-start py-5 gap-2 w-full border-b border-neutral-100">
 
                         {/* Author info row */}
                         <div className="flex items-center gap-2 w-[236.65px] h-16">
@@ -630,8 +642,8 @@ export default function VenueDetailsPage() {
                         </div>
 
                         {/* Review text comment */}
-                        <div className="flex flex-col items-start w-[862px] h-[24px] mt-1.5">
-                          <p className="w-[862px] h-[24px] font-inter font-normal text-[16.3px] leading-6 text-[#0D0D0D] truncate">
+                        <div className="flex flex-col items-start w-full h-[24px] mt-1.5">
+                          <p className="w-full h-[24px] font-inter font-normal text-[16.3px] leading-6 text-[#0D0D0D] truncate">
                             {review.comment} <span className="font-semibold text-black cursor-pointer hover:underline">Read more</span>
                           </p>
                         </div>
@@ -641,7 +653,7 @@ export default function VenueDetailsPage() {
                   </div>
 
                   {/* See all button */}
-                  <div className="flex flex-col items-start w-[862px] h-12 mt-6">
+                  <div className="flex flex-col items-start w-full h-12 mt-6">
                     <button className="box-border flex items-center justify-center px-5 py-2.5 w-[89.8px] h-12 bg-white border border-[#D3D3D3] rounded-full hover:bg-neutral-50 transition-colors shadow-sm cursor-pointer">
                       <span className="font-inter font-semibold text-[16.3px] text-[#0D0D0D] whitespace-nowrap">
                         See all
@@ -653,13 +665,13 @@ export default function VenueDetailsPage() {
               )}
 
               {activeTab === "team" && (
-                <div className="flex flex-col gap-6 w-[862px] font-inter">
-                  <h3 className="w-[862px] font-semibold text-[25.8px] leading-[36px] text-[#0D0D0D]">
+                <div className="flex flex-col gap-6 w-full max-w-[862px] font-inter">
+                  <h3 className="w-full font-semibold text-[25.8px] leading-[36px] text-[#0D0D0D]">
                     Team
                   </h3>
 
                   {/* Employees scroll/flex list wrapper */}
-                  <div className="flex flex-wrap items-start gap-8 w-[862px] h-[404px] overflow-y-auto">
+                  <div className="flex flex-wrap items-start gap-8 w-full overflow-y-auto">
                     {mockVenueDetails.team.map((member) => (
                       <div
                         key={member.id}
@@ -698,11 +710,11 @@ export default function VenueDetailsPage() {
               )}
 
               {activeTab === "gallery" && (
-                <div className="flex flex-col gap-6 w-[862px] font-inter">
+                <div className="flex flex-col gap-6 w-full max-w-[862px] font-inter">
 
                   {/* Gallery Title Row */}
-                  <div className="flex justify-between items-baseline w-[862px] h-[40px] mb-2">
-                    <h3 className="w-[816px] font-semibold text-[25.8px] leading-[36px] text-[#0D0D0D]">
+                  <div className="flex justify-between items-baseline w-full mb-2">
+                    <h3 className="font-semibold text-[25.8px] leading-[36px] text-[#0D0D0D]">
                       Photos
                     </h3>
                     <button className="w-[46px] h-[36px] font-poppins text-sm leading-[36px] text-[#0D0D0D] hover:underline cursor-pointer">
@@ -710,38 +722,27 @@ export default function VenueDetailsPage() {
                     </button>
                   </div>
 
-                  {/* Two rows of photo cards */}
-                  <div className="flex flex-col gap-5 w-[862px]">
-
-                    {/* Row 1 */}
-                    <div className="flex flex-row items-center gap-5 w-[862px] h-[274px]">
-                      <div className="w-[274px] h-[274px] bg-[#D9D9D9] rounded-xl flex-grow overflow-hidden relative">
-                        <Image src="/image/imgOfService.png" alt="Gallery 1" fill className="object-cover opacity-60 mix-blend-multiply" />
-                      </div>
-                      <div className="w-[274px] h-[274px] bg-[#D9D9D9] rounded-xl flex-grow overflow-hidden relative">
-                        <Image src="/image/imgOfService.png" alt="Gallery 2" fill className="object-cover opacity-60 mix-blend-multiply" />
-                      </div>
-                      <div className="w-[274px] h-[274px] bg-[#D9D9D9] rounded-xl flex-grow overflow-hidden relative">
-                        <Image src="/image/imgOfService.png" alt="Gallery 3" fill className="object-cover opacity-60 mix-blend-multiply" />
-                      </div>
+                  {/* Responsive grid of photo cards (2 in a row on mobile, 3 on desktop) */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 w-full">
+                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                      <Image src="/image/imgOfService.png" alt="Gallery 1" fill className="object-cover opacity-60 mix-blend-multiply" />
                     </div>
-
-                    {/* Row 2 */}
-                    <div className="flex flex-row items-center gap-5 w-[862px] h-[274px]">
-                      <div className="w-[274px] h-[274px] bg-[#D9D9D9] rounded-xl flex-grow overflow-hidden relative">
-                        <Image src="/image/imgOfService.png" alt="Gallery 4" fill className="object-cover opacity-60 mix-blend-multiply" />
-                      </div>
-                      <div className="w-[274px] h-[274px] bg-[#D9D9D9] rounded-xl flex-grow overflow-hidden relative">
-                        <Image src="/image/imgOfService.png" alt="Gallery 5" fill className="object-cover opacity-60 mix-blend-multiply" />
-                      </div>
-                      <div className="w-[274px] h-[274px] bg-[#D9D9D9] rounded-xl flex-grow overflow-hidden relative">
-                        <Image src="/image/imgOfService.png" alt="Gallery 6" fill className="object-cover opacity-60 mix-blend-multiply" />
-                      </div>
+                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                      <Image src="/image/imgOfService.png" alt="Gallery 2" fill className="object-cover opacity-60 mix-blend-multiply" />
                     </div>
-
+                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                      <Image src="/image/imgOfService.png" alt="Gallery 3" fill className="object-cover opacity-60 mix-blend-multiply" />
+                    </div>
+                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                      <Image src="/image/imgOfService.png" alt="Gallery 4" fill className="object-cover opacity-60 mix-blend-multiply" />
+                    </div>
+                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                      <Image src="/image/imgOfService.png" alt="Gallery 5" fill className="object-cover opacity-60 mix-blend-multiply" />
+                    </div>
+                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                      <Image src="/image/imgOfService.png" alt="Gallery 6" fill className="object-cover opacity-60 mix-blend-multiply" />
+                    </div>
                   </div>
-
-
 
                 </div>
               )}
@@ -750,7 +751,7 @@ export default function VenueDetailsPage() {
           </div>
 
           {/* Right Column: Sticky Venue Summary Card */}
-          <aside className="w-[422px] bg-[#FFFFFF] shadow-[0px_-1px_4px_rgba(0,0,0,0.25),0px_4px_12px_rgba(0,0,0,0.2)] rounded-[12px] p-12 flex flex-col gap-10 lg:sticky lg:top-24 select-none">
+          <aside className="w-full lg:max-w-[422px] lg:mx-0 bg-[#FFFFFF] shadow-[0px_-1px_4px_rgba(0,0,0,0.25),0px_4px_12px_rgba(0,0,0,0.2)] rounded-[12px] p-6 sm:p-12 flex flex-col gap-10 lg:sticky lg:top-24 select-none">
 
             {isLoggedIn && selectedList.length > 0 ? (
               /* checkout / book a visit state */
@@ -864,13 +865,13 @@ export default function VenueDetailsPage() {
               /* Default layout when no services are selected / logged out */
               <>
                 {/* Salon Details Block */}
-                <div className="flex flex-col gap-5 w-[316.89px]">
+                <div className="flex flex-col gap-5 w-full max-w-[316.89px]">
                   <h2 className="font-inter font-semibold text-[37.2px] leading-[44px] text-[#0D0D0D]">
                     {mockVenueDetails.name}
                   </h2>
 
                   {/* Stars and rating block */}
-                  <div className="flex items-center gap-2 w-[253px] h-8">
+                  <div className="flex items-center gap-2 w-full max-w-[253px] h-8">
                     <span className="font-inter font-semibold text-2xl leading-8 text-[#0D0D0D]">5.0</span>
                     <div className="flex items-center gap-1 w-[136px] h-6 justify-center">
                       {[1, 2, 3, 4, 5].map((s) => (
@@ -893,7 +894,7 @@ export default function VenueDetailsPage() {
                     </button>
 
                     {/* Info block */}
-                    <div className="flex flex-col gap-5 w-[338px]">
+                    <div className="flex flex-col gap-5 w-full max-w-[338px]">
 
                       {/* Clock status */}
                       <div className="flex items-center gap-3 w-full h-[24px]">
@@ -968,7 +969,7 @@ export default function VenueDetailsPage() {
                     </button>
 
                     {/* Clock & Address shown unblurred */}
-                    <div className="flex flex-col gap-5 w-[338px]">
+                    <div className="flex flex-col gap-5 w-full max-w-[338px]">
 
                       {/* Clock status */}
                       <div className="flex items-center gap-3 w-full h-[24px]">
@@ -1001,7 +1002,7 @@ export default function VenueDetailsPage() {
                     </div>
 
                     {/* Blurred details and Lock overlay section */}
-                    <div className="relative w-[338px] h-[200px] mt-2 border border-neutral-100 rounded-xl bg-white overflow-hidden">
+                    <div className="relative w-full max-w-[338px] h-[200px] mt-2 border border-neutral-100 rounded-xl bg-white overflow-hidden">
 
                       {/* Blurred elements under the lock */}
                       <div className="flex flex-col gap-5 w-full p-4 filter blur-[5px] select-none pointer-events-none opacity-50">
