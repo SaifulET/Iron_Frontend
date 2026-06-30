@@ -52,6 +52,73 @@ export default function VenueDetailsPage() {
   // Tab State
   const [activeTab, setActiveTab] = useState<"services" | "about" | "reviews" | "team" | "gallery">("services");
   const [selectedCategory, setSelectedCategory] = useState("Featured");
+  const [isMobile, setIsMobile] = useState(false);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024); // lg breakpoint in Tailwind is 1024px
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Scroll to section helper
+  const scrollToSection = (sectionId: string) => {
+    setActiveTab(sectionId as any);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 100; // Offset for navbar
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  // Scroll listener scroll spy for active tab based on closest section to header threshold
+  React.useEffect(() => {
+    if (!isMobile) return;
+
+    const handleScroll = () => {
+      const sections = ["services", "about", "reviews", "team", "gallery"];
+      const threshold = 180; // Offset below viewport top (accounts for navbar + tab navigation height)
+
+      let closestSection = "services";
+      let closestDistance = Infinity;
+
+      for (const id of sections) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // Distance from the top of the element to our threshold
+          const distance = Math.abs(rect.top - threshold);
+          
+          // Section must have started entering the screen or been scrolled past (rect.top <= threshold + margin)
+          if (rect.top <= threshold + 200) {
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestSection = id;
+            }
+          }
+        }
+      }
+
+      setActiveTab(closestSection as any);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Initial check on mount
+    handleScroll();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isMobile]);
 
   // Dynamic user logged in state toggle (checkbox/button for demo representation)
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -134,7 +201,7 @@ export default function VenueDetailsPage() {
   const totalPriceText = `€${totalPrice}`;
 
   return (
-    <div className="min-h-screen bg-[#FCFAF9] flex flex-col relative overflow-x-hidden text-[#1C1B1C]">
+    <div className="min-h-screen bg-[#FCFAF9] flex flex-col relative overflow-x-clip text-[#1C1B1C]">
       {/* Navbar */}
       <Navbar
         isLoggedIn={isLoggedIn}
@@ -260,11 +327,11 @@ export default function VenueDetailsPage() {
           <div className="flex-grow w-full lg:max-w-[868px] flex flex-col gap-8">
 
             {/* Tabs Navigation */}
-            <div className="flex border-b border-[#ACAAB4] w-full justify-between">
+            <div className={`flex border-b border-[#ACAAB4] w-full justify-between ${isMobile ? "sticky top-0 bg-[#FCFAF9] z-20" : ""}`}>
               {(["services", "about", "reviews", "team", "gallery"] as const).map((tab) => (
                 <button
                   key={tab}
-                  onClick={() => setActiveTab(tab)}
+                  onClick={() => isMobile ? scrollToSection(tab) : setActiveTab(tab)}
                   className={`py-3 px-1 sm:px-6 text-[11px] xs:text-xs sm:text-[14.8px] font-inter font-semibold transition-all border-b-[4px] capitalize cursor-pointer flex-1 text-center shrink-0 ${activeTab === tab
                     ? "border-[#1C1B1C] text-[#0D0D0D] font-bold"
                     : "border-transparent text-[#757575] hover:text-black"
@@ -276,10 +343,9 @@ export default function VenueDetailsPage() {
             </div>
 
             {/* Tab content renderer */}
-            <div className="w-full">
-              {activeTab === "services" && (
-                <div className="flex flex-col gap-6">
-
+            <div className={`w-full ${isMobile ? "flex flex-col gap-12" : ""}`}>
+              {(isMobile || activeTab === "services") && (
+                <section id="services" className="scroll-mt-24 flex flex-col gap-6">
                   {/* Category Filter Badges */}
                   <div className="flex flex-wrap gap-2 mb-2">
                     {["Featured", "Packages", "Hair", "Beard", "Color", "Hair Treatment", "NAILS", "Facial", "Waxing & Trimming"].map((cat, idx) => (
@@ -478,273 +544,287 @@ export default function VenueDetailsPage() {
                     </button>
 
                   </div>
-
-                </div>
+                </section>
               )}
 
-              {activeTab === "about" && (
-                <div className="flex flex-col gap-8 font-poppins">
-                  <div className="flex flex-col gap-4">
-                    <h3 className="font-bold text-2xl text-[#0D0D0D]">About</h3>
-                    <p className="text-[#4E5F78] leading-relaxed">
-                      {mockVenueDetails.aboutText}
-                    </p>
-                  </div>
+              {isMobile && (isMobile || activeTab === "services") && <hr className="border-t border-[#ACAAB4]/30" />}
 
-                  {/* Static Google Maps mockup */}
-                  {/* Static Google Maps mockup */}
-                  <div className="w-full h-[320px] bg-[#EAE8E4] rounded-xl relative overflow-hidden shadow-inner border border-neutral-200">
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      frameBorder="0"
-                      style={{ border: 0 }}
-                      src="https://maps.google.com/maps?q=Sobha%20Hartland%20Dubai&t=&z=14&ie=UTF8&iwloc=&output=embed"
-                      allowFullScreen
-                    />
-                    {/* Center Pin overlay */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-10 pointer-events-none">
-                      <div className="bg-[#1C1B1C] text-white px-3 py-1.5 rounded-lg text-xs font-semibold font-poppins shadow-md whitespace-nowrap">
-                        {mockVenueDetails.name} <span className="text-[#FFC00A] ml-1">5.0</span>
-                      </div>
-                      {/* Down arrow caret */}
-                      <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#1C1B1C]" />
-                    </div>
-
-                    <div className="absolute left-4 bottom-4 bg-[#FFFFFF] border border-[#ACAAB4] rounded-lg p-3 shadow-md">
-                      <span className="font-bold text-sm block">{mockVenueDetails.name}</span>
-                      <span className="text-xs text-yellow-600 block">★★★★★ 5.0 rating</span>
-                    </div>
-                  </div>
-
-                  {/* Opening hours & Additional Info grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                    {/* Opening Times */}
+              {(isMobile || activeTab === "about") && (
+                <section id="about" className="scroll-mt-24">
+                  <div className="flex flex-col gap-8 font-poppins">
                     <div className="flex flex-col gap-4">
-                      <h4 className="font-bold text-lg text-[#0D0D0D]">Opening times</h4>
-                      <div className="flex flex-col gap-2.5 text-sm text-[#4E5F78]">
-                        {[
-                          { day: "Monday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
-                          { day: "Tuesday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
-                          { day: "Wednesday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
-                          { day: "Thursday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
-                          { day: "Friday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
-                          { day: "Saturday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
-                          { day: "Sunday", time: "Closed" }
-                        ].map((item, idx) => (
-                          <div key={idx} className="flex justify-between items-center py-1 border-b border-neutral-100">
-                            <span className="font-semibold text-black">{item.day}</span>
-                            <span>{item.time}</span>
-                          </div>
+                      <h3 className="font-bold text-2xl text-[#0D0D0D]">About</h3>
+                      <p className="text-[#4E5F78] leading-relaxed">
+                        {mockVenueDetails.aboutText}
+                      </p>
+                    </div>
+
+                    {/* Static Google Maps mockup */}
+                    <div className="w-full h-[320px] bg-[#EAE8E4] rounded-xl relative overflow-hidden shadow-inner border border-neutral-200">
+                      <iframe
+                        width="100%"
+                        height="100%"
+                        frameBorder="0"
+                        style={{ border: 0 }}
+                        src="https://maps.google.com/maps?q=Sobha%20Hartland%20Dubai&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                        allowFullScreen
+                      />
+                      {/* Center Pin overlay */}
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-10 pointer-events-none">
+                        <div className="bg-[#1C1B1C] text-white px-3 py-1.5 rounded-lg text-xs font-semibold font-poppins shadow-md whitespace-nowrap">
+                          {mockVenueDetails.name} <span className="text-[#FFC00A] ml-1">5.0</span>
+                        </div>
+                        {/* Down arrow caret */}
+                        <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#1C1B1C]" />
+                      </div>
+
+                      <div className="absolute left-4 bottom-4 bg-[#FFFFFF] border border-[#ACAAB4] rounded-lg p-3 shadow-md">
+                        <span className="font-bold text-sm block">{mockVenueDetails.name}</span>
+                        <span className="text-xs text-yellow-600 block">★★★★★ 5.0 rating</span>
+                      </div>
+                    </div>
+
+                    {/* Opening hours & Additional Info grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                      {/* Opening Times */}
+                      <div className="flex flex-col gap-4">
+                        <h4 className="font-bold text-lg text-[#0D0D0D]">Opening times</h4>
+                        <div className="flex flex-col gap-2.5 text-sm text-[#4E5F78]">
+                          {[
+                            { day: "Monday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
+                            { day: "Tuesday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
+                            { day: "Wednesday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
+                            { day: "Thursday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
+                            { day: "Friday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
+                            { day: "Saturday", time: "10:30 AM - 1:00 PM, 3:30 PM - 7:00 PM" },
+                            { day: "Sunday", time: "Closed" }
+                          ].map((item, idx) => (
+                            <div key={idx} className="flex justify-between items-center py-1 border-b border-neutral-100">
+                              <span className="font-semibold text-black">{item.day}</span>
+                              <span>{item.time}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Additional Information */}
+                      <div className="flex flex-col gap-4">
+                        <h4 className="font-bold text-lg text-[#0D0D0D]">Additional information</h4>
+                        <ul className="flex flex-col gap-4 text-sm text-[#4E5F78]">
+                          <li className="flex items-start gap-2.5">
+                            <span className="text-[#2BB54F] font-bold">✓</span>
+                            <span>Instant Confirmation</span>
+                          </li>
+                          <li className="flex items-start gap-2.5">
+                            <span className="shrink-0 text-neutral-500 mt-0.5">
+                              <HugeiconsIcon icon={InformationCircleIcon} size={18} />
+                            </span>
+                            <span>First visit? A small deposit of 20% secures your booking — deducted from your total at the venue.</span>
+                          </li>
+                          <li className="flex items-start gap-2.5">
+                            <span className="shrink-0 text-neutral-500 mt-0.5">
+                              <HugeiconsIcon icon={InformationCircleIcon} size={18} />
+                            </span>
+                            <span>Returning customer? No deposit needed. Just show up and pay at the venue as normal.</span>
+                          </li>
+                        </ul>
+                      </div>
+
+                    </div>
+
+                  </div>
+                </section>
+              )}
+
+              {isMobile && (isMobile || activeTab === "about") && <hr className="border-t border-[#ACAAB4]/30" />}
+
+              {(isMobile || activeTab === "reviews") && (
+                <section id="reviews" className="scroll-mt-24">
+                  <div className="flex flex-col pt-6 w-full max-w-[862px] font-inter">
+
+                    {/* Reviews Title Row */}
+                    <div className="flex flex-wrap justify-between items-baseline w-full mb-3 gap-2">
+                      <h3 className="font-semibold text-[25.2px] leading-[36px] text-[#0D0D0D]">
+                        Reviews
+                      </h3>
+
+                      {/* Sort Selector */}
+                      <div className="flex items-center gap-2 w-[165px] h-[28px]">
+                        <div className="flex items-center justify-center px-2 py-0.5 w-[65px] h-6 rounded-full">
+                          <span className="font-poppins text-sm text-[#4E5F78]">Sort by</span>
+                        </div>
+                        <div className="flex items-center justify-center gap-1 px-2 py-0.5 w-[92px] h-7 border border-[#111111] rounded-full bg-white cursor-pointer hover:bg-neutral-50 transition-colors">
+                          <span className="font-poppins text-sm text-[#111111]">Latest</span>
+                          <svg className="w-4 h-4 text-[#141B34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Rating breakdown details stars row */}
+                    <div className="flex items-end gap-5 w-[284px] h-[27px] mb-6">
+                      <div className="flex items-center gap-3 w-[188px] h-[27px]">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <img key={s} src="/Icons/rattingfull.svg" alt="star" className="w-[28px] h-[27px] object-contain" />
                         ))}
                       </div>
-                    </div>
-
-                    {/* Additional Information */}
-                    <div className="flex flex-col gap-4">
-                      <h4 className="font-bold text-lg text-[#0D0D0D]">Additional information</h4>
-                      <ul className="flex flex-col gap-4 text-sm text-[#4E5F78]">
-                        <li className="flex items-start gap-2.5">
-                          <span className="text-[#2BB54F] font-bold">✓</span>
-                          <span>Instant Confirmation</span>
-                        </li>
-                        <li className="flex items-start gap-2.5">
-                          <span className="shrink-0 text-neutral-500 mt-0.5">
-                            <HugeiconsIcon icon={InformationCircleIcon} size={18} />
-                          </span>
-                          <span>First visit? A small deposit of 20% secures your booking — deducted from your total at the venue.</span>
-                        </li>
-                        <li className="flex items-start gap-2.5">
-                          <span className="shrink-0 text-neutral-500 mt-0.5">
-                            <HugeiconsIcon icon={InformationCircleIcon} size={18} />
-                          </span>
-                          <span>Returning customer? No deposit needed. Just show up and pay at the venue as normal.</span>
-                        </li>
-                      </ul>
-                    </div>
-
-                  </div>
-
-                </div>
-              )}
-
-              {activeTab === "reviews" && (
-                <div className="flex flex-col pt-6 w-full max-w-[862px] font-inter">
-
-                  {/* Reviews Title Row */}
-                  <div className="flex flex-wrap justify-between items-baseline w-full mb-3 gap-2">
-                    <h3 className="font-semibold text-[25.2px] leading-[36px] text-[#0D0D0D]">
-                      Reviews
-                    </h3>
-
-                    {/* Sort Selector */}
-                    <div className="flex items-center gap-2 w-[165px] h-[28px]">
-                      <div className="flex items-center justify-center px-2 py-0.5 w-[65px] h-6 rounded-full">
-                        <span className="font-poppins text-sm text-[#4E5F78]">Sort by</span>
-                      </div>
-                      <div className="flex items-center justify-center gap-1 px-2 py-0.5 w-[92px] h-7 border border-[#111111] rounded-full bg-white cursor-pointer hover:bg-neutral-50 transition-colors">
-                        <span className="font-poppins text-sm text-[#111111]">Latest</span>
-                        <svg className="w-4 h-4 text-[#141B34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
+                      <div className="flex items-start gap-1 w-[76px] h-6 font-semibold">
+                        <span className="font-inter text-[17px] leading-6 text-[#0D0D0D]">5.0</span>
+                        <span className="font-inter text-[17px] leading-6 text-[#6950F3]">(809)</span>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Rating breakdown details stars row */}
-                  <div className="flex items-end gap-5 w-[284px] h-[27px] mb-6">
-                    <div className="flex items-center gap-3 w-[188px] h-[27px]">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <img key={s} src="/Icons/rattingfull.svg" alt="star" className="w-[28px] h-[27px] object-contain" />
+                    {/* Reviews stack */}
+                    <div className="flex flex-col py-3 gap-6 w-full">
+                      {mockVenueDetails.reviews.map((review) => (
+                        <div key={review.id} className="flex flex-col items-start py-5 gap-2 w-full border-b border-neutral-100">
+
+                          {/* Author info row */}
+                          <div className="flex items-center gap-2 w-[236.65px] h-16">
+
+                            {/* Avatar Circle Container */}
+                            <div className="box-border flex flex-col justify-center items-start p-[0.0667px] w-16 h-16 bg-[#F0F0FF] border border-[#F0F0FF] rounded-full overflow-hidden shrink-0">
+                              <div className="w-[61.87px] h-[61.87px] rounded-full overflow-hidden relative">
+                                <Image src={review.avatar} alt={review.author} fill className="object-cover" />
+                              </div>
+                            </div>
+
+                            {/* Author Name and Date details */}
+                            <div className="flex flex-col justify-center items-start gap-2 w-[164.65px] h-16">
+                              <div className="w-[164.65px] h-10 relative">
+                                <span className="absolute left-0 top-0 font-inter font-medium text-[16.5px] leading-6 text-[#0D0D0D] block">
+                                  {review.author}
+                                </span>
+                                <span className="absolute left-0 top-6 font-inter font-normal text-xs leading-4 text-[#767676] block whitespace-nowrap">
+                                  {review.date}
+                                </span>
+                              </div>
+
+                              {/* Stars row */}
+                              <div className="flex items-start gap-1 w-[108px] h-4">
+                                {[1, 2, 3, 4, 5].map((s) => (
+                                  <img key={s} src="/Icons/rattingfull.svg" alt="star" className="w-4 h-4 object-contain" />
+                                ))}
+                              </div>
+                            </div>
+
+                          </div>
+
+                          {/* Review text comment */}
+                          <div className="flex flex-col items-start w-full h-[24px] mt-1.5">
+                            <p className="w-full h-[24px] font-inter font-normal text-[16.3px] leading-6 text-[#0D0D0D] truncate">
+                              {review.comment} <span className="font-semibold text-black cursor-pointer hover:underline">Read more</span>
+                            </p>
+                          </div>
+
+                        </div>
                       ))}
                     </div>
-                    <div className="flex items-start gap-1 w-[76px] h-6 font-semibold">
-                      <span className="font-inter text-[17px] leading-6 text-[#0D0D0D]">5.0</span>
-                      <span className="font-inter text-[17px] leading-6 text-[#6950F3]">(809)</span>
+
+                    {/* See all button */}
+                    <div className="flex flex-col items-start w-full h-12 mt-6">
+                      <button className="box-border flex items-center justify-center px-5 py-2.5 w-[89.8px] h-12 bg-white border border-[#D3D3D3] rounded-full hover:bg-neutral-50 transition-colors shadow-sm cursor-pointer">
+                        <span className="font-inter font-semibold text-[16.3px] text-[#0D0D0D] whitespace-nowrap">
+                          See all
+                        </span>
+                      </button>
                     </div>
+
                   </div>
-
-                  {/* Reviews stack */}
-                  <div className="flex flex-col py-3 gap-6 w-full">
-                    {mockVenueDetails.reviews.map((review) => (
-                      <div key={review.id} className="flex flex-col items-start py-5 gap-2 w-full border-b border-neutral-100">
-
-                        {/* Author info row */}
-                        <div className="flex items-center gap-2 w-[236.65px] h-16">
-
-                          {/* Avatar Circle Container */}
-                          <div className="box-border flex flex-col justify-center items-start p-[0.0667px] w-16 h-16 bg-[#F0F0FF] border border-[#F0F0FF] rounded-full overflow-hidden shrink-0">
-                            <div className="w-[61.87px] h-[61.87px] rounded-full overflow-hidden relative">
-                              <Image src={review.avatar} alt={review.author} fill className="object-cover" />
-                            </div>
-                          </div>
-
-                          {/* Author Name and Date details */}
-                          <div className="flex flex-col justify-center items-start gap-2 w-[164.65px] h-16">
-                            <div className="w-[164.65px] h-10 relative">
-                              <span className="absolute left-0 top-0 font-inter font-medium text-[16.5px] leading-6 text-[#0D0D0D] block">
-                                {review.author}
-                              </span>
-                              <span className="absolute left-0 top-6 font-inter font-normal text-xs leading-4 text-[#767676] block whitespace-nowrap">
-                                {review.date}
-                              </span>
-                            </div>
-
-                            {/* Stars row */}
-                            <div className="flex items-start gap-1 w-[108px] h-4">
-                              {[1, 2, 3, 4, 5].map((s) => (
-                                <img key={s} src="/Icons/rattingfull.svg" alt="star" className="w-4 h-4 object-contain" />
-                              ))}
-                            </div>
-                          </div>
-
-                        </div>
-
-                        {/* Review text comment */}
-                        <div className="flex flex-col items-start w-full h-[24px] mt-1.5">
-                          <p className="w-full h-[24px] font-inter font-normal text-[16.3px] leading-6 text-[#0D0D0D] truncate">
-                            {review.comment} <span className="font-semibold text-black cursor-pointer hover:underline">Read more</span>
-                          </p>
-                        </div>
-
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* See all button */}
-                  <div className="flex flex-col items-start w-full h-12 mt-6">
-                    <button className="box-border flex items-center justify-center px-5 py-2.5 w-[89.8px] h-12 bg-white border border-[#D3D3D3] rounded-full hover:bg-neutral-50 transition-colors shadow-sm cursor-pointer">
-                      <span className="font-inter font-semibold text-[16.3px] text-[#0D0D0D] whitespace-nowrap">
-                        See all
-                      </span>
-                    </button>
-                  </div>
-
-                </div>
+                </section>
               )}
 
-              {activeTab === "team" && (
-                <div className="flex flex-col gap-6 w-full max-w-[862px] font-inter">
-                  <h3 className="w-full font-semibold text-[25.8px] leading-[36px] text-[#0D0D0D]">
-                    Team
-                  </h3>
+              {isMobile && (isMobile || activeTab === "reviews") && <hr className="border-t border-[#ACAAB4]/30" />}
 
-                  {/* Employees scroll/flex list wrapper */}
-                  <div className="flex flex-wrap items-start gap-8 w-full overflow-y-auto">
-                    {mockVenueDetails.team.map((member) => (
-                      <div
-                        key={member.id}
-                        className="flex flex-col items-center gap-4 w-[120px] h-[182px] relative cursor-pointer"
-                      >
-                        {/* Avatar Image circle with background border */}
-                        <div className="relative w-[120px] h-[120px] shrink-0">
-                          <div className="box-border flex flex-col justify-center items-start p-[0.0667px] w-[120px] h-[120px] bg-[#F0F0FF] border border-[#F0F0FF] rounded-full overflow-hidden">
-                            <div className="w-[117.87px] h-[117.87px] rounded-full overflow-hidden relative">
-                              <Image src={member.avatar} alt={member.name} fill className="object-cover" />
-                            </div>
-                          </div>
-
-                          {/* Rating Badge Overlay absolute positioned bottom-center */}
-                          <div className="box-border flex items-center justify-center gap-1 absolute left-1/2 -translate-x-1/2 -bottom-2 w-[62.13px] h-[30.13px] bg-white border border-[#DBDDFF] rounded-full shadow-sm">
-                            <img src="/Icons/rattingfull.svg" alt="star" className="w-4 h-4 object-contain" />
-                            <span className="font-inter font-semibold text-[15px] leading-5 text-[#0D0D0D]">5.0</span>
-                          </div>
-                        </div>
-
-                        {/* Name and Description (Role) details */}
-                        <div className="flex flex-col items-center gap-0.5 w-[120px] h-[46px] text-center mt-1">
-                          <span className="font-inter font-medium text-[17px] leading-6 text-[#0D0D0D]">
-                            {member.name}
-                          </span>
-                          <span className="font-inter font-normal text-[14.4px] leading-5 text-[#767676]">
-                            {member.role}
-                          </span>
-                        </div>
-
-                      </div>
-                    ))}
-                  </div>
-
-                </div>
-              )}
-
-              {activeTab === "gallery" && (
-                <div className="flex flex-col gap-6 w-full max-w-[862px] font-inter">
-
-                  {/* Gallery Title Row */}
-                  <div className="flex justify-between items-baseline w-full mb-2">
-                    <h3 className="font-semibold text-[25.8px] leading-[36px] text-[#0D0D0D]">
-                      Photos
+              {(isMobile || activeTab === "team") && (
+                <section id="team" className="scroll-mt-24">
+                  <div className="flex flex-col gap-6 w-full max-w-[862px] font-inter">
+                    <h3 className="w-full font-semibold text-[25.8px] leading-[36px] text-[#0D0D0D]">
+                      Team
                     </h3>
-                    <button className="w-[46px] h-[36px] font-poppins text-sm leading-[36px] text-[#0D0D0D] hover:underline cursor-pointer">
-                      See all
-                    </button>
-                  </div>
 
-                  {/* Responsive grid of photo cards (2 in a row on mobile, 3 on desktop) */}
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 w-full">
-                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
-                      <Image src="/image/imgOfService.png" alt="Gallery 1" fill className="object-cover opacity-60 mix-blend-multiply" />
-                    </div>
-                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
-                      <Image src="/image/imgOfService.png" alt="Gallery 2" fill className="object-cover opacity-60 mix-blend-multiply" />
-                    </div>
-                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
-                      <Image src="/image/imgOfService.png" alt="Gallery 3" fill className="object-cover opacity-60 mix-blend-multiply" />
-                    </div>
-                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
-                      <Image src="/image/imgOfService.png" alt="Gallery 4" fill className="object-cover opacity-60 mix-blend-multiply" />
-                    </div>
-                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
-                      <Image src="/image/imgOfService.png" alt="Gallery 5" fill className="object-cover opacity-60 mix-blend-multiply" />
-                    </div>
-                    <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
-                      <Image src="/image/imgOfService.png" alt="Gallery 6" fill className="object-cover opacity-60 mix-blend-multiply" />
-                    </div>
-                  </div>
+                    {/* Employees scroll/flex list wrapper */}
+                    <div className="flex flex-wrap items-start gap-8 w-full">
+                      {mockVenueDetails.team.map((member) => (
+                        <div
+                          key={member.id}
+                          className="flex flex-col items-center gap-4 w-[120px] h-[182px] relative cursor-pointer"
+                        >
+                          {/* Avatar Image circle with background border */}
+                          <div className="relative w-[120px] h-[120px] shrink-0">
+                            <div className="box-border flex flex-col justify-center items-start p-[0.0667px] w-[120px] h-[120px] bg-[#F0F0FF] border border-[#F0F0FF] rounded-full overflow-hidden">
+                              <div className="w-[117.87px] h-[117.87px] rounded-full overflow-hidden relative">
+                                <Image src={member.avatar} alt={member.name} fill className="object-cover" />
+                              </div>
+                            </div>
 
-                </div>
+                            {/* Rating Badge Overlay absolute positioned bottom-center */}
+                            <div className="box-border flex items-center justify-center gap-1 absolute left-1/2 -translate-x-1/2 -bottom-2 w-[62.13px] h-[30.13px] bg-white border border-[#DBDDFF] rounded-full shadow-sm">
+                              <img src="/Icons/rattingfull.svg" alt="star" className="w-4 h-4 object-contain" />
+                              <span className="font-inter font-semibold text-[15px] leading-5 text-[#0D0D0D]">5.0</span>
+                            </div>
+                          </div>
+
+                          {/* Name and Description (Role) details */}
+                          <div className="flex flex-col items-center gap-0.5 w-[120px] h-[46px] text-center mt-1">
+                            <span className="font-inter font-medium text-[17px] leading-6 text-[#0D0D0D]">
+                              {member.name}
+                            </span>
+                            <span className="font-inter font-normal text-[14.4px] leading-5 text-[#767676]">
+                              {member.role}
+                            </span>
+                          </div>
+
+                        </div>
+                      ))}
+                    </div>
+
+                  </div>
+                </section>
+              )}
+
+              {isMobile && (isMobile || activeTab === "team") && <hr className="border-t border-[#ACAAB4]/30" />}
+
+              {(isMobile || activeTab === "gallery") && (
+                <section id="gallery" className="scroll-mt-24">
+                  <div className="flex flex-col gap-6 w-full max-w-[862px] font-inter">
+
+                    {/* Gallery Title Row */}
+                    <div className="flex justify-between items-baseline w-full mb-2">
+                      <h3 className="font-semibold text-[25.8px] leading-[36px] text-[#0D0D0D]">
+                        Photos
+                      </h3>
+                      <button className="w-[46px] h-[36px] font-poppins text-sm leading-[36px] text-[#0D0D0D] hover:underline cursor-pointer">
+                        See all
+                      </button>
+                    </div>
+
+                    {/* Responsive grid of photo cards (2 in a row on mobile, 3 on desktop) */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 w-full">
+                      <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                        <Image src="/image/imgOfService.png" alt="Gallery 1" fill className="object-cover opacity-60 mix-blend-multiply" />
+                      </div>
+                      <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                        <Image src="/image/imgOfService.png" alt="Gallery 2" fill className="object-cover opacity-60 mix-blend-multiply" />
+                      </div>
+                      <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                        <Image src="/image/imgOfService.png" alt="Gallery 3" fill className="object-cover opacity-60 mix-blend-multiply" />
+                      </div>
+                      <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                        <Image src="/image/imgOfService.png" alt="Gallery 4" fill className="object-cover opacity-60 mix-blend-multiply" />
+                      </div>
+                      <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                        <Image src="/image/imgOfService.png" alt="Gallery 5" fill className="object-cover opacity-60 mix-blend-multiply" />
+                      </div>
+                      <div className="aspect-square w-full bg-[#D9D9D9] rounded-xl overflow-hidden relative">
+                        <Image src="/image/imgOfService.png" alt="Gallery 6" fill className="object-cover opacity-60 mix-blend-multiply" />
+                      </div>
+                    </div>
+
+                  </div>
+                </section>
               )}
             </div>
 
