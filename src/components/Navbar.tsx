@@ -106,9 +106,9 @@ export default function Navbar({
 
         {/* Nav links (Desktop) */}
         <nav className="hidden md:flex items-center gap-6">
-          <a href="#" className="text-xs font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase">
+          <Link href="/explore" className="text-xs font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase">
             Explore
-          </a>
+          </Link>
           <a href="#" className="text-xs font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase">
             How it Works
           </a>
@@ -429,13 +429,13 @@ export default function Navbar({
       {/* Mobile Menu Dropdown */}
       {showMobileMenu && (
         <div className="absolute top-[85px] left-4 right-4 bg-[#FDFBF9] border border-[#E8E6FF] rounded-2xl shadow-xl z-50 p-5 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2 duration-200 md:hidden">
-          <a
-            href="#"
+          <Link
+            href="/explore"
             onClick={() => setShowMobileMenu(false)}
             className="text-sm font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase py-2 border-b border-neutral-100"
           >
             Explore
-          </a>
+          </Link>
           <a
             href="#"
             onClick={() => setShowMobileMenu(false)}

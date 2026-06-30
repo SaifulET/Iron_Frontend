@@ -28,6 +28,7 @@ interface ServiceCardProps {
   hasDiamond?: boolean;
   noDeposit?: boolean;
   travelsToYou?: boolean;
+  className?: string;
 }
 
 export default function ServiceCard({
@@ -38,12 +39,13 @@ export default function ServiceCard({
   hasDiamond = rec.hasDiamond,
   noDeposit = rec.noDeposit,
   travelsToYou = rec.travelsToYou,
+  className = "w-full sm:w-[360px] md:w-[406px]",
 }: ServiceCardProps) {
   const router = useRouter();
   return (
     <div 
       onClick={() => router.push(`/venue?id=${rec.id}`)}
-      className="w-full sm:w-[360px] md:w-[406px] h-full bg-white border border-[#E8E6FF] rounded-2xl overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col group font-poppins shrink-0 cursor-pointer"
+      className={`${className} h-full bg-white border border-[#E8E6FF] rounded-2xl overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col group font-poppins shrink-0 cursor-pointer`}
     >
       {/* Card Image Area */}
       <div className="relative w-full h-[140px] xs:h-[180px] sm:h-[220px] md:h-[241px] p-[4px] bg-transparent overflow-hidden shrink-0">
