@@ -206,7 +206,7 @@ export default function ExplorePage() {
               setShowMap={setShowMap}
             />
           )}
-<div >
+    <div className="flex-1 w-full">
 
   {/* RIGHT SIDE CONTENT CONTAINER (Contains list & map split container) */}
           <ResultsList
@@ -273,7 +273,7 @@ export default function ExplorePage() {
 
       {/* MOBILE MAP OVERLAY MODAL (Full screen on mobile) */}
       {showMap && (
-        <div className="fixed inset-0 bg-white z-50 flex flex-col xl:hidden animate-in slide-in-from-bottom duration-500 ease-out">
+        <div className="fixed inset-0 bg-white z-50 flex flex-col lg:hidden animate-in slide-in-from-bottom duration-500 ease-out">
           
           {/* Header */}
           <div className="flex items-center justify-between w-full px-6 py-4 border-b border-neutral-100 bg-white">

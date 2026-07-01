@@ -52,10 +52,10 @@ export default function ResultsList({
   const router = useRouter();
 
   return (
-    <div className={`flex-grow w-full flex ${showMap ? "xl:flex-row gap-[22px] items-start" : "flex-col gap-6"} bg-white p-6 rounded-2xl border border-[#E5E5E5]/50 shadow-sm`}>
+    <div className={`flex-grow w-full flex ${showMap ? "lg:flex-row gap-[22px] items-start" : "flex-col gap-6"} bg-white p-6 rounded-2xl border border-[#E5E5E5]/50 shadow-sm`}>
       
       {/* Results list area */}
-      <div className={`flex flex-col gap-6 ${showMap ? "w-full xl:w-[644px] shrink-0" : "w-full"}`}>
+      <div className={`flex flex-col gap-6 ${showMap ? "w-full lg:w-[644px] shrink-0" : "w-full"}`}>
         
         {/* Filter & View Map buttons */}
         <div className={`flex flex-row items-center gap-3 w-full mb-2 ${showMap ? "" : "lg:hidden"}`}>
@@ -183,7 +183,7 @@ export default function ResultsList({
 
       {/* Desktop Map (right side) */}
       {showMap && (
-        <div className="hidden xl:block w-full xl:flex-1 h-[988px] sticky top-24 shrink-0 rounded-2xl overflow-hidden border border-[#E5E5E5]/50 shadow-sm">
+        <div className="hidden lg:block w-full lg:flex-1 h-[988px] sticky top-24 shrink-0 rounded-2xl overflow-hidden border border-[#E5E5E5]/50 shadow-sm">
           <ExploreMap services={filteredServices} />
         </div>
       )}

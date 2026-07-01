@@ -46,11 +46,12 @@ export default function ExploreMap({ services }: ExploreMapProps) {
       const map = L.map(mapContainerRef.current, {
         center,
         zoom: 9,
+        minZoom: 3,
         zoomControl: true,
       });
 
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom',
       }).addTo(map);
 
       mapRef.current = map;
@@ -118,11 +119,16 @@ export default function ExploreMap({ services }: ExploreMapProps) {
       map.fitBounds(group.getBounds().pad(0.15));
     }
 
+    // Force Leaflet to recalculate size after render
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+
   }, [services]);
 
   return (
-    <div className="w-full h-full relative rounded-2xl overflow-hidden border border-[#E5E5E5]/50 shadow-sm min-h-[500px]">
-      <div ref={mapContainerRef} className="w-full h-full min-h-[500px] z-0" />
+    <div className="w-full h-full relative rounded-2xl overflow-hidden border border-[#E5E5E5]/50 shadow-sm min-h-[500px] bg-[#d4e6ec]">
+      <div ref={mapContainerRef} className="w-full h-full min-h-[500px] z-0 bg-[#d4e6ec]" />
     </div>
   );
 }
