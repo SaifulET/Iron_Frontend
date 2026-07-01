@@ -166,7 +166,7 @@ export default function ExplorePage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#FCFAF9] flex flex-col relative text-[#1C1B1C] font-poppins">
+    <div className="min-h-screen bg-[#FCFAF9] flex flex-col relative text-[#1C1B1C] font-poppins ">
       <Navbar
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
@@ -175,7 +175,7 @@ export default function ExplorePage() {
       />
 
       {/* Main Container */}
-      <main className="flex-1 w-full px-4 md:px-16 flex flex-col gap-6">
+      <main className="flex-1 w-full px-4 md:px-16 flex flex-col gap-6 mb-[149px]">
 
         {/* Explore Columns layout */}
         <div className="w-full flex flex-col lg:flex-row gap-10 items-start relative mt-4 min-h-[950px]">
@@ -206,8 +206,9 @@ export default function ExplorePage() {
               setShowMap={setShowMap}
             />
           )}
+<div >
 
-          {/* RIGHT SIDE CONTENT CONTAINER (Contains list & map split container) */}
+  {/* RIGHT SIDE CONTENT CONTAINER (Contains list & map split container) */}
           <ResultsList
             filteredServices={filteredServices}
             favorites={favorites}
@@ -221,10 +222,9 @@ export default function ExplorePage() {
             setShowMobileFilters={setShowMobileFilters}
           />
 
-        </div>
-
-        {/* Footer Business Banner Section */}
-        <section className="w-full max-w-[704px] mx-auto mt-16 p-8 sm:p-12 bg-white border border-neutral-100 rounded-[20px] flex flex-col items-center text-center gap-6 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+ {/* Footer Business Banner Section */}
+         {/* Footer Business Banner Section */}
+        <section className="w-full max-w-[704px] mx-auto mt-[72px]  p-8 sm:p-12 bg-white border border-neutral-100 rounded-[20px] flex flex-col items-center text-center gap-6 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
           <div className="flex flex-col gap-3 items-center">
             <h3 className="font-bold text-xl sm:text-2xl text-[#1C1B1C]">Is your business not listed?</h3>
             <p className="text-sm sm:text-base text-[#4E5F78] leading-relaxed max-w-md">
@@ -238,7 +238,12 @@ export default function ExplorePage() {
             List your business - it's free
           </button>
         </section>
+</div>
+        
 
+        </div>
+
+       
       </main>
 
       {/* MOBILE DRAWERS OVERLAY FILTER (Collapsible on mobile) */}

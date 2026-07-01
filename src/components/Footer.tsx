@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -87,18 +88,18 @@ export default function Footer() {
                 Legal
               </h4>
               <div className="flex flex-col items-start p-0 w-full gap-[20px]">
-                <a href="#" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[20px] text-[#4E5F78] hover:text-black transition-colors">
+                <Link href="/privacy" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[20px] text-[#4E5F78] hover:text-black transition-colors">
                   Privacy Policy
-                </a>
-                <a href="#" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[20px] text-[#4E5F78] hover:text-black transition-colors">
+                </Link>
+                <Link href="/terms-of-service" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[20px] text-[#4E5F78] hover:text-black transition-colors">
                   Terms of service
-                </a>
-                <a href="#" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[20px] text-[#4E5F78] hover:text-black transition-colors">
+                </Link>
+                <Link href="/cookies" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[20px] text-[#4E5F78] hover:text-black transition-colors">
                   Cookies policy
-                </a>
-                <a href="#" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[20px] text-[#4E5F78] hover:text-black transition-colors">
+                </Link>
+                <Link href="/terms-of-use" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[20px] text-[#4E5F78] hover:text-black transition-colors">
                   Terms of use
-                </a>
+                </Link>
               </div>
             </div>
 
