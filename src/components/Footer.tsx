@@ -64,9 +64,9 @@ export default function Footer() {
                 <a href="/blog" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[40px] text-[#4E5F78] hover:text-black transition-colors">
                   Blog
                 </a>
-                <a href="#" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[40px] text-[#4E5F78] hover:text-black transition-colors">
+                <Link href="/about" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[40px] text-[#4E5F78] hover:text-black transition-colors">
                   About us
-                </a>
+                </Link>
               </div>
             </div>
 
