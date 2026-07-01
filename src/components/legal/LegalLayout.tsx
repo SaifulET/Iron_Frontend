@@ -85,7 +85,7 @@ export default function LegalLayout({
       <main className="flex-1 w-full  px-4 md:px-16   flex flex-col lg:flex-row gap-6 items-start relative ">
         
         {/* LEFT SIDEBAR NAVIGATION */}
-        <aside className="w-full lg:w-[256px] bg-white rounded-2xl p-6 flex flex-col gap-2 shrink-0 border border-neutral-100 shadow-sm lg:sticky lg:top-24">
+        <aside className="hidden lg:flex flex-col w-[256px] bg-white rounded-2xl p-6 gap-2 shrink-0 border border-neutral-100 shadow-sm sticky top-24">
           <div className="px-3 pb-2 flex flex-col gap-1 border-b border-neutral-100">
             <span className="font-semibold text-xs tracking-[0.6px] uppercase text-[#64748B]">
               Legal Documentation

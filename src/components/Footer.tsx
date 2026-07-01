@@ -58,9 +58,9 @@ export default function Footer() {
                 About Bookly
               </h4>
               <div className="flex flex-col items-start p-0 w-full">
-                <a href="#" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[40px] text-[#4E5F78] hover:text-black transition-colors">
+                <Link href="/contact-support" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[40px] text-[#4E5F78] hover:text-black transition-colors">
                   Support
-                </a>
+                </Link>
                 <a href="/blog" className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[40px] text-[#4E5F78] hover:text-black transition-colors">
                   Blog
                 </a>
