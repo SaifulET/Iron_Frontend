@@ -21,6 +21,28 @@ import SearchBar from "@/components/SearchBar";
 export default function LandingPage() {
   const router = useRouter();
 
+  const stepsContainerRef = useRef<HTMLDivElement | null>(null);
+  const [stepsVisible, setStepsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setStepsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (stepsContainerRef.current) {
+      observer.observe(stepsContainerRef.current);
+    }
+
+    return () => {
+      if (stepsContainerRef.current) {
+        observer.unobserve(stepsContainerRef.current);
+      }
+    };
+  }, []);
+
   // State variables
   const [showBanner, setShowBanner] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("ENG");
@@ -785,10 +807,10 @@ export default function LandingPage() {
       </section>
 
       {/* 10. Book in 3 Simple Steps Section */}
-      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[72px]">
+      <section ref={stepsContainerRef} className="w-full px-4 md:px-8 xl:px-[68px] mt-[72px]">
         <div className="w-full flex flex-col items-center gap-10 md:gap-[40px]">
           {/* Header Container */}
-          <div className="flex flex-col items-center gap-5 text-center max-w-[730px]">
+          <div className={`flex flex-col items-center gap-5 text-center max-w-[730px] transition-all duration-700 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <h2 className="text-3xl md:text-[36px] font-medium leading-tight md:leading-[48px] text-[#16123E] tracking-tight">
               Book in 3 simple steps
             </h2>
@@ -800,7 +822,7 @@ export default function LandingPage() {
           {/* Cards Frame */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
             {/* Step 1 */}
-            <div className="flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-shadow duration-200">
+            <div className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-all duration-700 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
               <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
                 <HugeiconsIcon icon={Search01Icon} className="w-9 h-9 text-[#111111]" />
               </div>
@@ -815,7 +837,7 @@ export default function LandingPage() {
             </div>
 
             {/* Step 2 */}
-            <div className="flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-shadow duration-200">
+            <div style={{ transitionDelay: '150ms' }} className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-all duration-700 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
               <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
                 <HugeiconsIcon icon={SquareLock01Icon} className="w-9 h-9 text-[#111111]" />
               </div>
@@ -830,7 +852,7 @@ export default function LandingPage() {
             </div>
 
             {/* Step 3 */}
-            <div className="flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-shadow duration-200">
+            <div style={{ transitionDelay: '300ms' }} className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-all duration-700 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
               <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
                 <img src="/Icons/glasses.svg" alt="Cheers" className="w-9 h-9 object-contain" draggable="false" />
               </div>

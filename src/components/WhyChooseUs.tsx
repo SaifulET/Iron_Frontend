@@ -1,10 +1,31 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ZapIcon, HeartIcon, StarIcon, Wallet03Icon } from "@hugeicons/core-free-icons";
 
 export default function WhyChooseUs() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
   const steps = [
     {
       icon: ZapIcon,
@@ -29,10 +50,12 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[120px] mb-0">
+    <section ref={containerRef} className="w-full px-4 md:px-8 xl:px-[68px] mt-[120px] mb-0">
       <div className="w-full flex flex-col items-center gap-10 md:gap-[40px]">
         {/* Header Container */}
-        <div className="flex flex-col items-center gap-5 text-center max-w-[553px]">
+        <div className={`flex flex-col items-center gap-5 text-center max-w-[553px] transition-all duration-700 ease-out ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
           <h2 className="text-3xl md:text-[36px] font-medium leading-tight md:leading-[48px] text-[#16123E] tracking-tight">
             Why customers choose Bookly
           </h2>
@@ -46,7 +69,10 @@ export default function WhyChooseUs() {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="flex flex-col items-start p-5 gap-10 bg-white rounded-xl hover:shadow-sm transition-shadow duration-200"
+              style={{ transitionDelay: `${index * 150}ms` }}
+              className={`flex flex-col items-start p-5 gap-10 bg-white rounded-xl hover:shadow-sm transition-all duration-700 ease-out ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+              }`}
             >
               {/* Icon Container */}
               <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
