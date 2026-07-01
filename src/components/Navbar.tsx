@@ -16,7 +16,8 @@ import {
   ProfileIcon,
   Logout01Icon,
   ArrowDown01Icon,
-  ArrowRight02Icon
+  ArrowRight02Icon,
+  Setting07Icon
 } from "@hugeicons/core-free-icons";
 
 interface NavbarProps {
@@ -300,7 +301,8 @@ export default function Navbar({
                         router.push("/customer/settings");
                       }}
                     >
-                      <HugeiconsIcon icon={Clock01Icon} className="w-[18px] h-[18px] text-[#111111]" />
+                      
+                      <HugeiconsIcon icon={Setting07Icon} className="w-[18px] h-[18px] text-[#111111]" />
                       <span className="font-medium text-base text-[#1C1B1C]">Setting</span>
                     </button>
 
