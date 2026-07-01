@@ -822,7 +822,7 @@ export default function LandingPage() {
           {/* Cards Frame */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
             {/* Step 1 */}
-            <div className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-all duration-700 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
+            <div className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
               <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
                 <HugeiconsIcon icon={Search01Icon} className="w-9 h-9 text-[#111111]" />
               </div>
@@ -837,7 +837,7 @@ export default function LandingPage() {
             </div>
 
             {/* Step 2 */}
-            <div style={{ transitionDelay: '150ms' }} className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-all duration-700 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
+            <div style={{ transitionDelay: '150ms' }} className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
               <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
                 <HugeiconsIcon icon={SquareLock01Icon} className="w-9 h-9 text-[#111111]" />
               </div>
@@ -852,7 +852,7 @@ export default function LandingPage() {
             </div>
 
             {/* Step 3 */}
-            <div style={{ transitionDelay: '300ms' }} className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-sm transition-all duration-700 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
+            <div style={{ transitionDelay: '300ms' }} className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
               <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
                 <img src="/Icons/glasses.svg" alt="Cheers" className="w-9 h-9 object-contain" draggable="false" />
               </div>
