@@ -352,6 +352,88 @@ export default function LandingPage() {
     },
   ];
 
+  // Mock popular businesses data (Service cards format)
+  const popularBusinesses: Recommendation[] = [
+    {
+      id: 31,
+      title: "Soho Vintage Barbers | Sheikh Zayed Road",
+      rating: 4.9,
+      reviews: 299,
+      categories: ["Barber", "Salon"],
+      location: "Limassol Marina",
+      distance: "1.1km away",
+      lastVisited: "Popular business",
+      startingPrice: 12,
+      image: "/img/service_demo.jpg",
+      hasDiamond: true,
+      noDeposit: true,
+    },
+    {
+      id: 32,
+      title: "Zara Hair & Beauty Salon | Nicosia Center",
+      rating: 4.7,
+      reviews: 142,
+      categories: ["Salon", "Beauty"],
+      location: "Ledra Street, Nicosia",
+      distance: "0.8km away",
+      lastVisited: "Popular business",
+      startingPrice: 25,
+      image: "/img/service_demo.jpg",
+      hasDiamond: true,
+    },
+    {
+      id: 33,
+      title: "Zen Spa & Massage | Limassol Marina",
+      rating: 4.9,
+      reviews: 88,
+      categories: ["Spa", "Wellness"],
+      location: "Marina Road, Limassol",
+      distance: "1.5km away",
+      lastVisited: "Popular business",
+      startingPrice: 60,
+      image: "/img/service_demo.jpg",
+      noDeposit: true,
+    },
+    {
+      id: 34,
+      title: "Luxury Nails & Lashes | Limassol",
+      rating: 4.6,
+      reviews: 95,
+      categories: ["Beauty", "Salon"],
+      location: "Anexartisias, Limassol",
+      distance: "2.1km away",
+      lastVisited: "Popular business",
+      startingPrice: 20,
+      image: "/img/service_demo.jpg",
+    },
+    {
+      id: 35,
+      title: "Absolute Tattoo Studio | Ayia Napa",
+      rating: 4.8,
+      reviews: 320,
+      categories: ["Beauty", "Experience"],
+      location: "Nissi Avenue, Ayia Napa",
+      distance: "0.7km away",
+      lastVisited: "Popular business",
+      startingPrice: 80,
+      image: "/img/service_demo.jpg",
+      hasDiamond: true,
+    },
+    {
+      id: 36,
+      title: "Precision Men's Grooming | Larnaca",
+      rating: 4.6,
+      reviews: 92,
+      categories: ["Barber"],
+      location: "Phinikoudes, Larnaca",
+      distance: "1.2km away",
+      lastVisited: "Popular business",
+      startingPrice: 18,
+      image: "/img/service_demo.jpg",
+      noDeposit: true,
+    }
+  ];
+
   // Mock trending services data
   const trendingServices: Recommendation[] = [
     {
@@ -645,6 +727,47 @@ export default function LandingPage() {
         />
       )}
 
+      {/* 5.5 Popular Businesses Section */}
+      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px]">
+        {/* Section Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl md:text-[28px] font-medium tracking-tight text-[#1C1B1C]">
+            Popular businesses
+          </h2>
+          <a href="#" className="text-sm md:text-base font-medium text-[#1C1B1C] hover:underline transition-all">
+            See all
+          </a>
+        </div>
+
+        {/* Card Grid / Carousel */}
+        {popularBusinesses.length > 5 ? (
+          <Carousel>
+            {popularBusinesses.map((rec) => (
+              <div key={rec.id} className="w-[calc(50%-7.5px)] sm:w-[360px] md:w-[406px] shrink-0 snap-start">
+                <ServiceCard
+                  rec={rec}
+                  isFavorite={favorites.includes(rec.id)}
+                  onToggleFavorite={toggleFavorite}
+                  onBookNow={(id) => console.log("Booking item", id)}
+                />
+              </div>
+            ))}
+          </Carousel>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+            {popularBusinesses.map((rec) => (
+              <ServiceCard
+                key={rec.id}
+                rec={rec}
+                isFavorite={favorites.includes(rec.id)}
+                onToggleFavorite={toggleFavorite}
+                onBookNow={(id) => console.log("Booking item", id)}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+
       {/* 6. Recommended Section */}
       <section className="w-full px-4 md:px-8 xl:px-[68px] mt-16 relative z-10">
 
@@ -688,48 +811,50 @@ export default function LandingPage() {
 
       </section>
 
-      {/* 7. Services Near You Section */}
-      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px]">
+      {/* 7. Services Near You Section (Logged In Only) */}
+      {isLoggedIn && (
+        <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px]">
 
-        {/* Section Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl md:text-[28px] font-medium tracking-tight text-[#1C1B1C]">
-            Services near you
-          </h2>
-          <a href="#" className="text-sm md:text-base font-medium text-[#1C1B1C] hover:underline transition-all">
-            See all
-          </a>
-        </div>
+          {/* Section Header */}
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl md:text-[28px] font-medium tracking-tight text-[#1C1B1C]">
+              Services near you
+            </h2>
+            <a href="#" className="text-sm md:text-base font-medium text-[#1C1B1C] hover:underline transition-all">
+              See all
+            </a>
+          </div>
 
-        {/* Card Grid / Carousel */}
-        {servicesNearYou.length > 5 ? (
-          <Carousel>
-            {servicesNearYou.map((rec) => (
-              <div key={rec.id} className="w-[calc(50%-7.5px)] sm:w-[360px] md:w-[406px] shrink-0 snap-start">
+          {/* Card Grid / Carousel */}
+          {servicesNearYou.length > 5 ? (
+            <Carousel>
+              {servicesNearYou.map((rec) => (
+                <div key={rec.id} className="w-[calc(50%-7.5px)] sm:w-[360px] md:w-[406px] shrink-0 snap-start">
+                  <ServiceCard
+                    rec={rec}
+                    isFavorite={favorites.includes(rec.id)}
+                    onToggleFavorite={toggleFavorite}
+                    onBookNow={(id) => console.log("Booking item", id)}
+                  />
+                </div>
+              ))}
+            </Carousel>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+              {servicesNearYou.map((rec) => (
                 <ServiceCard
+                  key={rec.id}
                   rec={rec}
                   isFavorite={favorites.includes(rec.id)}
                   onToggleFavorite={toggleFavorite}
                   onBookNow={(id) => console.log("Booking item", id)}
                 />
-              </div>
-            ))}
-          </Carousel>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-            {servicesNearYou.map((rec) => (
-              <ServiceCard
-                key={rec.id}
-                rec={rec}
-                isFavorite={favorites.includes(rec.id)}
-                onToggleFavorite={toggleFavorite}
-                onBookNow={(id) => console.log("Booking item", id)}
-              />
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
 
-      </section>
+        </section>
+      )}
 
       {/* 8. Trending Services Section */}
       <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px]">
@@ -873,22 +998,19 @@ export default function LandingPage() {
       <WhyChooseUs />
 
       {/* 12. Add Bookly to Your Home Screen Section */}
-      <section className="w-full mt-[166px] py-16 lg:py-0 lg:h-[484px] relative mb-24 flex items-center overflow-hidden lg:overflow-visible">
+      <section className="w-full mt-[166px] mb-24  flex justify-center">
+        <div className="w-full  h-[320px] xl:h-[484px] bg-[#2E9DA7]  relative overflow-visible z-10">
 
-        {/* Inner Background starting after 38px */}
-        <div className="absolute inset-y-0 left-0 top-[38px] right-0 bg-[#2A9CA6] z-0" />
 
-        <div className="w-full max-w-[1312px] mx-auto px-4 md:px-8 xl:px-[68px] flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-0 h-full relative z-10">
-
-          {/* Left Side: Content & Button */}
-          <div className="flex flex-col items-start gap-[20px] lg:max-w-[636px] text-white z-10 py-6 relative">
-            <h2 className="text-3xl sm:text-4xl md:text-[54px] font-medium leading-tight md:leading-[64px] text-[#FCFAF9] tracking-tight">
+          {/* Left Side: Content */}
+          <div className="absolute left-[37px] top-[38px] xl:left-[130px] text-white z-10 flex flex-col items-start gap-2.5 sm:gap-4 md:gap-5 max-w-[calc(100%-140px)] lg:max-w-[636px]">
+            <h2 className="text-xl sm:text-[32px] lg:text-[54px] lg:leading-[64px] font-poppins font-medium text-[#FCFAF9] tracking-tight">
               Add Bookly to your <br /> home screen
             </h2>
 
             {/* Subtitle tick frame */}
-            <div className="flex items-center gap-2">
-              <span className="text-lg md:text-[18px] font-medium leading-[26px] text-[#FCFAF9]">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="text-[10px] sm:text-base md:text-[18px] md:leading-[26px] font-poppins font-medium text-[#FCFAF9]">
                 Book any local services instantly
               </span>
               <div className="w-6 h-6 border-[1.5px] border-[#FCFAF9] rounded-full flex items-center justify-center shrink-0">
@@ -897,49 +1019,51 @@ export default function LandingPage() {
                 </svg>
               </div>
             </div>
-
-            {/* Arrow & Button Container */}
-            <div className="flex items-center mt-8 relative w-full pl-0 lg:pl-[120px]">
-              {/* Hand-drawn style curved arrow SVG */}
-              <div className="absolute left-0 top-[-30px] lg:top-[-20px] w-24 h-16 pointer-events-none text-[#FCFAF9] opacity-95 hidden lg:block">
-                <svg viewBox="0 0 100 60" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-                  <path d="M10,10 C15,45 40,60 85,45" />
-                  <path d="M72,35 L85,45 L75,55" />
-                </svg>
-              </div>
-
-              {/* Install Button */}
-              <AddToHomeScreenButton
-                className="z-10"
-                showTextOnMobile={true}
-                size="large"
-              />
-            </div>
           </div>
 
-          {/* Right Side: Mockup Image with grouped Glow */}
-          <div className="relative lg:absolute lg:right-[68px] lg:bottom-0 w-[280px] sm:w-[320px] lg:w-[360px] xl:w-[400px] h-[340px] lg:h-[460px] flex items-end justify-center z-20">
-            {/* Figma Ellipse 133 Glow Light (grouped behind the phone) */}
-            <div
-              className="absolute pointer-events-none -z-10 hidden lg:block opacity-90"
-              style={{
-                width: "244.85px",
-                height: "478.55px",
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%) rotate(6.83deg)",
-                background: "rgba(255, 255, 255, 0.8)",
-                filter: "blur(100px)",
-              }}
+          {/* Install Button Container */}
+          <div className="absolute left-[150px] xl:left-[378px] top-[250px] xl:top-[347px] z-20">
+            <AddToHomeScreenButton
+              className="z-10 scale-75 xl:scale-100 origin-left"
+              showTextOnMobile={true}
+              size="large"
             />
+          </div>
 
-            {/* Phone Image */}
+          {/* Curved Arrow Image */}
+          <div className="absolute left-[60px] xl:left-[209px] top-[186px] xl:top-[278px] w-[80px] xl:w-[114px] h-[90px] xl:h-[151px] pointer-events-none opacity-95 z-20">
             <img
-              src="/img/mobile.png"
-              alt="Bookly App Mockup"
-              className="w-full h-auto object-contain max-h-[380px] lg:max-h-[500px] xl:max-h-[540px] transform lg:translate-y-8"
+              src="/Icons/direction.png"
+              alt="Direction Arrow"
+              className="w-full h-full object-contain"
               draggable="false"
             />
+          </div>
+
+          {/* Right Side: Phone Image mockup (Sticking out 96px at top, body sticks out 14px on the right) */}
+          <div className="absolute right-[-14px] xl:right-[150px] top-[-106px] z-0 sm:z-20 pointer-events-none w-[200px] xl:w-[400px] h-[360px] xl:h-[540px]">
+            <div className="relative w-full h-full flex items-center justify-center">
+              {/* Ellipse 133 Glow Light behind phone */}
+              <div
+                className="absolute pointer-events-none -z-10 opacity-90"
+                style={{
+                  width: "244.85px",
+                  height: "478.55px",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%) rotate(6.83deg)",
+                  background: "rgba(255, 255, 255, 0.8)",
+                  filter: "blur(100px)",
+                }}
+              />
+
+              <img
+                src="/img/mobile.png"
+                alt="Bookly App Mockup"
+                className="h-full w-auto object-contain z-10"
+                draggable="false"
+              />
+            </div>
           </div>
 
         </div>

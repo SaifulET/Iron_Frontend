@@ -26,7 +26,7 @@ function BusinessFormContent() {
   const [businessName, setBusinessName] = useState("Moakhali");
   const [ownerName, setOwnerName] = useState("John Doe");
   const [city, setCity] = useState("Larnaca");
-  const [countryCode, setCountryCode] = useState("+880");
+  const [countryCode, setCountryCode] = useState("+357");
   const [mobileNumber, setMobileNumber] = useState("1234556666");
   const [area, setArea] = useState("Mackenzie, finikoudes");
   const [streetName, setStreetName] = useState("Emrou");

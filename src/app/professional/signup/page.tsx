@@ -3,6 +3,7 @@
 import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
 import { Mail01Icon, SquareLock01Icon } from "@hugeicons/core-free-icons";
 
 // Components
@@ -22,7 +23,7 @@ function ProfessionalSignupContent() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("male");
-  const [countryCode, setCountryCode] = useState("+880");
+  const [countryCode, setCountryCode] = useState("+357");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -140,7 +141,7 @@ function ProfessionalSignupContent() {
                   htmlFor="agree-terms"
                   className="text-xs font-semibold text-[#1A1A1A] cursor-pointer select-none leading-relaxed"
                 >
-                  I agree to the Bookly Terms & Conditions, including the Business Partner Terms
+                  I agree to the Bookly <Link href="/terms-of-service" className="text-[#240183] underline hover:text-black transition-colors">Terms & Conditions</Link>, including the <Link href="/terms-of-use" className="text-[#240183] underline hover:text-black transition-colors">Business Partner Terms</Link>
                 </label>
               </div>
 

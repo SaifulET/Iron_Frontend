@@ -79,6 +79,23 @@ export default function BusinessFormStep1({
   setSearchQuery,
   onSubmit,
 }: BusinessFormStep1Props) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="w-full max-w-[973px] flex flex-col items-center gap-[72px]">
       {/* Header */}
@@ -158,42 +175,66 @@ export default function BusinessFormStep1({
           <label className="text-sm font-medium text-[#262626] tracking-tight">Mobile number *</label>
           <div className="flex w-full h-12">
             {/* Selector */}
-            <div className="relative flex items-center bg-[#E0E0E0] rounded-l-xl px-4 py-3.5 border-r border-[#D2D2D2] gap-1.5 min-w-[141px]">
-              <span className="text-xl leading-none">
-                {(() => {
-                  const countriesList = [
-                    { code: "+357", emoji: "🇨🇾", name: "Cyprus (+357)" },
-                    { code: "+880", emoji: "🇧🇩", name: "Bangladesh (+880)" },
-                    { code: "+1", emoji: "🇺🇸", name: "United States (+1)" },
-                    { code: "+44", emoji: "🇬🇧", name: "United Kingdom (+44)" },
-                    { code: "+30", emoji: "🇬🇷", name: "Greece (+30)" },
-                    { code: "+91", emoji: "🇮🇳", name: "India (+91)" },
-                    { code: "+61", emoji: "🇦🇺", name: "Australia (+61)" },
-                    { code: "+971", emoji: "🇦🇪", name: "United Arab Emirates (+971)" },
-                    { code: "+49", emoji: "🇩🇪", name: "Germany (+49)" },
-                    { code: "+33", emoji: "🇫🇷", name: "France (+33)" },
-                  ];
-                  return countriesList.find((c) => c.code === countryCode)?.emoji || "🇺🇸";
-                })()}
-              </span>
-              <span className="text-sm text-[#808080] font-normal">{countryCode}</span>
-              <HugeiconsIcon icon={ArrowDown01Icon} size={20} className="text-[#666666] ml-auto cursor-pointer" />
-              <select
-                value={countryCode}
-                onChange={(e) => setCountryCode(e.target.value)}
-                className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-              >
-                <option value="+357">Cyprus (+357)</option>
-                <option value="+880">Bangladesh (+880)</option>
-                <option value="+1">United States (+1)</option>
-                <option value="+44">United Kingdom (+44)</option>
-                <option value="+30">Greece (+30)</option>
-                <option value="+91">India (+91)</option>
-                <option value="+61">Australia (+61)</option>
-                <option value="+971">United Arab Emirates (+971)</option>
-                <option value="+49">Germany (+49)</option>
-                <option value="+33">France (+33)</option>
-              </select>
+            <div ref={dropdownRef} className="relative flex items-center bg-[#E0E0E0] rounded-l-xl px-4 py-3.5 border-r border-[#D2D2D2] gap-1.5 min-w-[141px]">
+              {(() => {
+                const countriesList = [
+                  { code: "+357", flag: "https://flagcdn.com/w20/cy.png", name: "Cyprus (+357)" },
+                  { code: "+880", flag: "https://flagcdn.com/w20/bd.png", name: "Bangladesh (+880)" },
+                  { code: "+1", flag: "https://flagcdn.com/w20/us.png", name: "United States (+1)" },
+                  { code: "+44", flag: "https://flagcdn.com/w20/gb.png", name: "United Kingdom (+44)" },
+                  { code: "+30", flag: "https://flagcdn.com/w20/gr.png", name: "Greece (+30)" },
+                  { code: "+91", flag: "https://flagcdn.com/w20/in.png", name: "India (+91)" },
+                  { code: "+61", flag: "https://flagcdn.com/w20/au.png", name: "Australia (+61)" },
+                  { code: "+971", flag: "https://flagcdn.com/w20/ae.png", name: "United Arab Emirates (+971)" },
+                  { code: "+49", flag: "https://flagcdn.com/w20/de.png", name: "Germany (+49)" },
+                  { code: "+33", flag: "https://flagcdn.com/w20/fr.png", name: "France (+33)" },
+                ];
+                const current = countriesList.find((c) => c.code === countryCode) || countriesList[0];
+                return (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setIsOpen(!isOpen)}
+                      className="flex items-center gap-1.5 cursor-pointer focus:outline-none w-full"
+                    >
+                      <img
+                        src={current.flag}
+                        alt="Country Flag"
+                        className="rounded-sm object-cover w-5 h-3.5 shrink-0"
+                        draggable="false"
+                      />
+                      <span className="text-sm text-[#808080] font-normal">{countryCode}</span>
+                      <HugeiconsIcon icon={ArrowDown01Icon} size={20} className="text-[#666666] ml-auto" />
+                    </button>
+
+                    {/* Custom Dropdown list with flag images */}
+                    {isOpen && (
+                      <div className="absolute top-full left-0 mt-2 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 w-[240px] max-h-[220px] overflow-y-auto flex flex-col p-1.5 gap-0.5">
+                        {countriesList.map((c) => (
+                          <button
+                            key={c.code}
+                            type="button"
+                            onClick={() => {
+                              setCountryCode(c.code);
+                              setIsOpen(false);
+                            }}
+                            className="flex items-center gap-2.5 px-3 py-2 text-sm text-[#1A1A1A] hover:bg-[#F5F5F7] rounded-lg transition-colors w-full text-left"
+                          >
+                            <img
+                              src={c.flag}
+                              alt={c.name}
+                              className="w-5 h-3.5 rounded-sm object-cover shrink-0"
+                              draggable="false"
+                            />
+                            <span className="font-semibold text-xs text-[#1A1A1A] shrink-0 w-[42px]">{c.code}</span>
+                            <span className="text-[#707070] text-xs truncate">{c.name.split(" (")[0]}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
             {/* Input */}
             <input

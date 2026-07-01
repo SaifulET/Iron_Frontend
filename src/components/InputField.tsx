@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { EyeIcon, ViewOffIcon, ArrowDown01Icon } from "@hugeicons/core-free-icons";
-import Image from "next/image";
 
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -37,9 +36,8 @@ export function InputField({
         )}
         <input
           type={isPassword ? (showPassword ? "text" : "password") : props.type}
-          className={`w-full h-12 bg-[#F5F5F7] text-sm text-[#1A1A1A] placeholder-[#9E9E9E] rounded-xl px-4 transition-all duration-200 border border-transparent focus:bg-white focus:border-[#240183] focus:outline-none disabled:bg-[#EAEAEA] disabled:text-[#8E8E8E] ${
-            icon ? "pl-12" : ""
-          } ${isPassword ? "pr-12" : ""}`}
+          className={`w-full h-12 bg-[#F5F5F7] text-sm text-[#1A1A1A] placeholder-[#9E9E9E] rounded-xl px-4 transition-all duration-200 border border-transparent focus:bg-white focus:border-[#240183] focus:outline-none disabled:bg-[#EAEAEA] disabled:text-[#8E8E8E] ${icon ? "pl-12" : ""
+            } ${isPassword ? "pr-12" : ""}`}
           {...props}
         />
         {isPassword && (
@@ -131,6 +129,22 @@ export function PhoneInputField({
   ...props
 }: PhoneInputFieldProps) {
   const currentCountry = countriesList.find((c) => c.code === countryCode) || countriesList[0];
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, []);
 
   const handlePhoneInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const digitsOnly = e.target.value.replace(/\D/g, "");
@@ -152,33 +166,48 @@ export function PhoneInputField({
         {label}
       </label>
       <div className="flex gap-2 w-full">
-        {/* Country selector */}
-        <div className="relative flex items-center bg-[#F5F5F7] rounded-xl border border-transparent focus-within:bg-white focus-within:border-[#240183] px-3 h-12 transition-all duration-200">
-          <div className="flex items-center gap-1.5 cursor-pointer">
-            <Image
+        {/* Custom Country selector */}
+        <div ref={dropdownRef} className="relative flex items-center bg-[#F5F5F7] rounded-xl border border-transparent px-3 h-12 transition-all duration-200">
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center gap-1.5 cursor-pointer focus:outline-none"
+          >
+            <img
               src={currentCountry.flag}
-              loader={({ src }) => src}
-              unoptimized
               alt="Country Flag"
-              width={20}
-              height={15}
               className="rounded-sm object-cover w-5 h-3.5"
+              draggable="false"
             />
             <span className="text-sm font-medium text-[#1A1A1A]">{countryCode}</span>
             <HugeiconsIcon icon={ArrowDown01Icon} size={14} className="text-[#707070]" />
-          </div>
-          {/* Transparent select element overlay */}
-          <select
-            value={countryCode}
-            onChange={(e) => onCountryCodeChange?.(e.target.value)}
-            className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-          >
-            {countriesList.map((c) => (
-              <option key={c.code} value={c.code}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          </button>
+
+          {/* Custom Dropdown list with flag images */}
+          {isOpen && (
+            <div className="absolute top-full left-0 mt-2 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 w-[240px] max-h-[220px] overflow-y-auto flex flex-col p-1.5 gap-0.5">
+              {countriesList.map((c) => (
+                <button
+                  key={c.code}
+                  type="button"
+                  onClick={() => {
+                    onCountryCodeChange?.(c.code);
+                    setIsOpen(false);
+                  }}
+                  className="flex items-center gap-2.5 px-3 py-2 text-sm text-[#1A1A1A] hover:bg-[#F5F5F7] rounded-lg transition-colors w-full text-left"
+                >
+                  <img
+                    src={c.flag}
+                    alt={c.name}
+                    className="w-5 h-3.5 rounded-sm object-cover shrink-0"
+                    draggable="false"
+                  />
+                  <span className="font-semibold text-xs text-[#1A1A1A] shrink-0 w-[42px]">{c.code}</span>
+                  <span className="text-[#707070] text-xs truncate">{c.name.split(" (")[0]}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Input number field */}
