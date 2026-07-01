@@ -272,7 +272,13 @@ export default function Navbar({
                     <div className="border-t border-[#ACAAB4] w-full"></div>
 
                     {/* 5. Payment card */}
-                    <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+                    <button
+                      className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85"
+                      onClick={() => {
+                        setShowUserDropdown(false);
+                        router.push("/customer/payment-card");
+                      }}
+                    >
                       <HugeiconsIcon icon={CreditCardPosIcon} className="w-[18px] h-[18px] text-[#111111]" />
                       <span className="font-medium text-base text-[#1C1B1C]">Payment card</span>
                     </button>
