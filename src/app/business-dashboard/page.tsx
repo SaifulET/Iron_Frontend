@@ -31,6 +31,7 @@ export default function BusinessDashboard() {
   const [scheduleFilter, setScheduleFilter] = useState("All");
   const [timeFilter, setTimeFilter] = useState("Today");
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [showFooterMenu, setShowFooterMenu] = useState(false);
 
   // Mock data for Schedule
   const scheduleData = [
@@ -406,23 +407,42 @@ export default function BusinessDashboard() {
         </div>
 
         {/* User Footer Profile */}
-        <div className={`p-4 border-t border-[#757575]/30 flex items-center bg-[#C0D5D8] ${isCollapsed ? "justify-center" : "justify-between"}`}>
-          <div className="flex items-center gap-3">
-            <img
-              src="/businessDashboard/downLogo.png"
-              alt="User Profile"
-              className="w-10 h-10 rounded-full object-cover border border-[#4E5F78]"
-            />
+        <div className="relative">
+          {showFooterMenu && (
+            <div className={`absolute bottom-[72px] z-50 w-[179px] h-[116px] bg-[#C0D5D8] rounded-xl flex flex-col items-center py-0 border border-[#B0C5C8] shadow-md ${isCollapsed ? "left-[5px]" : "left-[15px]"}`}>
+              {/* Contact Support */}
+              <button className="w-[179px] h-[50px] flex items-center gap-3 px-4 pt-4 pb-2.5 hover:bg-[#B0C5C8]/50 rounded-t-xl text-left transition-all">
+                <HugeiconsIcon icon={HeadsetIcon} className="w-5 h-5 text-[#111111] shrink-0" />
+                <span className="font-manrope font-medium text-sm text-[#111111]">Contact Support</span>
+              </button>
+              {/* Divider */}
+              <div className="w-[179px] h-[0px] border-t border-[rgba(17,17,17,0.2)]"></div>
+              {/* Logout */}
+              <button className="w-[179px] h-[50px] flex items-center gap-3 px-4 pt-2.5 pb-4 hover:bg-[#B0C5C8]/50 rounded-b-xl text-left transition-all">
+                <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
+                <span className="font-manrope font-medium text-sm text-[#111111]">Logout</span>
+              </button>
+            </div>
+          )}
+
+          <div className={`p-4 border-t border-[#757575]/30 flex items-center bg-[#C0D5D8] ${isCollapsed ? "justify-center" : "justify-between"}`}>
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => setShowFooterMenu(!showFooterMenu)}>
+              <img
+                src="/businessDashboard/downLogo.png"
+                alt="User Profile"
+                className="w-10 h-10 rounded-full object-cover border border-[#4E5F78]"
+              />
+              {!isCollapsed && (
+                <div className="flex flex-col">
+                  <span className="font-semibold text-sm text-[#111111]">MasterPlan LLC</span>
+                  <span className="text-[11px] text-[#4E5F78] max-w-[140px] truncate">agent@msplan.com</span>
+                </div>
+              )}
+            </div>
             {!isCollapsed && (
-              <div className="flex flex-col">
-                <span className="font-semibold text-sm text-[#111111]">MasterPlan LLC</span>
-                <span className="text-[11px] text-[#4E5F78] max-w-[140px] truncate">agent@msplan.com</span>
-              </div>
+              <HugeiconsIcon icon={ArrowDown01Icon} className="w-4 h-4 text-[#1C1B1C] cursor-pointer" onClick={() => setShowFooterMenu(!showFooterMenu)} />
             )}
           </div>
-          {!isCollapsed && (
-            <HugeiconsIcon icon={ArrowDown01Icon} className="w-4 h-4 text-[#1C1B1C] cursor-pointer" />
-          )}
         </div>
       </aside>
 
