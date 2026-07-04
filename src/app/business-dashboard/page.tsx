@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   BellIcon,
@@ -23,7 +23,9 @@ import {
   CalendarCheck2Icon,
   ReceiptTextIcon,
   Cancel01Icon,
-  Clock01Icon
+  Clock01Icon,
+  HeadsetIcon,
+  Logout01Icon
 } from "@hugeicons/core-free-icons";
 
 export default function BusinessDashboard() {
@@ -31,7 +33,14 @@ export default function BusinessDashboard() {
   const [scheduleFilter, setScheduleFilter] = useState("All");
   const [timeFilter, setTimeFilter] = useState("Today");
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [showFooterMenu, setShowFooterMenu] = useState(false);
+  const [showFooterMenu, setShowFooterMenu] = useState(true);
+  const footerMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (showFooterMenu && footerMenuRef.current) {
+      footerMenuRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [showFooterMenu]);
 
   // Mock data for Schedule
   const scheduleData = [
@@ -133,7 +142,7 @@ export default function BusinessDashboard() {
           <div className={`flex items-center px-4 py-5 border-b border-[#757575]/30 ${isCollapsed ? "flex-col gap-4 justify-center" : "justify-between"}`}>
             <div className="flex items-center gap-3">
               <img
-                src="/img/smallBLogo.svg"
+                src="/img/smallBlackLogo.svg"
                 alt="Bookly Logo"
                 className="w-8 h-[38.4px] object-contain"
               />
@@ -153,7 +162,9 @@ export default function BusinessDashboard() {
           </div>
 
           {/* Navigation Links */}
-          <div className="px-3.5 py-4 space-y-5 overflow-y-auto max-h-[calc(100vh-160px)] scrollbar-hide">
+          <div className={`px-3.5 py-4 space-y-5 overflow-y-auto scrollbar-hide transition-all duration-300 ${
+            showFooterMenu ? "max-h-[calc(100vh-280px)]" : "max-h-[calc(100vh-165px)]"
+          }`}>
             {/* OVERVIEW SECTION */}
             <div className="space-y-1">
               {!isCollapsed && (
@@ -407,26 +418,10 @@ export default function BusinessDashboard() {
         </div>
 
         {/* User Footer Profile */}
-        <div className="relative">
-          {showFooterMenu && (
-            <div className={`absolute bottom-[72px] z-50 w-[179px] h-[116px] bg-[#C0D5D8] rounded-xl flex flex-col items-center py-0 border border-[#B0C5C8] shadow-md ${isCollapsed ? "left-[5px]" : "left-[15px]"}`}>
-              {/* Contact Support */}
-              <button className="w-[179px] h-[50px] flex items-center gap-3 px-4 pt-4 pb-2.5 hover:bg-[#B0C5C8]/50 rounded-t-xl text-left transition-all">
-                <HugeiconsIcon icon={HeadsetIcon} className="w-5 h-5 text-[#111111] shrink-0" />
-                <span className="font-manrope font-medium text-sm text-[#111111]">Contact Support</span>
-              </button>
-              {/* Divider */}
-              <div className="w-[179px] h-[0px] border-t border-[rgba(17,17,17,0.2)]"></div>
-              {/* Logout */}
-              <button className="w-[179px] h-[50px] flex items-center gap-3 px-4 pt-2.5 pb-4 hover:bg-[#B0C5C8]/50 rounded-b-xl text-left transition-all">
-                <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
-                <span className="font-manrope font-medium text-sm text-[#111111]">Logout</span>
-              </button>
-            </div>
-          )}
-
-          <div className={`p-4 border-t border-[#757575]/30 flex items-center bg-[#C0D5D8] ${isCollapsed ? "justify-center" : "justify-between"}`}>
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => setShowFooterMenu(!showFooterMenu)}>
+        <div className="border-t border-[#757575]/30 bg-[#C0D5D8] flex flex-col">
+          {/* Profile Card */}
+          <div className={`p-4 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
+            <div className="flex items-center gap-3 cursor-pointer select-none" onClick={() => setShowFooterMenu(!showFooterMenu)}>
               <img
                 src="/businessDashboard/downLogo.png"
                 alt="User Profile"
@@ -440,8 +435,35 @@ export default function BusinessDashboard() {
               )}
             </div>
             {!isCollapsed && (
-              <HugeiconsIcon icon={ArrowDown01Icon} className="w-4 h-4 text-[#1C1B1C] cursor-pointer" onClick={() => setShowFooterMenu(!showFooterMenu)} />
+              <HugeiconsIcon
+                icon={ArrowDown01Icon}
+                className={`w-4 h-4 text-[#1C1B1C] cursor-pointer transition-transform duration-200 ${showFooterMenu ? "rotate-180" : ""}`}
+                onClick={() => setShowFooterMenu(!showFooterMenu)}
+              />
             )}
+          </div>
+
+          {/* Collapsible Submenu in flow */}
+          <div
+            ref={footerMenuRef}
+            className={`flex flex-col border-[#757575]/15 bg-[#B8CED1] transition-all duration-300 ease-in-out overflow-hidden ${
+              showFooterMenu ? "max-h-[110px] opacity-100 border-t py-2 px-3.5" : "max-h-0 opacity-0 py-0 px-3.5"
+            } ${isCollapsed ? "items-center !px-1" : ""} gap-1`}
+          >
+            {/* Contact Support */}
+            <button className={`flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all ${isCollapsed ? "w-full justify-center" : "w-full"}`}>
+              <HugeiconsIcon icon={HeadsetIcon} className="w-5 h-5 text-[#111111] shrink-0" />
+              {!isCollapsed && (
+                <span className="font-manrope font-medium text-xs text-[#111111]">Contact Support</span>
+              )}
+            </button>
+            {/* Logout */}
+            <button className={`flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all ${isCollapsed ? "w-full justify-center" : "w-full"}`}>
+              <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
+              {!isCollapsed && (
+                <span className="font-manrope font-medium text-xs text-[#111111]">Logout</span>
+              )}
+            </button>
           </div>
         </div>
       </aside>
@@ -455,7 +477,7 @@ export default function BusinessDashboard() {
             <p className="text-xs text-neutral-500 font-poppins mt-0.5">Wednesday, 27 May 2026 · Good morning, Elena</p>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col items-end gap-3">
             {/* Bell Icon Notification Button */}
             <div className="relative">
               <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm">
@@ -488,51 +510,52 @@ export default function BusinessDashboard() {
         {/* 3. Metric Strip Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 mb-8">
           {/* Card 1 */}
-          <div className="bg-white border border-[#D3D3D3] rounded-xl p-4.5 shadow-sm relative flex flex-col justify-between h-[88px]">
+          <div className="bg-white border border-[#D3D3D3] rounded-xl p-4.5 shadow-sm flex flex-col justify-between h-[96px]">
             <span className="text-[11px] font-normal text-[#888780] font-poppins">Today's bookings</span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-3xl font-medium text-[#1A1A1A]">8</span>
-              <span className="text-xs text-[#757575]">3 remaining</span>
+            <div className="flex flex-col mt-0.5">
+              <span className="text-3xl font-semibold text-[#1A1A1A] leading-none">8</span>
+              <span className="text-xs text-[#757575] mt-1.5 font-poppins">3 remaining</span>
             </div>
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white border border-[#D3D3D3] rounded-xl p-4.5 shadow-sm relative flex flex-col justify-between h-[88px]">
+          <div className="bg-white border border-[#D3D3D3] rounded-xl p-4.5 shadow-sm flex flex-col justify-between h-[96px]">
             <span className="text-[11px] font-normal text-[#888780] font-poppins">To collect today</span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-3xl font-medium text-[#1D9E75]">€320</span>
-              <span className="text-xs text-[#757575]">pay at venue</span>
+            <div className="flex flex-col mt-0.5">
+              <span className="text-3xl font-semibold text-[#1D9E75] leading-none">€320</span>
+              <span className="text-xs text-[#757575] mt-1.5 font-poppins">pay at venue</span>
             </div>
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white border border-[#D3D3D3] rounded-xl p-4.5 shadow-sm relative flex flex-col justify-between h-[88px]">
+          <div className="bg-white border border-[#D3D3D3] rounded-xl p-4.5 shadow-sm flex flex-col justify-between h-[96px]">
             <span className="text-[11px] font-normal text-[#888780] font-poppins">No-shows this month</span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-3xl font-medium text-[#E24B4A]">2</span>
-              <span className="text-xs text-[#757575]">€45 charged</span>
+            <div className="flex flex-col mt-0.5">
+              <span className="text-3xl font-semibold text-[#E24B4A] leading-none">2</span>
+              <span className="text-xs text-[#757575] mt-1.5 font-poppins">€45 charged</span>
             </div>
           </div>
 
           {/* Card 4 */}
-          <div className="bg-white border border-[#D3D3D3] rounded-xl p-4.5 shadow-sm relative flex flex-col justify-between h-[88px]">
+          <div className="bg-white border border-[#D3D3D3] rounded-xl p-4.5 shadow-sm flex flex-col justify-between h-[96px]">
             <span className="text-[11px] font-normal text-[#888780] font-poppins">Monthly revenue</span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-3xl font-medium text-[#1D9E75]">€4280</span>
+            <div className="flex flex-col mt-0.5">
+              <span className="text-3xl font-semibold text-[#1D9E75] leading-none">€4280</span>
+              <span className="text-xs text-transparent mt-1.5 select-none font-poppins">-</span>
             </div>
           </div>
 
           {/* Card 5 */}
-          <div className="bg-white border border-[#D3D3D3] rounded-xl p-4.5 shadow-sm relative flex flex-col justify-between h-[88px]">
+          <div className="bg-white border border-[#D3D3D3] rounded-xl p-4.5 shadow-sm flex flex-col justify-between h-[96px]">
             <span className="text-[11px] font-normal text-[#888780] font-poppins">Avg Rating</span>
-            <div className="flex items-center gap-1.5 mt-1">
-              <span className="text-3xl font-medium text-[#1A1A1A]">4.9</span>
-              <img src="/businessDashboard/Metric 5 Star.svg" alt="5 Stars" className="w-6 h-6 object-contain" />
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="text-3xl font-semibold text-[#1A1A1A] leading-none">4.9</span>
+              <img src="/businessDashboard/Metric 5 Star.svg" alt="5 Stars" className="w-5 h-5 object-contain" />
             </div>
-            <div className="flex items-center text-[11px] text-[#757575] hover:text-[#111111] cursor-pointer mt-1 font-poppins">
+            <div className="flex items-center text-[11px] text-[#757575] hover:text-[#111111] cursor-pointer mt-0.5 font-poppins whitespace-nowrap select-none">
               <span>38 verified reviews</span>
-              <svg className="w-3 h-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg className="w-3.5 h-3.5 ml-1.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
           </div>
@@ -611,16 +634,16 @@ export default function BusinessDashboard() {
                   </tbody>
                 </table>
               </div>
+            </div>
 
-              {/* Bottom Full Calendar Link */}
-              <div className="mt-4 pt-2 border-t border-neutral-100">
-                <button className="text-xs font-medium text-[#0F1E35] hover:opacity-85 transition-opacity flex items-center gap-1.5 font-poppins">
-                  <span>View full calendar</span>
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7-7 7M3 12h18" />
-                  </svg>
-                </button>
-              </div>
+            {/* Bottom Full Calendar Link (outside the box) */}
+            <div className="mt-4">
+              <button className="text-xs font-medium text-[#1D9E75] hover:opacity-85 transition-opacity flex items-center gap-1.5 font-poppins">
+                <span>View full calendar</span>
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7-7 7M3 12h18" />
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -635,10 +658,10 @@ export default function BusinessDashboard() {
                     <span className="bg-[#111111] text-white text-[10px] font-medium px-2 py-1 rounded w-12 text-center shrink-0">
                       {evt.time}
                     </span>
-                    <div className="flex flex-col border-l-2 border-neutral-100 pl-3">
+                    <div className="flex flex-col pl-1">
                       <span className="text-xs font-semibold text-[#111111]">{evt.name}</span>
                       <span className="text-[11px] text-neutral-500">{evt.detail}</span>
-                      <span className="text-[10px] text-neutral-400 font-light mt-0.5">{evt.duration}</span>
+                      <span className="text-[10px] text-amber-600 font-medium mt-0.5">{evt.duration}</span>
                     </div>
                   </div>
                 ))}
@@ -646,15 +669,11 @@ export default function BusinessDashboard() {
             </div>
 
             {/* Recent Activity Card */}
-            <div className="bg-white border border-[#E8E8E6] rounded-xl p-5 shadow-sm relative">
-              {/* Floating Activity Graph Image */}
-              <div className="absolute right-5 top-5">
-                <img src="/businessDashboard/Activity.svg" alt="Activity Trend" className="w-12 h-6 object-contain" />
+            <div className="bg-white border border-[#E8E8E6] rounded-xl p-5 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <img src="/businessDashboard/Activity.svg" alt="Activity Trend" className="w-8 h-4 object-contain opacity-95" />
+                <h3 className="text-sm font-semibold text-[#0F1E35] font-poppins">Recent activity</h3>
               </div>
-
-              <h3 className="text-sm font-semibold text-[#0f1e35] font-poppins mb-4 flex items-center gap-2">
-                <span>Recent activity</span>
-              </h3>
 
               <div className="space-y-4">
                 {activityFeed.map((act) => (
