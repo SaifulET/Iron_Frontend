@@ -18,6 +18,78 @@ import Navbar from "@/components/Navbar";
 import BookAgainSection from "@/components/BookAgainSection";
 import SearchBar from "@/components/SearchBar";
 
+function useInView(threshold = 0.4) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, inView };
+}
+
+function LandingStepCard({
+  index,
+  icon,
+  title,
+  description,
+}: {
+  index: number;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  const { ref, inView } = useInView(0.4);
+  const delay = index * 150;
+
+  return (
+    <div ref={ref} className="flex-1 min-w-0 h-full">
+      <div
+        className={`relative flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out h-full ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+          }`}
+        style={{ transitionDelay: `${delay}ms` }}
+      >
+        {/* Icon Container */}
+        <div
+          className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0"
+          style={{
+            transform: inView ? "scale(1)" : "scale(0.5)",
+            opacity: inView ? 1 : 0,
+            transition: `transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) ${delay + 300}ms, opacity 0.3s ease ${delay + 300}ms`,
+          }}
+        >
+          {icon}
+        </div>
+
+        {/* Text Area */}
+        <div className="flex flex-col gap-3 w-full flex-1">
+          <h3 className="text-[24px] font-medium leading-[32px] text-[#212121] tracking-tight font-poppins">
+            {title}
+          </h3>
+          <p className="text-[16px] font-normal leading-[24px] text-[#757575]">
+            {description}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function LandingPage() {
   const router = useRouter();
 
@@ -552,18 +624,26 @@ export default function LandingPage() {
         <img src="/designImg/middleEllipes.svg" alt="" className="absolute top-[20%] right-0 w-[600px] h-[600px]" />
       </div>
 
-      {/* 1. App Install Banner */}
+      {/* 1. Top Banner */}
       {showBanner && (
         <div className="w-full bg-[#96C3CD] text-[#111111] px-3 sm:px-[16px] py-2.5 sm:py-[16px] flex items-center justify-between transition-all duration-300 relative z-50 text-[10px] sm:text-xs md:text-sm font-medium">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <div className="w-[17px] h-[20px] flex items-center justify-center shrink-0">
               <img src="/img/smallBLogo.svg" alt="B" className="w-full h-full object-contain" />
             </div>
-            <span className="truncate">Book local services in Cyprus — instantly, any time</span>
+            <span className="truncate">Reach new customers across Cyprus. Zero monthly fees. No risk</span>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-            <AddToHomeScreenButton size="small" className="px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs" />
+            <button
+              onClick={() => router.push("/list-your-business")}
+              className="bg-white hover:bg-neutral-50 text-[#1C1B1C] px-4 py-1.5 rounded-full font-semibold shadow-sm transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 whitespace-nowrap text-[10px] sm:text-xs md:text-sm"
+            >
+              <span>List your Business</span>
+              <svg className="w-3.5 h-3.5 text-[#111111] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
             <button
               onClick={() => setShowBanner(false)}
               className="text-[#1C1B1C] hover:opacity-75 transition-opacity cursor-pointer p-1"
@@ -946,50 +1026,24 @@ export default function LandingPage() {
 
           {/* Cards Frame */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
-            {/* Step 1 */}
-            <div className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-              <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
-                <HugeiconsIcon icon={Search01Icon} className="w-9 h-9 text-[#111111]" />
-              </div>
-              <div className="flex flex-col gap-3 w-full">
-                <h3 className="text-[24px] font-medium leading-[32px] text-[#212121]">
-                  Discover
-                </h3>
-                <p className="text-[16px] font-normal leading-[24px] text-[#757575]">
-                  Browse local services and book instantly. Find exactly what you need, when you need it
-                </p>
-              </div>
-            </div>
-
-            {/* Step 2 */}
-            <div style={{ transitionDelay: '150ms' }} className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-              <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
-                <HugeiconsIcon icon={SquareLock01Icon} className="w-9 h-9 text-[#111111]" />
-              </div>
-              <div className="flex flex-col gap-3 w-full">
-                <h3 className="text-[24px] font-medium leading-[32px] text-[#212121]">
-                  Secure your spot
-                </h3>
-                <p className="text-[16px] font-normal leading-[24px] text-[#757575]">
-                  Confirm your booking instantly. First visit? A small deposit is required. Returning customer? No deposit — your slot is held automatically
-                </p>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div style={{ transitionDelay: '300ms' }} className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl flex-1 hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-              <div className="w-[68px] h-[68px] bg-[#2E9DA7] rounded-xl flex items-center justify-center shrink-0">
-                <img src="/Icons/glasses.svg" alt="Cheers" className="w-9 h-9 object-contain" draggable="false" />
-              </div>
-              <div className="flex flex-col gap-3 w-full">
-                <h3 className="text-[24px] font-medium leading-[32px] text-[#212121]">
-                  Show up and enjoy
-                </h3>
-                <p className="text-[16px] font-normal leading-[24px] text-[#757575]">
-                  Pay the remaining balance at the venue by cash or card. That's it!
-                </p>
-              </div>
-            </div>
+            <LandingStepCard
+              index={0}
+              icon={<HugeiconsIcon icon={Search01Icon} className="w-9 h-9 text-[#111111]" />}
+              title="Discover"
+              description="Browse local services and book instantly. Find exactly what you need, when you need it"
+            />
+            <LandingStepCard
+              index={1}
+              icon={<HugeiconsIcon icon={SquareLock01Icon} className="w-9 h-9 text-[#111111]" />}
+              title="Secure your spot"
+              description="Confirm your booking instantly. First visit? A small deposit is required. Returning customer? No deposit — your slot is held automatically"
+            />
+            <LandingStepCard
+              index={2}
+              icon={<img src="/Icons/glasses.svg" alt="Cheers" className="w-9 h-9 object-contain" draggable="false" />}
+              title="Show up and enjoy"
+              description="Pay the remaining balance at the venue by cash or card. That's it!"
+            />
           </div>
         </div>
       </section>
@@ -998,22 +1052,22 @@ export default function LandingPage() {
       <WhyChooseUs />
 
       {/* 12. Add Bookly to Your Home Screen Section */}
-      <section className="w-full mt-[166px] mb-24  flex justify-center">
-        <div className="w-full  h-[320px] xl:h-[484px] bg-[#2E9DA7]  relative overflow-visible z-10">
+      <section className="w-full mt-[219px] mb-24  flex justify-center">
+        <div className="w-full h-[320px] md:h-[400px] lg:h-[449px] xl:h-[484px] bg-[#2E9DA7] relative overflow-visible z-10">
 
 
           {/* Left Side: Content */}
-          <div className="absolute left-[37px] top-[38px] xl:left-[130px] text-white z-10 flex flex-col items-start gap-2.5 sm:gap-4 md:gap-5 max-w-[calc(100%-140px)] lg:max-w-[636px]">
-            <h2 className="text-xl sm:text-[32px] lg:text-[54px] lg:leading-[64px] font-poppins font-medium text-[#FCFAF9] tracking-tight">
+          <div className="absolute left-[37px] top-[38px] xl:left-[141px] text-white z-10 flex flex-col items-start gap-2.5 sm:gap-4 md:gap-5 max-w-[calc(100%-140px)] lg:max-w-[636px] add-home-screen-content-wrapper">
+            <h2 className="add-home-screen-title sm:text-[32px] lg:text-[54px] lg:leading-[64px] font-poppins font-medium text-[#FCFAF9] tracking-tight">
               Add Bookly to your <br /> home screen
             </h2>
 
             {/* Subtitle tick frame */}
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <span className="text-[10px] sm:text-base md:text-[18px] md:leading-[26px] font-poppins font-medium text-[#FCFAF9]">
+              <span className="add-home-screen-subtitle sm:text-base md:text-[18px] md:leading-[26px] font-poppins font-medium text-[#FCFAF9]">
                 Book any local services instantly
               </span>
-              <div className="w-6 h-6 border-[1.5px] border-[#FCFAF9] rounded-full flex items-center justify-center shrink-0">
+              <div className="w-6 h-6 border-[1.5px] border-[#FCFAF9] rounded-full flex items-center justify-center shrink-0 add-home-screen-check-icon">
                 <svg className="w-3.5 h-3.5 text-[#FCFAF9]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
@@ -1022,16 +1076,16 @@ export default function LandingPage() {
           </div>
 
           {/* Install Button Container */}
-          <div className="absolute left-[150px] xl:left-[378px] top-[250px] xl:top-[347px] z-20">
+          <div className="absolute left-[150px] xl:left-[378px] top-[250px] xl:top-[347px] z-20 add-home-screen-btn-container">
             <AddToHomeScreenButton
-              className="z-10 scale-75 xl:scale-100 origin-left"
+              className="z-10 scale-75 xl:scale-100 origin-left add-home-screen-btn"
               showTextOnMobile={true}
               size="large"
             />
           </div>
 
           {/* Curved Arrow Image */}
-          <div className="absolute left-[60px] xl:left-[209px] top-[186px] xl:top-[278px] w-[80px] xl:w-[114px] h-[90px] xl:h-[151px] pointer-events-none opacity-95 z-20">
+          <div className="absolute left-[60px] xl:left-[209px] top-[186px] xl:top-[278px] w-[80px] xl:w-[114px] h-[90px] xl:h-[151px] pointer-events-none opacity-95 z-20 add-home-screen-arrow-icon">
             <img
               src="/Icons/direction.png"
               alt="Direction Arrow"
@@ -1040,8 +1094,8 @@ export default function LandingPage() {
             />
           </div>
 
-          {/* Right Side: Phone Image mockup (Sticking out 96px at top, body sticks out 14px on the right) */}
-          <div className="absolute right-[-14px] xl:right-[150px] top-[-106px] z-0 sm:z-20 pointer-events-none w-[200px] xl:w-[400px] h-[360px] xl:h-[540px]">
+          {/* Right Side: Phone Image mockup */}
+          <div className="absolute right-[16px] md:right-[20px] lg:right-[150px] z-0 sm:z-20 pointer-events-none mockup-container-fixed">
             <div className="relative w-full h-full flex items-center justify-center">
               {/* Ellipse 133 Glow Light behind phone */}
               <div
@@ -1060,7 +1114,10 @@ export default function LandingPage() {
               <img
                 src="/img/mobile.png"
                 alt="Bookly App Mockup"
-                className="h-full w-auto object-contain z-10"
+                style={{
+                  transform: "rotate(6.83deg)"
+                }}
+                className="object-fill z-10 max-w-none mockup-image-fixed"
                 draggable="false"
               />
             </div>
@@ -1090,7 +1147,7 @@ export default function LandingPage() {
 
           {/* CTA Button */}
           <button
-            onClick={() => router.push("/professional")}
+            onClick={() => router.push("/list-your-business")}
             className="flex flex-row items-center justify-center py-3 px-6 gap-[8px] w-full sm:w-[290px] h-[48px] bg-[#141414] hover:bg-black text-white rounded-full transition-all active:scale-95 cursor-pointer font-inter font-semibold text-[15.7px] leading-[24px]"
           >
             <span>List your Business - It’s free</span>

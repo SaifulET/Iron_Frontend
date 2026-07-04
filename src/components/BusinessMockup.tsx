@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export default function BusinessMockup() {
+export default function BusinessMockup({ showCities = true }: { showCities?: boolean }) {
   return (
     <section className="w-full mt-[63px] mb-24 px-4 md:px-8 xl:px-0 relative overflow-hidden lg:overflow-visible">
       {/* Container holding both mockups */}
@@ -43,19 +43,21 @@ export default function BusinessMockup() {
       </div>
 
       {/* Cyprus Cities list at the bottom */}
-      <div className="w-full max-w-[1100px] mx-auto mt-16 md:mt-30 flex flex-wrap items-center justify-center gap-y-4 gap-x-4 md:gap-x-8 text-[#2E9DA7] font-poppins font-medium text-sm sm:text-base md:text-[20px] tracking-[0.05em] uppercase select-none">
-        <span>Larnaca</span>
-        <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#2E9DA7] shrink-0"></span>
-        <span>Limassol</span>
-        <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#2E9DA7] shrink-0"></span>
-        <span>Pafos</span>
-        <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#2E9DA7] shrink-0"></span>
-        <span>Nicosia</span>
-        <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#2E9DA7] shrink-0"></span>
-        <span>Ayia Napa</span>
-        <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#2E9DA7] shrink-0"></span>
-        <span>Protaras</span>
-      </div>
+      {showCities && (
+        <div className="w-full max-w-[1100px] mx-auto mt-16 md:mt-30 flex flex-wrap items-center justify-center gap-y-4 gap-x-4 md:gap-x-8 text-[#2E9DA7] font-poppins font-medium text-sm sm:text-base md:text-[20px] tracking-[0.05em] uppercase select-none">
+          <span>Larnaca</span>
+          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#2E9DA7] shrink-0"></span>
+          <span>Limassol</span>
+          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#2E9DA7] shrink-0"></span>
+          <span>Pafos</span>
+          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#2E9DA7] shrink-0"></span>
+          <span>Nicosia</span>
+          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#2E9DA7] shrink-0"></span>
+          <span>Ayia Napa</span>
+          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#2E9DA7] shrink-0"></span>
+          <span>Protaras</span>
+        </div>
+      )}
     </section>
   );
 }

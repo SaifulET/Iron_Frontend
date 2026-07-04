@@ -25,13 +25,15 @@ interface NavbarProps {
   setIsLoggedIn: (val: boolean) => void;
   selectedLanguage: string;
   setSelectedLanguage: (lang: string) => void;
+  isBusinessPage?: boolean;
 }
 
 export default function Navbar({
   isLoggedIn,
   setIsLoggedIn,
   selectedLanguage,
-  setSelectedLanguage
+  setSelectedLanguage,
+  isBusinessPage = false
 }: NavbarProps) {
   const router = useRouter();
   const [showLangDropdown, setShowLangDropdown] = useState(false);
@@ -106,14 +108,16 @@ export default function Navbar({
         </div>
 
         {/* Nav links (Desktop) */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link href="/explore" className="text-xs font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase">
-            Explore
-          </Link>
-          <a href="#" className="text-xs font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase">
-            How it Works
-          </a>
-        </nav>
+        {!isBusinessPage && (
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="/explore" className="text-xs font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase">
+              Explore
+            </Link>
+            <a href="#" className="text-xs font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase">
+              How it Works
+            </a>
+          </nav>
+        )}
 
         {/* Right Side Options (Desktop) */}
         <div className="hidden md:flex items-center gap-3 sm:gap-4">
@@ -129,10 +133,10 @@ export default function Navbar({
 
               {/* List your business button */}
               <button
-                onClick={() => router.push("/professional")}
+                onClick={() => router.push(isBusinessPage ? "/business-dashboard" : "/list-your-business")}
                 className="bg-[#1C1B1C] hover:bg-black text-[#F9FAFB] px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer active:scale-95 whitespace-nowrap"
               >
-                List your business
+                {isBusinessPage ? "Marketplace" : "List your business"}
               </button>
 
               {/* Language Selector */}
@@ -169,10 +173,10 @@ export default function Navbar({
             <>
               {/* List your business button */}
               <button
-                onClick={() => router.push("/professional")}
+                onClick={() => router.push(isBusinessPage ? "/business-dashboard" : "/list-your-business")}
                 className="bg-[#1C1B1C] hover:bg-black text-[#F9FAFB] px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer active:scale-95 whitespace-nowrap"
               >
-                List your business
+                {isBusinessPage ? "Marketplace" : "List your business"}
               </button>
 
               {/* Logged in user avatar and dropdown toggle */}
@@ -340,13 +344,15 @@ export default function Navbar({
                     <button
                       onClick={() => {
                         setShowUserDropdown(false);
-                        router.push("/professional");
+                        router.push(isBusinessPage ? "/business-dashboard" : "/list-your-business");
                       }}
                       className="flex items-between justify-between cursor-pointer w-full hover:opacity-85"
                     >
                       <div className="flex items-center gap-3">
                         <HugeiconsIcon icon={ProfileIcon} className="w-[18px] h-[18px] text-[#141B34]" />
-                        <span className="font-medium text-base text-[#1C1B1C]">List your Business</span>
+                        <span className="font-medium text-base text-[#1C1B1C]">
+                          {isBusinessPage ? "Marketplace" : "List your Business"}
+                        </span>
                       </div>
                       <HugeiconsIcon icon={ArrowRight02Icon} className="w-6 h-6 text-[#111111]" />
                     </button>
@@ -443,20 +449,24 @@ export default function Navbar({
       {/* Mobile Menu Dropdown */}
       {showMobileMenu && (
         <div className="absolute top-[85px] left-4 right-4 bg-[#FDFBF9] border border-[#E8E6FF] rounded-2xl shadow-xl z-50 p-5 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2 duration-200 md:hidden">
-          <Link
-            href="/explore"
-            onClick={() => setShowMobileMenu(false)}
-            className="text-sm font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase py-2 border-b border-neutral-100"
-          >
-            Explore
-          </Link>
-          <a
-            href="#"
-            onClick={() => setShowMobileMenu(false)}
-            className="text-sm font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase py-2 border-b border-neutral-100"
-          >
-            How it Works
-          </a>
+          {!isBusinessPage && (
+            <>
+              <Link
+                href="/explore"
+                onClick={() => setShowMobileMenu(false)}
+                className="text-sm font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase py-2 border-b border-neutral-100"
+              >
+                Explore
+              </Link>
+              <a
+                href="#"
+                onClick={() => setShowMobileMenu(false)}
+                className="text-sm font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase py-2 border-b border-neutral-100"
+              >
+                How it Works
+              </a>
+            </>
+          )}
 
           <div className="flex flex-col gap-3 pt-2">
             {!isLoggedIn ? (
@@ -473,11 +483,11 @@ export default function Navbar({
                 <button
                   onClick={() => {
                     setShowMobileMenu(false);
-                    router.push("/professional");
+                    router.push(isBusinessPage ? "/business-dashboard" : "/list-your-business");
                   }}
                   className="w-full text-center bg-[#1C1B1C] hover:bg-black text-[#F9FAFB] py-2.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer"
                 >
-                  List your business
+                  {isBusinessPage ? "Marketplace" : "List your business"}
                 </button>
               </>
             ) : (
@@ -677,13 +687,15 @@ export default function Navbar({
           <button
             onClick={() => {
               setShowUserDropdown(false);
-              router.push("/professional");
+              router.push(isBusinessPage ? "/business-dashboard" : "/list-your-business");
             }}
             className="flex items-center justify-between cursor-pointer w-full hover:opacity-85"
           >
             <div className="flex items-center gap-3">
               <HugeiconsIcon icon={ProfileIcon} className="w-[18px] h-[18px] text-[#141B34]" />
-              <span className="font-medium text-base text-[#1C1B1C]">List your Business</span>
+              <span className="font-medium text-base text-[#1C1B1C]">
+                {isBusinessPage ? "Marketplace" : "List your Business"}
+              </span>
             </div>
             <HugeiconsIcon icon={ArrowRight02Icon} className="w-6 h-6 text-[#111111]" />
           </button>
