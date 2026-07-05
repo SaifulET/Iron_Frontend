@@ -29,7 +29,13 @@ import {
   Add01Icon,
   Money01Icon,
   ViewIcon,
-  Tick01Icon
+  Tick01Icon,
+  ArrowLeft02Icon,
+  User02Icon,
+  PencilEdit02Icon,
+  Mail01Icon,
+  ScissorIcon,
+  Calendar02Icon
 } from "@hugeicons/core-free-icons";
 
 export default function BusinessDashboard() {
@@ -40,6 +46,63 @@ export default function BusinessDashboard() {
   const [showFooterMenu, setShowFooterMenu] = useState(true);
   const [openDropdownCardId, setOpenDropdownCardId] = useState<string | null>(null);
   const footerMenuRef = useRef<HTMLDivElement>(null);
+
+  // Add Client Form States
+  const [isAddingClient, setIsAddingClient] = useState(false);
+  const [clientFirstName, setClientFirstName] = useState("");
+  const [clientLastName, setClientLastName] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [clientDob, setClientDob] = useState("1/6/2026");
+  const [clientGender, setClientGender] = useState("Male");
+  const [clientCity, setClientCity] = useState("Limasol");
+  const [clientPropertyType, setClientPropertyType] = useState("");
+  const [clientArea, setClientArea] = useState("");
+  const [clientStreetName, setClientStreetName] = useState("");
+  const [clientStreetNumber, setClientStreetNumber] = useState("");
+  const [clientFloor, setClientFloor] = useState("");
+  const [clientAptNo, setClientAptNo] = useState("");
+  const [clientDirections, setClientDirections] = useState("");
+  const [clientNotes, setClientNotes] = useState("");
+  const [clientTag, setClientTagState] = useState("VIP");
+
+  const handleAddClient = () => {
+    if (!clientFirstName || !clientPhone) return;
+    const newClient = {
+      name: `${clientFirstName} ${clientLastName}`.trim(),
+      joined: `Since ${new Date().toLocaleString("en-US", { month: "short", year: "numeric" })}`,
+      phone: clientPhone,
+      visitText: "—",
+      visitSub: "No visits yet",
+      isNext: false,
+      visits: 0,
+      spent: "€0",
+      tag: clientTag || null,
+      tagBg: clientTag === "VIP" ? "bg-[#FAEEDA]" : clientTag === "No-show" ? "bg-[#FCE4E4]" : clientTag === "New" ? "bg-[#E6F1FB]" : "bg-neutral-100",
+      tagColor: clientTag === "VIP" ? "text-[#633806]" : clientTag === "No-show" ? "text-[#E42424]" : clientTag === "New" ? "text-[#0C447C]" : "text-neutral-600",
+      avatarBg: "bg-[#E1F5EE]",
+      avatarText: `${clientFirstName.charAt(0)}${clientLastName ? clientLastName.charAt(0) : ""}`.toUpperCase()
+    };
+    setClientsData([newClient, ...clientsData]);
+    // Reset Form
+    setClientFirstName("");
+    setClientLastName("");
+    setClientPhone("");
+    setClientEmail("");
+    setClientDob("1/6/2026");
+    setClientGender("Male");
+    setClientCity("Limasol");
+    setClientPropertyType("");
+    setClientArea("");
+    setClientStreetName("");
+    setClientStreetNumber("");
+    setClientFloor("");
+    setClientAptNo("");
+    setClientDirections("");
+    setClientNotes("");
+    setClientTagState("VIP");
+    setIsAddingClient(false);
+  };
 
   useEffect(() => {
     if (showFooterMenu && footerMenuRef.current) {
@@ -78,7 +141,7 @@ export default function BusinessDashboard() {
     );
   };
 
-  const clientsData = [
+  const [clientsData, setClientsData] = useState([
     {
       name: "Sara L.",
       joined: "Since Jan 2024",
@@ -214,7 +277,7 @@ export default function BusinessDashboard() {
       avatarBg: "bg-[#EEEDFE]",
       avatarText: "RM"
     }
-  ];
+  ]);
 
   // Mock data for Schedule
   const scheduleData = [
@@ -308,9 +371,9 @@ export default function BusinessDashboard() {
   ];
 
   return (
-    <div className="flex bg-[#FCFAF9] min-h-screen font-poppins text-[#111111]">
+    <div className="flex bg-[#FCFAF9] h-screen overflow-hidden font-poppins text-[#111111]">
       {/* 1. Sidebar */}
-      <aside className={`bg-[#C0D5D8] flex flex-col justify-between shrink-0 border-r border-[#B0C5C8] h-screen sticky top-0 transition-all duration-300 ${isCollapsed ? "w-[78px]" : "w-[280px]"}`}>
+      <aside className={`bg-[#C0D5D8] flex flex-col justify-between shrink-0 border-r border-[#B0C5C8] h-full transition-all duration-300 ${isCollapsed ? "w-[78px]" : "w-[280px]"}`}>
         <div>
           {/* Top Logo and User Container */}
           <div className={`flex items-center px-4 py-5 border-b border-[#757575]/30 ${isCollapsed ? "flex-col gap-4 justify-center" : "justify-between"}`}>
@@ -644,9 +707,9 @@ export default function BusinessDashboard() {
 
       {/* 2. Main Content Area */}
       {activeTab === "Calendar" ? (
-        <main className="flex-1 flex flex-col h-screen overflow-hidden bg-[#FCF8F8] relative">
+        <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] relative">
           {/* Calendar Toolbar */}
-          <div className="h-16 border-b border-[#C6C6CB] bg-[#FCF8F8] px-6 flex items-center justify-between shrink-0 select-none">
+          <div className="flex flex-col sm:flex-row gap-4 py-3 sm:py-0 sm:h-16 border-b border-[#C6C6CB] bg-[#FCF8F8] px-6 items-center justify-between shrink-0 select-none">
             {/* Left side: Today & Date picker */}
             <div className="flex items-center gap-4">
               {/* Today Button */}
@@ -700,7 +763,10 @@ export default function BusinessDashboard() {
             </div>
           </div>
 
-          {/* Calendar Headers (Resource Columns - Sticky) */}
+          {/* Horizontal Scroll Wrapper for Headers & Grid on Mobile */}
+          <div className="flex-1 flex flex-col overflow-x-auto w-full">
+            <div className="min-w-[800px] flex-1 flex flex-col min-h-0">
+              {/* Calendar Headers (Resource Columns - Sticky) */}
           <div className="bg-[#FCF8F8] border-b border-[#C6C6CB] flex items-center shrink-0 select-none">
             {/* Left corner time placeholder */}
             <div className="w-16 h-20 border-r border-[#C6C6CB] shrink-0"></div>
@@ -733,7 +799,7 @@ export default function BusinessDashboard() {
           {/* Scrollable Grid Area */}
           <div className="flex-1 overflow-y-auto relative bg-[#FCF8F8] select-none min-h-0">
             {/* Grid Container */}
-            <div className="flex min-w-[800px] h-[800px] relative">
+            <div className="flex w-full h-[800px] relative">
               {/* Backdrop overlay to close dropdown on clicking outside */}
               {openDropdownCardId && (
                 <div
@@ -987,11 +1053,13 @@ export default function BusinessDashboard() {
                 </div>
               </div>
             </div>
+            </div>
+          </div>
           </div>
 
           {/* Slots selected bottom bar */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white border border-[#C6C6CB] rounded-xl px-4 py-3 shadow-xl flex items-center justify-between w-[640px] h-[94px] z-30 select-none">
-            <div className="flex items-center gap-3">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white border border-[#C6C6CB] rounded-xl px-4 py-3 shadow-xl flex flex-col sm:flex-row items-center justify-between w-[calc(100%-32px)] sm:w-[640px] min-h-[94px] h-auto gap-4 sm:gap-0 z-30 select-none">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               <div className="w-[31px] h-10 rounded-full bg-[#CFE1FE] flex items-center justify-center shrink-0">
                 <img src="/calederions/edit.svg" alt="Edit Icon" className="w-5 h-5 object-contain" />
               </div>
@@ -1000,18 +1068,441 @@ export default function BusinessDashboard() {
                 <span className="text-xs text-[#45474B] font-poppins">John's schedule</span>
               </div>
             </div>
-            <div className="flex items-center gap-6">
-              <button className="bg-[#020305] text-white text-sm font-medium px-[36.2px] h-[50px] rounded-lg hover:bg-neutral-800 transition-colors shadow-md">
+            <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
+              <button className="bg-[#020305] text-white text-xs sm:text-sm font-medium px-4 sm:px-[36.2px] h-[44px] sm:h-[50px] rounded-lg hover:bg-neutral-800 transition-colors shadow-md flex-1 sm:flex-initial">
                 Disable Selected Slots (2)
               </button>
-              <button className="text-[#45474B] hover:text-neutral-900 text-sm font-medium transition-colors">
+              <button className="text-[#45474B] hover:text-neutral-900 text-xs sm:text-sm font-medium transition-colors shrink-0">
                 Cancel
               </button>
             </div>
           </div>
         </main>
       ) : activeTab === "Clients" ? (
-        <main className="flex-1 flex flex-col h-screen overflow-hidden bg-[#FCF8F8] relative">
+        isAddingClient ? (
+          <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] relative">
+            {/* Client management Header */}
+            <div className="h-16 border-b border-[#C6C6CB] bg-[#FCF8F8] px-6 flex items-center justify-between shrink-0 select-none">
+              <div>
+                <h1 className="text-xl font-bold text-[#1A1A1A] font-poppins">Add Client</h1>
+                <p className="text-[11px] text-neutral-500 font-poppins mt-0.5">Create new client info to your system</p>
+              </div>
+              {/* Notification bell */}
+              <div className="relative">
+                <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm">
+                  <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px] text-[#5F5E5A]" />
+                </button>
+                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E24B4A] text-white text-[9px] font-medium flex items-center justify-center rounded-full border-2 border-white">
+                  5
+                </span>
+              </div>
+            </div>
+
+            {/* Main Form + Preview Block */}
+            <div className="flex-1 p-6 md:p-8 xl:p-10 flex flex-col lg:flex-row gap-8 items-start w-full">
+              {/* Left Column: Form (Full width) */}
+              <div className="flex-1 flex flex-col gap-6 w-full">
+                {/* Back / Breadcrumbs */}
+                <div
+                  onClick={() => setIsAddingClient(false)}
+                  className="flex items-center gap-2 cursor-pointer text-xs font-medium text-neutral-500 hover:text-neutral-900 font-poppins select-none"
+                >
+                  <HugeiconsIcon icon={ArrowLeft02Icon} className="w-4 h-4 text-neutral-600" />
+                  <span>Clients</span>
+                  <span className="text-neutral-300 font-normal">&gt;</span>
+                  <span className="text-[#0F1E35] font-semibold">Add client</span>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Personal Information Header */}
+                  <div>
+                    <h3 className="font-poppins text-[11px] font-medium tracking-[0.66px] uppercase text-[#888780]">Personal information</h3>
+                  </div>
+
+                  {/* Avatar Picker */}
+                  <div className="relative w-14 h-14 bg-[#E1F5EE] rounded-full flex items-center justify-center select-none cursor-pointer hover:opacity-95 transition-opacity">
+                    <HugeiconsIcon icon={User02Icon} className="w-[22px] h-[22px] text-[#ABAAA6]" />
+                    <div className="absolute right-0 bottom-0 w-6 h-6 bg-white border border-[#E8E8E4] rounded-full flex items-center justify-center shadow-sm">
+                      <HugeiconsIcon icon={PencilEdit02Icon} className="w-3 h-3 text-[#757575]" />
+                    </div>
+                  </div>
+
+                  {/* First and Last Name */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label className="font-poppins text-xs font-medium text-[#5F5E5A] flex items-center gap-0.5">
+                        <span>First name</span>
+                        <span className="text-[#E24B4A]">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={clientFirstName}
+                        onChange={(e) => setClientFirstName(e.target.value)}
+                        placeholder="e.g. Maria"
+                        className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg px-3 text-xs placeholder-neutral-400 focus:outline-none focus:border-neutral-800"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="font-poppins text-xs font-medium text-[#5F5E5A]">Last name</label>
+                      <input
+                        type="text"
+                        value={clientLastName}
+                        onChange={(e) => setClientLastName(e.target.value)}
+                        placeholder="e.g. Papadopoulou"
+                        className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg px-3 text-xs placeholder-neutral-400 focus:outline-none focus:border-neutral-800"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Phone */}
+                  <div className="flex flex-col gap-2">
+                    <label className="font-poppins text-xs font-medium text-[#5F5E5A] flex items-center gap-0.5">
+                      <span>Phone</span>
+                      <span className="text-[#E24B4A]">*</span>
+                    </label>
+                    <div className="flex w-full h-[38px]">
+                      <div className="bg-white border border-[#E8E8E4] border-r-0 rounded-l-lg px-3 flex items-center gap-1.5 text-xs text-neutral-500 shrink-0">
+                        <span>🇺🇸</span>
+                        <span>+88</span>
+                        <svg className="w-3 h-3 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                      <input
+                        type="text"
+                        value={clientPhone}
+                        onChange={(e) => setClientPhone(e.target.value)}
+                        placeholder="1111111111"
+                        className="flex-1 h-full bg-white border border-[#E8E8E4] rounded-r-lg px-3 text-xs placeholder-neutral-400 focus:outline-none focus:border-neutral-800"
+                      />
+                    </div>
+                    <span className="text-[11px] text-[#ABAAA6] font-poppins">Used for SMS reminders and booking confirmations</span>
+                  </div>
+
+                  {/* Email */}
+                  <div className="flex flex-col gap-2">
+                    <label className="font-poppins text-xs font-medium text-[#5F5E5A] flex items-center gap-0.5">
+                      <span>Email</span>
+                      <span className="text-[#E24B4A]">*</span>
+                    </label>
+                    <div className="flex items-center gap-3 border border-[#E8E8E4] rounded-lg px-3 bg-white h-[38px]">
+                      <HugeiconsIcon icon={Mail01Icon} className="w-5 h-5 text-neutral-400" />
+                      <input
+                        type="email"
+                        value={clientEmail}
+                        onChange={(e) => setClientEmail(e.target.value)}
+                        placeholder="client@email.com"
+                        className="w-full h-full text-xs placeholder-neutral-400 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Date of Birth & Gender */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label className="font-poppins text-xs font-medium text-[#5F5E5A]">Date of birth</label>
+                      <div className="flex items-center gap-3 border border-[#E8E8E4] rounded-lg px-3 bg-white h-[38px]">
+                        <HugeiconsIcon icon={Calendar03Icon} className="w-5 h-5 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={clientDob}
+                          onChange={(e) => setClientDob(e.target.value)}
+                          placeholder="1/6/2026"
+                          className="w-full h-full text-xs placeholder-neutral-400 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="font-poppins text-xs font-medium text-[#5F5E5A]">Gender</label>
+                      <div className="relative">
+                        <select
+                          value={clientGender}
+                          onChange={(e) => setClientGender(e.target.value)}
+                          className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg px-3 text-xs text-neutral-700 appearance-none focus:outline-none focus:border-neutral-800"
+                        >
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <div className="absolute right-3 top-3.5 pointer-events-none">
+                          <svg className="w-3.5 h-3.5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Address Section */}
+                  <div className="border border-[#E8E8E6] rounded-xl p-5 bg-white flex flex-col gap-4">
+                    <h4 className="font-poppins text-xs font-semibold text-[#5F5E5A] tracking-wider uppercase">Address</h4>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="font-poppins text-xs font-medium text-[#5F5E5A] flex items-center gap-0.5">
+                        <span>City</span>
+                        <span className="text-[#E24B4A]">*</span>
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={clientCity}
+                          onChange={(e) => setClientCity(e.target.value)}
+                          className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg px-3 text-xs text-neutral-700 appearance-none focus:outline-none focus:border-neutral-800"
+                        >
+                          <option value="Limasol">Limasol</option>
+                          <option value="Nicosia">Nicosia</option>
+                          <option value="Larnaca">Larnaca</option>
+                        </select>
+                        <div className="absolute right-3 top-3.5 pointer-events-none">
+                          <svg className="w-3.5 h-3.5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="font-poppins text-xs font-medium text-[#5F5E5A] flex items-center gap-0.5">
+                        <span>Property type</span>
+                        <span className="text-[#E24B4A]">*</span>
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={clientPropertyType}
+                          onChange={(e) => setClientPropertyType(e.target.value)}
+                          className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg px-3 text-xs text-neutral-700 appearance-none focus:outline-none focus:border-neutral-800"
+                        >
+                          <option value="">Select property type</option>
+                          <option value="Apartment">Apartment</option>
+                          <option value="House">House</option>
+                          <option value="Office">Office</option>
+                        </select>
+                        <div className="absolute right-3 top-3.5 pointer-events-none">
+                          <svg className="w-3.5 h-3.5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="font-poppins text-xs font-medium text-[#5F5E5A] flex items-center gap-0.5">
+                        <span>Area/neighborhood</span>
+                        <span className="text-[#E24B4A]">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={clientArea}
+                        onChange={(e) => setClientArea(e.target.value)}
+                        placeholder="e.g. Mackenzie, finikoudes"
+                        className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg px-3 text-xs placeholder-neutral-400 focus:outline-none focus:border-neutral-800"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="font-poppins text-xs font-medium text-[#5F5E5A] flex items-center gap-0.5">
+                          <span>Street name</span>
+                          <span className="text-[#E24B4A]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={clientStreetName}
+                          onChange={(e) => setClientStreetName(e.target.value)}
+                          placeholder="e.g. Emrou"
+                          className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg px-3 text-xs placeholder-neutral-400 focus:outline-none focus:border-neutral-800"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="font-poppins text-xs font-medium text-[#5F5E5A] flex items-center gap-0.5">
+                          <span>Street number</span>
+                          <span className="text-[#E24B4A]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={clientStreetNumber}
+                          onChange={(e) => setClientStreetNumber(e.target.value)}
+                          placeholder="e.g. 14"
+                          className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg px-3 text-xs placeholder-neutral-400 focus:outline-none focus:border-neutral-800"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="font-poppins text-xs font-medium text-[#5F5E5A]">Floor /unit</label>
+                        <input
+                          type="text"
+                          value={clientFloor}
+                          onChange={(e) => setClientFloor(e.target.value)}
+                          placeholder="e.g. 3rd floor"
+                          className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg px-3 text-xs placeholder-neutral-400 focus:outline-none focus:border-neutral-800"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="font-poppins text-xs font-medium text-[#5F5E5A]">Apt/room no.</label>
+                        <input
+                          type="text"
+                          value={clientAptNo}
+                          onChange={(e) => setClientAptNo(e.target.value)}
+                          placeholder="e.g. 5"
+                          className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg px-3 text-xs placeholder-neutral-400 focus:outline-none focus:border-neutral-800"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="font-poppins text-xs font-medium text-[#5F5E5A]">Additional directions</label>
+                      <textarea
+                        value={clientDirections}
+                        onChange={(e) => setClientDirections(e.target.value)}
+                        placeholder="e.g. Blue gate on the left, ring twice. Hotel name if applicable. Parking availale in front."
+                        className="w-full h-24 bg-white border border-[#E8E8E4] rounded-lg p-3 text-xs placeholder-neutral-400 focus:outline-none focus:border-neutral-800 resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Notes Section */}
+                  <div className="flex flex-col gap-2">
+                    <label className="font-poppins text-xs font-medium text-[#5F5E5A]">Notes</label>
+                    <textarea
+                      value={clientNotes}
+                      onChange={(e) => setClientNotes(e.target.value)}
+                      placeholder="e.g. Prefers ammonia-free colour. Sensitive scalp."
+                      className="w-full h-24 bg-white border border-[#E8E8E4] rounded-lg p-3 text-xs placeholder-neutral-400 focus:outline-none focus:border-neutral-800 resize-none"
+                    />
+                    <span className="text-[11px] text-[#ABAAA6] font-poppins">Visible to staff only — allergy info, preferences,</span>
+                  </div>
+
+                  {/* Tags Section */}
+                  <div className="flex flex-col gap-3">
+                    <label className="font-poppins text-xs font-medium text-[#5F5E5A]">Client tags</label>
+                    <div className="flex flex-wrap items-center gap-2 select-none">
+                      {["VIP", "Regular", "New", "No-show"].map((tag) => (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => setClientTagState(tag)}
+                          className={`h-8 px-4 rounded-full text-xs font-medium border transition-all ${
+                            clientTag === tag
+                              ? "bg-[#E8E8E4] border-white text-[#5F5E5A] font-semibold"
+                              : "bg-white border-[#E8E8E4] text-[#5F5E5A]"
+                          }`}
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+                    <span className="text-[11px] text-[#ABAAA6] font-poppins">Tags help you filter and identify clients quickly</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Preview (280px width) */}
+              <div className="w-full lg:w-[280px] bg-white border border-[#EEECEA] rounded-xl p-5 flex flex-col gap-6 shrink-0 shadow-sm relative lg:sticky lg:top-6">
+                <span className="font-poppins font-medium text-[13px] text-[#1C1C1A]">Client preview</span>
+
+                {/* Avatar & Name */}
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-16 h-16 bg-[#E1F5EE] rounded-full flex items-center justify-center">
+                    <HugeiconsIcon icon={User02Icon} className="w-[26px] h-[26px] text-[#ABAAA6]" />
+                  </div>
+                  <span className={`font-poppins font-semibold text-sm leading-[21px] text-center ${clientFirstName || clientLastName ? "text-[#1C1C1A]" : "text-[#D3D1C7]"}`}>
+                    {clientFirstName || clientLastName ? `${clientFirstName} ${clientLastName}`.trim() : "Full name"}
+                  </span>
+                </div>
+
+                <div className="border-t border-[#F0F0EE] w-full" />
+
+                {/* Details List */}
+                <div className="flex flex-col gap-4">
+                  {/* Phone Row */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-[15px] h-[15px] flex items-center justify-center shrink-0 mt-0.5">
+                      <img src="/Icons/phone.svg" alt="Phone" className="w-[15px] h-[15px] object-contain opacity-60" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-poppins text-[10px] text-[#ABAAA6] leading-none">Phone</span>
+                      <span className={`font-poppins text-xs mt-1 ${clientPhone ? "text-neutral-800" : "text-[#D3D1C7]"}`}>
+                        {clientPhone || "—"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Email Row */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-[15px] h-[15px] flex items-center justify-center shrink-0 mt-0.5">
+                      <HugeiconsIcon icon={Mail01Icon} className="w-[15px] h-[15px] text-[#888780]" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-poppins text-[10px] text-[#ABAAA6] leading-none">Email</span>
+                      <span className={`font-poppins text-xs mt-1 ${clientEmail ? "text-neutral-800" : "text-[#D3D1C7]"} break-all`}>
+                        {clientEmail || "—"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Staff Row */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-[15px] h-[15px] flex items-center justify-center shrink-0 mt-0.5">
+                      <HugeiconsIcon icon={ScissorIcon} className="w-[15px] h-[15px] text-[#888780]" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-poppins text-[10px] text-[#ABAAA6] leading-none">Staff</span>
+                      <span className="font-poppins text-xs mt-1 text-[#D3D1C7]">—</span>
+                    </div>
+                  </div>
+
+                  {/* Birthday Row */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-[15px] h-[15px] flex items-center justify-center shrink-0 mt-0.5">
+                      <HugeiconsIcon icon={Calendar02Icon} className="w-[15px] h-[15px] text-[#888780]" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-poppins text-[10px] text-[#ABAAA6] leading-none">Birthday</span>
+                      <span className={`font-poppins text-xs mt-1 ${clientDob ? "text-neutral-800" : "text-[#D3D1C7]"}`}>
+                        {clientDob || "—"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-[#F0F0EE] w-full" />
+
+                {/* Validation Warnings */}
+                {(!clientFirstName || !clientPhone) && (
+                  <div className="bg-[#FAFAF8] border border-[#E8E8E4] rounded-lg p-3 flex gap-2 items-start text-[11px] text-[#ABAAA6] leading-[16px]">
+                    <svg className="w-4 h-4 text-[#ABAAA6] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span>First name and phone number are required to continue.</span>
+                  </div>
+                )}
+
+                {/* Form Action Buttons */}
+                <div className="flex flex-col gap-2 mt-4">
+                  <button
+                    onClick={handleAddClient}
+                    disabled={!clientFirstName || !clientPhone}
+                    className={`w-full h-10 rounded-lg text-xs font-semibold text-white font-poppins transition-all select-none ${
+                      clientFirstName && clientPhone
+                        ? "bg-[#0F1E35] hover:bg-[#1C3252] cursor-pointer"
+                        : "bg-[#D3D1C7] cursor-not-allowed"
+                    }`}
+                  >
+                    Add client
+                  </button>
+                  <button
+                    onClick={() => setIsAddingClient(false)}
+                    className="w-full h-[38px] bg-white border border-[#E8E8E4] rounded-lg text-xs font-semibold text-[#5F5E5A] font-poppins hover:bg-neutral-50 transition-all select-none"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </main>
+        ) : (
+          <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] relative">
           {/* Client management Header */}
           <div className="h-16 border-b border-[#C6C6CB] bg-[#FCF8F8] px-6 flex items-center justify-between shrink-0 select-none">
             <div>
@@ -1032,34 +1523,34 @@ export default function BusinessDashboard() {
           {/* Scrollable Container */}
           <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
             {/* Metrics cards container */}
-            <div className="grid grid-cols-5 bg-white border border-[#E8E8E6] rounded-xl divide-x divide-[#E8E8E6] shrink-0">
-              <div className="p-4 flex flex-col justify-center">
+            <div className="grid grid-cols-2 md:grid-cols-5 bg-white border border-[#E8E8E6] rounded-xl shrink-0 overflow-hidden">
+              <div className="p-4 flex flex-col justify-center border-b border-r border-[#E8E8E6] md:border-0">
                 <span className="text-lg font-semibold text-[#1A1A1A]">18</span>
                 <span className="text-xs text-[#888780] font-light mt-0.5">Total clients</span>
               </div>
-              <div className="p-4 flex flex-col justify-center">
+              <div className="p-4 flex flex-col justify-center border-b border-[#E8E8E6] md:border-l md:border-0">
                 <span className="text-lg font-semibold text-[#1A1A1A]">12</span>
                 <span className="text-xs text-[#888780] font-light mt-0.5">Active this month</span>
               </div>
-              <div className="p-4 flex flex-col justify-center">
+              <div className="p-4 flex flex-col justify-center border-b border-r border-[#E8E8E6] md:border-l md:border-0">
                 <span className="text-lg font-semibold text-[#1D9E75]">3</span>
                 <span className="text-xs text-[#888780] font-light mt-0.5">New this month</span>
               </div>
-              <div className="p-4 flex flex-col justify-center">
+              <div className="p-4 flex flex-col justify-center border-b border-[#E8E8E6] md:border-l md:border-0">
                 <span className="text-lg font-semibold text-[#E24B4A]">2</span>
                 <span className="text-xs text-[#888780] font-light mt-0.5">At-risk</span>
               </div>
-              <div className="p-4 flex flex-col justify-center">
+              <div className="p-4 flex flex-col justify-center col-span-2 md:col-span-1 md:border-l border-[#E8E8E6]">
                 <span className="text-lg font-semibold text-[#1A1A1A]">€504</span>
                 <span className="text-xs text-[#888780] font-light mt-0.5">Avg. lifetime value</span>
               </div>
             </div>
 
             {/* Filter toolbar */}
-            <div className="flex items-center justify-between shrink-0">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center justify-between shrink-0">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
                 {/* Search box */}
-                <div className="relative w-[230px] h-9">
+                <div className="relative w-full sm:w-[230px] h-9">
                   <span className="absolute left-3 top-2.5 text-neutral-400">
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -1094,7 +1585,7 @@ export default function BusinessDashboard() {
               </div>
 
               {/* Add Client Button */}
-              <button className="h-9 px-4 bg-[#111111] text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 hover:bg-neutral-800 transition-colors">
+              <button onClick={() => setIsAddingClient(true)} className="h-9 px-4 bg-[#111111] text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-neutral-800 transition-colors w-full lg:w-auto">
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
@@ -1154,7 +1645,7 @@ export default function BusinessDashboard() {
                         {/* Tags */}
                         <td className="px-5 py-3.5">
                           {client.tag && (
-                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-semibold ${client.tagBg} ${client.tagColor}`}>
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-semibold whitespace-nowrap ${client.tagBg} ${client.tagColor}`}>
                               {client.tag}
                             </span>
                           )}
@@ -1193,8 +1684,9 @@ export default function BusinessDashboard() {
             </div>
           </div>
         </main>
+        )
       ) : (
-        <main className="flex-1 p-6 md:p-8 xl:p-10 overflow-y-auto max-h-screen">
+        <main className="flex-1 min-w-0 p-6 md:p-8 xl:p-10 overflow-y-auto h-full">
           {/* Top Header Block */}
           <div className="flex justify-between items-start mb-6">
             <div>
@@ -1345,7 +1837,7 @@ export default function BusinessDashboard() {
                           <td className="py-3 px-4 text-xs text-[#5F5E5A] font-poppins">{row.staff}</td>
                           <td className="py-3 px-4">
                             <span
-                              className={`inline-block px-2.5 py-1 text-[11px] font-medium rounded-full ${
+                              className={`inline-block px-2.5 py-1 text-[11px] font-medium rounded-full whitespace-nowrap ${
                                 row.lead === "New customer"
                                   ? "bg-[#E1F5EE] text-[#085041]"
                                   : "bg-blue-50 text-blue-700"
