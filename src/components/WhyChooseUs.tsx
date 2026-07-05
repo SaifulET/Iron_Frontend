@@ -39,8 +39,8 @@ function FeatureCard({
         setInView(entry.isIntersecting);
       },
       {
-        threshold: 0.05,
-        rootMargin: "0px 0px -20px 0px",
+        threshold: 0,
+        rootMargin: "0px 0px -10px 0px",
       }
     );
 
@@ -54,8 +54,8 @@ function FeatureCard({
     <div
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out ${
-        inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 md:opacity-100 md:translate-y-0"
+      className={`flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-[1400ms] ease-out ${
+        inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
       }`}
     >
       {/* Icon Container */}

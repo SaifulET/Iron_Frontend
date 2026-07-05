@@ -25,6 +25,148 @@ import FaqSection from "@/components/FaqSection";
 import Footer from "@/components/Footer";
 import EdgeSoftOrbsTop from "@/components/EdgeSoftOrbsTop";
 
+function BusinessStepCard({
+  index,
+  icon,
+  title,
+  description,
+  globalVisible,
+}: {
+  index: number;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  globalVisible: boolean;
+}) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setInView(globalVisible);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      {
+        threshold: 0,
+        rootMargin: "0px 0px -10px 0px",
+      }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isMobile, globalVisible]);
+
+  const delay = isMobile ? 0 : index * 150;
+
+  return (
+    <div
+      ref={ref}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`group flex flex-col items-start p-6 gap-8 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-xl hover:-translate-y-3 hover:scale-[1.02] hover:border-[#2E9DA7]/40 transition-all duration-[1400ms] ease-in-out ${
+        inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+      }`}
+    >
+      <div className="w-[60px] h-[60px] bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+        {icon}
+      </div>
+      <div className="flex flex-col gap-3 w-full">
+        <h3 className="text-[20px] font-medium text-[#212121]">
+          {title}
+        </h3>
+        <p className="text-[15px] font-normal leading-relaxed text-[#757575]">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function BusinessFeatureCard({
+  index,
+  icon,
+  title,
+  description,
+  globalVisible,
+}: {
+  index: number;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  globalVisible: boolean;
+}) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setInView(globalVisible);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      {
+        threshold: 0,
+        rootMargin: "0px 0px -10px 0px",
+      }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isMobile, globalVisible]);
+
+  const delay = isMobile ? 0 : index * 100;
+
+  return (
+    <div
+      ref={ref}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`group flex flex-col items-start p-6 gap-6 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-lg hover:-translate-y-2 hover:scale-[1.01] hover:border-[#2E9DA7]/30 transition-all duration-[1400ms] ease-in-out ${
+        inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      }`}
+    >
+      <div className="w-12 h-12 bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+        {icon}
+      </div>
+      <div className="flex flex-col gap-2 w-full">
+        <h4 className="text-[18px] font-semibold text-[#212121]">{title}</h4>
+        <p className="text-[14px] leading-relaxed text-[#757575]">{description}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function ListYourBusinessPage() {
   const router = useRouter();
 
@@ -263,50 +405,27 @@ export default function ListYourBusinessPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
-          {/* Card 1 */}
-          <div className={`group flex flex-col items-start p-6 gap-8 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-xl hover:-translate-y-3 hover:scale-[1.02] hover:border-[#2E9DA7]/40 transition-all duration-300 ease-in-out ${cardsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-            <div className="w-[60px] h-[60px] bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <HugeiconsIcon icon={Search01Icon} className="w-7 h-7" />
-            </div>
-            <div className="flex flex-col gap-3 w-full">
-              <h3 className="text-[20px] font-medium text-[#212121]">
-                Get Discovered
-              </h3>
-              <p className="text-[15px] font-normal leading-relaxed text-[#757575]">
-                New customers in Cyprus search Bookly and find your business. No advertising needed on your end. We do the discovery work for you.
-              </p>
-            </div>
-          </div>
-
-          {/* Card 2 */}
-          <div style={{ transitionDelay: '150ms' }} className={`group flex flex-col items-start p-6 gap-8 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-xl hover:-translate-y-3 hover:scale-[1.02] hover:border-[#2E9DA7]/40 transition-all duration-300 ease-in-out ${cardsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-            <div className="w-[60px] h-[60px] bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <HugeiconsIcon icon={Tick01Icon} className="w-7 h-7" />
-            </div>
-            <div className="flex flex-col gap-3 w-full">
-              <h3 className="text-[20px] font-medium text-[#212121]">
-                Get Booked
-              </h3>
-              <p className="text-[15px] font-normal leading-relaxed text-[#757575]">
-                Customers book and pay a small deposit online. You get an instant SMS notification. Your calendar updates automatically. No phone tag.
-              </p>
-            </div>
-          </div>
-
-          {/* Card 3 */}
-          <div style={{ transitionDelay: '300ms' }} className={`group flex flex-col items-start p-6 gap-8 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-xl hover:-translate-y-3 hover:scale-[1.02] hover:border-[#2E9DA7]/40 transition-all duration-300 ease-in-out ${cardsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-            <div className="w-[60px] h-[60px] bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <HugeiconsIcon icon={SaveMoneyDollarIcon} className="w-7 h-7" />
-            </div>
-            <div className="flex flex-col gap-3 w-full">
-              <h3 className="text-[20px] font-medium text-[#212121]">
-                Get Paid
-              </h3>
-              <p className="text-[15px] font-normal leading-relaxed text-[#757575]">
-                Collect the remaining balance at your venue. No-show? The customer's card is already saved — charge the fee with one tap. You keep 100%.
-              </p>
-            </div>
-          </div>
+          <BusinessStepCard
+            index={0}
+            icon={<HugeiconsIcon icon={Search01Icon} className="w-7 h-7" />}
+            title="Get Discovered"
+            description="New customers in Cyprus search Bookly and find your business. No advertising needed on your end. We do the discovery work for you."
+            globalVisible={cardsVisible}
+          />
+          <BusinessStepCard
+            index={1}
+            icon={<HugeiconsIcon icon={Tick01Icon} className="w-7 h-7" />}
+            title="Get Booked"
+            description="Customers book and pay a small deposit online. You get an instant SMS notification. Your calendar updates automatically. No phone tag."
+            globalVisible={cardsVisible}
+          />
+          <BusinessStepCard
+            index={2}
+            icon={<HugeiconsIcon icon={SaveMoneyDollarIcon} className="w-7 h-7" />}
+            title="Get Paid"
+            description="Collect the remaining balance at your venue. No-show? The customer's card is already saved — charge the fee with one tap. You keep 100%."
+            globalVisible={cardsVisible}
+          />
         </div>
       </section>
 
@@ -322,122 +441,69 @@ export default function ListYourBusinessPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-stretch">
-          {/* Feature 1 */}
-          <div className={`group flex flex-col items-start p-6 gap-6 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-lg hover:-translate-y-2 hover:scale-[1.01] hover:border-[#2E9DA7]/30 transition-all duration-300 ease-in-out ${featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="w-12 h-12 bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <HugeiconsIcon icon={Clock01Icon} className="w-6 h-6" />
-            </div>
-            <div className="flex flex-col gap-2 w-full">
-              <h4 className="text-[18px] font-semibold text-[#212121]">24/7 Online Booking</h4>
-              <p className="text-[14px] leading-relaxed text-[#757575]">
-                Never miss a booking because you were busy or asleep. Customers book anytime, from anywhere.
-              </p>
-            </div>
-          </div>
-
-          {/* Feature 2 */}
-          <div className={`group flex flex-col items-start p-6 gap-6 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-lg hover:-translate-y-2 hover:scale-[1.01] hover:border-[#2E9DA7]/30 transition-all duration-300 ease-in-out ${featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="w-12 h-12 bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <img src="/Icons/businessIcon/Chield_check.svg" alt="" className="w-6 h-6 object-contain" />
-            </div>
-            <div className="flex flex-col gap-2 w-full">
-              <h4 className="text-[18px] font-semibold text-[#212121]">No-Show Protection</h4>
-              <p className="text-[14px] leading-relaxed text-[#757575]">
-                Customers save a card at booking. If they don't show, you charge the fee instantly — one tap. You set the amount, you decide every time.
-              </p>
-            </div>
-          </div>
-
-          {/* Feature 3 */}
-          <div className={`group flex flex-col items-start p-6 gap-6 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-lg hover:-translate-y-2 hover:scale-[1.01] hover:border-[#2E9DA7]/30 transition-all duration-300 ease-in-out ${featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="w-12 h-12 bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <img src="/Icons/businessIcon/Bell_pin.svg" alt="" className="w-6 h-6 object-contain" />
-            </div>
-            <div className="flex flex-col gap-2 w-full">
-              <h4 className="text-[18px] font-semibold text-[#212121]">Automatic Reminders</h4>
-              <p className="text-[14px] leading-relaxed text-[#757575]">
-                SMS and email reminders sent automatically before every appointment. Fewer no-shows, less chasing.
-              </p>
-            </div>
-          </div>
-
-          {/* Feature 4 */}
-          <div className={`group flex flex-col items-start p-6 gap-6 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-lg hover:-translate-y-2 hover:scale-[1.01] hover:border-[#2E9DA7]/30 transition-all duration-300 ease-in-out ${featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="w-12 h-12 bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <HugeiconsIcon icon={Analytics01Icon} className="w-6 h-6" />
-            </div>
-            <div className="flex flex-col gap-2 w-full">
-              <h4 className="text-[18px] font-semibold text-[#212121]">Analytics Dashboard</h4>
-              <p className="text-[14px] leading-relaxed text-[#757575]">
-                See your busiest slots, top services, and revenue — all in one place. Make smarter decisions with real data.
-              </p>
-            </div>
-          </div>
-
-          {/* Feature 5 */}
-          <div className={`group flex flex-col items-start p-6 gap-6 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-lg hover:-translate-y-2 hover:scale-[1.01] hover:border-[#2E9DA7]/30 transition-all duration-300 ease-in-out ${featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="w-12 h-12 bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <HugeiconsIcon icon={Calendar03Icon} className="w-6 h-6" />
-            </div>
-            <div className="flex flex-col gap-2 w-full">
-              <h4 className="text-[18px] font-semibold text-[#212121]">Google Calendar Sync</h4>
-              <p className="text-[14px] leading-relaxed text-[#757575]">
-                Two-way sync with Google Calendar. Bookly appointments appear automatically, and calendar blocks prevent double bookings.
-              </p>
-            </div>
-          </div>
-
-          {/* Feature 6 */}
-          <div className={`group flex flex-col items-start p-6 gap-6 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-lg hover:-translate-y-2 hover:scale-[1.01] hover:border-[#2E9DA7]/30 transition-all duration-300 ease-in-out ${featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="w-12 h-12 bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <HugeiconsIcon icon={UserGroup03Icon} className="w-6 h-6" />
-            </div>
-            <div className="flex flex-col gap-2 w-full">
-              <h4 className="text-[18px] font-semibold text-[#212121]">Multi-Staff Calendars</h4>
-              <p className="text-[14px] leading-relaxed text-[#757575]">
-                Separate calendar columns per staff member. Log in on multiple devices. Owner, supervisor and staff permission levels built in.
-              </p>
-            </div>
-          </div>
-
-          {/* Feature 7 */}
-          <div className={`group flex flex-col items-start p-6 gap-6 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-lg hover:-translate-y-2 hover:scale-[1.01] hover:border-[#2E9DA7]/30 transition-all duration-300 ease-in-out ${featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="w-12 h-12 bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <img src="/Icons/businessIcon/star-light.svg" alt="" className="w-6 h-6 object-contain" />
-            </div>
-            <div className="flex flex-col gap-2 w-full">
-              <h4 className="text-[18px] font-semibold text-[#212121]">Verified Reviews</h4>
-              <p className="text-[14px] leading-relaxed text-[#757575]">
-                Only real customers who booked through Bookly can leave reviews. Genuine ratings that build your reputation.
-              </p>
-            </div>
-          </div>
-
-          {/* Feature 8 */}
-          <div className={`group flex flex-col items-start p-6 gap-6 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-lg hover:-translate-y-2 hover:scale-[1.01] hover:border-[#2E9DA7]/30 transition-all duration-300 ease-in-out ${featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="w-12 h-12 bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <HugeiconsIcon icon={ZapIcon} className="w-6 h-6" />
-            </div>
-            <div className="flex flex-col gap-2 w-full">
-              <h4 className="text-[18px] font-semibold text-[#212121]">Instant Notifications</h4>
-              <p className="text-[14px] leading-relaxed text-[#757575]">
-                Get an SMS the moment a new booking lands. Know immediately so you can prepare — no delays, no surprises.
-              </p>
-            </div>
-          </div>
-
-          {/* Feature 9 */}
-          <div className={`group flex flex-col items-start p-6 gap-6 bg-white border border-[#E8E6FF] rounded-2xl hover:shadow-lg hover:-translate-y-2 hover:scale-[1.01] hover:border-[#2E9DA7]/30 transition-all duration-300 ease-in-out ${featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="w-12 h-12 bg-[#2E9DA7] text-[#111111] rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-              <img src="/Icons/businessIcon/security-check.svg" alt="" className="w-6 h-6 object-contain" />
-            </div>
-            <div className="flex flex-col gap-2 w-full">
-              <h4 className="text-[18px] font-semibold text-[#212121]">Secure Payments</h4>
-              <p className="text-[14px] leading-relaxed text-[#757575]">
-                Deposits processed via Stripe — the same technology used by millions of businesses worldwide. Safe, fast and reliable.
-              </p>
-            </div>
-          </div>
+          <BusinessFeatureCard
+            index={0}
+            icon={<HugeiconsIcon icon={Clock01Icon} className="w-6 h-6" />}
+            title="24/7 Online Booking"
+            description="Never miss a booking because you were busy or asleep. Customers book anytime, from anywhere."
+            globalVisible={featuresVisible}
+          />
+          <BusinessFeatureCard
+            index={1}
+            icon={<img src="/Icons/businessIcon/Chield_check.svg" alt="" className="w-6 h-6 object-contain" />}
+            title="No-Show Protection"
+            description="Customers save a card at booking. If they don't show, you charge the fee instantly — one tap. You set the amount, you decide every time."
+            globalVisible={featuresVisible}
+          />
+          <BusinessFeatureCard
+            index={2}
+            icon={<img src="/Icons/businessIcon/Bell_pin.svg" alt="" className="w-6 h-6 object-contain" />}
+            title="Automatic Reminders"
+            description="SMS and email reminders sent automatically before every appointment. Fewer no-shows, less chasing."
+            globalVisible={featuresVisible}
+          />
+          <BusinessFeatureCard
+            index={3}
+            icon={<HugeiconsIcon icon={Analytics01Icon} className="w-6 h-6" />}
+            title="Analytics Dashboard"
+            description="See your busiest slots, top services, and revenue — all in one place. Make smarter decisions with real data."
+            globalVisible={featuresVisible}
+          />
+          <BusinessFeatureCard
+            index={4}
+            icon={<HugeiconsIcon icon={Calendar03Icon} className="w-6 h-6" />}
+            title="Google Calendar Sync"
+            description="Two-way sync with Google Calendar. Bookly appointments appear automatically, and calendar blocks prevent double bookings."
+            globalVisible={featuresVisible}
+          />
+          <BusinessFeatureCard
+            index={5}
+            icon={<HugeiconsIcon icon={UserGroup03Icon} className="w-6 h-6" />}
+            title="Multi-Staff Calendars"
+            description="Separate calendar columns per staff member. Log in on multiple devices. Owner, supervisor and staff permission levels built in."
+            globalVisible={featuresVisible}
+          />
+          <BusinessFeatureCard
+            index={6}
+            icon={<img src="/Icons/businessIcon/star-light.svg" alt="" className="w-6 h-6 object-contain" />}
+            title="Verified Reviews"
+            description="Only real customers who booked through Bookly can leave reviews. Genuine ratings that build your reputation."
+            globalVisible={featuresVisible}
+          />
+          <BusinessFeatureCard
+            index={7}
+            icon={<HugeiconsIcon icon={ZapIcon} className="w-6 h-6" />}
+            title="Instant Notifications"
+            description="Get an SMS the moment a new booking lands. Know immediately so you can prepare — no delays, no surprises."
+            globalVisible={featuresVisible}
+          />
+          <BusinessFeatureCard
+            index={8}
+            icon={<img src="/Icons/businessIcon/security-check.svg" alt="" className="w-6 h-6 object-contain" />}
+            title="Secure Payments"
+            description="Deposits processed via Stripe — the same technology used by millions of businesses worldwide. Safe, fast and reliable."
+            globalVisible={featuresVisible}
+          />
         </div>
       </section>
 

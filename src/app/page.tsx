@@ -18,7 +18,7 @@ import Navbar from "@/components/Navbar";
 import BookAgainSection from "@/components/BookAgainSection";
 import SearchBar from "@/components/SearchBar";
 
-function useInView(threshold = 0.4) {
+function useInView() {
   const ref = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
 
@@ -30,12 +30,15 @@ function useInView(threshold = 0.4) {
       ([entry]) => {
         setInView(entry.isIntersecting);
       },
-      { threshold }
+      { 
+        threshold: 0,
+        rootMargin: "0px 0px -10px 0px"
+      }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [threshold]);
+  }, []);
 
   return { ref, inView };
 }
@@ -51,7 +54,7 @@ function LandingStepCard({
   title: string;
   description: string;
 }) {
-  const { ref, inView } = useInView(0.05);
+  const { ref, inView } = useInView();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -68,8 +71,8 @@ function LandingStepCard({
   return (
     <div ref={ref} className="flex-1 min-w-0 h-full">
       <div
-        className={`relative flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out h-full ${
-          inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 md:opacity-100 md:translate-y-0"
+        className={`relative flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-[1400ms] ease-out h-full ${
+          inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
         }`}
         style={{ transitionDelay: `${delay}ms` }}
       >
