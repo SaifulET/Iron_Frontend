@@ -28,10 +28,7 @@ function useInView(threshold = 0.4) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.unobserve(el);
-        }
+        setInView(entry.isIntersecting);
       },
       { threshold }
     );
@@ -54,14 +51,26 @@ function LandingStepCard({
   title: string;
   description: string;
 }) {
-  const { ref, inView } = useInView(0.4);
-  const delay = index * 150;
+  const { ref, inView } = useInView(0.05);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const delay = isMobile ? 0 : index * 150;
 
   return (
     <div ref={ref} className="flex-1 min-w-0 h-full">
       <div
-        className={`relative flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out h-full ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-          }`}
+        className={`relative flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-1000 ease-out h-full ${
+          inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 md:opacity-100 md:translate-y-0"
+        }`}
         style={{ transitionDelay: `${delay}ms` }}
       >
         {/* Icon Container */}
