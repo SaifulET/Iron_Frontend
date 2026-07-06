@@ -11,7 +11,8 @@ import {
   Mail01Icon,
   Calendar03Icon,
   ScissorIcon,
-  Calendar02Icon
+  Calendar02Icon,
+  Location05Icon
 } from "@hugeicons/core-free-icons";
 
 // Reused component
@@ -26,6 +27,7 @@ import DashboardBookingForm from "@/components/DashboardBookingForm";
 import DashboardClientsList from "@/components/DashboardClientsList";
 import DashboardClientDetails from "@/components/DashboardClientDetails";
 import ClientBookingHistoryCard from "@/components/ClientBookingHistoryCard";
+import DashboardBusinessProfile from "@/components/DashboardBusinessProfile";
 
 interface Booking {
   clientInitials: string;
@@ -811,12 +813,13 @@ export default function BusinessDashboard() {
                 dateText={b.date}
                 timeText={b.time}
                 staffName={b.staff}
-                servicePrice={(b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034" || b.bookingId === "#BK-0033") ? "€20" : b.amount}
-                depositedAmount={(b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034") ? "€8" : "-"}
-                remainingBalance={(b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034" || b.bookingId === "#BK-0033") ? "€32" : (b.paymentType === "Pay at venue" ? b.amount : "€32")}
+                servicePrice={(b.bookingId === "#BK-0036" || b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034" || b.bookingId === "#BK-0033" || b.bookingId === "#BK-0032" || b.bookingId === "#BK-0031") ? "€20" : b.amount}
+                depositedAmount={(b.bookingId === "#BK-0036" || b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034") ? "€8" : "-"}
+                remainingBalance={(b.bookingId === "#BK-0036" || b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034" || b.bookingId === "#BK-0033" || b.bookingId === "#BK-0032" || b.bookingId === "#BK-0031") ? "€32" : (b.paymentType === "Pay at venue" ? b.amount : "€32")}
                 showFooterActions={true}
-                addressText={(b.bookingId === "#BK-0023" || b.bookingId === "#BK-0031") ? "Please use organic products only, allergic to strong fragrances" : undefined}
-                clientNotesText={(b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034" || b.bookingId === "#BK-0033") ? "Please use organic products only, allergic to strong fragrances" : undefined}
+                addressText={(b.bookingId === "#BK-0023") ? "Please use organic products only, allergic to strong fragrances" : undefined}
+                clientNotesText={(b.bookingId === "#BK-0036" || b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034" || b.bookingId === "#BK-0033" || b.bookingId === "#BK-0032" || b.bookingId === "#BK-0031") ? "Please use organic products only, allergic to strong fragrances" : undefined}
+                isManual={b.bookingId === "#BK-0031"}
                 businessNotesText={
                   b.status === "Completed"
                     ? `Yes - customer paid ${b.paymentType === "Pay at venue" ? b.amount.replace("€", "") : "32"}.00 at venue`
@@ -875,6 +878,10 @@ export default function BusinessDashboard() {
           }}
         />
       );
+    }
+
+    if (activeTab === "Business Profile") {
+      return <DashboardBusinessProfile />;
     }
 
     // Default mock fallback container for other business profile tabs

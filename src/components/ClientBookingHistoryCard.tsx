@@ -56,6 +56,7 @@ interface ClientBookingHistoryCardProps {
   streetNumber?: string;
   floorUnit?: string;
   aptRoomNo?: string;
+  isManual?: boolean;
 
   showClientDetails?: boolean;
   showDateTimeDetails?: boolean;
@@ -101,6 +102,7 @@ export default function ClientBookingHistoryCard({
   streetNumber = "14",
   floorUnit = "3rd floor",
   aptRoomNo = "14",
+  isManual = false,
 
   showClientDetails = true,
   showDateTimeDetails = true,
@@ -167,8 +169,8 @@ export default function ClientBookingHistoryCard({
     }
     if (norm === "cancelled by customer" || norm === "canceled by customer") {
       return (
-        <span className="bg-[#F0F0EE] text-[#5F5E5A] rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider select-none">
-          Cancelled by customer
+        <span className="bg-[#FFF0F0] border border-[#E42424] text-[#E42424] rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider select-none">
+          Canceled by Customer
         </span>
       );
     }
@@ -204,7 +206,7 @@ export default function ClientBookingHistoryCard({
     }
     if (norm === "canceled" || norm === "cancelled") {
       return (
-        <span className="bg-[#FFF0F0] text-[#E42424] rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider select-none">
+        <span className="bg-[#FFF0F0] border border-[#E42424] text-[#E42424] rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider select-none">
           Canceled
         </span>
       );
@@ -252,6 +254,11 @@ export default function ClientBookingHistoryCard({
                     {isNewClient && (
                       <span className="bg-[#3A97D1] text-white rounded-md px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.045em] select-none">
                         New
+                      </span>
+                    )}
+                    {isManual && (
+                      <span className="bg-[#F5F4EE] text-[#5F5E5A] rounded-md px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.045em] select-none">
+                        Manual
                       </span>
                     )}
                   </div>
@@ -423,6 +430,18 @@ export default function ClientBookingHistoryCard({
               : bookingId === "#BK-0034"
                 ? "This booking was cancelled by the customer outside the free cancellation window. A late cancellation fee was charged. The platform deposit has been retained by Bookly and the remaining balance will be transferred to you in your monthly payout. This customer is now activated — their next booking with you will require no deposit."
                 : "This booking was cancelled by the customer outside the free cancellation window. A late cancellation fee was charged in full and will be transferred to you in your monthly payout. No platform fee was applied."
+            }
+          </div>
+        </div>
+      ) : (status.toLowerCase().includes("cancelled by customer") || status.toLowerCase().includes("canceled by customer")) ? (
+        <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-3 w-full shadow-sm">
+          <span className="font-poppins text-xs font-normal text-[#73726D] tracking-[0.075em] uppercase">
+            Status
+          </span>
+          <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-4 rounded-r-lg text-sm font-medium text-[#111111] leading-relaxed">
+            {depositedAmount === "-"
+              ? "This booking was cancelled by the customer within the free cancellation window. No charges were applied and no refund was due. The customer remains activated for future bookings with you."
+              : "This booking was cancelled by the customer within the free cancellation window. The full deposit has been refunded to the customer. As the cancellation occurred before activation, a deposit will be required again on their next booking with you"
             }
           </div>
         </div>
@@ -604,7 +623,7 @@ export default function ClientBookingHistoryCard({
                     <div className="border-t border-[#757575]/20 w-full" />
                     <div className={`flex justify-between items-center font-poppins text-[#1C1B1C] ${isCancelledBooking ? "opacity-30" : ""}`}>
                       <span className="text-sm font-medium">
-                        {(depositedAmount === "-" || status.toLowerCase().includes("late cancellation"))
+                        {(depositedAmount === "-" || status.toLowerCase().includes("late cancellation") || status.toLowerCase().includes("by customer") || status.toLowerCase() === "canceled" || status.toLowerCase() === "cancelled")
                           ? "Full balance due at appointment"
                           : "Remaining balance due at appointment"
                         }
@@ -621,12 +640,20 @@ export default function ClientBookingHistoryCard({
               </div>
 
               {((status.toLowerCase().includes("waived") && depositedAmount !== "-") ||
-                status.toLowerCase().includes("by business")) && (
+                status.toLowerCase().includes("by business") ||
+                (status.toLowerCase().includes("by customer") && depositedAmount !== "-")) && (
                   <div className="flex justify-between items-center bg-[#EEF5F0] rounded-xl px-4 py-3 text-sm font-semibold text-[#297A5E] font-poppins mt-2">
                     <span>Total deposit refunded</span>
                     <span>{depositedAmount === "-" ? "€0.00" : "€8.00"}</span>
                   </div>
                 )}
+
+              {status.toLowerCase().includes("by customer") && depositedAmount === "-" && (
+                <div className="flex justify-between items-center bg-[#EEF5F0] rounded-xl px-4 py-3 text-sm font-semibold text-[#297A5E] font-poppins mt-2">
+                  <span>Cancellation fee charged 0%</span>
+                  <span>€0.00</span>
+                </div>
+              )}
 
               {status.toLowerCase().includes("late cancellation") && (
                 <div className="flex flex-col gap-2 bg-[#EEF5F0] rounded-xl px-4 py-3 text-sm font-semibold font-poppins mt-2">
@@ -706,7 +733,7 @@ export default function ClientBookingHistoryCard({
           {clientNotesText && (
             <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-2 w-full">
               <span className="font-poppins text-[10px] uppercase font-semibold text-[#73726D] tracking-[0.06em]">
-                CLIENT LEFT NOTES
+                {status.toLowerCase() === "canceled" || status.toLowerCase() === "cancelled" ? "NOTE" : "CLIENT LEFT NOTES"}
               </span>
               <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-4 rounded-r-lg text-xs font-medium text-[#111111] leading-relaxed">
                 <div className="text-[10px] uppercase font-semibold text-[#73726D] tracking-wider mb-1">NOTE</div>
@@ -745,9 +772,9 @@ export default function ClientBookingHistoryCard({
         </div>
       )}
 
-      {showFooterActions && (statusType === "upcoming" || statusType === "pending" || statusType === "noshow" || status.toLowerCase().includes("by business") || status.toLowerCase().includes("late cancellation")) && (
+      {showFooterActions && (statusType === "upcoming" || statusType === "pending" || statusType === "noshow" || status.toLowerCase().includes("by business") || status.toLowerCase().includes("late cancellation") || status.toLowerCase().includes("by customer") || status.toLowerCase() === "canceled" || status.toLowerCase() === "cancelled") && (
         <div className="flex justify-end gap-3 mt-4 w-full select-none">
-          {status.toLowerCase().includes("by business") || status.toLowerCase().includes("late cancellation") ? (
+          {status.toLowerCase().includes("by business") || status.toLowerCase().includes("late cancellation") || status.toLowerCase().includes("by customer") || status.toLowerCase() === "canceled" || status.toLowerCase() === "cancelled" ? (
             <>
               <button
                 disabled

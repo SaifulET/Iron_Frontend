@@ -75,7 +75,7 @@ export default function DashboardBookingsList({
   const filteredBookings = bookingsData
     .map((b, originalIdx) => ({ ...b, originalIdx }))
     .filter((b) => {
-      if (activeTab === "Upcoming" && !["Upcoming", "Pending"].includes(b.status)) return false;
+      if (activeTab === "Upcoming" && b.status !== "Upcoming") return false;
       if (activeTab === "Canceled" && !b.status.toLowerCase().includes("cancel") && !b.status.toLowerCase().includes("waived")) return false;
       if (bookingSearch) {
         const q = bookingSearch.toLowerCase();
@@ -136,16 +136,36 @@ export default function DashboardBookingsList({
               onChange={(e) => setBookingStatusFilter(e.target.value)}
               className="appearance-none bg-white border border-[#111111] rounded-lg px-4 h-full pr-8 text-xs font-poppins font-medium text-[#111111] focus:outline-none cursor-pointer hover:bg-neutral-50 transition-all"
             >
-              <option value="All">All Status</option>
-              <option value="Upcoming">Upcoming</option>
-              <option value="Completed">Completed</option>
-              <option value="No-show - charged">No-show - charged</option>
-              <option value="No-show - cancelled">No-show - cancelled</option>
-              <option value="No-show - waived">No-show - waived</option>
-              <option value="Cancelled by customer">Cancelled by customer</option>
-              <option value="Cancelled by business">Cancelled by business</option>
-              <option value="Late cancellation">Late cancellation</option>
-              <option value="Pending">Pending</option>
+              {activeTab === "Upcoming" ? (
+                <>
+                  <option value="All">All Status</option>
+                  <option value="Upcoming">Upcoming</option>
+                </>
+              ) : activeTab === "Canceled" ? (
+                <>
+                  <option value="All">All Status</option>
+                  <option value="No-show - cancelled">No-show - cancelled</option>
+                  <option value="No-show - waived">No-show - waived</option>
+                  <option value="Cancelled by customer">Cancelled by customer</option>
+                  <option value="Cancelled by business">Cancelled by business</option>
+                  <option value="Late cancellation">Late cancellation</option>
+                  <option value="Canceled">Canceled</option>
+                </>
+              ) : (
+                <>
+                  <option value="All">All Status</option>
+                  <option value="Upcoming">Upcoming</option>
+                  <option value="Completed">Completed</option>
+                  <option value="No-show - charged">No-show - charged</option>
+                  <option value="No-show - cancelled">No-show - cancelled</option>
+                  <option value="No-show - waived">No-show - waived</option>
+                  <option value="Cancelled by customer">Cancelled by customer</option>
+                  <option value="Cancelled by business">Cancelled by business</option>
+                  <option value="Late cancellation">Late cancellation</option>
+                  <option value="Canceled">Canceled</option>
+                  <option value="Pending">Pending</option>
+                </>
+              )}
             </select>
             <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 absolute right-2.5 top-2.5 text-neutral-600 pointer-events-none" />
           </div>

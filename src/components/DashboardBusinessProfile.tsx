@@ -1,0 +1,221 @@
+"use client";
+
+import React from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  BellIcon,
+  PencilEdit02Icon,
+  Location05Icon
+} from "@hugeicons/core-free-icons";
+
+interface BusinessCardProps {
+  type: "Primary" | "Secondary";
+  title: string;
+  rating: number;
+  reviews: number;
+  categories: string[];
+  location: string;
+  startingPrice: string;
+  image: string;
+  onEdit?: () => void;
+  onView?: () => void;
+}
+
+export function BusinessCard({
+  type,
+  title,
+  rating,
+  reviews,
+  categories,
+  location,
+  startingPrice,
+  image,
+  onEdit,
+  onView
+}: BusinessCardProps) {
+  const isPrimary = type === "Primary";
+
+  return (
+    <div className="box-border flex flex-col items-start gap-5 w-[372px] h-[507px] rounded-xl bg-white border border-[#E8E6FF] overflow-hidden shadow-sm font-poppins">
+      {/* Image Container */}
+      <div className="relative flex flex-col items-start p-1 gap-2.5 isolation-isolate w-[372px] h-[241px] shrink-0">
+        <img
+          src={image}
+          alt={title}
+          className="w-[364px] h-[233px] rounded-lg object-cover"
+          draggable="false"
+        />
+        {/* Overlay Badge */}
+        <div 
+          className={`absolute flex flex-row justify-center items-center px-3 py-0.5 gap-2.5 h-6 left-[9px] top-[17.4px] rounded-full z-10 shadow-sm ${
+            isPrimary 
+              ? "bg-[#8EBAC5] w-[71px]" 
+              : "bg-[#E0E0E0] w-[90px]"
+          }`}
+        >
+          <span className="font-poppins font-normal text-xs text-[#111111] leading-5 text-center select-none">
+            {type}
+          </span>
+        </div>
+      </div>
+
+      {/* Details Area */}
+      <div className="flex flex-col justify-center items-start px-5 pb-5 pt-0 gap-4 w-[372px] h-[246px]">
+        {/* Title & Star Rating */}
+        <div className="flex flex-row justify-between items-start gap-4 w-[332px] h-16 shrink-0">
+          <h3 className="w-[211px] h-16 font-poppins font-medium text-lg text-[#1C1B1C] leading-[32px] line-clamp-2">
+            {title}
+          </h3>
+          
+          {/* Rating */}
+          <div className="flex flex-row items-center gap-2 w-[118px] h-5 shrink-0 select-none">
+            <div className="flex flex-row items-center gap-1 w-[58px] h-5">
+              <span className="text-[20px] text-[#E49D12] select-none leading-none">★</span>
+              <span className="w-7 h-5 font-poppins font-medium text-lg text-[#1C1B1C] leading-5">
+                {rating}
+              </span>
+            </div>
+            <span className="w-[52px] h-5 font-poppins font-medium text-lg text-[#757575] leading-5">
+              ({reviews})
+            </span>
+          </div>
+        </div>
+
+        {/* Tags */}
+        <div className="flex flex-row items-start gap-2 h-6 shrink-0 select-none">
+          {categories.map((cat, i) => (
+            <div key={i} className="box-border flex flex-row justify-center items-center px-3 py-0.5 border border-[#4E5F78] rounded-full shrink-0">
+              <span className="font-poppins font-medium text-xs text-[#4E5F78] leading-5 uppercase tracking-wider text-center select-none">
+                {cat}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Address */}
+        <div className="flex flex-col items-start gap-2 h-6 shrink-0 select-none w-full">
+          <div className="flex flex-row items-center gap-2 w-full">
+            <HugeiconsIcon icon={Location05Icon} className="w-4 h-4 text-neutral-400 shrink-0" />
+            <span className="font-poppins font-medium text-base text-[#757575] leading-6 select-none truncate">
+              {location}
+            </span>
+          </div>
+        </div>
+
+        {/* Divider & Action */}
+        <div className="box-border flex flex-row justify-between items-center pt-3 gap-2.5 w-[332px] h-[62px] border-t border-[#111111]/20 mt-auto shrink-0">
+          {/* Price Frame */}
+          <div className="flex flex-col items-start select-none">
+            <span className="font-poppins font-medium text-xs text-[#757575] leading-5 tracking-wider uppercase whitespace-nowrap">
+              Starting Price
+            </span>
+            <span className="font-poppins font-medium text-2xl text-[#1C1B1C] leading-[30px]">
+              {startingPrice}
+            </span>
+          </div>
+
+          {/* Button Frame */}
+          {isPrimary ? (
+            <button 
+              onClick={onEdit}
+              className="flex flex-row justify-center items-center p-3 gap-2 w-[88px] h-12 bg-[#131313] hover:bg-black text-white rounded-xl transition-all select-none"
+            >
+              <HugeiconsIcon icon={PencilEdit02Icon} className="w-6 h-6 text-white shrink-0" />
+              <span className="w-[30px] h-5 font-poppins font-medium text-base text-white leading-5">
+                Edit
+              </span>
+            </button>
+          ) : (
+            <button 
+              onClick={onView}
+              className="flex flex-row justify-center items-center p-3 gap-2.5 w-[63px] h-11 bg-[#131313] hover:bg-black text-white rounded-xl transition-all select-none"
+            >
+              <span className="w-[39px] h-5 font-poppins font-medium text-base text-white leading-5">
+                View
+              </span>
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function DashboardBusinessProfile() {
+  return (
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] p-6 md:p-8 select-none font-poppins w-full">
+      {/* Header block */}
+      <div className="flex items-center justify-between mb-8 select-none w-full">
+        <div>
+          <h1 className="text-xl font-bold text-[#1A1A1A] font-poppins">Business</h1>
+          <p className="text-[11px] text-neutral-500 font-poppins mt-0.5">
+            Public facing information shown on your booking page
+          </p>
+        </div>
+        {/* Notification bell */}
+        <div className="relative">
+          <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm">
+            <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px] text-[#5F5E5A]" />
+          </button>
+          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E24B4A] text-white text-[9px] font-medium flex items-center justify-center rounded-full border-2 border-white">
+            5
+          </span>
+        </div>
+      </div>
+
+      {/* Frame 2147240061 Wrapper */}
+      <div className="flex flex-col items-start gap-5 w-full">
+        
+        {/* Container (Toolbar) */}
+        <div className="flex flex-row justify-between items-center w-full h-[37.6px]">
+          
+          {/* 2 Active Pill Container */}
+          <div className="box-border flex flex-row items-center px-4 py-2 gap-2 w-[102px] h-[38px] bg-white border border-[#F5F5F4] shadow-[0px_1px_3px_rgba(0,0,0,0.1),0px_1px_2px_-1px_rgba(0,0,0,0.1)] rounded-full">
+            {/* Dot */}
+            <span className="w-1.5 h-1.5 bg-[#1D9E75] rounded-full shrink-0" />
+            {/* 2 Active Text */}
+            <span className="w-[56px] h-5 font-poppins font-medium text-sm text-[#1F8900] leading-5 shrink-0 select-none">
+              2 Active
+            </span>
+          </div>
+
+          {/* Add existing business button */}
+          <button className="flex flex-row items-center px-3.5 py-[7px] gap-1.5 w-[190px] h-[37.6px] bg-[#111111] hover:bg-black text-white rounded-lg transition-colors shadow-sm select-none">
+            <svg className="w-3.5 h-3.5 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            <span className="w-[142px] h-5 font-poppins font-medium text-[13px] text-white text-center leading-5 select-none">
+              Add existing business
+            </span>
+          </button>
+        </div>
+
+        {/* Frame 2147240196 (Cards list) */}
+        <div className="flex flex-row flex-wrap items-start gap-5 w-full select-none">
+          <BusinessCard
+            type="Primary"
+            title="Soho Vintage Barbers | Sheikh Zayed Road"
+            rating={4.9}
+            reviews={299}
+            categories={["Barber", "Salon"]}
+            location="Sheikh Zayed Road, Dubai"
+            startingPrice="$12"
+            image="/image/profile.jpg"
+          />
+
+          <BusinessCard
+            type="Secondary"
+            title="Soho Vintage Barbers | Sheikh Zayed Road"
+            rating={4.9}
+            reviews={299}
+            categories={["Barber", "Salon"]}
+            location="Sheikh Zayed Road, Dubai"
+            startingPrice="$12"
+            image="/image/profile.jpg"
+          />
+        </div>
+
+      </div>
+    </main>
+  );
+}
