@@ -87,7 +87,7 @@ export default function ClientBookingHistoryCard({
 
   // Status Badge coloring helper
   const renderStatusBadge = () => {
-    const norm = (statusType || status || "").toLowerCase().trim();
+    const norm = (status || statusType || "").toLowerCase().trim();
     if (norm === "completed") {
       return (
         <span className="bg-[#E1F5EE] text-[#2F8068] rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider select-none">
@@ -98,8 +98,10 @@ export default function ClientBookingHistoryCard({
     if (norm.includes("no-show - canceled") || norm.includes("no-show - cancelled") || norm.includes("noshow - canceled") || norm.includes("noshow - cancelled") || norm.includes("canceled") || norm.includes("cancelled")) {
       if (norm.includes("waived")) {
         return (
-          <span className="bg-[#FFF0F0] text-[#E42424] rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider select-none">
-            No-show - waived
+          <span className="bg-[#F7E0E0] border border-[#702A2A] text-[#702A2A] rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider select-none inline-flex items-center gap-1">
+            <span>No-show</span>
+            <span className="w-1 h-1 rounded-full bg-[#702A2A]" />
+            <span>Waived</span>
           </span>
         );
       }
@@ -150,10 +152,12 @@ export default function ClientBookingHistoryCard({
         </span>
       );
     }
-    if (norm.includes("no-show - waived")) {
+    if (norm.includes("waived")) {
       return (
-        <span className="bg-[#FFF0F0] text-[#E42424] rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider select-none">
-          No-show - waived
+        <span className="bg-[#F7E0E0] border border-[#702A2A] text-[#702A2A] rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider select-none inline-flex items-center gap-1">
+          <span>No-show</span>
+          <span className="w-1 h-1 rounded-full bg-[#702A2A]" />
+          <span>Waived</span>
         </span>
       );
     }
@@ -183,7 +187,7 @@ export default function ClientBookingHistoryCard({
       {/* 1. MAIN CARD: Client details and Booking Header */}
       <div className="bg-white border border-neutral-200/60 rounded-2xl overflow-hidden shadow-sm flex flex-col w-full">
         {/* Header bar */}
-        <div className="bg-[#F4F2EC] border-b border-[#EDD4D2] px-6 py-3.5 flex items-center justify-between select-none">
+        <div className="relative bg-[#F4F2EC] border-b border-[#EDD4D2] px-6 py-3.5 flex items-center justify-between select-none">
           <span className="font-poppins text-xs font-normal text-[#73726D] tracking-[0.075em] uppercase">
             {bookingId}
           </span>
@@ -196,34 +200,42 @@ export default function ClientBookingHistoryCard({
             <span className="font-poppins text-[10px] font-medium tracking-[0.075em] uppercase text-[#73726D]">
               Client
             </span>
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full overflow-hidden border border-neutral-100 shrink-0">
-                <img src={clientAvatar} alt={clientName} className="w-full h-full object-cover" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="font-poppins font-semibold text-lg text-[#111111]">{clientName}</span>
-                  {isNewClient && (
-                    <span className="bg-[#3A97D1] text-white rounded-md px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.045em] select-none">
-                      New
-                    </span>
-                  )}
+            <div className="flex items-center justify-between gap-4 w-full">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden border border-neutral-100 shrink-0">
+                  <img src={clientAvatar} alt={clientName} className="w-full h-full object-cover" />
                 </div>
-                <div className="flex flex-wrap items-center gap-4 text-xs text-[#5F5E5A] font-poppins">
-                  <div className="flex items-center gap-1">
-                    <HugeiconsIcon icon={User02Icon} className="w-4 h-4 text-neutral-400" />
-                    <span>{clientGender}</span>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-poppins font-semibold text-lg text-[#111111]">{clientName}</span>
+                    {isNewClient && (
+                      <span className="bg-[#3A97D1] text-white rounded-md px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.045em] select-none">
+                        New
+                      </span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <HugeiconsIcon icon={Mail01Icon} className="w-4 h-4 text-neutral-400" />
-                    <span>{clientEmail}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <img src="/Icons/phone.svg" alt="Phone" className="w-4 h-4 object-contain filter opacity-60" />
-                    <span>{clientPhone}</span>
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-[#5F5E5A] font-poppins">
+                    <div className="flex items-center gap-1">
+                      <HugeiconsIcon icon={User02Icon} className="w-4 h-4 text-neutral-400" />
+                      <span>{clientGender}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <HugeiconsIcon icon={Mail01Icon} className="w-4 h-4 text-neutral-400" />
+                      <span>{clientEmail}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <img src="/Icons/phone.svg" alt="Phone" className="w-4 h-4 object-contain filter opacity-60" />
+                      <span>{clientPhone}</span>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              {/* More button */}
+              <button className="h-9 px-3 border border-[#111111]/40 rounded-lg flex items-center justify-between gap-2 hover:bg-neutral-50 transition-all text-xs font-medium text-[#111111] opacity-70">
+                <span>More</span>
+                <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 text-[#111111]" />
+              </button>
             </div>
           </div>
         )}
@@ -267,8 +279,17 @@ export default function ClientBookingHistoryCard({
         </div>
       )}
 
-      {/* 3. STATUS LOG EXPLANATION (No-show charged only) */}
-      {statusType === "noshow" && (
+      {/* 3. STATUS LOG EXPLANATION */}
+      {status.toLowerCase().includes("waived") ? (
+        <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-3 w-full shadow-sm">
+          <span className="font-poppins text-xs font-normal text-[#73726D] tracking-[0.075em] uppercase">
+            Status
+          </span>
+          <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-4 rounded-r-lg text-base font-medium text-[#111111] leading-relaxed">
+            The no-show was waived within the 90-minute window. This booking is considered cancelled. This customer is now activated – their next booking with you will require no deposit.
+          </div>
+        </div>
+      ) : (statusType === "noshow" || status.toLowerCase().includes("no-show")) && (
         <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-3 w-full shadow-sm">
           <span className="font-poppins text-xs font-normal text-[#73726D] tracking-[0.075em] uppercase">
             Status
@@ -280,7 +301,7 @@ export default function ClientBookingHistoryCard({
       )}
 
       {/* 4. MARKED AS NO-SHOW ACCORDION */}
-      {(statusType === "pending" || statusType === "noshow") && (
+      {(statusType === "pending" || (statusType === "noshow" && !status.toLowerCase().includes("waived"))) && (
         <div className="flex flex-col border border-neutral-200/60 bg-white rounded-2xl overflow-hidden shadow-sm w-full">
           {/* Accordion Header */}
           <div
@@ -354,62 +375,89 @@ export default function ClientBookingHistoryCard({
 
           {showSummary && (
             <div className="p-6 flex flex-col gap-4 bg-white">
-              {/* Main service */}
-              {serviceName && (
-                <div className="flex justify-between items-start">
-                  <div className="flex flex-col">
-                    <span className="font-poppins font-medium text-sm text-[#1C1B1C]">{serviceName}</span>
-                    <span className="text-xs text-[#4E5F78] font-poppins mt-0.5">{serviceDetailText}</span>
+              <div className={status.toLowerCase().includes("waived") ? "opacity-30 flex flex-col gap-4" : "flex flex-col gap-4"}>
+                {/* Main service */}
+                {serviceName && (
+                  <div className="flex justify-between items-start">
+                    <div className="flex flex-col">
+                      <span className="font-poppins font-medium text-sm text-[#1C1B1C]">{serviceName}</span>
+                      <span className="text-xs text-[#4E5F78] font-poppins mt-0.5">{serviceDetailText}</span>
+                    </div>
+                    <span className="font-poppins font-semibold text-sm text-[#1C1B1C]">{servicePrice}</span>
                   </div>
-                  <span className="font-poppins font-semibold text-sm text-[#1C1B1C]">{servicePrice}</span>
-                </div>
-              )}
+                )}
 
-              {/* Add-ons */}
-              {addonsName && (
-                <div className="flex justify-between items-start">
-                  <div className="flex flex-col">
-                    <span className="font-poppins font-medium text-sm text-[#1C1B1C]">{addonsName}</span>
-                    <span className="text-xs text-[#4E5F78] font-poppins mt-0.5">{addonsDetailText}</span>
+                {/* Add-ons */}
+                {addonsName && (
+                  <div className="flex justify-between items-start">
+                    <div className="flex flex-col">
+                      <span className="font-poppins font-medium text-sm text-[#1C1B1C]">{addonsName}</span>
+                      <span className="text-xs text-[#4E5F78] font-poppins mt-0.5">{addonsDetailText}</span>
+                    </div>
+                    <span className="font-poppins font-semibold text-sm text-[#1C1B1C]">{addonsPrice}</span>
                   </div>
-                  <span className="font-poppins font-semibold text-sm text-[#1C1B1C]">{addonsPrice}</span>
-                </div>
-              )}
+                )}
 
-              {(serviceName || addonsName) && <div className="border-t border-neutral-100 w-full" />}
+                {(serviceName || addonsName) && <div className="border-t border-neutral-100 w-full" />}
 
-              {/* Subtotal */}
-              <div className="flex justify-between items-center text-sm font-semibold font-poppins text-[#1C1B1C]">
-                <span>Subtotal</span>
-                <span>
-                  €{" "}
-                  {((parseFloat(servicePrice.replace("€", "")) || 0) +
-                    (parseFloat(addonsPrice.replace("€", "")) || 0))}
-                </span>
-              </div>
-
-              {/* Remaining Balance card */}
-              <div className="bg-[#F5F4EE] rounded-xl p-4 flex flex-col gap-3">
-                <div className="flex justify-between items-center font-poppins text-xs text-[#1C1B1C]">
-                  <span>Deposited</span>
-                  <span className="font-semibold text-sm">{depositedAmount}</span>
-                </div>
-                <div className="border-t border-neutral-200/50 w-full" />
-                <div className="flex justify-between items-center font-poppins text-[#1C1B1C]">
-                  <span className="text-xs font-medium">
-                    {depositedAmount === "-" ? "Full balance due at appointment" : "Remaining balance due at appointment"}
-                  </span>
-                  <span className="font-bold text-lg">
-                    {depositedAmount === "-" 
-                      ? `€${((parseFloat(servicePrice.replace("€", "")) || 0) + (parseFloat(addonsPrice.replace("€", "")) || 0))}`
-                      : remainingBalance
-                    }
+                {/* Subtotal */}
+                <div className="flex justify-between items-center text-sm font-semibold font-poppins text-[#1C1B1C]">
+                  <span>Subtotal</span>
+                  <span>
+                    €{" "}
+                    {((parseFloat(servicePrice.replace("€", "")) || 0) +
+                      (parseFloat(addonsPrice.replace("€", "")) || 0))}
                   </span>
                 </div>
+
+                {/* Remaining Balance card */}
+                {status.toLowerCase().includes("waived") ? (
+                  <div className="bg-[#F5F4EE] rounded-xl p-4 flex flex-col gap-3">
+                    <div className="flex justify-between items-center font-poppins text-xs text-[#1C1B1C]">
+                      <span>Deposited</span>
+                      <span className="font-semibold text-sm">{depositedAmount}</span>
+                    </div>
+                    <div className="border-t border-neutral-200/50 w-full" />
+                    <div className="flex justify-between items-center font-poppins text-[#1C1B1C]">
+                      <span className="text-xs font-medium">Remaining balance due at venue</span>
+                      <span className="font-semibold text-sm line-through">{remainingBalance}</span>
+                    </div>
+                    <div className="flex justify-between items-center font-poppins text-[#1C1B1C]">
+                      <span className="text-xs font-medium">No-show fee waived by you</span>
+                      <span className="font-semibold text-sm">€20</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-[#F5F4EE] rounded-xl p-4 flex flex-col gap-3">
+                    <div className="flex justify-between items-center font-poppins text-xs text-[#1C1B1C]">
+                      <span>Deposited</span>
+                      <span className="font-semibold text-sm">{depositedAmount}</span>
+                    </div>
+                    <div className="border-t border-neutral-200/50 w-full" />
+                    <div className="flex justify-between items-center font-poppins text-[#1C1B1C]">
+                      <span className="text-xs font-medium">
+                        {depositedAmount === "-" ? "Full balance due at appointment" : "Remaining balance due at appointment"}
+                      </span>
+                      <span className="font-bold text-lg">
+                        {depositedAmount === "-" 
+                          ? `€${((parseFloat(servicePrice.replace("€", "")) || 0) + (parseFloat(addonsPrice.replace("€", "")) || 0))}`
+                          : remainingBalance
+                        }
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
+
+              {status.toLowerCase().includes("waived") && depositedAmount !== "-" && (
+                <div className="flex justify-between items-center bg-[#EEF5F0] rounded-xl px-4 py-3 text-sm font-semibold text-[#297A5E] font-poppins mt-2">
+                  <span>Total deposit refunded</span>
+                  <span>€8.00</span>
+                </div>
+              )}
 
               {/* No-show fee charged alert */}
-              {statusType === "noshow" && (
+              {statusType === "noshow" && !status.toLowerCase().includes("waived") && (
                 <>
                   <div className="flex justify-between items-center bg-[#E1F5EE]/50 border border-[#085041]/10 rounded-xl px-4 py-3 text-xs font-semibold text-[#085041] font-poppins mt-2">
                     <span>No-show fee charged 30%</span>
@@ -462,7 +510,9 @@ export default function ClientBookingHistoryCard({
                 BUSINESS NOTES
               </span>
               <div className="flex flex-col gap-2 font-poppins">
-                <span className="text-[11px] text-neutral-400">Reason</span>
+                <span className="text-[11px] text-neutral-400">
+                  {status.toLowerCase().includes("waived") ? "Reason for waiving" : "Reason"}
+                </span>
                 <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-3 rounded-r-lg text-xs font-medium text-[#111111]">
                   {businessNotesText || "Customer did not attend"}
                 </div>

@@ -191,9 +191,10 @@ export default function DashboardBookingsList({
             </thead>
             <tbody className="divide-y divide-[#EFEFED]">
               {bookingsData
+                .map((b, originalIdx) => ({ ...b, originalIdx }))
                 .filter((b) => {
                   if (activeTab === "Upcoming" && !["Upcoming", "Pending"].includes(b.status)) return false;
-                  if (activeTab === "Canceled" && !b.status.toLowerCase().includes("cancel")) return false;
+                  if (activeTab === "Canceled" && !b.status.toLowerCase().includes("cancel") && !b.status.toLowerCase().includes("waived")) return false;
                   if (bookingSearch) {
                     const q = bookingSearch.toLowerCase();
                     if (!b.clientName.toLowerCase().includes(q) && !b.clientPhone.toLowerCase().includes(q) && !b.bookingId.toLowerCase().includes(q)) return false;
@@ -389,7 +390,7 @@ export default function DashboardBookingsList({
                               <button
                                 onClick={() => {
                                   setOpenBookingActionIdx(null);
-                                  if (onViewBookingDetails) onViewBookingDetails(idx);
+                                  if (onViewBookingDetails) onViewBookingDetails(booking.originalIdx);
                                 }}
                                 className="px-4 py-2 hover:bg-neutral-50 font-medium text-neutral-700 w-full text-left"
                               >
@@ -409,7 +410,7 @@ export default function DashboardBookingsList({
                                   setNewBookingTime(booking.time);
                                   setNewBookingStaff(booking.staff);
                                   setIsEditingBooking(true);
-                                  setEditingBookingIndex(idx);
+                                  setEditingBookingIndex(booking.originalIdx);
                                   setIsCreatingBooking(true);
                                   setOpenBookingActionIdx(null);
                                 }}
@@ -425,7 +426,7 @@ export default function DashboardBookingsList({
                               </button>
                               <button
                                 onClick={() => {
-                                  setBookingsData(bookingsData.filter((_, i) => i !== idx));
+                                  setBookingsData(bookingsData.filter((_, i) => i !== booking.originalIdx));
                                   setOpenBookingActionIdx(null);
                                 }}
                                 className="px-4 py-2 hover:bg-neutral-50 font-semibold text-[#BA1A1A]"
