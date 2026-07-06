@@ -396,8 +396,15 @@ export default function ClientBookingHistoryCard({
                 </div>
                 <div className="border-t border-neutral-200/50 w-full" />
                 <div className="flex justify-between items-center font-poppins text-[#1C1B1C]">
-                  <span className="text-xs font-medium">Remaining balance due at appointment</span>
-                  <span className="font-bold text-lg">{remainingBalance}</span>
+                  <span className="text-xs font-medium">
+                    {depositedAmount === "-" ? "Full balance due at appointment" : "Remaining balance due at appointment"}
+                  </span>
+                  <span className="font-bold text-lg">
+                    {depositedAmount === "-" 
+                      ? `€${((parseFloat(servicePrice.replace("€", "")) || 0) + (parseFloat(addonsPrice.replace("€", "")) || 0))}`
+                      : remainingBalance
+                    }
+                  </span>
                 </div>
               </div>
 
@@ -422,14 +429,14 @@ export default function ClientBookingHistoryCard({
       )}
 
       {/* 4. ADDRESS CARD */}
-      {addressText && (
-        <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-2 w-full">
+      {(addressText || statusType === "noshow") && (
+        <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-2 w-full shadow-sm">
           <span className="font-poppins text-[10px] uppercase font-semibold text-[#73726D] tracking-[0.06em]">
             ADDRESS NOTE
           </span>
           <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-4 rounded-r-lg text-xs font-medium text-[#111111] leading-relaxed">
             <div className="text-[10px] uppercase font-semibold text-[#73726D] tracking-wider mb-1">NOTE</div>
-            <div>{addressText}</div>
+            <div>{addressText || "Please use organic products only, allergic to strong fragrances"}</div>
           </div>
         </div>
       )}
@@ -449,7 +456,7 @@ export default function ClientBookingHistoryCard({
             </div>
           )}
 
-          {businessNotesText && (
+          {(businessNotesText || statusType === "pending" || statusType === "noshow") && (
             <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-4 w-full">
               <span className="font-poppins text-[10px] uppercase font-semibold text-[#73726D] tracking-[0.06em]">
                 BUSINESS NOTES
@@ -457,7 +464,7 @@ export default function ClientBookingHistoryCard({
               <div className="flex flex-col gap-2 font-poppins">
                 <span className="text-[11px] text-neutral-400">Reason</span>
                 <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-3 rounded-r-lg text-xs font-medium text-[#111111]">
-                  {businessNotesText}
+                  {businessNotesText || "Customer did not attend"}
                 </div>
               </div>
               <div className="flex flex-col gap-2 mt-1">
@@ -472,17 +479,46 @@ export default function ClientBookingHistoryCard({
         </div>
       )}
 
-      {showFooterActions && statusType === "upcoming" && (
+      {showFooterActions && (statusType === "upcoming" || statusType === "pending" || statusType === "noshow") && (
         <div className="flex justify-end gap-3 mt-4 w-full select-none">
-          <button className="h-[40px] px-6 rounded-lg bg-[#111111] hover:bg-neutral-800 text-white text-xs font-semibold font-poppins shadow-sm">
-            Reschedule
-          </button>
-          <button
-            onClick={onCompleteBooking}
-            className="h-[40px] px-6 rounded-lg bg-[#12B76A] hover:bg-[#0F9F5C] text-white text-xs font-semibold font-poppins shadow-sm"
-          >
-            Complete Booking
-          </button>
+          {statusType === "pending" ? (
+            <>
+              <button className="h-[40px] px-6 rounded-lg bg-[#A3A3A2] hover:bg-neutral-500 text-white text-xs font-semibold font-poppins shadow-sm">
+                Reschedule
+              </button>
+              <button
+                onClick={onCompleteBooking}
+                className="h-[40px] px-6 rounded-lg bg-[#B5E3D5] hover:bg-[#a5d3c5] text-white text-xs font-semibold font-poppins shadow-sm"
+              >
+                Complete Booking
+              </button>
+            </>
+          ) : statusType === "noshow" ? (
+            <>
+              <button className="h-[40px] px-6 rounded-lg bg-[#A3A3A2] hover:bg-neutral-500 text-white text-xs font-semibold font-poppins shadow-sm">
+                Reschedule
+              </button>
+              <button
+                onClick={onCompleteBooking}
+                className="h-[40px] px-6 rounded-lg bg-[#B5E3D5] hover:bg-[#a5d3c5] text-white text-xs font-semibold font-poppins shadow-sm flex items-center justify-center gap-1.5"
+              >
+                <span>✓</span>
+                <span>Completed</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="h-[40px] px-6 rounded-lg bg-[#111111] hover:bg-neutral-800 text-white text-xs font-semibold font-poppins shadow-sm">
+                Reschedule
+              </button>
+              <button
+                onClick={onCompleteBooking}
+                className="h-[40px] px-6 rounded-lg bg-[#12B76A] hover:bg-[#0F9F5C] text-white text-xs font-semibold font-poppins shadow-sm"
+              >
+                Complete Booking
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>

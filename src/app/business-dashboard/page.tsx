@@ -810,6 +810,8 @@ export default function BusinessDashboard() {
                 timeText={b.time}
                 staffName={b.staff}
                 servicePrice={b.amount}
+                depositedAmount={b.paymentType === "Pay at venue" ? "-" : "€8"}
+                remainingBalance={b.paymentType === "Pay at venue" ? b.amount : "€32"}
                 showFooterActions={true}
                 onCompleteBooking={() => {
                   const updated = [...bookingsData];
