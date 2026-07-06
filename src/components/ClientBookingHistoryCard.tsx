@@ -105,6 +105,15 @@ export default function ClientBookingHistoryCard({
           </span>
         );
       }
+      if (norm.includes("no-show") || norm.includes("noshow")) {
+        return (
+          <span className="bg-[#E0F7E9] border border-[#2A7047] text-[#2A7047] rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider select-none inline-flex items-center gap-1">
+            <span>No-show</span>
+            <span className="w-1 h-1 rounded-full bg-[#2A7047]" />
+            <span>Canceled</span>
+          </span>
+        );
+      }
       if (norm.includes("canceled") || norm.includes("cancelled")) {
         if (norm.includes("no-show")) {
           return (
@@ -289,6 +298,18 @@ export default function ClientBookingHistoryCard({
             The no-show was waived within the 90-minute window. This booking is considered cancelled. This customer is now activated – their next booking with you will require no deposit.
           </div>
         </div>
+      ) : (status.toLowerCase().includes("no-show - canceled") || status.toLowerCase().includes("no-show - cancelled") || status.toLowerCase().includes("noshow - canceled") || status.toLowerCase().includes("noshow - cancelled")) ? (
+        <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-3 w-full shadow-sm">
+          <span className="font-poppins text-xs font-normal text-[#73726D] tracking-[0.075em] uppercase">
+            Status
+          </span>
+          <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-4 rounded-r-lg text-sm font-medium text-[#111111] leading-relaxed">
+            {depositedAmount === "-" 
+              ? "The no-show was cancelled within the 90-minute window. This booking is considered completed."
+              : "The no-show was cancelled by the business within the 90-minute window. This booking is considered completed by Bookly. The platform deposit has been retained by Bookly as the activation fee. No additional payout was due for this booking. This customer is now activated — their next booking with you will require no deposit."
+            }
+          </div>
+        </div>
       ) : (statusType === "noshow" || status.toLowerCase().includes("no-show")) && (
         <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-3 w-full shadow-sm">
           <span className="font-poppins text-xs font-normal text-[#73726D] tracking-[0.075em] uppercase">
@@ -301,7 +322,7 @@ export default function ClientBookingHistoryCard({
       )}
 
       {/* 4. MARKED AS NO-SHOW ACCORDION */}
-      {(statusType === "pending" || (statusType === "noshow" && !status.toLowerCase().includes("waived"))) && (
+      {(statusType === "pending" || (statusType === "noshow" && !status.toLowerCase().includes("waived") && !status.toLowerCase().includes("cancel") && !status.toLowerCase().includes("cancelled") && !status.toLowerCase().includes("canceled"))) && (
         <div className="flex flex-col border border-neutral-200/60 bg-white rounded-2xl overflow-hidden shadow-sm w-full">
           {/* Accordion Header */}
           <div
@@ -457,7 +478,11 @@ export default function ClientBookingHistoryCard({
               )}
 
               {/* No-show fee charged alert */}
-              {statusType === "noshow" && !status.toLowerCase().includes("waived") && (
+              {statusType === "noshow" && 
+               !status.toLowerCase().includes("waived") && 
+               !status.toLowerCase().includes("cancel") && 
+               !status.toLowerCase().includes("cancelled") && 
+               !status.toLowerCase().includes("canceled") && (
                 <>
                   <div className="flex justify-between items-center bg-[#E1F5EE]/50 border border-[#085041]/10 rounded-xl px-4 py-3 text-xs font-semibold text-[#085041] font-poppins mt-2">
                     <span>No-show fee charged 30%</span>
@@ -504,7 +529,7 @@ export default function ClientBookingHistoryCard({
             </div>
           )}
 
-          {(businessNotesText || statusType === "pending" || statusType === "noshow") && (
+          {(businessNotesText || statusType === "pending" || (statusType === "noshow" && !status.toLowerCase().includes("waived") && !status.toLowerCase().includes("cancel") && !status.toLowerCase().includes("cancelled") && !status.toLowerCase().includes("canceled"))) && (
             <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-4 w-full">
               <span className="font-poppins text-[10px] uppercase font-semibold text-[#73726D] tracking-[0.06em]">
                 BUSINESS NOTES
