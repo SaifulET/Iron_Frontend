@@ -88,9 +88,9 @@ export const initialBookingsData = [
     date: "Mon, 18 May",
     time: "12:00",
     staff: "George",
-    status: "Cancelled by business",
+    status: "Completed",
     amount: "€75",
-    paymentType: "Prepaid"
+    paymentType: "Pay at venue"
   },
   {
     clientName: "Anna M.",
@@ -181,7 +181,7 @@ export const initialBookingsData = [
     staff: "Vivi",
     status: "Completed",
     amount: "€130",
-    paymentType: "Paid"
+    paymentType: "Pay at venue"
   },
   {
     clientName: "Michalis P.",

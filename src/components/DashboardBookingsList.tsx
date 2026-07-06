@@ -161,9 +161,9 @@ export default function DashboardBookingsList({
       </div>
 
       {/* Bookings Table Block */}
-      <div className="bg-white border border-[#E8E8E6] rounded-2xl flex-1 flex flex-col overflow-hidden shadow-sm">
-        <div className="overflow-x-auto w-full">
-          <table className="w-full text-left border-collapse min-w-[850px]">
+      <div className="bg-white border border-[#E8E8E6] rounded-2xl flex-1 flex flex-col overflow-visible shadow-sm">
+        <div className="overflow-visible w-full">
+          <table className="w-full text-left border-collapse min-w-[850px] overflow-visible">
             <thead>
               <tr className="bg-[#FAFAF8] border-b border-[#E8E8E6] text-[11px] text-[#888780] font-normal font-poppins">
                 <th className="py-3 px-5 font-normal">
@@ -429,7 +429,7 @@ export default function DashboardBookingsList({
                                   setBookingsData(bookingsData.filter((_, i) => i !== booking.originalIdx));
                                   setOpenBookingActionIdx(null);
                                 }}
-                                className="px-4 py-2 hover:bg-neutral-50 font-semibold text-[#BA1A1A]"
+                                className="px-4 py-2 hover:bg-neutral-50 font-semibold text-[#BA1A1A] w-full text-left"
                               >
                                 Delete booking
                               </button>

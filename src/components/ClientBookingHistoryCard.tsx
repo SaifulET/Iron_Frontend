@@ -10,7 +10,15 @@ import {
   ArrowDown01Icon,
   Cancel01Icon,
   InformationCircleIcon,
-  Tick01Icon
+  Tick01Icon,
+  Location05Icon,
+  Building06Icon,
+  SentIcon,
+  Route01Icon,
+  Home03Icon,
+  Layers01Icon,
+  PinIcon,
+  Car04Icon
 } from "@hugeicons/core-free-icons";
 
 interface ClientBookingHistoryCardProps {
@@ -40,6 +48,14 @@ interface ClientBookingHistoryCardProps {
   clientNotesText?: string;
   businessNotesText?: string;
   addressText?: string;
+
+  city?: string;
+  propertyType?: string;
+  areaNeighbourhood?: string;
+  streetName?: string;
+  streetNumber?: string;
+  floorUnit?: string;
+  aptRoomNo?: string;
 
   showClientDetails?: boolean;
   showDateTimeDetails?: boolean;
@@ -77,6 +93,15 @@ export default function ClientBookingHistoryCard({
   clientNotesText = "Please use organic products only, allergic to strong fragrances",
   businessNotesText,
   addressText,
+
+  city = "Limasol",
+  propertyType = "Vila",
+  areaNeighbourhood = "Mackenzie",
+  streetName = "Emrou",
+  streetNumber = "14",
+  floorUnit = "3rd floor",
+  aptRoomNo = "14",
+
   showClientDetails = true,
   showDateTimeDetails = true,
   showSummaryDetails = true,
@@ -294,6 +319,76 @@ export default function ClientBookingHistoryCard({
         </div>
       )}
 
+      {/* 2.5 ADDRESS GRID CARD */}
+      {addressText && (
+        <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-5 w-full shadow-sm">
+          <span className="font-poppins text-xs font-normal text-[#73726D] tracking-[0.075em] uppercase">
+            Address
+          </span>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 font-poppins">
+            {/* City */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-semibold text-[#73726D] uppercase tracking-wider">City</span>
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#111111]">
+                <HugeiconsIcon icon={Location05Icon} className="w-5 h-5 text-neutral-500 shrink-0" />
+                <span>{city}</span>
+              </div>
+            </div>
+            {/* Property Type */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-semibold text-[#73726D] uppercase tracking-wider">Property Type</span>
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#111111]">
+                <HugeiconsIcon icon={Building06Icon} className="w-5 h-5 text-neutral-500 shrink-0" />
+                <span>{propertyType}</span>
+              </div>
+            </div>
+            {/* Area/Neighbourhood */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-semibold text-[#73726D] uppercase tracking-wider">Area/Neighbourhood</span>
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#111111]">
+                <HugeiconsIcon icon={SentIcon} className="w-5 h-5 text-neutral-500 shrink-0" />
+                <span>{areaNeighbourhood}</span>
+              </div>
+            </div>
+            {/* Street Name */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-semibold text-[#73726D] uppercase tracking-wider">Street Name</span>
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#111111]">
+                <HugeiconsIcon icon={Route01Icon} className="w-5 h-5 text-neutral-500 shrink-0" />
+                <span>{streetName}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-6 font-poppins mt-2">
+            {/* Street Number */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-semibold text-[#73726D] uppercase tracking-wider">Street Number</span>
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#111111]">
+                <HugeiconsIcon icon={Home03Icon} className="w-5 h-5 text-neutral-500 shrink-0" />
+                <span>{streetNumber}</span>
+              </div>
+            </div>
+            {/* Floor/Unit */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-semibold text-[#73726D] uppercase tracking-wider">Floor/Unit</span>
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#111111]">
+                <HugeiconsIcon icon={Layers01Icon} className="w-5 h-5 text-neutral-500 shrink-0" />
+                <span>{floorUnit}</span>
+              </div>
+            </div>
+            {/* Apt/Room No. */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-semibold text-[#73726D] uppercase tracking-wider">Apt/Room No.</span>
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#111111]">
+                <HugeiconsIcon icon={PinIcon} className="w-5 h-5 text-neutral-500 shrink-0" />
+                <span>{aptRoomNo}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 3. STATUS LOG EXPLANATION */}
       {status.toLowerCase().includes("waived") ? (
         <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-3 w-full shadow-sm">
@@ -401,12 +496,12 @@ export default function ClientBookingHistoryCard({
           </div>
 
           {showSummary && (
-            <div className="p-6 flex flex-col gap-4 bg-white">
-              <div className={status.toLowerCase().includes("waived") ? "opacity-30 flex flex-col gap-4" : "flex flex-col gap-4"}>
+            <div className="p-4 flex flex-col gap-6 bg-white">
+              <div className={status.toLowerCase().includes("waived") ? "opacity-30 flex flex-col gap-6" : "flex flex-col gap-6"}>
                 {/* Main service */}
                 {serviceName && (
                   <div className="flex justify-between items-start">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
                       <span className="font-poppins font-medium text-sm text-[#1C1B1C]">{serviceName}</span>
                       <span className="text-xs text-[#4E5F78] font-poppins mt-0.5">{serviceDetailText}</span>
                     </div>
@@ -417,7 +512,7 @@ export default function ClientBookingHistoryCard({
                 {/* Add-ons */}
                 {addonsName && (
                   <div className="flex justify-between items-start">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
                       <span className="font-poppins font-medium text-sm text-[#1C1B1C]">{addonsName}</span>
                       <span className="text-xs text-[#4E5F78] font-poppins mt-0.5">{addonsDetailText}</span>
                     </div>
@@ -425,26 +520,45 @@ export default function ClientBookingHistoryCard({
                   </div>
                 )}
 
-                {(serviceName || addonsName) && <div className="border-t border-neutral-100 w-full" />}
+                {/* Travel fee */}
+                {addressText && (
+                  <div className="flex justify-between items-start">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <HugeiconsIcon icon={Car04Icon} className="w-5 h-5 text-neutral-600 shrink-0" />
+                        <span className="font-poppins font-medium text-sm text-[#1C1B1C]">
+                          Travel fee
+                        </span>
+                      </div>
+                      <span className="text-xs text-[#4E5F78] font-poppins mt-0.5">
+                        We come to you · Larnaca area
+                      </span>
+                    </div>
+                    <span className="font-poppins font-semibold text-sm text-[#1C1B1C]">€20</span>
+                  </div>
+                )}
+
+                {(serviceName || addonsName || addressText) && <div className="border-t border-[#757575]/20 w-full" />}
 
                 {/* Subtotal */}
-                <div className="flex justify-between items-center text-sm font-semibold font-poppins text-[#1C1B1C]">
+                <div className="flex justify-between items-center text-sm font-semibold font-poppins text-[#1C1B1C] px-2">
                   <span>Subtotal</span>
                   <span>
                     €{" "}
                     {((parseFloat(servicePrice.replace("€", "")) || 0) +
-                      (parseFloat(addonsPrice.replace("€", "")) || 0))}
+                      (parseFloat(addonsPrice.replace("€", "")) || 0) +
+                      (addressText ? 20 : 0))}
                   </span>
                 </div>
 
                 {/* Remaining Balance card */}
                 {status.toLowerCase().includes("waived") ? (
-                  <div className="bg-[#F5F4EE] rounded-xl p-4 flex flex-col gap-3">
+                  <div className="bg-[#F5F4EE] rounded-xl p-4 flex flex-col gap-5">
                     <div className="flex justify-between items-center font-poppins text-xs text-[#1C1B1C]">
                       <span>Deposited</span>
-                      <span className="font-semibold text-sm">{depositedAmount}</span>
+                      <span className="font-semibold text-2xl">{depositedAmount}</span>
                     </div>
-                    <div className="border-t border-neutral-200/50 w-full" />
+                    <div className="border-t border-[#757575]/20 w-full" />
                     <div className="flex justify-between items-center font-poppins text-[#1C1B1C]">
                       <span className="text-xs font-medium">Remaining balance due at venue</span>
                       <span className="font-semibold text-sm line-through">{remainingBalance}</span>
@@ -455,19 +569,19 @@ export default function ClientBookingHistoryCard({
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-[#F5F4EE] rounded-xl p-4 flex flex-col gap-3">
-                    <div className="flex justify-between items-center font-poppins text-xs text-[#1C1B1C]">
+                  <div className="bg-[#F5F4EE] rounded-xl p-4 flex flex-col gap-5">
+                    <div className="flex justify-between items-center font-poppins text-sm text-[#1C1B1C]">
                       <span>Deposited</span>
-                      <span className="font-semibold text-sm">{depositedAmount}</span>
+                      <span className="font-semibold text-2xl">{depositedAmount}</span>
                     </div>
-                    <div className="border-t border-neutral-200/50 w-full" />
+                    <div className="border-t border-[#757575]/20 w-full" />
                     <div className="flex justify-between items-center font-poppins text-[#1C1B1C]">
-                      <span className="text-xs font-medium">
+                      <span className="text-sm font-medium">
                         {depositedAmount === "-" ? "Full balance due at appointment" : "Remaining balance due at appointment"}
                       </span>
-                      <span className="font-bold text-lg">
+                      <span className="font-semibold text-2xl text-[#1C1B1C]">
                         {depositedAmount === "-" 
-                          ? `€${((parseFloat(servicePrice.replace("€", "")) || 0) + (parseFloat(addonsPrice.replace("€", "")) || 0))}`
+                          ? `€${((parseFloat(servicePrice.replace("€", "")) || 0) + (parseFloat(addonsPrice.replace("€", "")) || 0) + (addressText ? 20 : 0))}`
                           : remainingBalance
                         }
                       </span>
@@ -542,7 +656,12 @@ export default function ClientBookingHistoryCard({
               </span>
               <div className="flex flex-col gap-2 font-poppins">
                 <span className="text-[11px] text-neutral-400">
-                  {status.toLowerCase().includes("waived") ? "Reason for waiving" : "Reason"}
+                  {status.toLowerCase().includes("waived")
+                    ? "Reason for waiving"
+                    : status === "Completed"
+                      ? "Did the customer paid the remaining balance at the venue"
+                      : "Reason"
+                  }
                 </span>
                 <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-3 rounded-r-lg text-xs font-medium text-[#111111]">
                   {businessNotesText || "Customer did not attend"}

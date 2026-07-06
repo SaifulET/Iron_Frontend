@@ -813,6 +813,8 @@ export default function BusinessDashboard() {
                 depositedAmount={b.paymentType === "Pay at venue" ? "-" : "€8"}
                 remainingBalance={b.paymentType === "Pay at venue" ? b.amount : "€32"}
                 showFooterActions={true}
+                addressText={(b.bookingId === "#BK-0035" || b.bookingId === "#BK-0023") ? "Please use organic products only, allergic to strong fragrances" : undefined}
+                businessNotesText={b.status === "Completed" ? `Yes - customer paid ${b.paymentType === "Pay at venue" ? b.amount.replace("€", "") : "32"}.00 at venue` : undefined}
                 onCompleteBooking={() => {
                   const updated = [...bookingsData];
                   updated[viewingBookingIndex] = {
