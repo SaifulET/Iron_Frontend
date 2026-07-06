@@ -821,6 +821,15 @@ export default function BusinessDashboard() {
                   };
                   setBookingsData(updated);
                 }}
+                onReschedule={(newDate, newTime) => {
+                  const updated = [...bookingsData];
+                  updated[viewingBookingIndex] = {
+                    ...updated[viewingBookingIndex],
+                    date: newDate,
+                    time: newTime
+                  };
+                  setBookingsData(updated);
+                }}
               />
             </div>
           </main>

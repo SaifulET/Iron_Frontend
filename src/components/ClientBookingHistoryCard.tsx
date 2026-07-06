@@ -9,7 +9,8 @@ import {
   Clock01Icon,
   ArrowDown01Icon,
   Cancel01Icon,
-  InformationCircleIcon
+  InformationCircleIcon,
+  Tick01Icon
 } from "@hugeicons/core-free-icons";
 
 interface ClientBookingHistoryCardProps {
@@ -46,6 +47,7 @@ interface ClientBookingHistoryCardProps {
   showNotesDetails?: boolean;
   showFooterActions?: boolean;
   onCompleteBooking?: () => void;
+  onReschedule?: (newDate: string, newTime: string) => void;
 }
 
 export default function ClientBookingHistoryCard({
@@ -81,9 +83,13 @@ export default function ClientBookingHistoryCard({
   showNotesDetails = true,
   showFooterActions = false,
   onCompleteBooking,
+  onReschedule,
 }: ClientBookingHistoryCardProps) {
   const [showSummary, setShowSummary] = useState(true);
   const [showMarkedNoShow, setShowMarkedNoShow] = useState(true);
+  const [isRescheduling, setIsRescheduling] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(18);
+  const [selectedTime, setSelectedTime] = useState("14:00");
 
   // Status Badge coloring helper
   const renderStatusBadge = () => {
@@ -558,7 +564,10 @@ export default function ClientBookingHistoryCard({
         <div className="flex justify-end gap-3 mt-4 w-full select-none">
           {statusType === "pending" ? (
             <>
-              <button className="h-[40px] px-6 rounded-lg bg-[#A3A3A2] hover:bg-neutral-500 text-white text-xs font-semibold font-poppins shadow-sm">
+              <button
+                onClick={() => setIsRescheduling(true)}
+                className="h-[40px] px-6 rounded-lg bg-[#A3A3A2] hover:bg-neutral-500 text-white text-xs font-semibold font-poppins shadow-sm"
+              >
                 Reschedule
               </button>
               <button
@@ -570,7 +579,10 @@ export default function ClientBookingHistoryCard({
             </>
           ) : statusType === "noshow" ? (
             <>
-              <button className="h-[40px] px-6 rounded-lg bg-[#A3A3A2] hover:bg-neutral-500 text-white text-xs font-semibold font-poppins shadow-sm">
+              <button
+                onClick={() => setIsRescheduling(true)}
+                className="h-[40px] px-6 rounded-lg bg-[#A3A3A2] hover:bg-neutral-500 text-white text-xs font-semibold font-poppins shadow-sm"
+              >
                 Reschedule
               </button>
               <button
@@ -583,7 +595,10 @@ export default function ClientBookingHistoryCard({
             </>
           ) : (
             <>
-              <button className="h-[40px] px-6 rounded-lg bg-[#111111] hover:bg-neutral-800 text-white text-xs font-semibold font-poppins shadow-sm">
+              <button
+                onClick={() => setIsRescheduling(true)}
+                className="h-[40px] px-6 rounded-lg bg-[#111111] hover:bg-neutral-800 text-white text-xs font-semibold font-poppins shadow-sm"
+              >
                 Reschedule
               </button>
               <button
@@ -594,6 +609,211 @@ export default function ClientBookingHistoryCard({
               </button>
             </>
           )}
+        </div>
+      )}
+
+      {/* RESCHEDULE MODAL */}
+      {isRescheduling && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center overflow-y-auto p-4 font-poppins">
+          <div className="bg-white rounded-2xl p-8 max-w-[700px] w-full relative shadow-2xl flex flex-col gap-6 max-h-[90vh] overflow-y-auto">
+            {/* Title */}
+            <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
+              <h2 className="text-2xl font-semibold text-[#111111]">Reschedule booking</h2>
+              <button 
+                onClick={() => setIsRescheduling(false)}
+                className="text-neutral-400 hover:text-neutral-600 transition-colors"
+              >
+                <HugeiconsIcon icon={Cancel01Icon} className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Select Date & Time header */}
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-semibold tracking-wider text-neutral-400 uppercase">Select Date & Time</span>
+              <div className="h-[1px] bg-neutral-200 w-full my-2" />
+            </div>
+
+            {/* Service details */}
+            <div className="flex flex-col gap-4 bg-white">
+              <span className="text-sm font-semibold text-[#111111]">{serviceName || "YARD Beard Package"}</span>
+              <div className="flex items-center gap-3 text-sm text-[#111111]">
+                <HugeiconsIcon icon={Calendar01Icon} className="w-5 h-5 text-neutral-600" />
+                <span className="line-through text-neutral-400">{dateText} · {timeText}</span>
+                <span className="text-neutral-400">→</span>
+                <span className="text-[#1F8900] font-medium">Mon, {selectedDay} Aug · {selectedTime}</span>
+              </div>
+
+              {/* Deposit details */}
+              <div className="flex justify-between items-center text-sm font-medium mt-1">
+                <span className="text-[#111111]">Deposit</span>
+                <span className="text-[#2A6D16]">None - returning customer</span>
+              </div>
+              <div className="flex justify-between items-center text-sm font-medium">
+                <span className="text-[#111111]">Full amount due at venue</span>
+                <span className="text-[#111111]">
+                  €{((parseFloat(servicePrice.replace("€", "")) || 0) + (parseFloat(addonsPrice.replace("€", "")) || 0))}
+                </span>
+              </div>
+
+              {/* Green Box banner */}
+              <div className="bg-[#E5F5EF] text-[#2A6D16] rounded-xl p-3 flex items-start gap-3 mt-1">
+                <div className="w-5 h-5 rounded-full border border-[#2A6D16] flex items-center justify-center shrink-0 mt-0.5">
+                  <HugeiconsIcon icon={Tick01Icon} className="w-3.5 h-3.5 text-[#2A6D16]" />
+                </div>
+                <span className="text-[13px] font-medium leading-relaxed">
+                  Rescheduling is free. No deposit required - you pay the full amount at the venue as usual.
+                </span>
+              </div>
+            </div>
+
+            {/* Calendar Month select */}
+            <div className="flex flex-col gap-4 mt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-neutral-800">August 2026</span>
+                <div className="flex items-center gap-2">
+                  <button className="p-1 hover:bg-neutral-50 rounded text-neutral-600">&lt;</button>
+                  <button className="p-1 hover:bg-neutral-50 rounded text-neutral-600">&gt;</button>
+                </div>
+              </div>
+
+              {/* Active Day label */}
+              <span className="text-xl font-bold text-[#111111]">Mon, Aug {selectedDay}</span>
+
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-[#111111] bg-white border border-neutral-100 rounded-xl p-4">
+                {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
+                  <div key={i} className="py-2 text-[#73726D] font-medium">{d}</div>
+                ))}
+                {/* Row 1 */}
+                <div className="py-2"></div>
+                <div className="py-2"></div>
+                {[1, 2, 3, 4, 5].map((d) => (
+                  <button 
+                    key={d} 
+                    onClick={() => setSelectedDay(d)}
+                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${
+                      selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+                {/* Row 2 */}
+                {[6, 7, 8, 9, 10, 11, 12].map((d) => (
+                  <button 
+                    key={d} 
+                    onClick={() => setSelectedDay(d)}
+                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${
+                      selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+                {/* Row 3 */}
+                {[13, 14, 15, 16, 17, 18, 19].map((d) => (
+                  <button 
+                    key={d} 
+                    onClick={() => setSelectedDay(d)}
+                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${
+                      selectedDay === d ? "bg-[#111111] text-white" : d === 17 ? "bg-neutral-200 text-neutral-700" : "hover:bg-neutral-50"
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+                {/* Row 4 */}
+                {[20, 21, 22, 23, 24, 25, 26].map((d) => (
+                  <button 
+                    key={d} 
+                    onClick={() => setSelectedDay(d)}
+                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${
+                      selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+                {/* Row 5 */}
+                {[27, 28, 29, 30, 31].map((d) => (
+                  <button 
+                    key={d} 
+                    onClick={() => setSelectedDay(d)}
+                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${
+                      selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Time Slot Selection */}
+            <div className="flex flex-col gap-4">
+              <span className="text-xs font-semibold tracking-wider text-neutral-400 uppercase">Morning</span>
+              <div className="grid grid-cols-4 gap-2">
+                {["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"].map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setSelectedTime(t)}
+                    className={`h-9 rounded-lg border text-xs font-semibold transition-all ${
+                      selectedTime === t ? "bg-[#111111] text-white border-[#111111]" : "bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50"
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+
+              <span className="text-xs font-semibold tracking-wider text-neutral-400 uppercase mt-2">Afternoon</span>
+              <div className="grid grid-cols-4 gap-2">
+                {["13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"].map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setSelectedTime(t)}
+                    className={`h-9 rounded-lg border text-xs font-semibold transition-all ${
+                      selectedTime === t ? "bg-[#111111] text-white border-[#111111]" : "bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50"
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Customer Notes */}
+            <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-2 w-full mt-2">
+              <span className="font-poppins text-[10px] uppercase font-semibold text-[#73726D] tracking-[0.06em]">
+                Customer Notes
+              </span>
+              <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-4 rounded-r-lg text-xs font-medium text-[#111111] leading-relaxed">
+                <div className="text-[10px] uppercase font-semibold text-[#73726D] tracking-wider mb-1">NOTE</div>
+                <div>{clientNotesText || "Please use organic products only, allergic to strong fragrances"}</div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3 border-t border-neutral-100 pt-4 mt-2">
+              <button 
+                onClick={() => setIsRescheduling(false)}
+                className="h-10 px-6 rounded-lg border border-neutral-300 bg-white hover:bg-neutral-50 text-xs font-semibold text-[#111111]"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  if (onReschedule) {
+                    onReschedule(`Mon, ${selectedDay} Aug`, selectedTime);
+                  }
+                  setIsRescheduling(false);
+                }}
+                className="h-10 px-6 rounded-lg bg-[#59B1CC] hover:bg-[#4ea0b8] text-white text-xs font-semibold"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
