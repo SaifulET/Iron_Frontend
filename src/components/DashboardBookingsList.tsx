@@ -71,6 +71,23 @@ export default function DashboardBookingsList({
   setNewBookingStaff,
   onViewBookingDetails
 }: DashboardBookingsListProps) {
+  const [dropdownCoords, setDropdownCoords] = React.useState<{ top: number; left: number } | null>(null);
+  const filteredBookings = bookingsData
+    .map((b, originalIdx) => ({ ...b, originalIdx }))
+    .filter((b) => {
+      if (activeTab === "Upcoming" && !["Upcoming", "Pending"].includes(b.status)) return false;
+      if (activeTab === "Canceled" && !b.status.toLowerCase().includes("cancel") && !b.status.toLowerCase().includes("waived")) return false;
+      if (bookingSearch) {
+        const q = bookingSearch.toLowerCase();
+        if (!b.clientName.toLowerCase().includes(q) && !b.clientPhone.toLowerCase().includes(q) && !b.bookingId.toLowerCase().includes(q)) return false;
+      }
+      if (bookingStatusFilter !== "All") {
+        if (b.status.toLowerCase().trim() !== bookingStatusFilter.toLowerCase().trim()) return false;
+      }
+      if (bookingStaffFilter !== "All Staff" && b.staff !== bookingStaffFilter) return false;
+      return true;
+    });
+
   return (
     <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] p-6 md:p-8 select-none">
       {/* Bookings Header */}
@@ -161,9 +178,9 @@ export default function DashboardBookingsList({
       </div>
 
       {/* Bookings Table Block */}
-      <div className="bg-white border border-[#E8E8E6] rounded-2xl flex-1 flex flex-col overflow-visible shadow-sm">
-        <div className="overflow-visible w-full">
-          <table className="w-full text-left border-collapse min-w-[850px] overflow-visible">
+      <div className="bg-white border border-[#E8E8E6] rounded-2xl flex-1 flex flex-col overflow-hidden shadow-sm">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left border-collapse min-w-[850px]">
             <thead>
               <tr className="bg-[#FAFAF8] border-b border-[#E8E8E6] text-[11px] text-[#888780] font-normal font-poppins">
                 <th className="py-3 px-5 font-normal">
@@ -190,21 +207,7 @@ export default function DashboardBookingsList({
               </tr>
             </thead>
             <tbody className="divide-y divide-[#EFEFED]">
-              {bookingsData
-                .map((b, originalIdx) => ({ ...b, originalIdx }))
-                .filter((b) => {
-                  if (activeTab === "Upcoming" && !["Upcoming", "Pending"].includes(b.status)) return false;
-                  if (activeTab === "Canceled" && !b.status.toLowerCase().includes("cancel") && !b.status.toLowerCase().includes("waived")) return false;
-                  if (bookingSearch) {
-                    const q = bookingSearch.toLowerCase();
-                    if (!b.clientName.toLowerCase().includes(q) && !b.clientPhone.toLowerCase().includes(q) && !b.bookingId.toLowerCase().includes(q)) return false;
-                  }
-                  if (bookingStatusFilter !== "All") {
-                    if (b.status !== bookingStatusFilter) return false;
-                  }
-                  if (bookingStaffFilter !== "All Staff" && b.staff !== bookingStaffFilter) return false;
-                  return true;
-                })
+              {filteredBookings
                 .map((booking, idx) => {
                   // Status styling helper
                   const renderStatusBadge = (statusStr: string) => {
@@ -371,6 +374,13 @@ export default function DashboardBookingsList({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const dropdownHeight = 170;
+                            const spaceBelow = window.innerHeight - rect.bottom;
+                            setDropdownCoords({
+                              top: spaceBelow < dropdownHeight ? rect.top - dropdownHeight - 8 : rect.bottom + 8,
+                              left: rect.right - 176
+                            });
                             setOpenBookingActionIdx(openBookingActionIdx === idx ? null : idx);
                           }}
                           className="h-9 px-4 border border-[#111827] rounded-full flex items-center justify-center gap-1.5 hover:bg-neutral-50 transition-all text-xs font-semibold text-[#111827] mx-auto"
@@ -386,7 +396,14 @@ export default function DashboardBookingsList({
                               className="fixed inset-0 z-40 cursor-default"
                               onClick={() => setOpenBookingActionIdx(null)}
                             />
-                            <div className="absolute right-5 top-14 z-50 w-44 bg-white rounded-xl shadow-xl border border-neutral-200/50 flex flex-col py-1.5 text-xs text-left animate-fadeIn">
+                            <div 
+                              style={{ 
+                                position: "fixed", 
+                                top: dropdownCoords?.top, 
+                                left: dropdownCoords?.left 
+                              }}
+                              className="z-50 w-44 bg-white rounded-xl shadow-xl border border-neutral-200/50 flex flex-col py-1.5 text-xs text-left animate-fadeIn"
+                            >
                               <button
                                 onClick={() => {
                                   setOpenBookingActionIdx(null);
@@ -446,7 +463,7 @@ export default function DashboardBookingsList({
 
         {/* Pagination footer */}
         <div className="bg-[#FAFAF8] border-t border-[#E8E8E6] p-4 flex items-center justify-between text-xs font-poppins text-[#888780] select-none">
-          <span>{bookingsData.length} of {bookingsData.length} bookings</span>
+          <span>{filteredBookings.length} of {bookingsData.length} bookings</span>
           <div className="flex items-center gap-2">
             <button className="w-8 h-8 rounded-lg border border-neutral-200 flex items-center justify-center hover:bg-neutral-50 bg-white">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

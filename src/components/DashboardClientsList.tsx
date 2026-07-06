@@ -48,6 +48,7 @@ export default function DashboardClientsList({
   setClientPhone,
   setClientTagState
 }: DashboardClientsListProps) {
+  const [dropdownCoords, setDropdownCoords] = React.useState<{ top: number; left: number } | null>(null);
   return (
     <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] relative">
       {/* Client management Header */}
@@ -202,6 +203,13 @@ export default function DashboardClientsList({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          const dropdownHeight = 130;
+                          const spaceBelow = window.innerHeight - rect.bottom;
+                          setDropdownCoords({
+                            top: spaceBelow < dropdownHeight ? rect.top - dropdownHeight - 4 : rect.bottom + 4,
+                            left: rect.right - 160
+                          });
                           setOpenActionIdx(openActionIdx === idx ? null : idx);
                         }}
                         className="border border-[#111827] rounded-full px-3 py-1 text-xs font-semibold text-[#111827] hover:bg-neutral-50 transition-colors inline-flex items-center gap-1.5 h-[30px]"
@@ -217,7 +225,14 @@ export default function DashboardClientsList({
                             className="fixed inset-0 z-40 bg-transparent"
                             onClick={() => setOpenActionIdx(null)}
                           />
-                          <div className="absolute right-5 mt-1 z-50 w-[160px] bg-white rounded-xl shadow-2xl border border-[#C6C6CB] flex flex-col py-1 text-left text-xs font-poppins font-medium select-none animate-fadeIn">
+                          <div 
+                            style={{ 
+                              position: "fixed", 
+                              top: dropdownCoords?.top, 
+                              left: dropdownCoords?.left 
+                            }}
+                            className="z-50 w-[160px] bg-white rounded-xl shadow-2xl border border-[#C6C6CB] flex flex-col py-1 text-left text-xs font-poppins font-medium select-none animate-fadeIn"
+                          >
                             <button
                               className="px-4 py-2.5 hover:bg-neutral-50 text-neutral-700 hover:text-neutral-900 text-left transition-colors"
                               onClick={(e) => {

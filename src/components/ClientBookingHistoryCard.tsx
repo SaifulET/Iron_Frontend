@@ -83,10 +83,10 @@ export default function ClientBookingHistoryCard({
   staffRole = "Barber",
   rescheduleText = "Reschedule 1 of 2",
   serviceName = "YARD Beard Package",
-  serviceDetailText = "Express Facial · Shave · Wax · 1 hr, 20 min",
+  serviceDetailText = "Express Facial • Shave • Wax • 1 hr, 20 min",
   servicePrice = "€20",
   addonsName = "Add-ons",
-  addonsDetailText = "Hair wash (flat fee) · Scalp treatment (flat fee)",
+  addonsDetailText = "Hair wash (flat fee) • Scalp treatment (flat fee)",
   addonsPrice = "€20",
   depositedAmount = "€8",
   remainingBalance = "€32",
@@ -115,6 +115,7 @@ export default function ClientBookingHistoryCard({
   const [isRescheduling, setIsRescheduling] = useState(false);
   const [selectedDay, setSelectedDay] = useState(18);
   const [selectedTime, setSelectedTime] = useState("14:00");
+  const isCancelledBooking = status.toLowerCase().includes("cancel") || status.toLowerCase().includes("waived");
 
   // Status Badge coloring helper
   const renderStatusBadge = () => {
@@ -187,8 +188,8 @@ export default function ClientBookingHistoryCard({
     }
     if (norm === "cancelled by business" || norm === "canceled by business") {
       return (
-        <span className="bg-[#E0F4FB] text-[#007CA2] rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider select-none">
-          Cancelled by business
+        <span className="bg-[#94EEFF] border border-[#075E6F] text-[#075E6F] rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider select-none">
+          Cancelled by Business
         </span>
       );
     }
@@ -313,7 +314,7 @@ export default function ClientBookingHistoryCard({
               {staffName.charAt(0)}
             </div>
             <span>
-              with {staffName} · {staffRole} {rescheduleText && `· ${rescheduleText}`}
+              with {staffName} • {staffRole} {rescheduleText && `• ${rescheduleText}`}
             </span>
           </div>
         </div>
@@ -399,13 +400,39 @@ export default function ClientBookingHistoryCard({
             The no-show was waived within the 90-minute window. This booking is considered cancelled. This customer is now activated – their next booking with you will require no deposit.
           </div>
         </div>
+      ) : (status.toLowerCase().includes("cancelled by business") || status.toLowerCase().includes("canceled by business")) ? (
+        <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-3 w-full shadow-sm">
+          <span className="font-poppins text-xs font-normal text-[#73726D] tracking-[0.075em] uppercase">
+            Status
+          </span>
+          <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-4 rounded-r-lg text-sm font-medium text-[#111111] leading-relaxed">
+            {depositedAmount === "-"
+              ? "This booking was cancelled by the business. No deposit was held and no refund was due. The customer remains activated for future bookings with you"
+              : "This booking was cancelled by the business. The full deposit has been refunded to the customer. As this customer was not activated, a deposit will require again on their next booking with you."
+            }
+          </div>
+        </div>
+      ) : status.toLowerCase().includes("late cancellation") ? (
+        <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-3 w-full shadow-sm">
+          <span className="font-poppins text-xs font-normal text-[#73726D] tracking-[0.075em] uppercase">
+            Status
+          </span>
+          <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-4 rounded-r-lg text-sm font-medium text-[#111111] leading-relaxed">
+            {bookingId === "#BK-0035"
+              ? "This booking was cancelled by the customer and a 20% cancellation fee was charged. This fee has been retained by Bookly as the platform activation fee. No cancellation payout was due to you for this booking. This customer is now activated — their next booking with you will require no deposit."
+              : bookingId === "#BK-0034"
+                ? "This booking was cancelled by the customer outside the free cancellation window. A late cancellation fee was charged. The platform deposit has been retained by Bookly and the remaining balance will be transferred to you in your monthly payout. This customer is now activated — their next booking with you will require no deposit."
+                : "This booking was cancelled by the customer outside the free cancellation window. A late cancellation fee was charged in full and will be transferred to you in your monthly payout. No platform fee was applied."
+            }
+          </div>
+        </div>
       ) : (status.toLowerCase().includes("no-show - canceled") || status.toLowerCase().includes("no-show - cancelled") || status.toLowerCase().includes("noshow - canceled") || status.toLowerCase().includes("noshow - cancelled")) ? (
         <div className="bg-white border border-neutral-200/60 rounded-2xl p-6 flex flex-col gap-3 w-full shadow-sm">
           <span className="font-poppins text-xs font-normal text-[#73726D] tracking-[0.075em] uppercase">
             Status
           </span>
           <div className="border-l-4 border-[#B4B3AF] bg-[#F5F4EE] p-4 rounded-r-lg text-sm font-medium text-[#111111] leading-relaxed">
-            {depositedAmount === "-" 
+            {depositedAmount === "-"
               ? "The no-show was cancelled within the 90-minute window. This booking is considered completed."
               : "The no-show was cancelled by the business within the 90-minute window. This booking is considered completed by Bookly. The platform deposit has been retained by Bookly as the activation fee. No additional payout was due for this booking. This customer is now activated — their next booking with you will require no deposit."
             }
@@ -570,17 +597,20 @@ export default function ClientBookingHistoryCard({
                   </div>
                 ) : (
                   <div className="bg-[#F5F4EE] rounded-xl p-4 flex flex-col gap-5">
-                    <div className="flex justify-between items-center font-poppins text-sm text-[#1C1B1C]">
+                    <div className={`flex justify-between items-center font-poppins text-sm text-[#1C1B1C] ${isCancelledBooking ? "opacity-30" : ""}`}>
                       <span>Deposited</span>
                       <span className="font-semibold text-2xl">{depositedAmount}</span>
                     </div>
                     <div className="border-t border-[#757575]/20 w-full" />
-                    <div className="flex justify-between items-center font-poppins text-[#1C1B1C]">
+                    <div className={`flex justify-between items-center font-poppins text-[#1C1B1C] ${isCancelledBooking ? "opacity-30" : ""}`}>
                       <span className="text-sm font-medium">
-                        {depositedAmount === "-" ? "Full balance due at appointment" : "Remaining balance due at appointment"}
+                        {(depositedAmount === "-" || status.toLowerCase().includes("late cancellation"))
+                          ? "Full balance due at appointment"
+                          : "Remaining balance due at appointment"
+                        }
                       </span>
                       <span className="font-semibold text-2xl text-[#1C1B1C]">
-                        {depositedAmount === "-" 
+                        {depositedAmount === "-"
                           ? `€${((parseFloat(servicePrice.replace("€", "")) || 0) + (parseFloat(addonsPrice.replace("€", "")) || 0) + (addressText ? 20 : 0))}`
                           : remainingBalance
                         }
@@ -590,32 +620,68 @@ export default function ClientBookingHistoryCard({
                 )}
               </div>
 
-              {status.toLowerCase().includes("waived") && depositedAmount !== "-" && (
-                <div className="flex justify-between items-center bg-[#EEF5F0] rounded-xl px-4 py-3 text-sm font-semibold text-[#297A5E] font-poppins mt-2">
-                  <span>Total deposit refunded</span>
-                  <span>€8.00</span>
+              {((status.toLowerCase().includes("waived") && depositedAmount !== "-") ||
+                status.toLowerCase().includes("by business")) && (
+                  <div className="flex justify-between items-center bg-[#EEF5F0] rounded-xl px-4 py-3 text-sm font-semibold text-[#297A5E] font-poppins mt-2">
+                    <span>Total deposit refunded</span>
+                    <span>{depositedAmount === "-" ? "€0.00" : "€8.00"}</span>
+                  </div>
+                )}
+
+              {status.toLowerCase().includes("late cancellation") && (
+                <div className="flex flex-col gap-2 bg-[#EEF5F0] rounded-xl px-4 py-3 text-sm font-semibold font-poppins mt-2">
+                  {bookingId === "#BK-0035" ? (
+                    <>
+                      <div className="flex justify-between items-center text-[#297A5E]">
+                        <span>Cancellation fee charged 20%</span>
+                        <span>€0.00</span>
+                      </div>
+                      <div className="border-t border-[#297A5E]/15 my-1.5" />
+                      <div className="flex justify-between items-center text-[#1C1B1C]">
+                        <span>Deposit retained by Bookly</span>
+                        <span>€8.00</span>
+                      </div>
+                    </>
+                  ) : bookingId === "#BK-0034" ? (
+                    <>
+                      <div className="flex justify-between items-center text-[#297A5E]">
+                        <span>Cancellation fee charged 40%</span>
+                        <span>€8.00</span>
+                      </div>
+                      <div className="border-t border-[#297A5E]/15 my-1.5" />
+                      <div className="flex justify-between items-center text-[#1C1B1C]">
+                        <span>Deposit retained by Bookly</span>
+                        <span>€8.00</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex justify-between items-center text-[#297A5E]">
+                      <span>Cancellation fee charged 30%</span>
+                      <span>€12.00</span>
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* No-show fee charged alert */}
-              {statusType === "noshow" && 
-               !status.toLowerCase().includes("waived") && 
-               !status.toLowerCase().includes("cancel") && 
-               !status.toLowerCase().includes("cancelled") && 
-               !status.toLowerCase().includes("canceled") && (
-                <>
-                  <div className="flex justify-between items-center bg-[#E1F5EE]/50 border border-[#085041]/10 rounded-xl px-4 py-3 text-xs font-semibold text-[#085041] font-poppins mt-2">
-                    <span>No-show fee charged 30%</span>
-                    <span>€4.00</span>
-                  </div>
+              {statusType === "noshow" &&
+                !status.toLowerCase().includes("waived") &&
+                !status.toLowerCase().includes("cancel") &&
+                !status.toLowerCase().includes("cancelled") &&
+                !status.toLowerCase().includes("canceled") && (
+                  <>
+                    <div className="flex justify-between items-center bg-[#E1F5EE]/50 border border-[#085041]/10 rounded-xl px-4 py-3 text-xs font-semibold text-[#085041] font-poppins mt-2">
+                      <span>No-show fee charged 30%</span>
+                      <span>€4.00</span>
+                    </div>
 
-                  {/* End of month finance info */}
-                  <div className="flex items-center gap-2 bg-[#F5F4EE] rounded-xl p-3 text-[11px] text-[#73726D] font-poppins">
-                    <HugeiconsIcon icon={InformationCircleIcon} className="w-4 h-4 text-neutral-500 shrink-0" />
-                    <span>Appears in payouts & Finance end of month</span>
-                  </div>
-                </>
-              )}
+                    {/* End of month finance info */}
+                    <div className="flex items-center gap-2 bg-[#F5F4EE] rounded-xl p-3 text-[11px] text-[#73726D] font-poppins">
+                      <HugeiconsIcon icon={InformationCircleIcon} className="w-4 h-4 text-neutral-500 shrink-0" />
+                      <span>Appears in payouts & Finance end of month</span>
+                    </div>
+                  </>
+                )}
             </div>
           )}
         </div>
@@ -679,9 +745,24 @@ export default function ClientBookingHistoryCard({
         </div>
       )}
 
-      {showFooterActions && (statusType === "upcoming" || statusType === "pending" || statusType === "noshow") && (
+      {showFooterActions && (statusType === "upcoming" || statusType === "pending" || statusType === "noshow" || status.toLowerCase().includes("by business") || status.toLowerCase().includes("late cancellation")) && (
         <div className="flex justify-end gap-3 mt-4 w-full select-none">
-          {statusType === "pending" ? (
+          {status.toLowerCase().includes("by business") || status.toLowerCase().includes("late cancellation") ? (
+            <>
+              <button
+                disabled
+                className="h-[40px] px-6 rounded-lg bg-[#A3A3A2] text-white text-xs font-semibold font-poppins shadow-sm opacity-50 cursor-not-allowed"
+              >
+                Reschedule
+              </button>
+              <button
+                disabled
+                className="h-[40px] px-6 rounded-lg bg-[#B5E3D5] text-white text-xs font-semibold font-poppins shadow-sm opacity-50 cursor-not-allowed"
+              >
+                Complete Booking
+              </button>
+            </>
+          ) : statusType === "pending" ? (
             <>
               <button
                 onClick={() => setIsRescheduling(true)}
@@ -738,7 +819,7 @@ export default function ClientBookingHistoryCard({
             {/* Title */}
             <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
               <h2 className="text-2xl font-semibold text-[#111111]">Reschedule booking</h2>
-              <button 
+              <button
                 onClick={() => setIsRescheduling(false)}
                 className="text-neutral-400 hover:text-neutral-600 transition-colors"
               >
@@ -807,60 +888,55 @@ export default function ClientBookingHistoryCard({
                 <div className="py-2"></div>
                 <div className="py-2"></div>
                 {[1, 2, 3, 4, 5].map((d) => (
-                  <button 
-                    key={d} 
+                  <button
+                    key={d}
                     onClick={() => setSelectedDay(d)}
-                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${
-                      selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
-                    }`}
+                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
+                      }`}
                   >
                     {d}
                   </button>
                 ))}
                 {/* Row 2 */}
                 {[6, 7, 8, 9, 10, 11, 12].map((d) => (
-                  <button 
-                    key={d} 
+                  <button
+                    key={d}
                     onClick={() => setSelectedDay(d)}
-                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${
-                      selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
-                    }`}
+                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
+                      }`}
                   >
                     {d}
                   </button>
                 ))}
                 {/* Row 3 */}
                 {[13, 14, 15, 16, 17, 18, 19].map((d) => (
-                  <button 
-                    key={d} 
+                  <button
+                    key={d}
                     onClick={() => setSelectedDay(d)}
-                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${
-                      selectedDay === d ? "bg-[#111111] text-white" : d === 17 ? "bg-neutral-200 text-neutral-700" : "hover:bg-neutral-50"
-                    }`}
+                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${selectedDay === d ? "bg-[#111111] text-white" : d === 17 ? "bg-neutral-200 text-neutral-700" : "hover:bg-neutral-50"
+                      }`}
                   >
                     {d}
                   </button>
                 ))}
                 {/* Row 4 */}
                 {[20, 21, 22, 23, 24, 25, 26].map((d) => (
-                  <button 
-                    key={d} 
+                  <button
+                    key={d}
                     onClick={() => setSelectedDay(d)}
-                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${
-                      selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
-                    }`}
+                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
+                      }`}
                   >
                     {d}
                   </button>
                 ))}
                 {/* Row 5 */}
                 {[27, 28, 29, 30, 31].map((d) => (
-                  <button 
-                    key={d} 
+                  <button
+                    key={d}
                     onClick={() => setSelectedDay(d)}
-                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${
-                      selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
-                    }`}
+                    className={`py-2 rounded-full w-8 h-8 mx-auto flex items-center justify-center transition-all ${selectedDay === d ? "bg-[#111111] text-white" : "hover:bg-neutral-50"
+                      }`}
                   >
                     {d}
                   </button>
@@ -876,9 +952,8 @@ export default function ClientBookingHistoryCard({
                   <button
                     key={t}
                     onClick={() => setSelectedTime(t)}
-                    className={`h-9 rounded-lg border text-xs font-semibold transition-all ${
-                      selectedTime === t ? "bg-[#111111] text-white border-[#111111]" : "bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50"
-                    }`}
+                    className={`h-9 rounded-lg border text-xs font-semibold transition-all ${selectedTime === t ? "bg-[#111111] text-white border-[#111111]" : "bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50"
+                      }`}
                   >
                     {t}
                   </button>
@@ -891,9 +966,8 @@ export default function ClientBookingHistoryCard({
                   <button
                     key={t}
                     onClick={() => setSelectedTime(t)}
-                    className={`h-9 rounded-lg border text-xs font-semibold transition-all ${
-                      selectedTime === t ? "bg-[#111111] text-white border-[#111111]" : "bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50"
-                    }`}
+                    className={`h-9 rounded-lg border text-xs font-semibold transition-all ${selectedTime === t ? "bg-[#111111] text-white border-[#111111]" : "bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50"
+                      }`}
                   >
                     {t}
                   </button>
@@ -914,13 +988,13 @@ export default function ClientBookingHistoryCard({
 
             {/* Action Buttons */}
             <div className="flex justify-end gap-3 border-t border-neutral-100 pt-4 mt-2">
-              <button 
+              <button
                 onClick={() => setIsRescheduling(false)}
                 className="h-10 px-6 rounded-lg border border-neutral-300 bg-white hover:bg-neutral-50 text-xs font-semibold text-[#111111]"
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={() => {
                   if (onReschedule) {
                     onReschedule(`Mon, ${selectedDay} Aug`, selectedTime);

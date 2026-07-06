@@ -773,6 +773,8 @@ export default function BusinessDashboard() {
           statusType = "completed";
         } else if (b.status === "Canceled" || b.status === "Cancelled") {
           statusType = "cancelled";
+        } else if (b.status.toLowerCase().includes("late cancellation")) {
+          statusType = "late";
         }
 
         return (
@@ -809,12 +811,19 @@ export default function BusinessDashboard() {
                 dateText={b.date}
                 timeText={b.time}
                 staffName={b.staff}
-                servicePrice={b.amount}
-                depositedAmount={b.paymentType === "Pay at venue" ? "-" : "€8"}
-                remainingBalance={b.paymentType === "Pay at venue" ? b.amount : "€32"}
+                servicePrice={(b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034" || b.bookingId === "#BK-0033") ? "€20" : b.amount}
+                depositedAmount={(b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034") ? "€8" : "-"}
+                remainingBalance={(b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034" || b.bookingId === "#BK-0033") ? "€32" : (b.paymentType === "Pay at venue" ? b.amount : "€32")}
                 showFooterActions={true}
-                addressText={(b.bookingId === "#BK-0035" || b.bookingId === "#BK-0023") ? "Please use organic products only, allergic to strong fragrances" : undefined}
-                businessNotesText={b.status === "Completed" ? `Yes - customer paid ${b.paymentType === "Pay at venue" ? b.amount.replace("€", "") : "32"}.00 at venue` : undefined}
+                addressText={(b.bookingId === "#BK-0023" || b.bookingId === "#BK-0031") ? "Please use organic products only, allergic to strong fragrances" : undefined}
+                clientNotesText={(b.bookingId === "#BK-0035" || b.bookingId === "#BK-0034" || b.bookingId === "#BK-0033") ? "Please use organic products only, allergic to strong fragrances" : undefined}
+                businessNotesText={
+                  b.status === "Completed"
+                    ? `Yes - customer paid ${b.paymentType === "Pay at venue" ? b.amount.replace("€", "") : "32"}.00 at venue`
+                    : b.status.toLowerCase().includes("by business")
+                      ? "Service is not available"
+                      : undefined
+                }
                 onCompleteBooking={() => {
                   const updated = [...bookingsData];
                   updated[viewingBookingIndex] = {

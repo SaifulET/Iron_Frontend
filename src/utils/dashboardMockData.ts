@@ -85,11 +85,11 @@ export const initialBookingsData = [
     clientInitials: "NG",
     isNew: true,
     bookingId: "#BK-0035",
-    date: "Mon, 18 May",
-    time: "12:00",
+    date: "Saturday, May 9",
+    time: "10:00 - 11:20 AM",
     staff: "George",
-    status: "Completed",
-    amount: "€75",
+    status: "Late cancellation",
+    amount: "€40",
     paymentType: "Pay at venue"
   },
   {
@@ -98,12 +98,12 @@ export const initialBookingsData = [
     clientInitials: "AM",
     isNew: false,
     bookingId: "#BK-0034",
-    date: "Tue, 19 May",
-    time: "15:00",
-    staff: "Vivi",
+    date: "Saturday, May 9",
+    time: "10:00 - 11:20 AM",
+    staff: "George",
     status: "Late cancellation",
-    amount: "€50",
-    paymentType: "Pay at venue"
+    amount: "€40",
+    paymentType: "Prepaid"
   },
   {
     clientName: "Rania M.",
@@ -111,11 +111,11 @@ export const initialBookingsData = [
     clientInitials: "RM",
     isNew: true,
     bookingId: "#BK-0033",
-    date: "Wed, 20 May",
-    time: "11:00",
-    staff: "Anna",
-    status: "Pending",
-    amount: "€110",
+    date: "Saturday, May 9",
+    time: "10:00 - 11:20 AM",
+    staff: "George",
+    status: "Late cancellation",
+    amount: "€40",
     paymentType: "Paid"
   },
   {
@@ -140,7 +140,7 @@ export const initialBookingsData = [
     date: "Fri, 22 May",
     time: "09:30",
     staff: "Vivi",
-    status: "Upcoming",
+    status: "Completed",
     amount: "€85",
     paymentType: "Pay at venue"
   },
