@@ -65,7 +65,7 @@ export default function OpeningHoursSection({
             {/* Slots display */}
             {day.open ? (
               <div className="w-full sm:flex-1 flex flex-col gap-3.5">
-                {day.slots.map((slot, slotIdx) => (
+                {day.slots.map((slot: any, slotIdx: number) => (
                   <div key={slotIdx} className="flex flex-wrap sm:flex-nowrap items-center gap-[17px] w-full">
                     {/* Start time Custom Select */}
                     <div className="relative w-[166px] h-[53px] shrink-0">

@@ -11,7 +11,9 @@ import {
   InformationCircleIcon,
   Location05Icon,
   Calendar02Icon,
-  Clock01Icon
+  Clock01Icon,
+  MoreVerticalIcon,
+  ViewIcon
 } from "@hugeicons/core-free-icons";
 
 import BusinessInfoSection from "./create-business/BusinessInfoSection";
@@ -111,11 +113,23 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
 
   // Photos List
   const [photos, setPhotos] = useState<string[]>([
-    "/image/profile.jpg",
-    "/image/profile.jpg",
-    "/image/profile.jpg"
+    "/businessProfilePage/businessProfileImage.jpg",
+    "/businessProfilePage/businessProfileImage2.jpg",
+    "/businessProfilePage/businessProfileImage3.jpg"
   ]);
   const [showPhotoMenuIdx, setShowPhotoMenuIdx] = useState<number | null>(null);
+
+  // See-All Images View states
+  const [viewingAllImages, setViewingAllImages] = useState(false);
+  const [activeMenuIdx, setActiveMenuIdx] = useState<number | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  // Close dropdown on click outside
+  React.useEffect(() => {
+    const handleOutsideClick = () => setActiveMenuIdx(null);
+    window.addEventListener("click", handleOutsideClick);
+    return () => window.removeEventListener("click", handleOutsideClick);
+  }, []);
 
   // Opening Hours
   const [days, setDays] = useState([
@@ -242,6 +256,148 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
     }
   };
 
+  if (viewingAllImages) {
+    return (
+      <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] pl-[25px] pr-4 md:pr-[129px] pt-[37px] pb-24 select-none font-poppins relative">
+        {/* Header Row */}
+        <div className="flex items-center justify-between mb-[40px] select-none w-full">
+          <div className="flex flex-col gap-[2px]">
+            <h1 className="text-base font-semibold text-[#0F1E35] leading-6 font-poppins">Images</h1>
+            <p className="text-xs text-[#6B7280] leading-[18px] font-poppins">All the images that you have uploaded so far</p>
+          </div>
+
+          {/* Notification bell */}
+          <div className="relative">
+            <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm">
+              <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px] text-[#5F5E5A]" />
+            </button>
+            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E24B4A] text-white text-[9px] font-medium flex items-center justify-center rounded-full border-2 border-white">
+              5
+            </span>
+          </div>
+        </div>
+
+        {/* Breadcrumbs (Frame 2147240055) */}
+        <div className="flex flex-row items-center gap-3 mb-[40px] select-none w-full">
+          <button 
+            type="button"
+            onClick={() => setViewingAllImages(false)}
+            className="w-4 h-4 flex items-center justify-center text-neutral-600 hover:text-black cursor-pointer"
+          >
+            <HugeiconsIcon icon={ArrowLeft02Icon} className="w-4 h-4" />
+          </button>
+          
+          <div className="flex flex-row items-center gap-2">
+            <button 
+              type="button" 
+              onClick={onBack} 
+              className="text-[13px] font-medium text-[#888780] hover:text-black cursor-pointer leading-[20px]"
+            >
+              Business
+            </button>
+            <span className="text-[13px] text-[#888780] font-normal leading-[20px]">&gt;</span>
+            <button 
+              type="button" 
+              onClick={() => setViewingAllImages(false)} 
+              className="text-[13px] font-medium text-[#888780] hover:text-black cursor-pointer leading-[20px]"
+            >
+              Create Business
+            </button>
+            <span className="text-[13px] text-[#888780] font-normal leading-[20px]">&gt;</span>
+            <span className="text-[13px] font-semibold text-[#1C1C1A] leading-[20px]">Images</span>
+          </div>
+        </div>
+
+        {/* Photos Grid (Frame 2147239298 & Frame 2147240056) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-[20px] max-w-[1095px] w-full relative">
+          {/* Duplicate to simulate a filled grid matching the 2nd screenshot if we have 3 photos */}
+          {[...photos, ...photos].map((src, idx) => (
+            <div key={idx} className="relative w-full aspect-square rounded-[12px] bg-[#D9D9D9] border border-neutral-200">
+              <img src={src} className="w-full h-full object-cover rounded-[12px]" alt={`Business photo ${idx + 1}`} />
+
+              {/* White circular 3-dot overlay button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveMenuIdx(activeMenuIdx === idx ? null : idx);
+                }}
+                className="absolute right-3 top-3 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-neutral-50 transition-all cursor-pointer z-10"
+              >
+                <HugeiconsIcon icon={MoreVerticalIcon} className="w-3.5 h-3.5 text-[#0C0C0C]" />
+              </button>
+
+              {/* Action Dropdown Menu */}
+              {activeMenuIdx === idx && (
+                <div 
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-3 top-10 bg-white border border-neutral-100 rounded-lg shadow-xl py-1 w-[140px] z-20"
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const origIdx = idx % photos.length;
+                      const updated = [...photos];
+                      const item = updated.splice(origIdx, 1)[0];
+                      updated.unshift(item);
+                      setPhotos(updated);
+                      setActiveMenuIdx(null);
+                    }}
+                    className="w-full text-left px-3 py-2 text-xs font-medium text-neutral-800 hover:bg-neutral-50 border-b border-neutral-100/50 cursor-pointer block"
+                  >
+                    Make profile pic
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPreviewImage(src);
+                      setActiveMenuIdx(null);
+                    }}
+                    className="w-full text-left px-3 py-2 text-xs font-medium text-neutral-800 hover:bg-neutral-50 border-b border-neutral-100/50 flex items-center gap-2 cursor-pointer"
+                  >
+                    <HugeiconsIcon icon={ViewIcon} className="w-3.5 h-3.5 text-neutral-600" />
+                    <span>View</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const origIdx = idx % photos.length;
+                      setPhotos(photos.filter((_, i) => i !== origIdx));
+                      setActiveMenuIdx(null);
+                    }}
+                    className="w-full text-left px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer"
+                  >
+                    <HugeiconsIcon icon={Delete02Icon} className="w-3.5 h-3.5 text-red-600" />
+                    <span>Delete</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Image Preview Lightbox */}
+        {previewImage && (
+          <div 
+            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 cursor-pointer" 
+            onClick={() => setPreviewImage(null)}
+          >
+            <div className="relative max-w-3xl max-h-[80vh] bg-white p-2 rounded-xl" onClick={(e) => e.stopPropagation()}>
+              <img src={previewImage} className="max-w-full max-h-[75vh] rounded-lg object-contain" />
+              <button 
+                type="button"
+                onClick={() => setPreviewImage(null)}
+                className="absolute -top-3 -right-3 w-8 h-8 bg-white hover:bg-neutral-100 rounded-full flex items-center justify-center shadow-lg font-bold text-sm text-neutral-800 cursor-pointer focus:outline-none"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
+      </main>
+    );
+  }
+
   return (
     <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] pl-[25px] pr-4 md:pr-[129px] pt-[37px] pb-24 select-none font-poppins">
 
@@ -352,7 +508,11 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
         />
 
         {/* 8. Photos Section */}
-        <PhotosSection photos={photos} />
+        <PhotosSection
+          photos={photos}
+          setPhotos={setPhotos}
+          onSeeAll={() => setViewingAllImages(true)}
+        />
 
         {/* 9. Opening Hours Section */}
         <OpeningHoursSection

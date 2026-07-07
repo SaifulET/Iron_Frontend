@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { PlusSignIcon, Delete02Icon } from "@hugeicons/core-free-icons";
+import DatePickerModal from "./DatePickerModal";
 
 interface ClosedPeriodsSectionProps {
   closedPeriods: any[];
@@ -17,6 +18,17 @@ export default function ClosedPeriodsSection({
   addClosedPeriod,
   removeClosedPeriod
 }: ClosedPeriodsSectionProps) {
+  // Track which closed period index and field (start / end) is currently opening the date picker
+  const [activePicker, setActivePicker] = useState<{ idx: number; field: "start" | "end" } | null>(null);
+
+  // Formats date visually for presentation (e.g. "YYYY-MM-DD" to human readable or keeps original)
+  const formatDisplayDate = (dateStr: string) => {
+    if (!dateStr) return "Select date";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+  };
+
   return (
     <div className="flex flex-col gap-3 w-full">
       <div className="flex justify-between items-center w-full">
@@ -43,23 +55,31 @@ export default function ClosedPeriodsSection({
             {/* Start Date */}
             <div className="flex-1 flex flex-col gap-1.5 w-full">
               <label className="text-[10px] font-semibold text-neutral-500">Start Date</label>
-              <input
-                type="date"
-                value={period.start}
-                onChange={(e) => updateClosedPeriod(idx, "start", e.target.value)}
-                className="h-9 border border-[#D3D1C7] rounded-lg px-3 text-xs w-full focus:outline-none"
-              />
+              <button
+                type="button"
+                onClick={() => setActivePicker({ idx, field: "start" })}
+                className="h-9 border border-[#D3D1C7] rounded-lg px-3 text-xs w-full focus:outline-none bg-white text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
+              >
+                <span className={period.start ? "text-neutral-900" : "text-neutral-400"}>
+                  {formatDisplayDate(period.start)}
+                </span>
+                <span className="text-neutral-400">📅</span>
+              </button>
             </div>
 
             {/* End Date */}
             <div className="flex-1 flex flex-col gap-1.5 w-full">
               <label className="text-[10px] font-semibold text-neutral-500">End Date</label>
-              <input
-                type="date"
-                value={period.end}
-                onChange={(e) => updateClosedPeriod(idx, "end", e.target.value)}
-                className="h-9 border border-[#D3D1C7] rounded-lg px-3 text-xs w-full focus:outline-none"
-              />
+              <button
+                type="button"
+                onClick={() => setActivePicker({ idx, field: "end" })}
+                className="h-9 border border-[#D3D1C7] rounded-lg px-3 text-xs w-full focus:outline-none bg-white text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
+              >
+                <span className={period.end ? "text-neutral-900" : "text-neutral-400"}>
+                  {formatDisplayDate(period.end)}
+                </span>
+                <span className="text-neutral-400">📅</span>
+              </button>
             </div>
 
             {/* Reason/Label */}
@@ -85,6 +105,18 @@ export default function ClosedPeriodsSection({
           </div>
         ))}
       </div>
+
+      {/* Date Picker Modal */}
+      <DatePickerModal
+        isOpen={activePicker !== null}
+        initialDate={activePicker ? (activePicker.field === "start" ? closedPeriods[activePicker.idx].start : closedPeriods[activePicker.idx].end) : undefined}
+        onClose={() => setActivePicker(null)}
+        onSelect={(selectedDateStr) => {
+          if (activePicker) {
+            updateClosedPeriod(activePicker.idx, activePicker.field, selectedDateStr);
+          }
+        }}
+      />
     </div>
   );
 }
