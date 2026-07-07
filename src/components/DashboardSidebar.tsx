@@ -75,7 +75,7 @@ export default function DashboardSidebar({
         </div>
 
         {/* Sidebar Navigation */}
-        <div className={`p-4 space-y-7 overflow-y-auto max-h-[calc(100vh-260px)] select-none ${isCollapsed ? "px-2" : ""}`}>
+        <div className={`p-4 space-y-7 overflow-y-auto max-h-[calc(100vh-260px)] select-none ${isCollapsed ? "px-2" : ""} scrollbar-hide`}>
           
           {/* CORE SECTION */}
           <div className="space-y-1">
