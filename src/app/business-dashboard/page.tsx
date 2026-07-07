@@ -69,21 +69,9 @@ interface Client {
 
 export default function BusinessDashboard() {
   const [activeTab, setActiveTab] = useState("Business Profile");
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [showFooterMenu, setShowFooterMenu] = useState(true);
   const footerMenuRef = useRef<HTMLDivElement>(null);
-
-  // Auto-collapse sidebar on mobile screen widths
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsCollapsed(true);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   // Bookings Data & Filters
   const [bookingsData, setBookingsData] = useState<Booking[]>(initialBookingsData as Booking[]);
