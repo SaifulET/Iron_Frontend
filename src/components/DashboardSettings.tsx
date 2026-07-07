@@ -98,7 +98,7 @@ export default function DashboardSettings() {
       <div className="flex flex-col lg:flex-row items-start gap-6 w-full mt-4">
         
         {/* Left Submenu Navigation */}
-        <div className="w-full lg:w-[240px] shrink-0 bg-white border border-[#E1DED6] rounded-[16px] p-4 flex flex-col gap-1 shadow-[0px_4px_20px_rgba(0,0,0,0.06)]">
+        <div className="w-full lg:w-[240px] shrink-0 bg-white rounded-[16px] p-4 flex flex-col gap-1 shadow-[0px_4px_20px_rgba(0,0,0,0.06)]">
           {subTabs.map((tab) => {
             const isActive = activeSubTab === tab.name;
             return (
