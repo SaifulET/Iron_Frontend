@@ -28,6 +28,7 @@ import DashboardClientsList from "@/components/DashboardClientsList";
 import DashboardClientDetails from "@/components/DashboardClientDetails";
 import ClientBookingHistoryCard from "@/components/ClientBookingHistoryCard";
 import DashboardBusinessProfile from "@/components/DashboardBusinessProfile";
+import DashboardCreateBusiness from "@/components/DashboardCreateBusiness";
 
 interface Booking {
   clientInitials: string;
@@ -61,7 +62,7 @@ interface Client {
 }
 
 export default function BusinessDashboard() {
-  const [activeTab, setActiveTab] = useState("Dashboard");
+  const [activeTab, setActiveTab] = useState("Business Profile");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showFooterMenu, setShowFooterMenu] = useState(true);
   const footerMenuRef = useRef<HTMLDivElement>(null);
@@ -108,6 +109,7 @@ export default function BusinessDashboard() {
   // Viewing booking details states
   const [viewingBookingIndex, setViewingBookingIndex] = useState<number | null>(null);
   const [isViewingBookingDetails, setIsViewingBookingDetails] = useState(false);
+  const [isCreatingBusiness, setIsCreatingBusiness] = useState(true);
 
   // Clients Data states
   const [clientsData, setClientsData] = useState<Client[]>(initialClientsData as Client[]);
@@ -881,7 +883,10 @@ export default function BusinessDashboard() {
     }
 
     if (activeTab === "Business Profile") {
-      return <DashboardBusinessProfile />;
+      if (isCreatingBusiness) {
+        return <DashboardCreateBusiness onBack={() => setIsCreatingBusiness(false)} />;
+      }
+      return <DashboardBusinessProfile onAddBusiness={() => setIsCreatingBusiness(true)} />;
     }
 
     // Default mock fallback container for other business profile tabs

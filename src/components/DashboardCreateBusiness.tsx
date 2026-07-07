@@ -1,0 +1,458 @@
+"use client";
+
+import React, { useState } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  ArrowLeft02Icon,
+  BellIcon,
+  Search01Icon,
+  PlusSignIcon,
+  Delete02Icon,
+  InformationCircleIcon,
+  Location05Icon,
+  Calendar02Icon,
+  Clock01Icon
+} from "@hugeicons/core-free-icons";
+
+import BusinessInfoSection from "./create-business/BusinessInfoSection";
+import AddressSection from "./create-business/AddressSection";
+import LocationSection from "./create-business/LocationSection";
+import ServiceCategorySection from "./create-business/ServiceCategorySection";
+import PhotosSection from "./create-business/PhotosSection";
+import OpeningHoursSection from "./create-business/OpeningHoursSection";
+import BookingTimeControlSection from "./create-business/BookingTimeControlSection";
+import ClosedPeriodsSection from "./create-business/ClosedPeriodsSection";
+import LeadTimeSettingsSection from "./create-business/LeadTimeSettingsSection";
+import AdditionalInfoSection from "./create-business/AdditionalInfoSection";
+import TravelFeesSection from "./create-business/TravelFeesSection";
+
+interface DashboardCreateBusinessProps {
+  onBack: () => void;
+}
+
+const timeOptions = [
+  "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+  "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+  "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+  "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
+];
+
+export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusinessProps) {
+  // Business Active Toggle
+  const [isActive, setIsActive] = useState(true);
+
+  // Form Fields
+  const [businessName, setBusinessName] = useState("");
+  const [regNumber, setRegNumber] = useState("");
+  const [phoneCode, setPhoneCode] = useState("+357");
+  const [phoneFlag, setPhoneFlag] = useState("cy");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [city, setCity] = useState("Larnaca");
+  const [streetName, setStreetName] = useState("");
+  const [streetNumber, setStreetNumber] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [floorUnit, setFloorUnit] = useState("");
+  const [roomNo, setRoomNo] = useState("");
+
+  // Country Dropdown
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const countries = [
+    { name: "Cyprus", code: "+357", flag: "cy" },
+    { name: "Greece", code: "+30", flag: "gr" },
+    { name: "United Kingdom", code: "+44", flag: "gb" },
+    { name: "United States", code: "+1", flag: "us" }
+  ];
+
+  // Category selection (select one)
+  const [selectedCategory, setSelectedCategory] = useState("BEAUTY & WELLNESS");
+  const categories = [
+    "BEAUTY & WELLNESS",
+    "HEALTH & FITNESS",
+    "SPORTS & ACTIVITIES",
+    "EXPERIENCE & TOURS",
+    "ENTERTAINMENT & EVENTS",
+    "PETS & HOME",
+    "AUTOMOTIVE"
+  ];
+
+  // Subcategories selection (max 5)
+  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(["BEAUTY & WELLNESS"]);
+
+  const toggleSubcategory = (sub: string) => {
+    if (selectedSubcategories.includes(sub)) {
+      setSelectedSubcategories(selectedSubcategories.filter((s) => s !== sub));
+    } else {
+      if (selectedSubcategories.length < 5) {
+        setSelectedSubcategories([...selectedSubcategories, sub]);
+      }
+    }
+  };
+
+  // Custom Service Categories
+  const [customCategories, setCustomCategories] = useState<string[]>([
+    "Hair Treatment",
+    "Nail Treatment",
+    "Facial Care",
+    "Massage",
+    "Waxing"
+  ]);
+  const [newCatInput, setNewCatInput] = useState("");
+
+  const addCustomCategory = () => {
+    if (newCatInput.trim() && !customCategories.includes(newCatInput.trim())) {
+      setCustomCategories([...customCategories, newCatInput.trim()]);
+      setNewCatInput("");
+    }
+  };
+
+  const removeCustomCategory = (cat: string) => {
+    setCustomCategories(customCategories.filter((c) => c !== cat));
+  };
+
+  // Photos List
+  const [photos, setPhotos] = useState<string[]>([
+    "/image/profile.jpg",
+    "/image/profile.jpg",
+    "/image/profile.jpg"
+  ]);
+  const [showPhotoMenuIdx, setShowPhotoMenuIdx] = useState<number | null>(null);
+
+  // Opening Hours
+  const [days, setDays] = useState([
+    { name: "Monday", open: true, slots: [{ start: "10:00", end: "13:00" }, { start: "15:00", end: "22:00" }] },
+    { name: "Tuesday", open: true, slots: [{ start: "09:00", end: "18:00" }] },
+    { name: "Wednesday", open: false, slots: [{ start: "09:00", end: "18:00" }] },
+    { name: "Thursday", open: true, slots: [{ start: "09:00", end: "18:00" }] },
+    { name: "Friday", open: true, slots: [{ start: "09:00", end: "18:00" }] },
+    { name: "Saturday", open: false, slots: [{ start: "09:00", end: "18:00" }] },
+    { name: "Sunday", open: false, slots: [{ start: "09:00", end: "18:00" }] }
+  ]);
+
+  const toggleDay = (idx: number) => {
+    const updated = [...days];
+    updated[idx].open = !updated[idx].open;
+    setDays(updated);
+  };
+
+  const addTimeSlot = (dayIdx: number) => {
+    const updated = [...days];
+    updated[dayIdx].slots.push({ start: "09:00", end: "18:00" });
+    setDays(updated);
+  };
+
+  const removeTimeSlot = (dayIdx: number, slotIdx: number) => {
+    const updated = [...days];
+    updated[dayIdx].slots = updated[dayIdx].slots.filter((_, i) => i !== slotIdx);
+    setDays(updated);
+  };
+
+  const updateSlotTime = (dayIdx: number, slotIdx: number, field: "start" | "end", val: string) => {
+    const updated = [...days];
+    updated[dayIdx].slots[slotIdx][field] = val;
+    setDays(updated);
+  };
+
+  // Booking Time Control (Manual/Auto)
+  const [bookingMode, setBookingMode] = useState<"Manual" | "Auto">("Manual");
+  const [manualTimes, setManualTimes] = useState<string[]>(["10:00", "12:00"]);
+  const [newManualTime, setNewManualTime] = useState("10:00");
+  const [newManualAmpm, setNewManualAmpm] = useState("AM");
+  const [durationIncrement, setDurationIncrement] = useState("30 minutes");
+
+  const addManualTime = () => {
+    const formatted = `${newManualTime} ${newManualAmpm}`;
+    if (!manualTimes.includes(formatted)) {
+      setManualTimes([...manualTimes, formatted]);
+    }
+  };
+
+  const removeManualTime = (time: string) => {
+    setManualTimes(manualTimes.filter((t) => t !== time));
+  };
+
+  // Closed Periods
+  const [closedPeriods, setClosedPeriods] = useState([
+    { id: 1, start: "", end: "", note: "e.g. Public holiday (internal note)" }
+  ]);
+
+  const addClosedPeriod = () => {
+    setClosedPeriods([...closedPeriods, { id: Date.now(), start: "", end: "", note: "" }]);
+  };
+
+  const removeClosedPeriod = (id: number) => {
+    setClosedPeriods(closedPeriods.filter((p) => p.id !== id));
+  };
+
+  const updateClosedPeriod = (idx: number, field: string, val: string) => {
+    const updated = [...closedPeriods];
+    if (field === "start") updated[idx].start = val;
+    if (field === "end") updated[idx].end = val;
+    if (field === "label" || field === "note") updated[idx].note = val;
+    setClosedPeriods(updated);
+  };
+
+  // Online Availability Lead Times
+  const [allowBookingLead, setAllowBookingLead] = useState("Up to 15 minutes before start time");
+  const [maxAdvanceBooking, setMaxAdvanceBooking] = useState("12 months in the future");
+
+  // Additional Information states
+  const [additionalInfo, setAdditionalInfo] = useState<string[]>(["", ""]);
+  const addInfoField = () => {
+    if (additionalInfo.length < 3) {
+      setAdditionalInfo([...additionalInfo, ""]);
+    }
+  };
+  const removeInfoField = (idx: number) => {
+    setAdditionalInfo(additionalInfo.filter((_, i) => i !== idx));
+  };
+  const updateInfoField = (idx: number, val: string) => {
+    const updated = [...additionalInfo];
+    updated[idx] = val;
+    setAdditionalInfo(updated);
+  };
+
+  // Travel Fees states
+  const [cityFees, setCityFees] = useState([
+    { name: "Larnaca", active: true, fee: "0.00" },
+    { name: "Limasol", active: false, fee: "20.00" },
+    { name: "Nicosia", active: false, fee: "0.00" },
+    { name: "Paphos", active: false, fee: "30.00" },
+    { name: "Ayia Napa", active: false, fee: "40.00" },
+    { name: "Protaras", active: false, fee: "50.00" }
+  ]);
+  const toggleCityActive = (idx: number) => {
+    const updated = [...cityFees];
+    updated[idx].active = !updated[idx].active;
+    setCityFees(updated);
+  };
+  const updateCityFee = (idx: number, fee: string) => {
+    const updated = [...cityFees];
+    updated[idx].fee = fee;
+    setCityFees(updated);
+  };
+
+  // Map Coordinates (Larnaca Cyprus default: 34.9172, 33.6232)
+  const [searchLocation, setSearchLocation] = useState("Larnaca, Cyprus");
+  const [mapUrl, setMapUrl] = useState("https://maps.google.com/maps?q=34.9172,33.6232&t=&z=14&ie=UTF8&iwloc=&output=embed");
+
+  const handleLocationSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchLocation.trim()) {
+      setMapUrl(`https://maps.google.com/maps?q=${encodeURIComponent(searchLocation)}&t=&z=14&ie=UTF8&iwloc=&output=embed`);
+    }
+  };
+
+  return (
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] pl-[25px] pr-4 md:pr-[129px] pt-[37px] pb-24 select-none font-poppins">
+
+      {/* Header Row */}
+      <div className="flex items-center justify-between mb-[40px] select-none w-full">
+        <div className="flex flex-col">
+          <h1 className="text-xl font-bold text-[#1A1A1A]">Business</h1>
+          <p className="text-[11px] text-neutral-500 mt-0.5">Create your business at our platform</p>
+        </div>
+
+        {/* Notification bell */}
+        <div className="relative">
+          <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm">
+            <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px] text-[#5F5E5A]" />
+          </button>
+          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E24B4A] text-white text-[9px] font-medium flex items-center justify-center rounded-full border-2 border-white">
+            5
+          </span>
+        </div>
+      </div>
+
+      {/* Breadcrumbs */}
+      <div className="flex items-center gap-2 text-xs font-medium text-neutral-500 mb-8 select-none w-full">
+        <button onClick={onBack} className="hover:text-black flex items-center gap-1">
+          <HugeiconsIcon icon={ArrowLeft02Icon} className="w-3.5 h-3.5" />
+          <span>Business</span>
+        </button>
+        <span className="text-neutral-300">/</span>
+        <span className="text-black font-semibold">Create Business</span>
+      </div>
+
+      {/* Main Form container */}
+      <div className="flex flex-col gap-10 w-full pb-24 pl-0 md:pl-[120px] box-border">
+
+        {/* 1. Active Toggle block */}
+        <div className="flex flex-row justify-between items-center w-full h-[41px] border-b border-[#E8E8E4]/60 pb-4">
+          <div className="flex flex-col items-start gap-0.5">
+            <span className="font-poppins font-medium text-sm text-[#111111] leading-[21px] flex items-center">
+              Business active
+            </span>
+            <span className="font-poppins font-normal text-[11px] text-[#111111]/60 leading-[18px]">
+              Show on your public profile. Turn off to hide without deleting.
+            </span>
+          </div>
+
+          {/* Toggle Switch */}
+          <button
+            onClick={() => setIsActive(!isActive)}
+            className={`w-[38px] h-[21px] rounded-full p-[3px] transition-colors duration-200 focus:outline-none flex items-center ${isActive ? "bg-[#0F6E56]" : "bg-neutral-300"
+              }`}
+          >
+            <div
+              className={`w-[15px] h-[15px] bg-white rounded-full transition-transform duration-200 ${isActive ? "translate-x-[17px]" : "translate-x-0"
+                }`}
+            />
+          </button>
+        </div>
+
+        {/* 2. Business Information Section */}
+        <BusinessInfoSection
+          businessName={businessName}
+          setBusinessName={setBusinessName}
+          regNumber={regNumber}
+          setRegNumber={setRegNumber}
+          phoneCode={phoneCode}
+          setPhoneCode={setPhoneCode}
+          phoneFlag={phoneFlag}
+          setPhoneFlag={setPhoneFlag}
+          phoneNumber={phoneNumber}
+          setPhoneNumber={setPhoneNumber}
+        />
+
+        {/* 3. Address Section */}
+        <AddressSection
+          city={city}
+          setCity={setCity}
+          streetName={streetName}
+          setStreetName={setStreetName}
+          streetNumber={streetNumber}
+          setStreetNumber={setStreetNumber}
+          neighborhood={neighborhood}
+          setNeighborhood={setNeighborhood}
+          floorUnit={floorUnit}
+          setFloorUnit={setFloorUnit}
+          roomNo={roomNo}
+          setRoomNo={setRoomNo}
+        />
+
+        {/* 4. Location & Real Map Section */}
+        <LocationSection
+          searchLocation={searchLocation}
+          setSearchLocation={setSearchLocation}
+          mapUrl={mapUrl}
+          handleLocationSearch={handleLocationSearch}
+        />
+
+        {/* 5, 6, 7. Service Categories Section */}
+        <ServiceCategorySection
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedSubcategories={selectedSubcategories}
+          toggleSubcategory={toggleSubcategory}
+          customCategories={customCategories}
+          newCatInput={newCatInput}
+          setNewCatInput={setNewCatInput}
+          addCustomCategory={addCustomCategory}
+          removeCustomCategory={removeCustomCategory}
+        />
+
+        {/* 8. Photos Section */}
+        <PhotosSection photos={photos} />
+
+        {/* 9. Opening Hours Section */}
+        <OpeningHoursSection
+          days={days}
+          toggleDay={toggleDay}
+          updateSlotTime={updateSlotTime}
+          addTimeSlot={addTimeSlot}
+          removeTimeSlot={removeTimeSlot}
+          timeOptions={timeOptions}
+        />
+
+        {/* 10. Booking Time Control (Manual vs Auto) */}
+        <BookingTimeControlSection
+          bookingMode={bookingMode}
+          setBookingMode={setBookingMode}
+          durationIncrement={durationIncrement}
+          setDurationIncrement={setDurationIncrement}
+          manualTimes={manualTimes}
+          newManualTime={newManualTime}
+          setNewManualTime={setNewManualTime}
+          newManualPeriod={newManualAmpm as "AM" | "PM"}
+          setNewManualPeriod={setNewManualAmpm}
+          addManualTime={addManualTime}
+          removeManualTime={removeManualTime}
+        />
+
+        {/* 11. Add Closed Period Section */}
+        <ClosedPeriodsSection
+          closedPeriods={closedPeriods}
+          updateClosedPeriod={updateClosedPeriod}
+          addClosedPeriod={addClosedPeriod}
+          removeClosedPeriod={removeClosedPeriod}
+        />
+
+        {/* 12. Lead Time Settings */}
+        <LeadTimeSettingsSection
+          allowBookingLead={allowBookingLead}
+          setAllowBookingLead={setAllowBookingLead}
+          maxAdvanceBooking={maxAdvanceBooking}
+          setMaxAdvanceBooking={setMaxAdvanceBooking}
+        />
+
+        {/* 13. Additional Information Section */}
+        <AdditionalInfoSection
+          additionalInfo={additionalInfo}
+          addInfoField={addInfoField}
+          removeInfoField={removeInfoField}
+          updateInfoField={updateInfoField}
+        />
+
+        {/* 14. Travel Fees Section */}
+        <TravelFeesSection
+          cityFees={cityFees}
+          toggleCityActive={toggleCityActive}
+          updateCityFee={updateCityFee}
+        />
+
+        {/* 15. How Travel Fees Work Section */}
+        <div className="flex flex-col gap-4 w-full select-none border-t border-neutral-200/55 pt-6">
+          <span className="font-poppins text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+            HOW TRAVEL FEES WORK
+          </span>
+
+          <div className="flex flex-col gap-3.5 w-full">
+            {[
+              "Customer selects your service and enters their city and address.",
+              "Bookly automatically adds your city travel fee to the total. It is shown as a separate line: \"Travel fee — €20.00\".",
+              "Bookly's commission applies to the service price only — never to your travel fee. You keep 100% of the travel fee.",
+              "Customer pays the full balance including travel fee directly at the time of the visit."
+            ].map((stepText, idx) => (
+              <div key={idx} className="flex items-start gap-3 w-full">
+                <div className="w-[22px] h-[22px] bg-[#E1F5EE] text-[#085041] rounded-full flex items-center justify-center text-[11px] font-semibold shrink-0">
+                  {idx + 1}
+                </div>
+                <p className="text-xs md:text-sm font-medium text-neutral-900 leading-relaxed pt-0.5">
+                  {stepText}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 13. Footer Actions (Save Changes / Cancel) */}
+        <div className="flex flex-row justify-end items-center gap-3 w-full border-t border-neutral-200 pt-6 mt-4">
+          <button
+            onClick={onBack}
+            className="h-9 px-6 bg-[#EBEBEB] hover:bg-neutral-200 text-[#757575] font-poppins font-semibold text-xs rounded-lg transition-colors"
+          >
+            Cancel
+          </button>
+
+          <button
+            onClick={onBack}
+            className="h-9 px-6 bg-[#1C1B1C] hover:bg-black text-white font-poppins font-medium text-xs rounded-lg transition-colors"
+          >
+            Save changes
+          </button>
+        </div>
+
+      </div>
+    </main>
+  );
+}

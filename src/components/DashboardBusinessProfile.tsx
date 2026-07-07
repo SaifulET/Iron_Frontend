@@ -141,7 +141,11 @@ export function BusinessCard({
   );
 }
 
-export default function DashboardBusinessProfile() {
+interface DashboardBusinessProfileProps {
+  onAddBusiness?: () => void;
+}
+
+export default function DashboardBusinessProfile({ onAddBusiness }: DashboardBusinessProfileProps) {
   return (
     <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] p-6 md:p-8 select-none font-poppins w-full">
       {/* Header block */}
@@ -180,7 +184,10 @@ export default function DashboardBusinessProfile() {
           </div>
 
           {/* Add existing business button */}
-          <button className="flex flex-row items-center px-3.5 py-[7px] gap-1.5 w-[190px] h-[37.6px] bg-[#111111] hover:bg-black text-white rounded-lg transition-colors shadow-sm select-none">
+          <button 
+            onClick={onAddBusiness}
+            className="flex flex-row items-center px-3.5 py-[7px] gap-1.5 w-[190px] h-[37.6px] bg-[#111111] hover:bg-black text-white rounded-lg transition-colors shadow-sm select-none"
+          >
             <svg className="w-3.5 h-3.5 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
