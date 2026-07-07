@@ -90,14 +90,20 @@ export default function DashboardSidebar({
   };
 
   return (
-    <aside className={`bg-[#C0D5D8] flex flex-col justify-between shrink-0 border-r border-[#B0C5C8] h-full transition-all duration-300 ${isCollapsed ? "w-[78px]" : "w-[280px]"}`}>
+    <aside className={`bg-[#C0D5D8] flex flex-col justify-between shrink-0 border-r border-[#B0C5C8] h-full transition-all duration-300 ${
+      isCollapsed ? "w-[78px]" : "w-[78px] md:w-[280px]"
+    }`}>
       
       {/* Sidebar Header */}
       <div className={`h-16 flex items-center justify-between px-6 border-b border-[#B0C5C8] bg-[#C0D5D8] shrink-0 ${isCollapsed ? "justify-center !px-3" : ""}`}>
         {isCollapsed ? (
           <button
-            onClick={() => setIsCollapsed(false)}
-            className="w-8 h-8 rounded-lg hover:bg-[#B0C5C8]/50 flex items-center justify-center text-[#1C1B1C] transition-all cursor-pointer"
+            onClick={() => {
+              if (window.innerWidth >= 768) {
+                setIsCollapsed(false);
+              }
+            }}
+            className="w-8 h-8 rounded-lg hover:bg-[#B0C5C8]/50 hidden md:flex items-center justify-center text-[#1C1B1C] transition-all cursor-pointer"
           >
             <img src="/businessDashboard/Sidebar Icon.svg" alt="Toggle Sidebar" className="w-6 h-6 object-contain" />
           </button>
