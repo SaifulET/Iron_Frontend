@@ -404,36 +404,40 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
         />
 
         {/* 14. Travel Fees Section */}
-        <TravelFeesSection
-          cityFees={cityFees}
-          toggleCityActive={toggleCityActive}
-          updateCityFee={updateCityFee}
-        />
+        {bookingMode !== "Auto" && (
+          <TravelFeesSection
+            cityFees={cityFees}
+            toggleCityActive={toggleCityActive}
+            updateCityFee={updateCityFee}
+          />
+        )}
 
         {/* 15. How Travel Fees Work Section */}
-        <div className="flex flex-col gap-4 w-full select-none border-t border-neutral-200/55 pt-6">
-          <span className="font-poppins text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-            HOW TRAVEL FEES WORK
-          </span>
+        {bookingMode !== "Auto" && (
+          <div className="flex flex-col gap-4 w-full select-none border-t border-neutral-200/55 pt-6">
+            <span className="font-poppins text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+              HOW TRAVEL FEES WORK
+            </span>
 
-          <div className="flex flex-col gap-3.5 w-full">
-            {[
-              "Customer selects your service and enters their city and address.",
-              "Bookly automatically adds your city travel fee to the total. It is shown as a separate line: \"Travel fee — €20.00\".",
-              "Bookly's commission applies to the service price only — never to your travel fee. You keep 100% of the travel fee.",
-              "Customer pays the full balance including travel fee directly at the time of the visit."
-            ].map((stepText, idx) => (
-              <div key={idx} className="flex items-start gap-3 w-full">
-                <div className="w-[22px] h-[22px] bg-[#E1F5EE] text-[#085041] rounded-full flex items-center justify-center text-[11px] font-semibold shrink-0">
-                  {idx + 1}
+            <div className="flex flex-col gap-3.5 w-full">
+              {[
+                "Customer selects your service and enters their city and address.",
+                "Bookly automatically adds your city travel fee to the total. It is shown as a separate line: \"Travel fee — €20.00\".",
+                "Bookly's commission applies to the service price only — never to your travel fee. You keep 100% of the travel fee.",
+                "Customer pays the full balance including travel fee directly at the time of the visit."
+              ].map((stepText, idx) => (
+                <div key={idx} className="flex items-start gap-3 w-full">
+                  <div className="w-[22px] h-[22px] bg-[#E1F5EE] text-[#085041] rounded-full flex items-center justify-center text-[11px] font-semibold shrink-0">
+                    {idx + 1}
+                  </div>
+                  <p className="text-xs md:text-sm font-medium text-neutral-900 leading-relaxed pt-0.5">
+                    {stepText}
+                  </p>
                 </div>
-                <p className="text-xs md:text-sm font-medium text-neutral-900 leading-relaxed pt-0.5">
-                  {stepText}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* 13. Footer Actions (Save Changes / Cancel) */}
         <div className="flex flex-row justify-end items-center gap-3 w-full border-t border-neutral-200 pt-6 mt-4">
