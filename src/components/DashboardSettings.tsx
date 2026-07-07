@@ -98,19 +98,19 @@ export default function DashboardSettings() {
       <div className="flex flex-col lg:flex-row items-start gap-6 w-full mt-4">
         
         {/* Left Submenu Navigation */}
-        <div className="w-full lg:w-[240px] shrink-0 bg-white border border-[#E1DED6] rounded-[16px] p-4 flex flex-col gap-1 shadow-sm">
+        <div className="w-full lg:w-[240px] shrink-0 bg-white border border-[#E1DED6] rounded-[16px] p-4 flex flex-col gap-1 shadow-[0px_4px_20px_rgba(0,0,0,0.06)]">
           {subTabs.map((tab) => {
             const isActive = activeSubTab === tab.name;
             return (
               <button
                 key={tab.name}
                 onClick={() => setActiveSubTab(tab.name)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                className={`w-full flex items-start text-left gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                   isActive ? "bg-[#B0C5C8]/40 text-[#111111]" : "text-[#666666] hover:bg-neutral-50"
                 }`}
               >
-                <HugeiconsIcon icon={tab.icon} className="w-5 h-5 shrink-0" />
-                <span>{tab.name}</span>
+                <HugeiconsIcon icon={tab.icon} className="w-5 h-5 shrink-0 mt-0.5" />
+                <span className="leading-tight">{tab.name}</span>
               </button>
             );
           })}
@@ -194,9 +194,18 @@ export default function DashboardSettings() {
                   </span>
                   <div className="flex items-center border border-[#D3D1C7] rounded-[8px] overflow-hidden h-10">
                     <div className="flex items-center gap-1.5 px-3 border-r border-[#D3D1C7] bg-neutral-50 h-full select-none cursor-pointer">
-                      <span className="text-[16px]">🇺🇸</span>
+                      <svg className="w-5 h-3.5 shrink-0 rounded-[1px] shadow-[0px_0.5px_2px_rgba(0,0,0,0.25)]" viewBox="0 0 20 13" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="20" height="13" fill="#b22234"/>
+                        <path d="M0,1h20M0,3h20M0,5h20M0,7h20M0,9h20M0,11h20" stroke="#fff" stroke-width="1"/>
+                        <rect width="8" height="7" fill="#3c3b6e"/>
+                        <circle cx="2" cy="2" r="0.4" fill="#fff"/>
+                        <circle cx="6" cy="2" r="0.4" fill="#fff"/>
+                        <circle cx="4" cy="3.5" r="0.4" fill="#fff"/>
+                        <circle cx="2" cy="5" r="0.4" fill="#fff"/>
+                        <circle cx="6" cy="5" r="0.4" fill="#fff"/>
+                      </svg>
                       <span className="text-xs font-semibold text-neutral-600">+880</span>
-                      <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 text-neutral-500" />
+                      <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 text-neutral-500" strokeWidth={1.5} />
                     </div>
                     <input
                       type="text"
