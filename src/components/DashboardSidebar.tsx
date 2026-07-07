@@ -41,296 +41,143 @@ export default function DashboardSidebar({
   setShowFooterMenu,
   footerMenuRef
 }: DashboardSidebarProps) {
-  return (
-    <aside className={`bg-[#C0D5D8] flex flex-col justify-between shrink-0 border-r border-[#B0C5C8] h-full transition-all duration-300 ${isCollapsed ? "w-[78px]" : "w-[280px]"}`}>
-      <div>
-        {/* Sidebar Header */}
-        <div className={`h-16 flex items-center justify-between px-6 border-b border-[#B0C5C8] bg-[#C0D5D8] shrink-0 ${isCollapsed ? "justify-center !px-3" : ""}`}>
-          {isCollapsed ? (
-            <button
-              onClick={() => setIsCollapsed(false)}
-              className="w-8 h-8 rounded-lg hover:bg-[#B0C5C8]/50 flex items-center justify-center text-[#1C1B1C] transition-all cursor-pointer"
-            >
-              <img src="/businessDashboard/Sidebar Icon.svg" alt="Toggle Sidebar" className="w-6 h-6 object-contain" />
-            </button>
-          ) : (
-            <>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                  <img src="/img/smallBlacklogo.svg" alt="Bookly" className="w-full h-full object-contain" />
-                </div>
-                <div className="flex flex-col leading-none">
-                  <span className="font-bold text-[#111111] text-[15px] tracking-wide font-poppins">Bookly.cy</span>
-                  <span className="text-[10px] text-[#111111]/60 font-poppins mt-1">Business Owner</span>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsCollapsed(true)}
-                className="w-8 h-8 rounded-lg hover:bg-[#B0C5C8]/50 flex items-center justify-center text-[#1C1B1C] transition-all cursor-pointer"
-              >
-                <img src="/businessDashboard/Sidebar Icon.svg" alt="Toggle Sidebar" className="w-5 h-5 object-contain" />
-              </button>
-            </>
+  
+  // Helper for rendering menu button items with tooltip on hover when collapsed
+  const renderMenuItem = (
+    tabName: string,
+    icon: any,
+    labelText: string,
+    badgeCount?: number
+  ) => {
+    const isActive = activeTab === tabName;
+    return (
+      <button
+        onClick={() => setActiveTab(tabName)}
+        className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative group ${
+          isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
+        } ${
+          isActive ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
+        }`}
+      >
+        <div className="flex items-center gap-2.5">
+          <HugeiconsIcon icon={icon} className="w-5 h-5 shrink-0" />
+          {!isCollapsed && (
+            <span className={isActive ? "font-normal" : "font-light"}>{labelText}</span>
           )}
         </div>
 
-        {/* Sidebar Navigation */}
-        <div className={`p-4 space-y-7 overflow-y-auto max-h-[calc(100vh-260px)] select-none ${isCollapsed ? "px-2" : ""} scrollbar-hide`}>
-          
-          {/* CORE SECTION */}
-          <div className="space-y-1">
-            {!isCollapsed && (
-              <span className="text-[10px] font-medium tracking-[2px] uppercase text-[#111111]/60 px-3 block mb-2">Core</span>
+        {/* Badge rendering */}
+        {badgeCount !== undefined && (
+          <>
+            {isCollapsed ? (
+              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#E24B4A] rounded-full border border-[#C0D5D8]" />
+            ) : (
+              <span className="bg-[#E24B4A] text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
+                {badgeCount}
+              </span>
             )}
-            <button
-              onClick={() => setActiveTab("Dashboard")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Dashboard" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={DashboardSquare01Icon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Dashboard" ? "font-normal" : "font-light"}>Dashboard</span>
-                )}
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab("Calendar")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Calendar" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={Calendar03Icon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Calendar" ? "font-normal" : "font-light"}>Calendar</span>
-                )}
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab("Clients")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Clients" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={UserGroup03Icon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Clients" ? "font-normal" : "font-light"}>Clients</span>
-                )}
-              </div>
-            </button>
-          </div>
+          </>
+        )}
 
-          {/* BOOKINGS SECTION */}
-          <div className="space-y-1">
-            {!isCollapsed && (
-              <span className="text-[10px] font-medium tracking-[2px] uppercase text-[#111111]/60 px-3 block mb-2">Bookings</span>
-            )}
-            <button
-              onClick={() => setActiveTab("All Bookings")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "All Bookings" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={ProfileIcon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "All Bookings" ? "font-normal" : "font-light"}>All Bookings</span>
-                )}
-              </div>
-              {isCollapsed ? (
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#E24B4A] rounded-full border border-[#C0D5D8]" />
-              ) : (
-                <span className="bg-[#E24B4A] text-white text-[10px] font-medium px-2 py-0.5 rounded-full">3</span>
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab("Upcoming")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Upcoming" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={Orbit01Icon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Upcoming" ? "font-normal" : "font-light"}>Upcoming</span>
-                )}
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab("Canceled")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Canceled" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={CancelSquareIcon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Canceled" ? "font-normal" : "font-light"}>Canceled</span>
-                )}
-              </div>
-            </button>
+        {/* Collapsed hover tooltip showing in front of other elements */}
+        {isCollapsed && (
+          <div className="absolute left-[70px] top-1/2 -translate-y-1/2 bg-[#111111] text-white text-xs px-2.5 py-1.5 rounded-md shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 z-[9999] font-poppins">
+            {labelText}
           </div>
+        )}
+      </button>
+    );
+  };
 
-          {/* BUSINESS SECTION */}
-          <div className="space-y-1">
-            {!isCollapsed && (
-              <span className="text-[10px] font-medium tracking-[2px] uppercase text-[#111111]/60 px-3 block mb-2">Business</span>
-            )}
-            <button
-              onClick={() => setActiveTab("Business Profile")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Business Profile" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={Briefcase01Icon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Business Profile" ? "font-normal" : "font-light"}>Business Profile</span>
-                )}
+  return (
+    <aside className={`bg-[#C0D5D8] flex flex-col justify-between shrink-0 border-r border-[#B0C5C8] h-full transition-all duration-300 ${isCollapsed ? "w-[78px]" : "w-[280px]"}`}>
+      
+      {/* Sidebar Header */}
+      <div className={`h-16 flex items-center justify-between px-6 border-b border-[#B0C5C8] bg-[#C0D5D8] shrink-0 ${isCollapsed ? "justify-center !px-3" : ""}`}>
+        {isCollapsed ? (
+          <button
+            onClick={() => setIsCollapsed(false)}
+            className="w-8 h-8 rounded-lg hover:bg-[#B0C5C8]/50 flex items-center justify-center text-[#1C1B1C] transition-all cursor-pointer"
+          >
+            <img src="/businessDashboard/Sidebar Icon.svg" alt="Toggle Sidebar" className="w-6 h-6 object-contain" />
+          </button>
+        ) : (
+          <>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                <img src="/img/smallBlacklogo.svg" alt="Bookly" className="w-full h-full object-contain" />
               </div>
-            </button>
-            <button
-              onClick={() => setActiveTab("Services")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Services" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={PowerServiceIcon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Services" ? "font-normal" : "font-light"}>Services</span>
-                )}
+              <div className="flex flex-col leading-none">
+                <span className="font-bold text-[#111111] text-[15px] tracking-wide font-poppins">Bookly.cy</span>
+                <span className="text-[10px] text-[#111111]/60 font-poppins mt-1">Business Owner</span>
               </div>
-            </button>
+            </div>
             <button
-              onClick={() => setActiveTab("Add-ons")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Add-ons" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
+              onClick={() => setIsCollapsed(true)}
+              className="w-8 h-8 rounded-lg hover:bg-[#B0C5C8]/50 flex items-center justify-center text-[#1C1B1C] transition-all cursor-pointer"
             >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={AddSquareIcon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Add-ons" ? "font-normal" : "font-light"}>Add-ons</span>
-                )}
-              </div>
+              <img src="/businessDashboard/Sidebar Icon.svg" alt="Toggle Sidebar" className="w-5 h-5 object-contain" />
             </button>
-            <button
-              onClick={() => setActiveTab("Staff")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Staff" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={TieIcon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Staff" ? "font-normal" : "font-light"}>Staff</span>
-                )}
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab("Reviews")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Reviews" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={StarSquareIcon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Reviews" ? "font-normal" : "font-light"}>Reviews</span>
-                )}
-              </div>
-            </button>
-          </div>
+          </>
+        )}
+      </div>
 
-          {/* FINANCE SECTION */}
-          <div className="space-y-1">
-            {!isCollapsed && (
-              <span className="text-[10px] font-medium tracking-[2px] uppercase text-[#111111]/60 px-3 block mb-2">Finance</span>
-            )}
-            <button
-              onClick={() => setActiveTab("Payouts & Finance")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Payouts & Finance" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={Wallet03Icon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Payouts & Finance" ? "font-normal" : "font-light"}>Payouts & Finance</span>
-                )}
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab("Analytics")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Analytics" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={Analytics01Icon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Analytics" ? "font-normal" : "font-light"}>Analytics</span>
-                )}
-              </div>
-            </button>
-          </div>
-
-          {/* ACCOUNT SECTION */}
-          <div className="space-y-1">
-            {!isCollapsed && (
-              <span className="text-[10px] font-medium tracking-[2px] uppercase text-[#111111]/60 px-3 block mb-2">Account</span>
-            )}
-            <button
-              onClick={() => setActiveTab("Settings")}
-              className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative ${
-                isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-              } ${
-                activeTab === "Settings" ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <HugeiconsIcon icon={Settings01Icon} className="w-5 h-5" />
-                {!isCollapsed && (
-                  <span className={activeTab === "Settings" ? "font-normal" : "font-light"}>Settings</span>
-                )}
-              </div>
-            </button>
-          </div>
+      {/* Sidebar Navigation - occupies all remaining space up to footer profile */}
+      <div className={`flex-1 overflow-y-auto p-4 space-y-6 select-none ${isCollapsed ? "px-2" : ""} scrollbar-hide`}>
+        
+        {/* CORE SECTION */}
+        <div className="space-y-1">
+          {!isCollapsed && (
+            <span className="text-[10px] font-medium tracking-[2px] uppercase text-[#111111]/60 px-3 block mb-2">Core</span>
+          )}
+          {renderMenuItem("Dashboard", DashboardSquare01Icon, "Dashboard")}
+          {renderMenuItem("Calendar", Calendar03Icon, "Calendar")}
+          {renderMenuItem("Clients", UserGroup03Icon, "Clients")}
         </div>
+
+        {/* BOOKINGS SECTION */}
+        <div className="space-y-1">
+          {!isCollapsed && (
+            <span className="text-[10px] font-medium tracking-[2px] uppercase text-[#111111]/60 px-3 block mb-2">Bookings</span>
+          )}
+          {renderMenuItem("All Bookings", ProfileIcon, "All Bookings", 3)}
+          {renderMenuItem("Upcoming", Orbit01Icon, "Upcoming")}
+          {renderMenuItem("Canceled", CancelSquareIcon, "Canceled")}
+        </div>
+
+        {/* BUSINESS SECTION */}
+        <div className="space-y-1">
+          {!isCollapsed && (
+            <span className="text-[10px] font-medium tracking-[2px] uppercase text-[#111111]/60 px-3 block mb-2">Business</span>
+          )}
+          {renderMenuItem("Business Profile", Briefcase01Icon, "Business Profile")}
+          {renderMenuItem("Services", PowerServiceIcon, "Services")}
+          {renderMenuItem("Add-ons", AddSquareIcon, "Add-ons")}
+          {renderMenuItem("Staff", TieIcon, "Staff")}
+          {renderMenuItem("Reviews", StarSquareIcon, "Reviews")}
+        </div>
+
+        {/* FINANCE SECTION */}
+        <div className="space-y-1">
+          {!isCollapsed && (
+            <span className="text-[10px] font-medium tracking-[2px] uppercase text-[#111111]/60 px-3 block mb-2">Finance</span>
+          )}
+          {renderMenuItem("Payouts & Finance", Wallet03Icon, "Payouts & Finance")}
+          {renderMenuItem("Analytics", Analytics01Icon, "Analytics")}
+        </div>
+
+        {/* ACCOUNT SECTION */}
+        <div className="space-y-1">
+          {!isCollapsed && (
+            <span className="text-[10px] font-medium tracking-[2px] uppercase text-[#111111]/60 px-3 block mb-2">Account</span>
+          )}
+          {renderMenuItem("Settings", Settings01Icon, "Settings")}
+        </div>
+
       </div>
 
       {/* User Footer Profile */}
-      <div className="border-t border-[#757575]/30 bg-[#C0D5D8] flex flex-col">
+      <div className="border-t border-[#757575]/30 bg-[#C0D5D8] flex flex-col shrink-0">
         {/* Profile Card */}
         <div className={`p-4 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
           <div className="flex items-center gap-3 cursor-pointer select-none" onClick={() => setShowFooterMenu(!showFooterMenu)}>
