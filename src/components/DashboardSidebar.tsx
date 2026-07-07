@@ -215,15 +215,9 @@ export default function DashboardSidebar({
           </button>
           {/* Logout */}
           <button className={`flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all ${isCollapsed ? "w-full justify-center" : "w-full"}`}>
-            {isCollapsed ? (
-              <div className="w-10 h-10 bg-[#15171C] text-white rounded-full flex items-center justify-center font-semibold text-sm select-none shrink-0 border border-neutral-700/30">
-                N
-              </div>
-            ) : (
-              <>
-                <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
-                <span className="font-manrope font-medium text-xs text-[#111111]">Logout</span>
-              </>
+            <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
+            {!isCollapsed && (
+              <span className="font-manrope font-medium text-xs text-[#111111]">Logout</span>
             )}
           </button>
         </div>

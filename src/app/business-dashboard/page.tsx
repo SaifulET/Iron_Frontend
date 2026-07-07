@@ -35,6 +35,7 @@ import DashboardStaffList from "@/components/DashboardStaffList";
 import DashboardReviewsList from "@/components/DashboardReviewsList";
 import DashboardPayoutsList from "@/components/DashboardPayoutsList";
 import DashboardAnalytics from "@/components/DashboardAnalytics";
+import DashboardSettings from "@/components/DashboardSettings";
 
 interface Booking {
   clientInitials: string;
@@ -915,6 +916,10 @@ export default function BusinessDashboard() {
 
     if (activeTab === "Analytics") {
       return <DashboardAnalytics />;
+    }
+
+    if (activeTab === "Settings") {
+      return <DashboardSettings />;
     }
 
     // Default mock fallback container for other business profile tabs
