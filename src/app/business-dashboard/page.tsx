@@ -69,7 +69,7 @@ interface Client {
 
 export default function BusinessDashboard() {
   const [activeTab, setActiveTab] = useState("Business Profile");
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [showFooterMenu, setShowFooterMenu] = useState(true);
   const footerMenuRef = useRef<HTMLDivElement>(null);
 
@@ -84,7 +84,7 @@ export default function BusinessDashboard() {
   const [isCreatingBooking, setIsCreatingBooking] = useState(false);
   const [isEditingBooking, setIsEditingBooking] = useState(false);
   const [editingBookingIndex, setEditingBookingIndex] = useState<number | null>(null);
-  
+
   const [newBookingName, setNewBookingName] = useState("John Doe");
   const [newBookingDob, setNewBookingDob] = useState("1/6/2026");
   const [newBookingGender, setNewBookingGender] = useState("Male");
@@ -99,10 +99,10 @@ export default function BusinessDashboard() {
   const [newBookingFloor, setNewBookingFloor] = useState("");
   const [newBookingApt, setNewBookingApt] = useState("");
   const [newBookingDirections, setNewBookingDirections] = useState("");
-  const [newBookingServices, setNewBookingServices] = useState<Array<{name: string, duration: string, price: number}>>([
+  const [newBookingServices, setNewBookingServices] = useState<Array<{ name: string, duration: string, price: number }>>([
     { name: "Haircut", duration: "30 min", price: 90 }
   ]);
-  const [newBookingAddons, setNewBookingAddons] = useState<Array<{name: string, duration: string, price: number}>>([
+  const [newBookingAddons, setNewBookingAddons] = useState<Array<{ name: string, duration: string, price: number }>>([
     { name: "Haircut", duration: "30 min", price: 90 }
   ]);
   const [newBookingStaff, setNewBookingStaff] = useState("Basel");
@@ -569,11 +569,10 @@ export default function BusinessDashboard() {
                           key={tag}
                           type="button"
                           onClick={() => setClientTagState(tag)}
-                          className={`h-8 px-4 rounded-full text-xs font-medium border transition-all ${
-                            clientTag === tag
+                          className={`h-8 px-4 rounded-full text-xs font-medium border transition-all ${clientTag === tag
                               ? "bg-[#E8E8E4] border-white text-[#5F5E5A] font-semibold"
                               : "bg-white border-[#E8E8E4] text-[#5F5E5A]"
-                          }`}
+                            }`}
                         >
                           {tag}
                         </button>
@@ -670,11 +669,10 @@ export default function BusinessDashboard() {
                   <button
                     onClick={editingClientIndex !== null ? handleSaveClient : handleAddClient}
                     disabled={!clientFirstName || !clientPhone}
-                    className={`w-full h-10 rounded-lg text-xs font-semibold text-white font-poppins transition-all select-none ${
-                      clientFirstName && clientPhone
+                    className={`w-full h-10 rounded-lg text-xs font-semibold text-white font-poppins transition-all select-none ${clientFirstName && clientPhone
                         ? "bg-[#0F1E35] hover:bg-[#1C3252] cursor-pointer"
                         : "bg-[#D3D1C7] cursor-not-allowed"
-                    }`}
+                      }`}
                   >
                     {editingClientIndex !== null ? "Save changes" : "Add client"}
                   </button>
@@ -773,7 +771,7 @@ export default function BusinessDashboard() {
 
       if (isViewingBookingDetails && viewingBookingIndex !== null) {
         const b = bookingsData[viewingBookingIndex];
-        
+
         let statusType: "upcoming" | "noshow" | "completed" | "cancelled" | "late" | "pending" = "upcoming";
         if (b.status === "Pending") {
           statusType = "pending";

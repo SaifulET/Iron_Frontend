@@ -41,7 +41,7 @@ export default function DashboardSidebar({
   setShowFooterMenu,
   footerMenuRef
 }: DashboardSidebarProps) {
-  
+
   // Helper for rendering menu button items with tooltip on hover when collapsed
   const renderMenuItem = (
     tabName: string,
@@ -53,11 +53,9 @@ export default function DashboardSidebar({
     return (
       <button
         onClick={() => setActiveTab(tabName)}
-        className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative group ${
-          isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
-        } ${
-          isActive ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
-        }`}
+        className={`w-full flex items-center rounded-lg text-sm transition-all duration-150 relative group ${isCollapsed ? "justify-center p-2.5" : "justify-between px-3 py-2.5"
+          } ${isActive ? "bg-[#111111] text-white" : "text-[#111111] hover:bg-[#B0C5C8]/40"
+          }`}
       >
         <div className="flex items-center gap-2.5">
           <HugeiconsIcon icon={icon} className="w-5 h-5 shrink-0" />
@@ -90,18 +88,16 @@ export default function DashboardSidebar({
   };
 
   return (
-    <aside className={`bg-[#C0D5D8] flex flex-col justify-between shrink-0 border-r border-[#B0C5C8] h-full transition-all duration-300 ${
-      isCollapsed ? "w-[78px]" : "w-[280px]"
-    }`}>
-      
+    <aside className={`bg-[#C0D5D8] flex flex-col justify-between shrink-0 border-r border-[#B0C5C8] h-full transition-all duration-300 ${isCollapsed ? "w-[78px]" : "w-[280px]"}`}>
+
       {/* Sidebar Header */}
       <div className={`h-16 flex items-center justify-between px-6 border-b border-[#B0C5C8] bg-[#C0D5D8] shrink-0 ${isCollapsed ? "justify-center !px-3" : ""}`}>
         {isCollapsed ? (
           <button
             onClick={() => setIsCollapsed(false)}
-            className="w-10 h-10 hover:bg-[#B0C5C8]/50 flex items-center justify-center transition-all cursor-pointer rounded-lg"
+            className="w-8 h-8 rounded-lg hover:bg-[#B0C5C8]/50 flex items-center justify-center text-[#1C1B1C] transition-all cursor-pointer"
           >
-            <img src="/img/smallBlacklogo.svg" alt="Bookly" className="w-7 h-7 object-contain" />
+            <img src="/businessDashboard/Sidebar Icon.svg" alt="Toggle Sidebar" className="w-6 h-6 object-contain" />
           </button>
         ) : (
           <>
@@ -126,7 +122,7 @@ export default function DashboardSidebar({
 
       {/* Sidebar Navigation - occupies all remaining space up to footer profile */}
       <div className={`flex-1 overflow-y-auto p-4 space-y-6 select-none ${isCollapsed ? "px-2" : ""} scrollbar-hide`}>
-        
+
         {/* CORE SECTION */}
         <div className="space-y-1">
           {!isCollapsed && (
@@ -207,9 +203,8 @@ export default function DashboardSidebar({
         {/* Collapsible Submenu in flow */}
         <div
           ref={footerMenuRef}
-          className={`flex flex-col border-[#757575]/15 bg-[#B8CED1] transition-all duration-300 ease-in-out overflow-hidden ${
-            showFooterMenu ? "max-h-[110px] opacity-100 border-t py-2 px-3.5" : "max-h-0 opacity-0 py-0 px-3.5"
-          } ${isCollapsed ? "items-center !px-1" : ""} gap-1`}
+          className={`flex flex-col border-[#757575]/15 bg-[#B8CED1] transition-all duration-300 ease-in-out overflow-hidden ${showFooterMenu ? "max-h-[110px] opacity-100 border-t py-2 px-3.5" : "max-h-0 opacity-0 py-0 px-3.5"
+            } ${isCollapsed ? "items-center !px-1" : ""} gap-1`}
         >
           {/* Contact Support */}
           <button className={`flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all ${isCollapsed ? "w-full justify-center" : "w-full"}`}>
@@ -220,9 +215,15 @@ export default function DashboardSidebar({
           </button>
           {/* Logout */}
           <button className={`flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all ${isCollapsed ? "w-full justify-center" : "w-full"}`}>
-            <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
-            {!isCollapsed && (
-              <span className="font-manrope font-medium text-xs text-[#111111]">Logout</span>
+            {isCollapsed ? (
+              <div className="w-10 h-10 bg-[#15171C] text-white rounded-full flex items-center justify-center font-semibold text-sm select-none shrink-0 border border-neutral-700/30">
+                N
+              </div>
+            ) : (
+              <>
+                <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
+                <span className="font-manrope font-medium text-xs text-[#111111]">Logout</span>
+              </>
             )}
           </button>
         </div>
