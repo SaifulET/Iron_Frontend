@@ -99,9 +99,9 @@ export default function DashboardSidebar({
         {isCollapsed ? (
           <button
             onClick={() => setIsCollapsed(false)}
-            className="w-8 h-8 rounded-lg hover:bg-[#B0C5C8]/50 flex items-center justify-center text-[#1C1B1C] transition-all cursor-pointer"
+            className="w-10 h-10 hover:bg-[#B0C5C8]/50 flex items-center justify-center transition-all cursor-pointer rounded-lg"
           >
-            <img src="/businessDashboard/Sidebar Icon.svg" alt="Toggle Sidebar" className="w-6 h-6 object-contain" />
+            <img src="/img/smallBlacklogo.svg" alt="Bookly" className="w-7 h-7 object-contain" />
           </button>
         ) : (
           <>
