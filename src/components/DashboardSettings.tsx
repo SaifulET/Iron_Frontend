@@ -657,8 +657,8 @@ export default function DashboardSettings() {
                         notifEmail ? "bg-[#0F6E56]" : "bg-neutral-300"
                       }`}
                     >
-                      <div className={`w-[15px] h-[15px] bg-white rounded-full transition-transform shadow-sm ${
-                        notifEmail ? "translate-x-[18px]" : ""
+                      <div className={`w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${
+                        notifEmail ? "translate-x-[15px]" : ""
                       }`} />
                     </button>
                   </div>
@@ -677,8 +677,8 @@ export default function DashboardSettings() {
                         notifSms ? "bg-[#0F6E56]" : "bg-neutral-300"
                       }`}
                     >
-                      <div className={`w-[15px] h-[15px] bg-white rounded-full transition-transform shadow-sm ${
-                        notifSms ? "translate-x-[18px]" : ""
+                      <div className={`w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${
+                        notifSms ? "translate-x-[15px]" : ""
                       }`} />
                     </button>
                   </div>
@@ -697,8 +697,8 @@ export default function DashboardSettings() {
                         notifPush ? "bg-[#0F6E56]" : "bg-neutral-300"
                       }`}
                     >
-                      <div className={`w-[15px] h-[15px] bg-white rounded-full transition-transform shadow-sm ${
-                        notifPush ? "translate-x-[18px]" : ""
+                      <div className={`w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${
+                        notifPush ? "translate-x-[15px]" : ""
                       }`} />
                     </button>
                   </div>
@@ -717,8 +717,8 @@ export default function DashboardSettings() {
                         twoFactor ? "bg-[#0F6E56]" : "bg-neutral-300"
                       }`}
                     >
-                      <div className={`w-[15px] h-[15px] bg-white rounded-full transition-transform shadow-sm ${
-                        twoFactor ? "translate-x-[18px]" : ""
+                      <div className={`w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${
+                        twoFactor ? "translate-x-[15px]" : ""
                       }`} />
                     </button>
                   </div>

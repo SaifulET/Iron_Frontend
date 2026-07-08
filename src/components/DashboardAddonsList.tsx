@@ -103,7 +103,7 @@ export default function DashboardAddonsList() {
             onClick={() => setAddonActive(!addonActive)}
             className={`w-[38px] h-[21px] rounded-[11px] p-0.5 transition-colors duration-200 focus:outline-none flex items-center ${addonActive ? "bg-[#0F6E56]" : "bg-neutral-300"} cursor-pointer`}
           >
-            <div className={`w-4 h-4 bg-white rounded-full transition-transform duration-200 shadow-sm ${addonActive ? "translate-x-[18px]" : "translate-x-0"}`} />
+            <div className={`w-4 h-4 bg-white rounded-full transition-transform duration-200 shadow-sm ${addonActive ? "translate-x-[15px]" : "translate-x-0"}`} />
           </button>
         </div>
 
