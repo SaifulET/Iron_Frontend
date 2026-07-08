@@ -15,11 +15,15 @@ export default function BookingsPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("ENG");
 
+  // Stateful Bookings List
+  const [localBookings, setLocalBookings] = useState(bookingsList);
+
   // Tab State
   const [activeTab, setActiveTab] = useState<"upcoming" | "completed" | "noshow" | "canceled">("upcoming");
 
   // Reschedule Modal State
   const [rescheduleBookingId, setRescheduleBookingId] = useState<string | null>(null);
+  const [cancelBookingId, setCancelBookingId] = useState<string | null>(null);
 
   // Collapsible Policy State (stores boolean for each booking ID)
   const [openPolicies, setOpenPolicies] = useState<Record<string, boolean>>({
@@ -80,8 +84,55 @@ export default function BookingsPage() {
     }));
   };
 
+  const handleConfirmCancel = (id: string) => {
+    setLocalBookings(prev => 
+      prev.map(b => {
+        if (b.id === id) {
+          const isOutsideWindow = b.paymentType === "passed_fee" || b.paymentType === "passed_not_possible";
+          return {
+            ...b,
+            paymentType: "canceled" as const,
+            canceledType: isOutsideWindow ? ("by_you_fee_50" as const) : ("by_you_free" as const),
+            canceledDateText: `Cancelled on Fri 17 Apr 2026 at 4:30 PM`,
+            canceledSummary: {
+              servicePrice: "€500.00",
+              depositPaid: b.depositPaidAmount || "€0.00",
+              cancellationFee: isOutsideWindow ? "€250.00" : undefined,
+              refundedToCard: isOutsideWindow ? undefined : (b.depositPaidAmount || "€0.00"),
+              depositRetainedText: isOutsideWindow ? (b.depositPaidAmount || "€0.00") : undefined,
+              additionalChargeText: isOutsideWindow ? "€215.00" : undefined,
+              totalFee: isOutsideWindow ? "€250.00" : "€0.00",
+              footerNote: isOutsideWindow 
+                ? "Cancellation fees are set independently by Uncle SAM Gents Salon, not by Bookly." 
+                : "Allow 3-5 business days for your refund"
+            }
+          };
+        }
+        return b;
+      })
+    );
+    setCancelBookingId(null);
+  };
+
+  const getCancelFees = (booking: any) => {
+    if (booking.id === "booking-3") {
+      return {
+        depositPaid: "€35.00",
+        retained: "€35.00",
+        cancellationFee: "€250.00",
+        additionalCharge: "€215.00"
+      };
+    }
+    return {
+      depositPaid: booking.depositPaidAmount || "€0.00",
+      retained: booking.depositPaidAmount || "€0.00",
+      cancellationFee: booking.depositPaidAmount || "€35.00",
+      additionalCharge: "€0.00"
+    };
+  };
+
   // Filter bookings based on activeTab
-  const filteredBookings = bookingsList.filter((item) => {
+  const filteredBookings = localBookings.filter((item) => {
     if (activeTab === "upcoming") {
       return ["deposit_paid", "no_deposit", "passed_fee", "passed_not_possible"].includes(item.paymentType);
     }
@@ -191,6 +242,7 @@ export default function BookingsPage() {
                   setReviewInput={setReviewInput}
                   handleReviewSubmit={handleReviewSubmit}
                   onReschedule={(id) => setRescheduleBookingId(id)}
+                  onCancel={(id) => setCancelBookingId(id)}
                 />
               ))
             ) : (
@@ -214,6 +266,69 @@ export default function BookingsPage() {
           onSave={() => setRescheduleBookingId(null)}
         />
       )}
+
+      {/* Cancellation Modal Overlay */}
+      {cancelBookingId && (() => {
+        const booking = localBookings.find(b => b.id === cancelBookingId);
+        if (!booking) return null;
+        const isOutsideWindow = booking.paymentType === "passed_fee" || booking.paymentType === "passed_not_possible";
+        const fees = getCancelFees(booking);
+
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 font-manrope">
+            <div className="bg-white rounded-[24px] shadow-2xl p-8 max-w-[480px] w-full flex flex-col items-center select-none text-center">
+              <h2 className="font-bold text-[32px] leading-10 text-[#020305] mb-2">
+                Cancel your booking?
+              </h2>
+              
+              <div className="text-lg font-medium text-[#111111] mb-1">
+                {booking.businessName}
+              </div>
+              
+              <div className="text-sm text-[#4E5F78] mb-6">
+                Booking ID: {booking.bookingCode} &bull; {booking.date} | {booking.time}
+              </div>
+
+              <div className="text-[17px] font-semibold text-[#020305] mb-2">
+                {booking.serviceTitle}
+              </div>
+
+              <div className="text-[17px] font-bold text-[#020305] mb-6">
+                Deposit Paid: {fees.depositPaid}
+              </div>
+
+              <p className="text-sm text-[#4E5F78] leading-6 mb-8 px-2">
+                {isOutsideWindow ? (
+                  <>
+                    You are outside the free cancellation window. {booking.businessName} charges a cancellation fee of {fees.cancellationFee} for cancellations at this time. Your deposit of {fees.retained} will be retained and an additional {fees.additionalCharge} will be charged to your saved card. Total cancellation fee: {fees.cancellationFee}. Cancellation fees are set independently by {booking.businessName}, not by Bookly.
+                  </>
+                ) : (
+                  <>
+                    You are within the free cancellation window set by {booking.businessName}. No charge applies. Your deposit of {fees.depositPaid} will be refunded to your card within 3-5 business days.
+                  </>
+                )}
+              </p>
+
+              <div className="flex gap-4 w-full">
+                <button
+                  type="button"
+                  onClick={() => setCancelBookingId(null)}
+                  className="flex-1 py-3.5 border border-[#C6C6CB] rounded-full text-base font-semibold text-[#020305] hover:bg-neutral-50 transition-colors"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleConfirmCancel(booking.id)}
+                  className="flex-1 py-3.5 bg-[#0D0D0D] hover:bg-black text-white rounded-full text-base font-semibold transition-colors"
+                >
+                  {isOutsideWindow ? `Cancel & pay ${fees.additionalCharge}` : "Yes"}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

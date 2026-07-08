@@ -27,6 +27,7 @@ interface BookingCardProps {
   setReviewInput: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   handleReviewSubmit: (id: string) => void;
   onReschedule: (id: string) => void;
+  onCancel: (id: string) => void;
 }
 
 export default function BookingCard({
@@ -41,7 +42,8 @@ export default function BookingCard({
   reviewInput,
   setReviewInput,
   handleReviewSubmit,
-  onReschedule
+  onReschedule,
+  onCancel
 }: BookingCardProps) {
   const router = useRouter();
   const isPolicyOpen = !!openPolicies[booking.id];
@@ -226,6 +228,7 @@ export default function BookingCard({
               </button>
 
               <button
+                onClick={() => onCancel(booking.id)}
                 disabled={["passed_not_possible", "completed", "noshow", "canceled"].includes(booking.paymentType)}
                 className={`w-full py-2 border rounded-lg text-sm font-medium transition-colors ${
                   ["passed_not_possible", "completed", "noshow", "canceled"].includes(booking.paymentType)
@@ -523,7 +526,7 @@ export default function BookingCard({
           {openPolicies[booking.id + "-policy-collapse"] && (
             <div className="p-5 flex flex-col gap-4 bg-white border-t border-[#EBEBEB] text-xs font-poppins">
               <h4 className="font-normal text-[#4E5F78]">
-                {booking.policyName}
+                {booking.serviceTitle} - cancellation & no show policy
               </h4>
               <div className="flex flex-col gap-3 w-full">
                 {booking.policyRules.map((rule, index) => (
@@ -545,7 +548,7 @@ export default function BookingCard({
               </div>
               <div className="border-t border-[#B3B3B3] my-1 w-full" />
               <p className="font-normal text-[#4E5F78]">
-                {booking.policyFooter}
+                Fees set by {booking.businessName}, not by Bookly. Based on full service price.
               </p>
             </div>
           )}
@@ -685,7 +688,7 @@ export default function BookingCard({
             <div className="p-5 flex flex-col gap-4 bg-white border-t border-[#EBEBEB]">
               
               <h4 className="font-poppins font-normal text-xs text-[#4E5F78] leading-5">
-                {booking.policyName}
+                {booking.serviceTitle} - cancellation & no show policy
               </h4>
 
               <div className="flex flex-col gap-3 w-full">
@@ -707,14 +710,10 @@ export default function BookingCard({
                 ))}
               </div>
 
-              {booking.policyFooter && (
-                <>
-                  <div className="border-t border-[#B3B3B3] my-1 w-full" />
-                  <p className="font-poppins font-normal text-xs text-[#4E5F78] leading-5">
-                    {booking.policyFooter}
-                  </p>
-                </>
-              )}
+              <div className="border-t border-[#B3B3B3] my-1 w-full" />
+              <p className="font-poppins font-normal text-xs text-[#4E5F78] leading-5">
+                Fees set by {booking.businessName}, not by Bookly. Based on full service price.
+              </p>
 
             </div>
           )}
