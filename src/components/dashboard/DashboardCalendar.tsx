@@ -1,5 +1,6 @@
 "use client";
 import NotificationBell from "@/components/notifications/NotificationBell";
+import WaiveChargeModal from "./WaiveChargeModal";
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -47,6 +48,7 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
 
   // Modal State for Viewing Booking
   const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
+  const [waiveBookingId, setWaiveBookingId] = useState<string | null>(null);
 
   // Stateful bookings list
   const [bookings, setBookings] = useState<Booking[]>([
@@ -227,19 +229,8 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
   };
 
   const handleWaiveCharge = (cardId: string) => {
-    setBookings(prev => prev.map(b => {
-      if (b.id === cardId) {
-        return {
-          ...b,
-          status: "Waived charge",
-          colorClass: "bg-[#FFD18B]",
-          borderColor: "border-[#F59E0B]"
-        };
-      }
-      return b;
-    }));
+    setWaiveBookingId(cardId);
     setOpenDropdownCardId(null);
-    alert("Charge has been successfully waived.");
   };
 
   const handleViewBooking = (cardId: string) => {
@@ -629,6 +620,28 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
           </div>
         </div>
       )}
+
+      {/* Waive Charge Modal Overlay */}
+      <WaiveChargeModal
+        isOpen={!!waiveBookingId}
+        onClose={() => setWaiveBookingId(null)}
+        onConfirm={() => {
+          if (waiveBookingId) {
+            setBookings(prev => prev.map(b => {
+              if (b.id === waiveBookingId) {
+                return {
+                  ...b,
+                  status: "Waived charge",
+                  colorClass: "bg-[#FFD18B]",
+                  borderColor: "border-[#F59E0B]"
+                };
+              }
+              return b;
+            }));
+            setWaiveBookingId(null);
+          }
+        }}
+      />
     </main>
   );
 }
