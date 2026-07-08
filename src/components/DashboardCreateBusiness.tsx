@@ -1,10 +1,10 @@
 "use client";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowLeft02Icon,
-  BellIcon,
   Search01Icon,
   PlusSignIcon,
   Delete02Icon,
@@ -266,15 +266,7 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
             <p className="text-xs text-[#6B7280] leading-[18px] font-poppins">All the images that you have uploaded so far</p>
           </div>
 
-          {/* Notification bell */}
-          <div className="relative">
-            <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm">
-              <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px] text-[#5F5E5A]" />
-            </button>
-            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E24B4A] text-white text-[9px] font-medium flex items-center justify-center rounded-full border-2 border-white">
-              5
-            </span>
-          </div>
+          <NotificationBell />
         </div>
 
         {/* Breadcrumbs (Frame 2147240055) */}
@@ -408,15 +400,7 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
           <p className="text-[11px] text-neutral-500 mt-0.5">Create your business at our platform</p>
         </div>
 
-        {/* Notification bell */}
-        <div className="relative">
-          <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm">
-            <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px] text-[#5F5E5A]" />
-          </button>
-          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E24B4A] text-white text-[9px] font-medium flex items-center justify-center rounded-full border-2 border-white">
-            5
-          </span>
-        </div>
+        <NotificationBell />
       </div>
 
       {/* Breadcrumbs */}

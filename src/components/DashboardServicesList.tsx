@@ -1,4 +1,5 @@
 "use client";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -9,7 +10,6 @@ import {
   Car04Icon,
   PuzzleIcon,
   AlertCircleIcon,
-  BellIcon,
   ArrowLeft02Icon,
   InformationCircleIcon,
   CheckListIcon as ListChecksIcon
@@ -202,14 +202,7 @@ export default function DashboardServicesList() {
             <p className="text-xs text-[#6B7280] leading-[18px]">Manage your service catalogue</p>
           </div>
 
-          <div className="relative">
-            <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm cursor-pointer">
-              <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px] text-[#5F5E5A]" />
-            </button>
-            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E24B4A] text-white text-[9px] font-medium flex items-center justify-center rounded-full border-2 border-white">
-              5
-            </span>
-          </div>
+          <NotificationBell />
         </div>
 
         {/* Breadcrumbs */}
@@ -960,14 +953,7 @@ export default function DashboardServicesList() {
         </div>
 
         {/* Notification bell (custom dimensions from CSS) */}
-        <div className="relative">
-          <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm cursor-pointer">
-            <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px] text-[#5F5E5A]" />
-          </button>
-          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E24B4A] text-white text-[9px] font-medium flex items-center justify-center rounded-full border-2 border-white">
-            5
-          </span>
-        </div>
+        <NotificationBell />
       </div>
 
       {/* Control row: Stats pill & Create Service button */}

@@ -1,8 +1,9 @@
 "use client";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { BellIcon, Clock01Icon } from "@hugeicons/core-free-icons";
+import { Clock01Icon } from "@hugeicons/core-free-icons";
 import {
   initialScheduleData,
   initialTimelineEvents,
@@ -28,14 +29,7 @@ export default function DashboardOverview() {
 
         <div className="flex flex-col items-end gap-3">
           {/* Bell Icon Notification Button */}
-          <div className="relative">
-            <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm">
-              <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px] text-[#5F5E5A]" />
-            </button>
-            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E24B4A] text-white text-[9px] font-medium flex items-center justify-center rounded-full border-2 border-white">
-              5
-            </span>
-          </div>
+          <NotificationBell />
 
           {/* Time Toggle Buttons */}
           <div className="bg-white border border-[#E2E8F0] p-1 rounded-xl shadow-sm flex items-center gap-1">

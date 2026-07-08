@@ -2,7 +2,8 @@
 
 import React from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowDown01Icon, BellIcon } from "@hugeicons/core-free-icons";
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 interface Client {
   name: string;
@@ -116,15 +117,7 @@ export default function ClientsList({
           <h1 className="text-xl font-bold text-[#1A1A1A] font-poppins">Client management</h1>
           <p className="text-[11px] text-neutral-500 font-poppins mt-0.5">See all the details of your client</p>
         </div>
-        {/* Notification bell */}
-        <div className="relative">
-          <button className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm">
-            <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px] text-[#5F5E5A]" />
-          </button>
-          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E24B4A] text-white text-[9px] font-medium flex items-center justify-center rounded-full border-2 border-white">
-            5
-          </span>
-        </div>
+        <NotificationBell />
       </div>
 
       {/* Scrollable Container */}
