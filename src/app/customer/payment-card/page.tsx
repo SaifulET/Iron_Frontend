@@ -89,14 +89,14 @@ export default function PaymentCardPage() {
             <h1 className="font-manrope font-extrabold text-[30px] leading-[36px] tracking-[-0.75px] text-[#1C1B1C] whitespace-nowrap">
               Payment card
             </h1>
-            <p className="font-manrope font-normal text-[16px] leading-6 text-[#45474B]">
+            <p className="font-manrope font-normal text-[16px] leading-6 text-[#45474B] whitespace-nowrap">
               Manage your saved payment cards.
             </p>
           </div>
 
           {/* Right Column: Custom Auto layout wrapper: Frame 2147239829 */}
           <div className="flex-1 w-full max-w-[717px] flex flex-col items-start gap-5 min-h-[500px] lg:mt-[108px]">
-            <h2 className="w-full md:w-[339px] h-9 font-manrope font-medium text-[24px] leading-[36px] flex items-center text-[#1C1B1C] flex-none order-0 flex-grow-0">
+            <h2 className="w-full md:w-auto h-9 font-manrope font-medium text-[24px] leading-[36px] flex items-center text-[#1C1B1C] flex-none order-0 flex-grow-0 whitespace-nowrap">
               Add payment card information
             </h2>
 
