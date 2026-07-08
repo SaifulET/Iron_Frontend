@@ -98,7 +98,7 @@ export default function DashboardSettings() {
       <div className="flex flex-col lg:flex-row items-start gap-6 w-full mt-4">
         
         {/* Left Submenu Navigation */}
-        <div className="w-full lg:w-[240px] shrink-0 bg-transparent p-4 flex flex-col gap-1">
+        <div className="w-full lg:w-[240px] shrink-0 bg-white rounded-[16px] p-4 flex flex-col gap-1 shadow-none">
           {subTabs.map((tab) => {
             const isActive = activeSubTab === tab.name;
             return (
@@ -121,13 +121,13 @@ export default function DashboardSettings() {
           
           {/* TAB 1: Personal Info */}
           {activeSubTab === "Personal info" && (
-            <div className="flex flex-col gap-[14px] w-full max-w-[814px]">
+            <div className="flex flex-col gap-[14px] w-full">
               <div>
                 <h2 className="font-poppins font-medium text-base text-[#1A1A1A]">Personal info</h2>
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Set your personal information</p>
               </div>
 
-              <div className="bg-white rounded-[16px] p-6 flex flex-col gap-5">
+              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-5">
                 
                 {/* Photo Upload Area */}
                 <div>
@@ -232,14 +232,14 @@ export default function DashboardSettings() {
 
           {/* TAB 2: Role */}
           {activeSubTab === "Role" && (
-            <div className="flex flex-col gap-[14px] w-full max-w-[814px]">
+            <div className="flex flex-col gap-[14px] w-full">
               <div>
                 <h2 className="font-poppins font-medium text-base text-[#1A1A1A]">Role</h2>
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Assign role to members</p>
               </div>
 
               {/* Members Table Card */}
-              <div className="bg-white rounded-[16px] overflow-hidden flex flex-col">
+              <div className="bg-white border border-[#E2E8F0] rounded-[16px] overflow-hidden flex flex-col">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-[#F7F5F1] text-[10px] font-semibold text-[#6B7280] tracking-[0.7px] uppercase border-b border-[#E2E8F0] h-[48px]">
@@ -335,7 +335,7 @@ export default function DashboardSettings() {
 
           {/* TAB 3: Cancellation & No-show */}
           {activeSubTab === "Cancellation & No-show" && (
-            <div className="flex flex-col gap-[20px] w-full max-w-[814px]">
+            <div className="flex flex-col gap-[20px] w-full">
               <div>
                 <h2 className="font-poppins font-semibold text-[14px] leading-[21px] text-[#111111]">
                   Booking Rules
@@ -345,7 +345,7 @@ export default function DashboardSettings() {
                 </p>
               </div>
 
-              <div className="bg-white rounded-[12px] p-5 flex flex-col gap-5">
+              <div className="bg-white border border-neutral-100 rounded-[12px] p-5 flex flex-col gap-5">
                 
                 {/* Cancellation window header */}
                 <div className="flex flex-col gap-1">
@@ -447,13 +447,13 @@ export default function DashboardSettings() {
 
           {/* TAB 4: Payments */}
           {activeSubTab === "Payments" && (
-            <div className="flex flex-col gap-[14px] w-full max-w-[814px]">
+            <div className="flex flex-col gap-[14px] w-full">
               <div>
                 <h2 className="font-poppins font-medium text-base text-[#1A1A1A]">Payment info</h2>
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Set your payment information</p>
               </div>
 
-              <div className="bg-white rounded-[16px] p-6 flex flex-col gap-5">
+              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-5">
                 <span className="font-poppins font-semibold text-[13px] text-[#1A1A1A]">
                   Payout Bank Account Details (SEPA)
                 </span>
@@ -532,18 +532,18 @@ export default function DashboardSettings() {
 
           {/* TAB 5: Integration */}
           {activeSubTab === "Integration" && (
-            <div className="flex flex-col gap-[14px] w-full max-w-[814px]">
+            <div className="flex flex-col gap-[14px] w-full">
               <div>
                 <h2 className="font-poppins font-medium text-base text-[#1A1A1A]">Integration</h2>
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Connect your google calendar, and social media accounts</p>
               </div>
 
-              <div className="bg-white rounded-[16px] p-6 flex flex-col gap-6">
+              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-6">
                 <span className="font-semibold text-sm text-[#1A1A1A]">Connected apps</span>
                 <span className="text-[11px] text-neutral-400 -mt-4">Third-party tools that extend Bookly</span>
 
                 {/* App 1: Google Calendar */}
-                <div className="border border-neutral-100 rounded-[12px] p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                <div className="border border-neutral-100 rounded-[12px] p-4 flex flex-col items-start gap-3">
                   <div className="flex items-center gap-3">
                     <img src="/Icons/Google.svg" alt="Google" className="w-8 h-8 object-contain" />
                     <div className="flex flex-col">
@@ -565,7 +565,7 @@ export default function DashboardSettings() {
                 </div>
 
                 {/* App 2: Instagram */}
-                <div className="border border-neutral-100 rounded-[12px] p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                <div className="border border-neutral-100 rounded-[12px] p-4 flex flex-col items-start gap-3">
                   <div className="flex items-center gap-3">
                     <img src="/Icons/instagram1.svg" alt="Instagram" className="w-8 h-8 object-contain" />
                     <div className="flex flex-col">
@@ -579,7 +579,7 @@ export default function DashboardSettings() {
                 </div>
 
                 {/* App 3: Facebook */}
-                <div className="border border-neutral-100 rounded-[12px] p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                <div className="border border-neutral-100 rounded-[12px] p-4 flex flex-col items-start gap-3">
                   <div className="flex items-center gap-3">
                     <img src="/Icons/Facebook.svg" alt="Facebook" className="w-8 h-8 object-contain" />
                     <div className="flex flex-col">
@@ -598,13 +598,13 @@ export default function DashboardSettings() {
 
           {/* TAB 6: Notifications */}
           {activeSubTab === "Notifications" && (
-            <div className="flex flex-col gap-[14px] w-full max-w-[814px]">
+            <div className="flex flex-col gap-[14px] w-full">
               <div>
                 <h2 className="font-poppins font-medium text-base text-[#1A1A1A]">Notifications</h2>
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Configure your preference channels</p>
               </div>
 
-              <div className="bg-white rounded-[16px] p-6 flex flex-col gap-4">
+              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-4">
                 
                 {/* Toggle 1 */}
                 <div className="flex items-center justify-between py-2.5 border-b border-neutral-100">
@@ -666,13 +666,13 @@ export default function DashboardSettings() {
 
           {/* TAB 7: Security & 2FA */}
           {activeSubTab === "Security & 2FA" && (
-            <div className="flex flex-col gap-[14px] w-full max-w-[814px]">
+            <div className="flex flex-col gap-[14px] w-full">
               <div>
                 <h2 className="font-poppins font-medium text-base text-[#1A1A1A]">Security & 2FA</h2>
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Manage authentication settings</p>
               </div>
 
-              <div className="bg-white rounded-[16px] p-6 flex flex-col gap-5">
+              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-5">
                 
                 {/* Two factor auth */}
                 <div className="flex items-center justify-between">
