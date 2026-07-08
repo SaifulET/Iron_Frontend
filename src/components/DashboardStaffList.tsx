@@ -188,7 +188,7 @@ export default function DashboardStaffList() {
         </div>
 
         {/* Form Container (No wrapper white card, aligned under 'Add staff') */}
-        <div className="ml-[100px] flex flex-col gap-[20px] w-full max-w-[958.4px]">
+        <div className="ml-0 md:ml-[100px] flex flex-col gap-[20px] w-full max-w-full md:max-w-[958.4px]">
           
           {/* Photo Section */}
           <div className="flex flex-col gap-[12px] w-full">
@@ -342,16 +342,16 @@ export default function DashboardStaffList() {
           <div className="flex flex-col md:flex-row gap-[48px] w-full items-start mt-4">
             
             {/* Business Working Hours Column */}
-            <div className="flex-1 flex flex-col gap-[12px] w-full max-w-[455.2px]">
+            <div className="flex-1 flex flex-col gap-[12px] w-full max-w-full md:max-w-[455.2px]">
               <span className="font-poppins font-medium text-sm leading-[22px] text-[#101828]">
                 Edit Business Working Hours
               </span>
-              <div className="box-sizing-border-box flex flex-col items-start p-6 bg-white border border-[#E5E7EB] rounded-[4px] w-full h-[272px] justify-between">
-                <div className="flex flex-row justify-between w-full px-2">
+              <div className="box-sizing-border-box flex flex-col items-start p-6 bg-white border border-[#E5E7EB] rounded-[4px] w-full h-auto min-h-[272px] justify-between gap-4">
+                <div className="flex flex-row justify-between w-full px-2 gap-1 overflow-x-auto scrollbar-hide">
                   {Object.keys(workingShifts).map((day) => {
                     const shift = workingShifts[day];
                     return (
-                      <div key={day} className="flex flex-col items-center gap-2">
+                      <div key={day} className="flex flex-col items-center gap-2 shrink-0">
                         <button
                           type="button"
                           onClick={() => setWorkingShifts({
@@ -412,14 +412,14 @@ export default function DashboardStaffList() {
             </div>
 
             {/* Leave Reason & Date Column */}
-            <div className="flex-1 flex flex-col gap-[12px] w-full max-w-[455.2px]">
+            <div className="flex-1 flex flex-col gap-[12px] w-full max-w-full md:max-w-[455.2px]">
               <span className="font-poppins font-medium text-sm leading-[22px] text-[#101828]">
                 Leave reason & date
               </span>
               
-              <div className="flex flex-row justify-between gap-4 w-full">
+              <div className="flex flex-col sm:flex-row justify-between gap-4 w-full">
                 {/* Reason */}
-                <div className="flex-1 flex flex-col gap-2">
+                <div className="flex-1 w-full flex flex-col gap-2">
                   <span className="font-poppins font-medium text-[12px] leading-[20px] tracking-[1.5px] uppercase text-[#111111]">
                     name
                   </span>
@@ -442,7 +442,7 @@ export default function DashboardStaffList() {
                 </div>
 
                 {/* Date */}
-                <div className="flex-1 flex flex-col gap-2">
+                <div className="flex-1 w-full flex flex-col gap-2">
                   <span className="font-poppins font-medium text-[12px] leading-[20px] tracking-[1.5px] uppercase text-[#111111]">
                     date
                   </span>
@@ -471,8 +471,8 @@ export default function DashboardStaffList() {
               {leaves.length > 0 && (
                 <div className="flex flex-col gap-3 mt-4 w-full">
                   {leaves.map((leave, idx) => (
-                    <div key={idx} className="flex flex-row justify-between gap-4 w-full items-end">
-                      <div className="flex-1 flex flex-col gap-2">
+                    <div key={idx} className="flex flex-col sm:flex-row justify-between gap-4 w-full items-start sm:items-end border border-neutral-100 p-3 rounded-lg sm:border-0 sm:p-0">
+                      <div className="flex-1 w-full flex flex-col gap-2">
                         <span className="font-poppins font-medium text-[12px] leading-[20px] tracking-[1.5px] uppercase text-[#111111]">
                           name
                         </span>
@@ -480,7 +480,7 @@ export default function DashboardStaffList() {
                           {leave.type}
                         </div>
                       </div>
-                      <div className="flex-1 flex flex-col gap-2">
+                      <div className="flex-1 w-full flex flex-col gap-2">
                         <span className="font-poppins font-medium text-[12px] leading-[20px] tracking-[1.5px] uppercase text-[#111111]">
                           date
                         </span>
@@ -491,7 +491,7 @@ export default function DashboardStaffList() {
                       <button
                         type="button"
                         onClick={() => setLeaves(leaves.filter((_, i) => i !== idx))}
-                        className="h-[32px] px-4 bg-gradient-to-b from-[rgba(12,192,223,0.2)] to-[rgba(12,192,223,0.2)] bg-[#8EBAC5] rounded hover:opacity-90 transition-opacity text-sm font-medium text-[#111111] cursor-pointer flex items-center justify-center font-poppins shrink-0"
+                        className="w-full sm:w-auto h-[41.6px] sm:h-[32px] px-4 bg-gradient-to-b from-[rgba(12,192,223,0.2)] to-[rgba(12,192,223,0.2)] bg-[#8EBAC5] rounded hover:opacity-90 transition-opacity text-sm font-medium text-[#111111] cursor-pointer flex items-center justify-center font-poppins shrink-0"
                       >
                         Remove
                       </button>
