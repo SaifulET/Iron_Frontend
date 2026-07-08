@@ -96,7 +96,7 @@ export default function PaymentCardPage() {
 
           {/* Right Column: Custom Auto layout wrapper: Frame 2147239829 */}
           <div className="flex-1 w-full max-w-[717px] flex flex-col items-start gap-5 min-h-[500px] lg:mt-[108px]">
-            <h2 className="text-2xl font-semibold text-[#1C1B1C] font-manrope leading-[36px] tracking-tight">
+            <h2 className="w-full md:w-[339px] h-9 font-manrope font-medium text-[24px] leading-[36px] flex items-center text-[#1C1B1C] flex-none order-0 flex-grow-0">
               Add payment card information
             </h2>
 
