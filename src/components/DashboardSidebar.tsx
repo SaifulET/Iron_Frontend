@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   DashboardSquare01Icon,
@@ -41,6 +41,25 @@ export default function DashboardSidebar({
   setShowFooterMenu,
   footerMenuRef
 }: DashboardSidebarProps) {
+  const [profileImage, setProfileImage] = useState("/businessDashboard/downLogo.png");
+
+  useEffect(() => {
+    const loadProfileImage = () => {
+      const saved = localStorage.getItem("settingsProfileImage");
+      if (saved) {
+        setProfileImage(saved);
+      } else {
+        setProfileImage("/businessDashboard/downLogo.png");
+      }
+    };
+
+    loadProfileImage();
+
+    window.addEventListener("settingsProfileUpdate", loadProfileImage);
+    return () => {
+      window.removeEventListener("settingsProfileUpdate", loadProfileImage);
+    };
+  }, []);
 
   // Helper for rendering menu button items with tooltip on hover when collapsed
   const renderMenuItem = (
@@ -180,7 +199,7 @@ export default function DashboardSidebar({
         <div className={`p-4 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
           <div className="flex items-center gap-3 cursor-pointer select-none" onClick={() => setShowFooterMenu(!showFooterMenu)}>
             <img
-              src="/businessDashboard/downLogo.png"
+              src={profileImage}
               alt="User Profile"
               className="w-10 h-10 rounded-full object-cover border border-[#4E5F78]"
             />

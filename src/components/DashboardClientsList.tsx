@@ -18,6 +18,7 @@ interface Client {
   tagColor: string;
   avatarBg: string;
   avatarText: string;
+  avatar?: string;
 }
 
 interface DashboardClientsListProps {
@@ -33,6 +34,9 @@ interface DashboardClientsListProps {
   setClientLastName: (val: string) => void;
   setClientPhone: (val: string) => void;
   setClientTagState: (val: string) => void;
+  setClientPhoneCode?: (val: string) => void;
+  setClientPhoneFlag?: (val: string) => void;
+  setClientAvatar?: (val: string) => void;
 }
 
 export default function DashboardClientsList({
@@ -46,7 +50,10 @@ export default function DashboardClientsList({
   setClientFirstName,
   setClientLastName,
   setClientPhone,
-  setClientTagState
+  setClientTagState,
+  setClientPhoneCode,
+  setClientPhoneFlag,
+  setClientAvatar
 }: DashboardClientsListProps) {
   const [dropdownCoords, setDropdownCoords] = React.useState<{ top: number; left: number } | null>(null);
   return (
@@ -161,9 +168,17 @@ export default function DashboardClientsList({
                   <tr key={idx} className="hover:bg-neutral-50/50 transition-colors">
                     {/* Client details */}
                     <td className="px-5 py-3.5 flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-full ${client.avatarBg} flex items-center justify-center text-[10px] font-semibold text-[#5F5E5A] shrink-0`}>
-                        {client.avatarText}
-                      </div>
+                      {client.avatar ? (
+                        <img 
+                          src={client.avatar} 
+                          className="w-8 h-8 rounded-full object-cover shrink-0" 
+                          alt="avatar" 
+                        />
+                      ) : (
+                        <div className={`w-8 h-8 rounded-full ${client.avatarBg} flex items-center justify-center text-[10px] font-semibold text-[#5F5E5A] shrink-0`}>
+                          {client.avatarText}
+                        </div>
+                      )}
                       <div className="flex flex-col">
                         <span className="font-semibold text-[#1A1A1A]">{client.name}</span>
                         <span className="text-[10px] text-[#888780] font-light mt-0.5">{client.joined}</span>
@@ -243,8 +258,31 @@ export default function DashboardClientsList({
                                 const parts = c.name.split(" ");
                                 setClientFirstName(parts[0] || "");
                                 setClientLastName(parts.slice(1).join(" ") || "");
-                                setClientPhone(c.phone || "");
+                                
+                                let phoneSuffix = c.phone || "";
+                                if (c.phone && c.phone.startsWith("+")) {
+                                  const pParts = c.phone.split(" ");
+                                  const pCode = pParts[0];
+                                  const pRest = pParts.slice(1).join(" ");
+                                  if (setClientPhoneCode) setClientPhoneCode(pCode);
+                                  if (setClientPhoneFlag) {
+                                    const matched = [
+                                      { code: "+357", flag: "cy" },
+                                      { code: "+880", flag: "bd" },
+                                      { code: "+30", flag: "gr" },
+                                      { code: "+44", flag: "gb" },
+                                      { code: "+1", flag: "us" }
+                                    ].find(co => co.code === pCode);
+                                    if (matched) setClientPhoneFlag(matched.flag);
+                                  }
+                                  phoneSuffix = pRest;
+                                } else {
+                                  if (setClientPhoneCode) setClientPhoneCode("+357");
+                                  if (setClientPhoneFlag) setClientPhoneFlag("cy");
+                                }
+                                setClientPhone(phoneSuffix);
                                 setClientTagState(c.tag || "VIP");
+                                if (setClientAvatar) setClientAvatar(c.avatar || "");
                                 // Enable View mode
                                 setIsViewingClient(true);
                                 setEditingClientIndex(idx);
@@ -262,8 +300,31 @@ export default function DashboardClientsList({
                                 const parts = c.name.split(" ");
                                 setClientFirstName(parts[0] || "");
                                 setClientLastName(parts.slice(1).join(" ") || "");
-                                setClientPhone(c.phone || "");
+                                
+                                let phoneSuffix = c.phone || "";
+                                if (c.phone && c.phone.startsWith("+")) {
+                                  const pParts = c.phone.split(" ");
+                                  const pCode = pParts[0];
+                                  const pRest = pParts.slice(1).join(" ");
+                                  if (setClientPhoneCode) setClientPhoneCode(pCode);
+                                  if (setClientPhoneFlag) {
+                                    const matched = [
+                                      { code: "+357", flag: "cy" },
+                                      { code: "+880", flag: "bd" },
+                                      { code: "+30", flag: "gr" },
+                                      { code: "+44", flag: "gb" },
+                                      { code: "+1", flag: "us" }
+                                    ].find(co => co.code === pCode);
+                                    if (matched) setClientPhoneFlag(matched.flag);
+                                  }
+                                  phoneSuffix = pRest;
+                                } else {
+                                  if (setClientPhoneCode) setClientPhoneCode("+357");
+                                  if (setClientPhoneFlag) setClientPhoneFlag("cy");
+                                }
+                                setClientPhone(phoneSuffix);
                                 setClientTagState(c.tag || "VIP");
+                                if (setClientAvatar) setClientAvatar(c.avatar || "");
                                 // Go directly to Edit Form
                                 setIsViewingClient(false);
                                 setEditingClientIndex(idx);

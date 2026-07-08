@@ -66,6 +66,7 @@ interface Client {
   tagColor: string;
   avatarBg: string;
   avatarText: string;
+  avatar?: string;
 }
 
 export default function BusinessDashboard() {
@@ -143,12 +144,38 @@ export default function BusinessDashboard() {
   const [clientNotes, setClientNotes] = useState("");
   const [clientTag, setClientTagState] = useState("VIP");
 
+  // Avatar and Phone Country Code states
+  const [clientAvatar, setClientAvatar] = useState("");
+  const clientAvatarInputRef = useRef<HTMLInputElement>(null);
+  const [clientPhoneCode, setClientPhoneCode] = useState("+357");
+  const [clientPhoneFlag, setClientPhoneFlag] = useState("cy");
+  const [isClientPhoneDropdownOpen, setIsClientPhoneDropdownOpen] = useState(false);
+
+  const phoneCountries = [
+    { name: "Cyprus", code: "+357", flag: "cy" },
+    { name: "Bangladesh", code: "+880", flag: "bd" },
+    { name: "Greece", code: "+30", flag: "gr" },
+    { name: "United Kingdom", code: "+44", flag: "gb" },
+    { name: "United States", code: "+1", flag: "us" }
+  ];
+
+  const handleClientAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setClientAvatar(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddClient = () => {
     if (!clientFirstName || !clientPhone) return;
-    const newClient = {
+    const newClient: Client = {
       name: `${clientFirstName} ${clientLastName}`.trim(),
       joined: `Since ${new Date().toLocaleString("en-US", { month: "short", year: "numeric" })}`,
-      phone: clientPhone,
+      phone: `${clientPhoneCode} ${clientPhone}`.trim(),
       visitText: "—",
       visitSub: "No visits yet",
       isNext: false,
@@ -158,7 +185,8 @@ export default function BusinessDashboard() {
       tagBg: clientTag === "VIP" ? "bg-[#FAEEDA]" : clientTag === "No-show" ? "bg-[#FCE4E4]" : clientTag === "New" ? "bg-[#E6F1FB]" : "bg-neutral-100",
       tagColor: clientTag === "VIP" ? "text-[#633806]" : clientTag === "No-show" ? "text-[#E42424]" : clientTag === "New" ? "text-[#0C447C]" : "text-neutral-600",
       avatarBg: "bg-[#E1F5EE]",
-      avatarText: `${clientFirstName.charAt(0)}${clientLastName ? clientLastName.charAt(0) : ""}`.toUpperCase()
+      avatarText: `${clientFirstName.charAt(0)}${clientLastName ? clientLastName.charAt(0) : ""}`.toUpperCase(),
+      avatar: clientAvatar || undefined
     };
     setClientsData([newClient, ...clientsData]);
     // Reset Form
@@ -178,6 +206,9 @@ export default function BusinessDashboard() {
     setClientDirections("");
     setClientNotes("");
     setClientTagState("VIP");
+    setClientAvatar("");
+    setClientPhoneCode("+357");
+    setClientPhoneFlag("cy");
     setIsAddingClient(false);
   };
 
@@ -187,11 +218,12 @@ export default function BusinessDashboard() {
     updated[editingClientIndex] = {
       ...updated[editingClientIndex],
       name: `${clientFirstName} ${clientLastName}`.trim(),
-      phone: clientPhone,
+      phone: `${clientPhoneCode} ${clientPhone}`.trim(),
       tag: clientTag || null,
       tagBg: clientTag === "VIP" ? "bg-[#FAEEDA]" : clientTag === "No-show" ? "bg-[#FCE4E4]" : clientTag === "New" ? "bg-[#E6F1FB]" : "bg-neutral-100",
       tagColor: clientTag === "VIP" ? "text-[#633806]" : clientTag === "No-show" ? "text-[#E42424]" : clientTag === "New" ? "text-[#0C447C]" : "text-neutral-600",
-      avatarText: `${clientFirstName.charAt(0)}${clientLastName ? clientLastName.charAt(0) : ""}`.toUpperCase()
+      avatarText: `${clientFirstName.charAt(0)}${clientLastName ? clientLastName.charAt(0) : ""}`.toUpperCase(),
+      avatar: clientAvatar || undefined
     };
     setClientsData(updated);
     // Reset Form
@@ -211,6 +243,9 @@ export default function BusinessDashboard() {
     setClientDirections("");
     setClientNotes("");
     setClientTagState("VIP");
+    setClientAvatar("");
+    setClientPhoneCode("+357");
+    setClientPhoneFlag("cy");
     setEditingClientIndex(null);
   };
 
@@ -308,12 +343,26 @@ export default function BusinessDashboard() {
                   </div>
 
                   {/* Avatar Picker */}
-                  <div className="relative w-14 h-14 bg-[#E1F5EE] rounded-full flex items-center justify-center select-none cursor-pointer hover:opacity-95 transition-opacity">
-                    <HugeiconsIcon icon={User02Icon} className="w-[22px] h-[22px] text-[#ABAAA6]" />
+                  <div 
+                    onClick={() => clientAvatarInputRef.current?.click()}
+                    className="relative w-14 h-14 bg-[#E1F5EE] rounded-full flex items-center justify-center select-none cursor-pointer hover:opacity-95 transition-opacity"
+                  >
+                    {clientAvatar ? (
+                      <img src={clientAvatar} className="w-full h-full rounded-full object-cover" alt="client avatar" />
+                    ) : (
+                      <HugeiconsIcon icon={User02Icon} className="w-[22px] h-[22px] text-[#ABAAA6]" />
+                    )}
                     <div className="absolute right-0 bottom-0 w-6 h-6 bg-white border border-[#E8E8E6] rounded-full flex items-center justify-center shadow-sm">
                       <HugeiconsIcon icon={PencilEdit02Icon} className="w-3 h-3 text-[#757575]" />
                     </div>
                   </div>
+                  <input 
+                    type="file"
+                    ref={clientAvatarInputRef}
+                    onChange={handleClientAvatarChange}
+                    accept="image/*"
+                    className="hidden"
+                  />
 
                   {/* First and Last Name */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -348,14 +397,50 @@ export default function BusinessDashboard() {
                       <span>Phone</span>
                       <span className="text-[#E24B4A]">*</span>
                     </label>
-                    <div className="flex w-full h-[38px]">
-                      <div className="bg-white border border-[#E8E8E4] border-r-0 rounded-l-lg px-3 flex items-center gap-1.5 text-xs text-neutral-500 shrink-0">
-                        <span>🇺🇸</span>
-                        <span>+88</span>
+                    <div className="flex w-full h-[38px] relative">
+                      <div 
+                        onClick={() => setIsClientPhoneDropdownOpen(!isClientPhoneDropdownOpen)}
+                        className="bg-white border border-[#E8E8E4] border-r-0 rounded-l-lg px-3 flex items-center gap-1.5 text-xs text-neutral-500 shrink-0 cursor-pointer select-none hover:bg-neutral-50/50"
+                      >
+                        <img 
+                          src={`https://flagcdn.com/w20/${clientPhoneFlag}.png`} 
+                          alt="flag" 
+                          className="w-[18px] h-[12px] object-cover rounded-sm border border-neutral-100 shrink-0" 
+                        />
+                        <span>{clientPhoneCode}</span>
                         <svg className="w-3 h-3 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </div>
+
+                      {/* Dropdown menu */}
+                      {isClientPhoneDropdownOpen && (
+                        <>
+                          <div 
+                            className="fixed inset-0 z-40 bg-transparent"
+                            onClick={() => setIsClientPhoneDropdownOpen(false)}
+                          />
+                          <div className="absolute top-[40px] left-0 bg-white border border-neutral-200 rounded-lg shadow-lg z-50 w-[180px] p-1 flex flex-col gap-0.5 text-xs">
+                            {phoneCountries.map((c) => (
+                              <button
+                                key={c.code}
+                                type="button"
+                                onClick={() => {
+                                  setClientPhoneCode(c.code);
+                                  setClientPhoneFlag(c.flag);
+                                  setIsClientPhoneDropdownOpen(false);
+                                }}
+                                className="flex items-center gap-2 w-full px-3 py-2 hover:bg-neutral-50 rounded text-left font-poppins"
+                              >
+                                <img src={`https://flagcdn.com/w40/${c.flag}.png`} className="w-[20px] h-[12px] object-cover rounded-sm shrink-0 border border-neutral-100" alt="flag" />
+                                <span className="font-semibold text-neutral-800">{c.code}</span>
+                                <span className="text-neutral-500 text-[10px] ml-auto">{c.name}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
+
                       <input
                         type="text"
                         value={clientPhone}
@@ -461,8 +546,11 @@ export default function BusinessDashboard() {
                         >
                           <option value="">Select property type</option>
                           <option value="Apartment">Apartment</option>
+                          <option value="Villa">Villa</option>
                           <option value="House">House</option>
+                          <option value="Hotel">Hotel</option>
                           <option value="Office">Office</option>
+                          <option value="Other">Other</option>
                         </select>
                         <div className="absolute right-3 top-3.5 pointer-events-none">
                           <svg className="w-3.5 h-3.5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -590,8 +678,12 @@ export default function BusinessDashboard() {
 
                 {/* Avatar & Name */}
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-16 h-16 bg-[#E1F5EE] rounded-full flex items-center justify-center">
-                    <HugeiconsIcon icon={User02Icon} className="w-[26px] h-[26px] text-[#ABAAA6]" />
+                  <div className="w-16 h-16 bg-[#E1F5EE] rounded-full flex items-center justify-center overflow-hidden">
+                    {clientAvatar ? (
+                      <img src={clientAvatar} className="w-full h-full object-cover" alt="client avatar preview" />
+                    ) : (
+                      <HugeiconsIcon icon={User02Icon} className="w-[26px] h-[26px] text-[#ABAAA6]" />
+                    )}
                   </div>
                   <span className={`font-poppins font-semibold text-sm leading-[21px] text-center ${clientFirstName || clientLastName ? "text-[#1C1C1A]" : "text-[#D3D1C7]"}`}>
                     {clientFirstName || clientLastName ? `${clientFirstName} ${clientLastName}`.trim() : "Full name"}
@@ -707,6 +799,9 @@ export default function BusinessDashboard() {
           setClientLastName={setClientLastName}
           setClientPhone={setClientPhone}
           setClientTagState={setClientTagState}
+          setClientPhoneCode={setClientPhoneCode}
+          setClientPhoneFlag={setClientPhoneFlag}
+          setClientAvatar={setClientAvatar}
         />
       );
     }

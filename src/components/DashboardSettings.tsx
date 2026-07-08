@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   User02Icon,
@@ -38,6 +38,32 @@ export default function DashboardSettings() {
   const [personalEmail, setPersonalEmail] = useState("Eslsj@gam.com");
   const [personalRole, setPersonalRole] = useState("Supervisor");
   const [personalPhone, setPersonalPhone] = useState("1234556666");
+
+  const [profileImage, setProfileImage] = useState<string>("/businessDashboard/downLogo.png");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedImage = localStorage.getItem("settingsProfileImage");
+      if (savedImage) {
+        setProfileImage(savedImage);
+      }
+    }
+  }, []);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setProfileImage(base64String);
+        localStorage.setItem("settingsProfileImage", base64String);
+        window.dispatchEvent(new Event("settingsProfileUpdate"));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Members List State (Role Tab)
   const [members, setMembers] = useState<MemberItem[]>(initialMembers);
@@ -195,10 +221,21 @@ export default function DashboardSettings() {
                   </span>
                   <div className="flex items-center gap-4 mt-2">
                     <div className="relative w-20 h-20 rounded-full border border-neutral-200 overflow-hidden bg-neutral-100">
-                      <img src="/businessDashboard/downLogo.png" alt="Profile" className="w-full h-full object-cover" />
-                      <button className="absolute bottom-1 right-1 w-6 h-6 bg-white border border-neutral-300 rounded-full flex items-center justify-center hover:bg-neutral-50 shadow-sm cursor-pointer">
+                      <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                      <button 
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="absolute bottom-1 right-1 w-6 h-6 bg-white border border-neutral-300 rounded-full flex items-center justify-center hover:bg-neutral-50 shadow-sm cursor-pointer"
+                      >
                         <HugeiconsIcon icon={Camera01Icon} className="w-3.5 h-3.5 text-[#111111]" />
                       </button>
+                      <input 
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleImageChange}
+                        accept="image/*"
+                        className="hidden"
+                      />
                     </div>
                   </div>
                 </div>
