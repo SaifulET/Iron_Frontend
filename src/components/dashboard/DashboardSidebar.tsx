@@ -194,7 +194,7 @@ export default function DashboardSidebar({
       </div>
 
       {/* User Footer Profile */}
-      <div className="border-t border-[#757575]/30 bg-[#C0D5D8] flex flex-col shrink-0">
+      <div className="border-t border-[#757575]/30 bg-[#C0D5D8] flex flex-col shrink-0 relative">
         {/* Profile Card */}
         <div className={`p-4 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
           <div className="flex items-center gap-3 cursor-pointer select-none" onClick={() => setShowFooterMenu(!showFooterMenu)}>
@@ -219,29 +219,32 @@ export default function DashboardSidebar({
           )}
         </div>
 
-        {/* Collapsible Submenu in flow */}
-        <div
-          ref={footerMenuRef}
-          className={`flex flex-col border-[#757575]/15 bg-[#B8CED1] transition-all duration-300 ease-in-out overflow-hidden ${showFooterMenu ? "max-h-[110px] opacity-100 border-t py-2 px-3.5" : "max-h-0 opacity-0 py-0 px-3.5"
-            } ${isCollapsed ? "items-center !px-1" : ""} gap-1`}
-        >
-          <button 
-            onClick={() => setActiveTab("Contact Support")}
-            className={`flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all cursor-pointer ${isCollapsed ? "w-full justify-center" : "w-full"}`}
+        {/* Floating popover/modal for profile menu */}
+        {showFooterMenu && (
+          <div
+            ref={footerMenuRef}
+            className={`absolute bottom-[72px] ${isCollapsed ? "left-[4px] right-[4px] w-48 shadow-2xl z-50 bg-[#B8CED1]" : "left-[16px] right-[16px]"} z-50 bg-[#B8CED1] border border-[#757575]/25 rounded-xl shadow-2xl flex flex-col py-2 px-3 gap-1 animate-fadeIn`}
           >
-            <HugeiconsIcon icon={HeadsetIcon} className="w-5 h-5 text-[#111111] shrink-0" />
-            {!isCollapsed && (
+            <button 
+              onClick={() => {
+                setActiveTab("Contact Support");
+                setShowFooterMenu(false);
+              }}
+              className="flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all cursor-pointer w-full"
+            >
+              <HugeiconsIcon icon={HeadsetIcon} className="w-5 h-5 text-[#111111] shrink-0" />
               <span className="font-manrope font-medium text-xs text-[#111111]">Contact Support</span>
-            )}
-          </button>
-          {/* Logout */}
-          <button className={`flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all ${isCollapsed ? "w-full justify-center" : "w-full"}`}>
-            <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
-            {!isCollapsed && (
+            </button>
+            {/* Logout */}
+            <button 
+              onClick={() => setShowFooterMenu(false)}
+              className="flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all cursor-pointer w-full"
+            >
+              <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
               <span className="font-manrope font-medium text-xs text-[#111111]">Logout</span>
-            )}
-          </button>
-        </div>
+            </button>
+          </div>
+        )}
       </div>
     </aside>
   );
