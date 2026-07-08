@@ -94,21 +94,21 @@ export default function DashboardAddonsList() {
         </div>
 
         {/* Active Status Card */}
-        <div className="ml-[110px] flex justify-between items-center bg-[#F5F4EE] border border-[#C6C19F] rounded-[12px] p-5 w-full max-w-[779px] h-[81px] gap-[125px] mb-8">
+        <div className="ml-0 md:ml-[110px] flex justify-between items-center bg-[#F5F4EE] border border-[#C6C19F] rounded-[12px] p-5 w-full max-w-full md:max-w-[779px] gap-6 mb-8">
           <div className="flex flex-col gap-0.5">
             <span className="font-medium text-sm text-[#111111] font-poppins leading-[21px]">Add-on active</span>
             <span className="text-xs text-[#111111]/60 font-poppins leading-[18px]">Show on your public profile. Turn off to hide without deleting.</span>
           </div>
           <button
             onClick={() => setAddonActive(!addonActive)}
-            className={`w-[38px] h-[21px] rounded-[11px] p-[3px] transition-colors duration-200 focus:outline-none flex items-center ${addonActive ? "bg-[#0F6E56]" : "bg-neutral-300"} cursor-pointer`}
+            className="w-[38px] h-[21px] rounded-[11px] p-[3px] transition-colors duration-200 focus:outline-none flex items-center bg-neutral-300 cursor-pointer"
           >
             <div className={`w-[15px] h-[15px] bg-white rounded-full transition-transform duration-200 ${addonActive ? "translate-x-[17px]" : "translate-x-0"}`} />
           </button>
         </div>
 
         {/* Form Fields container (no wrapper box) */}
-        <div className="ml-[110px] flex flex-col gap-[32px] w-full max-w-[779px]">
+        <div className="ml-0 md:ml-[110px] flex flex-col gap-[32px] w-full max-w-full md:max-w-[779px]">
           {/* Add-on Name */}
           <div className="flex flex-col gap-2 w-full">
             <div className="flex items-center gap-0.5">
@@ -137,7 +137,7 @@ export default function DashboardAddonsList() {
           </div>
 
           {/* Price and Category Row */}
-          <div className="flex flex-row gap-5 w-full">
+          <div className="flex flex-col md:flex-row gap-5 w-full">
             <div className="flex-1 flex flex-col gap-2">
               <div className="flex items-center gap-0.5">
                 <span className="text-xs font-normal text-[#111111] font-poppins leading-[18px]">Price (€)</span>
