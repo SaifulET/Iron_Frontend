@@ -100,6 +100,16 @@ export default function PaymentCardPage() {
               Add payment card information
             </h2>
 
+            {/* Securing booking alert banner */}
+            {hasSavedCard && (
+              <div className="w-full flex flex-row items-start gap-3 bg-[#FDF4E6] border border-[#F5E6D3]/60 rounded-xl p-4 text-sm text-[#111111]/80 select-none">
+                <HugeiconsIcon icon={InformationCircleIcon} className="w-5 h-5 text-[#4F80E1] shrink-0 mt-0.5" />
+                <span className="font-poppins font-normal text-xs sm:text-[13px] text-[#111111] leading-relaxed">
+                  Your card is currently securing an upcoming booking. For your protection and the business's, saved cards cannot be removed while a booking is active. Once your appointment is complete, you're welcome to update or remove your payment details anytime.
+                </span>
+              </div>
+            )}
+
           {/* Primary Saved Card Box (Frame 2147240162) */}
           {hasSavedCard && (
             <div className="w-full flex flex-col items-start gap-4">
@@ -161,8 +171,8 @@ export default function PaymentCardPage() {
               <div className="w-full flex justify-end mt-1">
                 <button
                   type="button"
-                  onClick={handleDeleteClick}
-                  className="w-[99px] h-11 flex items-center justify-center rounded-lg text-sm font-semibold bg-[#F4C5C5] hover:bg-[#EAA1A1] text-[#962828] cursor-pointer transition-all duration-200"
+                  disabled={true}
+                  className="w-[99px] h-11 flex items-center justify-center rounded-lg text-sm font-semibold bg-[#FAECEC] text-[#D8A7A7] cursor-not-allowed transition-all duration-200 select-none"
                 >
                   Delete
                 </button>
