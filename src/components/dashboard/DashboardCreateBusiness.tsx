@@ -1,5 +1,5 @@
 "use client";
-import DashboardHeader from "@/components/DashboardHeader";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 
 import React, { useState } from "react";
@@ -17,17 +17,17 @@ import {
   ViewIcon
 } from "@hugeicons/core-free-icons";
 
-import BusinessInfoSection from "./create-business/BusinessInfoSection";
-import AddressSection from "./create-business/AddressSection";
-import LocationSection from "./create-business/LocationSection";
-import ServiceCategorySection from "./create-business/ServiceCategorySection";
-import PhotosSection from "./create-business/PhotosSection";
-import OpeningHoursSection from "./create-business/OpeningHoursSection";
-import BookingTimeControlSection from "./create-business/BookingTimeControlSection";
-import ClosedPeriodsSection from "./create-business/ClosedPeriodsSection";
-import LeadTimeSettingsSection from "./create-business/LeadTimeSettingsSection";
-import AdditionalInfoSection from "./create-business/AdditionalInfoSection";
-import TravelFeesSection from "./create-business/TravelFeesSection";
+import BusinessInfoSection from "../create-business/BusinessInfoSection";
+import AddressSection from "../create-business/AddressSection";
+import LocationSection from "../create-business/LocationSection";
+import ServiceCategorySection from "../create-business/ServiceCategorySection";
+import PhotosSection from "../create-business/PhotosSection";
+import OpeningHoursSection from "../create-business/OpeningHoursSection";
+import BookingTimeControlSection from "../create-business/BookingTimeControlSection";
+import ClosedPeriodsSection from "../create-business/ClosedPeriodsSection";
+import LeadTimeSettingsSection from "../create-business/LeadTimeSettingsSection";
+import AdditionalInfoSection from "../create-business/AdditionalInfoSection";
+import TravelFeesSection from "../create-business/TravelFeesSection";
 
 interface DashboardCreateBusinessProps {
   onBack: () => void;

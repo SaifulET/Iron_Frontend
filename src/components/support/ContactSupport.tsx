@@ -5,7 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Tick02Icon } from "@hugeicons/core-free-icons";
 
 // Modular sub-components inside same folder
-import DashboardHeader from "@/components/DashboardHeader";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import SupportBreadcrumbs from "./SupportBreadcrumbs";
 import SupportFormFields from "./SupportFormFields";
 import SupportFormActions from "./SupportFormActions";

@@ -1,5 +1,5 @@
 "use client";
-import DashboardHeader from "@/components/DashboardHeader";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 
 import React, { useState, useEffect, useRef } from "react";
@@ -26,10 +26,10 @@ import {
   CancellationRule
 } from "@/data/settingsMockData";
 
-import { SettingsInput } from "./settings/SettingsInput";
-import { SettingsToggle } from "./settings/SettingsToggle";
-import { SettingsSubSidebar } from "./settings/SettingsSubSidebar";
-import { Security2FAPanel } from "./settings/Security2FAPanel";
+import { SettingsInput } from "../settings/SettingsInput";
+import { SettingsToggle } from "../settings/SettingsToggle";
+import { SettingsSubSidebar } from "../settings/SettingsSubSidebar";
+import { Security2FAPanel } from "../settings/Security2FAPanel";
 
 export default function DashboardSettings() {
   const [activeSubTab, setActiveSubTab] = useState<string>("Personal info");

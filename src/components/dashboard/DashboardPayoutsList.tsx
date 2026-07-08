@@ -1,5 +1,5 @@
 "use client";
-import DashboardHeader from "@/components/DashboardHeader";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 
 import React, { useState } from "react";
@@ -7,9 +7,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { BellIcon } from "@hugeicons/core-free-icons";
 
 // Modular Subcomponents
-import PayoutsBanner from "./payouts/PayoutsBanner";
-import PayoutsBreakdown from "./payouts/PayoutsBreakdown";
-import PayoutsHistory from "./payouts/PayoutsHistory";
+import PayoutsBanner from "../payouts/PayoutsBanner";
+import PayoutsBreakdown from "../payouts/PayoutsBreakdown";
+import PayoutsHistory from "../payouts/PayoutsHistory";
 
 export default function DashboardPayoutsList() {
   const [selectedYear, setSelectedYear] = useState("2026");

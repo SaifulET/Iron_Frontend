@@ -19,24 +19,24 @@ import {
 import { initialBookingsData, initialClientsData } from "@/utils/dashboardMockData";
 
 // Modular Dashboard sub-components
-import DashboardSidebar from "@/components/DashboardSidebar";
-import DashboardOverview from "@/components/DashboardOverview";
-import DashboardCalendar from "@/components/DashboardCalendar";
-import DashboardBookingsList from "@/components/DashboardBookingsList";
-import DashboardBookingForm from "@/components/DashboardBookingForm";
+import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import DashboardOverview from "@/components/dashboard/DashboardOverview";
+import DashboardCalendar from "@/components/dashboard/DashboardCalendar";
+import DashboardBookingsList from "@/components/dashboard/DashboardBookingsList";
+import DashboardBookingForm from "@/components/dashboard/DashboardBookingForm";
 import ClientsList from "@/components/clients/ClientsList";
 import ClientDetails from "@/components/clients/ClientDetails";
 import ClientForm from "@/components/clients/ClientForm";
 import ClientBookingHistoryCard from "@/components/clients/ClientBookingHistoryCard";
-import DashboardBusinessProfile from "@/components/DashboardBusinessProfile";
-import DashboardCreateBusiness from "@/components/DashboardCreateBusiness";
-import DashboardServicesList from "@/components/DashboardServicesList";
-import DashboardAddonsList from "@/components/DashboardAddonsList";
-import DashboardStaffList from "@/components/DashboardStaffList";
-import DashboardReviewsList from "@/components/DashboardReviewsList";
-import DashboardPayoutsList from "@/components/DashboardPayoutsList";
-import DashboardAnalytics from "@/components/DashboardAnalytics";
-import DashboardSettings from "@/components/DashboardSettings";
+import DashboardBusinessProfile from "@/components/dashboard/DashboardBusinessProfile";
+import DashboardCreateBusiness from "@/components/dashboard/DashboardCreateBusiness";
+import DashboardServicesList from "@/components/dashboard/DashboardServicesList";
+import DashboardAddonsList from "@/components/dashboard/DashboardAddonsList";
+import DashboardStaffList from "@/components/dashboard/DashboardStaffList";
+import DashboardReviewsList from "@/components/dashboard/DashboardReviewsList";
+import DashboardPayoutsList from "@/components/dashboard/DashboardPayoutsList";
+import DashboardAnalytics from "@/components/dashboard/DashboardAnalytics";
+import DashboardSettings from "@/components/dashboard/DashboardSettings";
 import ContactSupport from "@/components/support/ContactSupport";
 
 interface Booking {

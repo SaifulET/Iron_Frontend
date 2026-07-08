@@ -1,5 +1,5 @@
 "use client";
-import DashboardHeader from "@/components/DashboardHeader";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 
 import React, { useState, useRef } from "react";
@@ -11,9 +11,9 @@ import {
   Camera01Icon
 } from "@hugeicons/core-free-icons";
 import { Staff, initialStaffMembers } from "@/data/staffMockData";
-import StaffCard from "./staff/StaffCard";
-import StaffAvailabilityTable from "./staff/StaffAvailabilityTable";
-import StaffRolePermissions from "./staff/StaffRolePermissions";
+import StaffCard from "../staff/StaffCard";
+import StaffAvailabilityTable from "../staff/StaffAvailabilityTable";
+import StaffRolePermissions from "../staff/StaffRolePermissions";
 
 interface WorkingShift {
   open: boolean;

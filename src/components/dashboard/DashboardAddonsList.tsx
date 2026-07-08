@@ -1,5 +1,5 @@
 "use client";
-import DashboardHeader from "@/components/DashboardHeader";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 
 import React, { useState } from "react";
@@ -9,7 +9,7 @@ import {
   ArrowLeft02Icon
 } from "@hugeicons/core-free-icons";
 import { Addon, initialAddons } from "@/data/addonsMockData";
-import AddonCard from "./addons/AddonCard";
+import AddonCard from "../addons/AddonCard";
 
 export default function DashboardAddonsList() {
   const [isCreating, setIsCreating] = useState(false);
