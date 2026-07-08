@@ -28,6 +28,7 @@ import {
 import { SettingsInput } from "./settings/SettingsInput";
 import { SettingsToggle } from "./settings/SettingsToggle";
 import { SettingsSubSidebar } from "./settings/SettingsSubSidebar";
+import { Security2FAPanel } from "./settings/Security2FAPanel";
 
 export default function DashboardSettings() {
   const [activeSubTab, setActiveSubTab] = useState<string>("Personal info");
@@ -627,76 +628,120 @@ export default function DashboardSettings() {
 
           {/* TAB 6: Notifications */}
           {activeSubTab === "Notifications" && (
-            <div className="flex flex-col gap-[14px] w-full">
-              <div>
-                <h2 className="font-poppins font-medium text-base text-[#1A1A1A]">Notifications</h2>
-                <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Configure your preference channels</p>
+            <div className="flex flex-col gap-[20px] w-full">
+              <div className="flex flex-col gap-1">
+                <h2 className="font-poppins font-medium text-base text-[#111111]">Notifications</h2>
+                <p className="font-poppins font-normal text-xs text-[#666666]">Control your notification</p>
               </div>
 
-              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-4">
-                <SettingsToggle
-                  title="Email Notifications"
-                  subtitle="Receive summaries and transactional details by email"
-                  checked={notifEmail}
-                  onChange={setNotifEmail}
-                />
-                <SettingsToggle
-                  title="SMS Alerts"
-                  subtitle="Send instant text updates for bookings and alerts"
-                  checked={notifSms}
-                  onChange={setNotifSms}
-                />
-                <SettingsToggle
-                  title="Browser Push Notifications"
-                  subtitle="Display immediate alerts inside your active browser session"
-                  checked={notifPush}
-                  onChange={setNotifPush}
-                />
+              {/* Notification triggers section */}
+              <div className="bg-white border border-[#E8E8E6] rounded-[12px] p-0.5 shadow-none flex flex-col">
+                {/* Header title */}
+                <div className="p-5 border-b border-[#F0F0EE]">
+                  <h3 className="font-poppins font-medium text-sm text-[#111111]">Notification triggers</h3>
+                  <p className="font-poppins font-normal text-xs text-neutral-400 mt-0.5">Choose which events send messages</p>
+                </div>
+
+                {/* List items */}
+                <div className="p-5 flex flex-col gap-5">
+                  
+                  {/* Row 1: New booking */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm text-[#111111]">New booking</span>
+                      <span className="text-xs text-neutral-400">When a client makes a new booking</span>
+                    </div>
+                    <button
+                      onClick={() => setNotifEmail(!notifEmail)}
+                      className={`w-[38px] h-[21px] rounded-full transition-colors flex items-center p-0.5 cursor-pointer ${
+                        notifEmail ? "bg-[#0F6E56]" : "bg-neutral-300"
+                      }`}
+                    >
+                      <div className={`w-[15px] h-[15px] bg-white rounded-full transition-transform shadow-sm ${
+                        notifEmail ? "translate-x-[18px]" : ""
+                      }`} />
+                    </button>
+                  </div>
+
+                  <div className="border-t border-[#666666]/20" />
+
+                  {/* Row 2: Booking cancelled */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm text-[#111111]">Booking cancelled</span>
+                      <span className="text-xs text-neutral-400">When a booking is cancelled by client or staff</span>
+                    </div>
+                    <button
+                      onClick={() => setNotifSms(!notifSms)}
+                      className={`w-[38px] h-[21px] rounded-full transition-colors flex items-center p-0.5 cursor-pointer ${
+                        notifSms ? "bg-[#0F6E56]" : "bg-neutral-300"
+                      }`}
+                    >
+                      <div className={`w-[15px] h-[15px] bg-white rounded-full transition-transform shadow-sm ${
+                        notifSms ? "translate-x-[18px]" : ""
+                      }`} />
+                    </button>
+                  </div>
+
+                  <div className="border-t border-[#666666]/20" />
+
+                  {/* Row 3: Reminder - 24h before */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm text-[#111111]">Reminder - 24h before</span>
+                      <span className="text-xs text-neutral-400">Sent to client the day before their appointment</span>
+                    </div>
+                    <button
+                      onClick={() => setNotifPush(!notifPush)}
+                      className={`w-[38px] h-[21px] rounded-full transition-colors flex items-center p-0.5 cursor-pointer ${
+                        notifPush ? "bg-[#0F6E56]" : "bg-neutral-300"
+                      }`}
+                    >
+                      <div className={`w-[15px] h-[15px] bg-white rounded-full transition-transform shadow-sm ${
+                        notifPush ? "translate-x-[18px]" : ""
+                      }`} />
+                    </button>
+                  </div>
+
+                  <div className="border-t border-[#666666]/20" />
+
+                  {/* Row 4: Reminder - 1h before */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm text-[#111111]">Reminder - 1h before</span>
+                      <span className="text-xs text-neutral-400">Last minute reminder to reduce no-shows</span>
+                    </div>
+                    <button
+                      onClick={() => setTwoFactor(!twoFactor)}
+                      className={`w-[38px] h-[21px] rounded-full transition-colors flex items-center p-0.5 cursor-pointer ${
+                        twoFactor ? "bg-[#0F6E56]" : "bg-neutral-300"
+                      }`}
+                    >
+                      <div className={`w-[15px] h-[15px] bg-white rounded-full transition-transform shadow-sm ${
+                        twoFactor ? "translate-x-[18px]" : ""
+                      }`} />
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-3 mt-4">
+                <button className="h-[34px] px-4 bg-[#EBEBEB] text-[#757575] hover:bg-neutral-200 rounded-[8px] text-xs font-semibold cursor-pointer">
+                  Cancel
+                </button>
+                <button className="h-[34px] px-4 bg-[#1C1B1C] hover:bg-black text-white rounded-[8px] text-xs font-semibold cursor-pointer">
+                  Save changes
+                </button>
               </div>
             </div>
           )}
 
           {/* TAB 7: Security & 2FA */}
           {activeSubTab === "Security & 2FA" && (
-            <div className="flex flex-col gap-[14px] w-full">
-              <div>
-                <h2 className="font-poppins font-medium text-base text-[#1A1A1A]">Security & 2FA</h2>
-                <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Manage authentication settings</p>
-              </div>
-
-              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-5">
-                <SettingsToggle
-                  title="Two-Factor Authentication (2FA)"
-                  subtitle="Add an extra layer of security using Google Authenticator or SMS"
-                  checked={twoFactor}
-                  onChange={setTwoFactor}
-                />
-
-                <div className="border-t border-neutral-100 pt-4 flex flex-col gap-3">
-                  <span className="font-semibold text-sm text-[#111111]">Change Password</span>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <SettingsInput
-                      label="New Password"
-                      type="password"
-                      value=""
-                      onChange={() => {}}
-                      placeholder="••••••••"
-                    />
-                    <SettingsInput
-                      label="Confirm New Password"
-                      type="password"
-                      value=""
-                      onChange={() => {}}
-                      placeholder="••••••••"
-                    />
-                  </div>
-                  <button className="px-4 py-2 bg-[#111111] hover:bg-black text-white text-xs font-semibold rounded-[8px] transition-colors mt-2 cursor-pointer w-fit">
-                    Update password
-                  </button>
-                </div>
-
-              </div>
-            </div>
+            <Security2FAPanel />
           )}
 
         </div>
