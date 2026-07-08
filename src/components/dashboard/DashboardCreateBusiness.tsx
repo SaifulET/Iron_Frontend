@@ -31,6 +31,7 @@ import TravelFeesSection from "../create-business/TravelFeesSection";
 
 interface DashboardCreateBusinessProps {
   onBack: () => void;
+  mode?: "create" | "edit" | "view";
 }
 
 const timeOptions = [
@@ -40,7 +41,9 @@ const timeOptions = [
   "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
 ];
 
-export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusinessProps) {
+export default function DashboardCreateBusiness({ onBack, mode = "create" }: DashboardCreateBusinessProps) {
+  const modeTitle = mode === "edit" ? "Edit Business" : mode === "view" ? "View Business" : "Create Business";
+  const modeSubtitle = mode === "edit" ? "Edit your business details" : mode === "view" ? "View your business details" : "Create your business at our platform";
   // Business Active Toggle
   const [isActive, setIsActive] = useState(true);
 
@@ -288,7 +291,7 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
               onClick={() => setViewingAllImages(false)} 
               className="text-[13px] font-medium text-[#888780] hover:text-black cursor-pointer leading-[20px]"
             >
-              Create Business
+              {modeTitle}
             </button>
             <span className="text-[13px] text-[#888780] font-normal leading-[20px]">&gt;</span>
             <span className="text-[13px] font-semibold text-[#1C1C1A] leading-[20px]">Images</span>
@@ -391,7 +394,7 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
 
       <DashboardHeader 
         title="Business Profile" 
-        subtitle="Create your business at our platform" 
+        subtitle={modeSubtitle} 
       />
       <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
@@ -402,7 +405,7 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
           <span>Business</span>
         </button>
         <span className="text-neutral-300">/</span>
-        <span className="text-black font-semibold">Create Business</span>
+        <span className="text-black font-semibold">{modeTitle}</span>
       </div>
 
       {/* Main Form container */}

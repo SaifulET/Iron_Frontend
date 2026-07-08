@@ -120,6 +120,7 @@ export default function BusinessDashboard() {
   const [viewingBookingIndex, setViewingBookingIndex] = useState<number | null>(null);
   const [isViewingBookingDetails, setIsViewingBookingDetails] = useState(false);
   const [isCreatingBusiness, setIsCreatingBusiness] = useState(false);
+  const [businessProfileMode, setBusinessProfileMode] = useState<"create" | "edit" | "view">("create");
 
   // Clients Data states
   const [clientsData, setClientsData] = useState<Client[]>(initialClientsData as Client[]);
@@ -590,13 +591,27 @@ export default function BusinessDashboard() {
 
     if (activeTab === "Business Profile") {
       if (isCreatingBusiness) {
-        return <DashboardCreateBusiness onBack={() => setIsCreatingBusiness(false)} />;
+        return (
+          <DashboardCreateBusiness 
+            onBack={() => setIsCreatingBusiness(false)} 
+            mode={businessProfileMode}
+          />
+        );
       }
       return (
         <DashboardBusinessProfile 
-          onAddBusiness={() => setIsCreatingBusiness(true)} 
-          onEditBusiness={() => setIsCreatingBusiness(true)}
-          onViewBusiness={() => setIsCreatingBusiness(true)}
+          onAddBusiness={() => {
+            setIsCreatingBusiness(true);
+            setBusinessProfileMode("create");
+          }} 
+          onEditBusiness={() => {
+            setIsCreatingBusiness(true);
+            setBusinessProfileMode("edit");
+          }}
+          onViewBusiness={() => {
+            setIsCreatingBusiness(true);
+            setBusinessProfileMode("view");
+          }}
         />
       );
     }
