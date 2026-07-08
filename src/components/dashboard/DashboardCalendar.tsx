@@ -1,6 +1,7 @@
 "use client";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import WaiveChargeModal from "./WaiveChargeModal";
+import { NoShowModal, CompleteModal, CancelBookingModal } from "./CalendarActionModals";
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -49,6 +50,9 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
   // Modal State for Viewing Booking
   const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
   const [waiveBookingId, setWaiveBookingId] = useState<string | null>(null);
+  const [noShowBookingId, setNoShowBookingId] = useState<string | null>(null);
+  const [completeBookingId, setCompleteBookingId] = useState<string | null>(null);
+  const [cancelBookingId, setCancelBookingId] = useState<string | null>(null);
 
   // Stateful bookings list
   const [bookings, setBookings] = useState<Booking[]>([
@@ -214,17 +218,7 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
 
   // Dropdown Actions Implementation
   const handleMarkNoShow = (cardId: string) => {
-    setBookings(prev => prev.map(b => {
-      if (b.id === cardId) {
-        return {
-          ...b,
-          status: "No-show - charged",
-          colorClass: "bg-[#FFB5D3]",
-          borderColor: "border-[#FF6B9E]"
-        };
-      }
-      return b;
-    }));
+    setNoShowBookingId(cardId);
     setOpenDropdownCardId(null);
   };
 
@@ -244,36 +238,12 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
   };
 
   const handleCompleteBooking = (cardId: string) => {
-    setBookings(prev => prev.map(b => {
-      if (b.id === cardId) {
-        return {
-          ...b,
-          status: "Completed ✓",
-          colorClass: "bg-[#86EFAC]/65",
-          borderColor: "border-[#10B981]",
-          isPending: false,
-          isCancelled: false
-        };
-      }
-      return b;
-    }));
+    setCompleteBookingId(cardId);
     setOpenDropdownCardId(null);
   };
 
   const handleCancelBooking = (cardId: string) => {
-    setBookings(prev => prev.map(b => {
-      if (b.id === cardId) {
-        return {
-          ...b,
-          status: "Cancelled",
-          colorClass: "bg-neutral-100",
-          borderColor: "border-neutral-400",
-          isCancelled: true,
-          isPending: false
-        };
-      }
-      return b;
-    }));
+    setCancelBookingId(cardId);
     setOpenDropdownCardId(null);
   };
 
@@ -639,6 +609,76 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
               return b;
             }));
             setWaiveBookingId(null);
+          }
+        }}
+      />
+
+      {/* No-show Confirm Modal Overlay */}
+      <NoShowModal
+        isOpen={!!noShowBookingId}
+        onClose={() => setNoShowBookingId(null)}
+        onConfirm={() => {
+          if (noShowBookingId) {
+            setBookings(prev => prev.map(b => {
+              if (b.id === noShowBookingId) {
+                return {
+                  ...b,
+                  status: "No-show - charged",
+                  colorClass: "bg-[#FFB5D3]",
+                  borderColor: "border-[#FF6B9E]"
+                };
+              }
+              return b;
+            }));
+            setNoShowBookingId(null);
+          }
+        }}
+      />
+
+      {/* Complete Booking Confirm Modal Overlay */}
+      <CompleteModal
+        isOpen={!!completeBookingId}
+        onClose={() => setCompleteBookingId(null)}
+        onConfirm={() => {
+          if (completeBookingId) {
+            setBookings(prev => prev.map(b => {
+              if (b.id === completeBookingId) {
+                return {
+                  ...b,
+                  status: "Completed ✓",
+                  colorClass: "bg-[#86EFAC]/65",
+                  borderColor: "border-[#10B981]",
+                  isPending: false,
+                  isCancelled: false
+                };
+              }
+              return b;
+            }));
+            setCompleteBookingId(null);
+          }
+        }}
+      />
+
+      {/* Cancel Booking Confirm Modal Overlay */}
+      <CancelBookingModal
+        isOpen={!!cancelBookingId}
+        onClose={() => setCancelBookingId(null)}
+        onConfirm={() => {
+          if (cancelBookingId) {
+            setBookings(prev => prev.map(b => {
+              if (b.id === cancelBookingId) {
+                return {
+                  ...b,
+                  status: "Cancelled",
+                  colorClass: "bg-neutral-100",
+                  borderColor: "border-neutral-400",
+                  isCancelled: true,
+                  isPending: false
+                };
+              }
+              return b;
+            }));
+            setCancelBookingId(null);
           }
         }}
       />
