@@ -285,6 +285,29 @@ export default function BusinessDashboard() {
             setIsCreatingBooking(true);
             setActiveTab("All Bookings");
           }}
+          onViewBookingClick={(clientName) => {
+            let index = bookingsData.findIndex(b => b.clientName.toLowerCase().includes(clientName.toLowerCase()));
+            if (index === -1) {
+              const newBookingObj: Booking = {
+                clientName: clientName,
+                clientPhone: "+357 99 999 999",
+                clientInitials: clientName.split(' ').map(n => n[0]).join(''),
+                isNew: true,
+                bookingId: `#BK-${Math.floor(1000 + Math.random() * 9000)}`,
+                date: "Wed, 21 Jun",
+                time: "10:00",
+                staff: "John",
+                status: "Upcoming",
+                amount: "€54",
+                paymentType: "Pay at venue"
+              };
+              setBookingsData(prev => [newBookingObj, ...prev]);
+              index = 0;
+            }
+            setViewingBookingIndex(index);
+            setIsViewingBookingDetails(true);
+            setActiveTab("All Bookings");
+          }}
         />
       );
     }

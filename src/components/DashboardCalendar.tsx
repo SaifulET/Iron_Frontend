@@ -15,6 +15,7 @@ import {
 
 interface DashboardCalendarProps {
   onNewBookingClick?: () => void;
+  onViewBookingClick?: (clientName: string) => void;
 }
 
 interface Booking {
@@ -33,7 +34,7 @@ interface Booking {
   isCancelled?: boolean;
 }
 
-export default function DashboardCalendar({ onNewBookingClick }: DashboardCalendarProps) {
+export default function DashboardCalendar({ onNewBookingClick, onViewBookingClick }: DashboardCalendarProps) {
   const [openDropdownCardId, setOpenDropdownCardId] = useState<string | null>(null);
 
   const [viewMode, setViewMode] = useState("Today");
@@ -243,7 +244,9 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
 
   const handleViewBooking = (cardId: string) => {
     const booking = bookings.find(b => b.id === cardId);
-    if (booking) {
+    if (booking && onViewBookingClick) {
+      onViewBookingClick(booking.client);
+    } else if (booking) {
       setViewingBooking(booking);
     }
     setOpenDropdownCardId(null);
