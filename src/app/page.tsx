@@ -30,7 +30,7 @@ function useInView() {
       ([entry]) => {
         setInView(entry.isIntersecting);
       },
-      { 
+      {
         threshold: 0,
         rootMargin: "0px 0px -10px 0px"
       }
@@ -71,9 +71,8 @@ function LandingStepCard({
   return (
     <div ref={ref} className="flex-1 min-w-0 h-full">
       <div
-        className={`relative flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-[1400ms] ease-out h-full ${
-          inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-        }`}
+        className={`relative flex flex-col items-start p-5 gap-10 bg-white border border-[#E8E6FF] rounded-xl hover:shadow-md hover:-translate-y-1.5 hover:border-[#2E9DA7]/30 hover:duration-300 transition-all duration-[1400ms] ease-out h-full ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+          }`}
         style={{ transitionDelay: `${delay}ms` }}
       >
         {/* Icon Container */}
@@ -988,11 +987,11 @@ export default function LandingPage() {
       <section ref={stepsContainerRef} className="w-full px-4 md:px-8 xl:px-[68px] mt-[72px]">
         <div className="w-full flex flex-col items-center gap-10 md:gap-[40px]">
           {/* Header Container */}
-          <div className={`flex flex-col items-center gap-5 text-center max-w-[730px] transition-all duration-700 ease-out ${stepsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <h2 className="text-3xl md:text-[36px] font-medium leading-tight md:leading-[48px] text-[#16123E] tracking-tight">
+          <div className="flex flex-col items-center gap-4 text-center max-w-[730px]">
+            <h2 className="text-3xl md:text-[36px] font-semibold leading-tight md:leading-[48px] text-[#111111] tracking-tight font-poppins">
               Book in 3 simple steps
             </h2>
-            <p className="text-lg md:text-[24px] font-normal leading-[32px] text-[#757575]">
+            <p className="text-lg md:text-[20px] font-normal leading-[28px] text-[#757575]">
               Simple, transparent, and built for Cyprus
             </p>
           </div>

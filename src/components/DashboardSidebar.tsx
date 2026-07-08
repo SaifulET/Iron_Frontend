@@ -225,8 +225,10 @@ export default function DashboardSidebar({
           className={`flex flex-col border-[#757575]/15 bg-[#B8CED1] transition-all duration-300 ease-in-out overflow-hidden ${showFooterMenu ? "max-h-[110px] opacity-100 border-t py-2 px-3.5" : "max-h-0 opacity-0 py-0 px-3.5"
             } ${isCollapsed ? "items-center !px-1" : ""} gap-1`}
         >
-          {/* Contact Support */}
-          <button className={`flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all ${isCollapsed ? "w-full justify-center" : "w-full"}`}>
+          <button 
+            onClick={() => setActiveTab("Contact Support")}
+            className={`flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all cursor-pointer ${isCollapsed ? "w-full justify-center" : "w-full"}`}
+          >
             <HugeiconsIcon icon={HeadsetIcon} className="w-5 h-5 text-[#111111] shrink-0" />
             {!isCollapsed && (
               <span className="font-manrope font-medium text-xs text-[#111111]">Contact Support</span>
