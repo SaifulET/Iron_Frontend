@@ -592,7 +592,13 @@ export default function BusinessDashboard() {
       if (isCreatingBusiness) {
         return <DashboardCreateBusiness onBack={() => setIsCreatingBusiness(false)} />;
       }
-      return <DashboardBusinessProfile onAddBusiness={() => setIsCreatingBusiness(true)} />;
+      return (
+        <DashboardBusinessProfile 
+          onAddBusiness={() => setIsCreatingBusiness(true)} 
+          onEditBusiness={() => setIsCreatingBusiness(true)}
+          onViewBusiness={() => setIsCreatingBusiness(true)}
+        />
+      );
     }
 
     if (activeTab === "Services") {

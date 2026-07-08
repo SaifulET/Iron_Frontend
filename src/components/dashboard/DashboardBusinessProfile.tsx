@@ -143,9 +143,15 @@ export function BusinessCard({
 
 interface DashboardBusinessProfileProps {
   onAddBusiness?: () => void;
+  onEditBusiness?: () => void;
+  onViewBusiness?: () => void;
 }
 
-export default function DashboardBusinessProfile({ onAddBusiness }: DashboardBusinessProfileProps) {
+export default function DashboardBusinessProfile({ 
+  onAddBusiness,
+  onEditBusiness,
+  onViewBusiness
+}: DashboardBusinessProfileProps) {
   return (
     <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] select-none font-poppins w-full">
       <DashboardHeader 
@@ -173,7 +179,7 @@ export default function DashboardBusinessProfile({ onAddBusiness }: DashboardBus
           {/* Add existing business button */}
           <button 
             onClick={onAddBusiness}
-            className="flex flex-row items-center px-3.5 py-[7px] gap-1.5 w-[190px] h-[37.6px] bg-[#111111] hover:bg-black text-white rounded-lg transition-colors shadow-sm select-none"
+            className="flex flex-row items-center px-3.5 py-[7px] gap-1.5 w-[190px] h-[37.6px] bg-[#111111] hover:bg-black text-white rounded-lg transition-colors shadow-sm select-none cursor-pointer"
           >
             <svg className="w-3.5 h-3.5 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -195,6 +201,7 @@ export default function DashboardBusinessProfile({ onAddBusiness }: DashboardBus
             location="Sheikh Zayed Road, Dubai"
             startingPrice="$12"
             image="/image/profile.jpg"
+            onEdit={onEditBusiness}
           />
 
           <BusinessCard
@@ -206,6 +213,7 @@ export default function DashboardBusinessProfile({ onAddBusiness }: DashboardBus
             location="Sheikh Zayed Road, Dubai"
             startingPrice="$12"
             image="/image/profile.jpg"
+            onView={onViewBusiness}
           />
         </div>
 
