@@ -229,7 +229,7 @@ export default function DashboardSidebar({
             />
             <div
               ref={footerMenuRef}
-              className={`absolute bottom-[72px] ${isCollapsed ? "left-[84px] w-48 shadow-2xl" : "left-3 right-3"} z-50 bg-[#B8CED1] border border-[#757575]/25 rounded-xl shadow-2xl flex flex-col py-2 px-3 gap-1 animate-fadeIn`}
+              className={`absolute bottom-[84px] ${isCollapsed ? "left-[84px] w-48 shadow-2xl" : "left-3 right-3"} z-50 bg-[#B8CED1] border border-[#757575]/25 rounded-xl shadow-2xl flex flex-col py-2 px-3 gap-1 animate-fadeIn`}
             >
               <button 
                 onClick={() => {
