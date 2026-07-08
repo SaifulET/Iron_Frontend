@@ -98,7 +98,7 @@ export default function DashboardSettings() {
       <div className="flex flex-col lg:flex-row items-start gap-6 w-full mt-4">
         
         {/* Left Submenu Navigation */}
-        <div className="w-full lg:w-[240px] shrink-0 bg-white rounded-[16px] p-4 flex flex-col gap-1 shadow-[0px_4px_20px_rgba(0,0,0,0.06)]">
+        <div className="w-full lg:w-[240px] shrink-0 bg-transparent p-4 flex flex-col gap-1">
           {subTabs.map((tab) => {
             const isActive = activeSubTab === tab.name;
             return (
@@ -127,7 +127,7 @@ export default function DashboardSettings() {
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Set your personal information</p>
               </div>
 
-              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-5 shadow-sm">
+              <div className="bg-white rounded-[16px] p-6 flex flex-col gap-5">
                 
                 {/* Photo Upload Area */}
                 <div>
@@ -239,7 +239,7 @@ export default function DashboardSettings() {
               </div>
 
               {/* Members Table Card */}
-              <div className="bg-white border border-[#E2E8F0] rounded-[16px] overflow-hidden shadow-sm flex flex-col">
+              <div className="bg-white rounded-[16px] overflow-hidden flex flex-col">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-[#F7F5F1] text-[10px] font-semibold text-[#6B7280] tracking-[0.7px] uppercase border-b border-[#E2E8F0] h-[48px]">
@@ -345,7 +345,7 @@ export default function DashboardSettings() {
                 </p>
               </div>
 
-              <div className="bg-white border border-neutral-100 rounded-[12px] p-5 flex flex-col gap-5 shadow-sm">
+              <div className="bg-white rounded-[12px] p-5 flex flex-col gap-5">
                 
                 {/* Cancellation window header */}
                 <div className="flex flex-col gap-1">
@@ -453,7 +453,7 @@ export default function DashboardSettings() {
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Set your payment information</p>
               </div>
 
-              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-5 shadow-sm">
+              <div className="bg-white rounded-[16px] p-6 flex flex-col gap-5">
                 <span className="font-poppins font-semibold text-[13px] text-[#1A1A1A]">
                   Payout Bank Account Details (SEPA)
                 </span>
@@ -538,7 +538,7 @@ export default function DashboardSettings() {
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Connect your google calendar, and social media accounts</p>
               </div>
 
-              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-6 shadow-sm">
+              <div className="bg-white rounded-[16px] p-6 flex flex-col gap-6">
                 <span className="font-semibold text-sm text-[#1A1A1A]">Connected apps</span>
                 <span className="text-[11px] text-neutral-400 -mt-4">Third-party tools that extend Bookly</span>
 
@@ -604,7 +604,7 @@ export default function DashboardSettings() {
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Configure your preference channels</p>
               </div>
 
-              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-4 shadow-sm">
+              <div className="bg-white rounded-[16px] p-6 flex flex-col gap-4">
                 
                 {/* Toggle 1 */}
                 <div className="flex items-center justify-between py-2.5 border-b border-neutral-100">
@@ -672,7 +672,7 @@ export default function DashboardSettings() {
                 <p className="font-poppins font-normal text-xs text-[#888780] mt-0.5">Manage authentication settings</p>
               </div>
 
-              <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 flex flex-col gap-5 shadow-sm">
+              <div className="bg-white rounded-[16px] p-6 flex flex-col gap-5">
                 
                 {/* Two factor auth */}
                 <div className="flex items-center justify-between">
