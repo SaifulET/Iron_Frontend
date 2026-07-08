@@ -65,6 +65,8 @@ interface ClientBookingHistoryCardProps {
   showFooterActions?: boolean;
   onCompleteBooking?: () => void;
   onReschedule?: (newDate: string, newTime: string) => void;
+  onWaiveFeeClick?: () => void;
+  onCancelNoShowClick?: () => void;
 }
 
 export default function ClientBookingHistoryCard({
@@ -111,6 +113,8 @@ export default function ClientBookingHistoryCard({
   showFooterActions = false,
   onCompleteBooking,
   onReschedule,
+  onWaiveFeeClick,
+  onCancelNoShowClick,
 }: ClientBookingHistoryCardProps) {
   const [showSummary, setShowSummary] = useState(true);
   const [showMarkedNoShow, setShowMarkedNoShow] = useState(true);
@@ -513,10 +517,16 @@ export default function ClientBookingHistoryCard({
 
                   {/* Action Buttons */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                    <button className="h-[44px] rounded-lg bg-[#E24B4A] hover:bg-[#D34140] text-white text-xs font-semibold font-poppins shadow-sm">
+                    <button 
+                      onClick={onWaiveFeeClick}
+                      className="h-[44px] rounded-lg bg-[#E24B4A] hover:bg-[#D34140] text-white text-xs font-semibold font-poppins shadow-sm cursor-pointer"
+                    >
                       Waive fee & cancel timer
                     </button>
-                    <button className="h-[44px] rounded-lg border border-neutral-300 bg-white hover:bg-neutral-50 text-[#1C1B1C] text-xs font-semibold font-poppins shadow-sm">
+                    <button 
+                      onClick={onCancelNoShowClick}
+                      className="h-[44px] rounded-lg border border-neutral-300 bg-white hover:bg-neutral-50 text-[#1C1B1C] text-xs font-semibold font-poppins shadow-sm cursor-pointer"
+                    >
                       Cancel No-show
                     </button>
                   </div>

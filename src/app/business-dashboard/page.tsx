@@ -38,7 +38,8 @@ import DashboardPayoutsList from "@/components/dashboard/DashboardPayoutsList";
 import DashboardAnalytics from "@/components/dashboard/DashboardAnalytics";
 import DashboardSettings from "@/components/dashboard/DashboardSettings";
 import ContactSupport from "@/components/support/ContactSupport";
-import { CompleteModal } from "@/components/dashboard/CalendarActionModals";
+import { CompleteModal, NoShowModal } from "@/components/dashboard/CalendarActionModals";
+import WaiveChargeModal from "@/components/dashboard/WaiveChargeModal";
 
 interface Booking {
   clientInitials: string;
@@ -121,6 +122,8 @@ export default function BusinessDashboard() {
   const [viewingBookingIndex, setViewingBookingIndex] = useState<number | null>(null);
   const [isViewingBookingDetails, setIsViewingBookingDetails] = useState(false);
   const [showCompleteModalForBooking, setShowCompleteModalForBooking] = useState(false);
+  const [showWaiveFeeModal, setShowWaiveFeeModal] = useState(false);
+  const [showNoShowModal, setShowNoShowModal] = useState(false);
   const [isCreatingBusiness, setIsCreatingBusiness] = useState(false);
   const [businessProfileMode, setBusinessProfileMode] = useState<"create" | "edit" | "view">("create");
 
@@ -541,6 +544,12 @@ export default function BusinessDashboard() {
                 onCompleteBooking={() => {
                   setShowCompleteModalForBooking(true);
                 }}
+                onWaiveFeeClick={() => {
+                  setShowWaiveFeeModal(true);
+                }}
+                onCancelNoShowClick={() => {
+                  setShowNoShowModal(true);
+                }}
                 onReschedule={(newDate, newTime) => {
                   const updated = [...bookingsData];
                   updated[viewingBookingIndex] = {
@@ -680,6 +689,40 @@ export default function BusinessDashboard() {
             setBookingsData(updated);
           }
           setShowCompleteModalForBooking(false);
+        }}
+      />
+
+      {/* Waive Fee Modal Overlay */}
+      <WaiveChargeModal
+        isOpen={showWaiveFeeModal}
+        onClose={() => setShowWaiveFeeModal(false)}
+        onConfirm={() => {
+          if (viewingBookingIndex !== null) {
+            const updated = [...bookingsData];
+            updated[viewingBookingIndex] = {
+              ...updated[viewingBookingIndex],
+              status: "Canceled - Waived"
+            };
+            setBookingsData(updated);
+          }
+          setShowWaiveFeeModal(false);
+        }}
+      />
+
+      {/* No-show Confirm Modal Overlay */}
+      <NoShowModal
+        isOpen={showNoShowModal}
+        onClose={() => setShowNoShowModal(false)}
+        onConfirm={() => {
+          if (viewingBookingIndex !== null) {
+            const updated = [...bookingsData];
+            updated[viewingBookingIndex] = {
+              ...updated[viewingBookingIndex],
+              status: "No-show - cancelled"
+            };
+            setBookingsData(updated);
+          }
+          setShowNoShowModal(false);
         }}
       />
     </div>
