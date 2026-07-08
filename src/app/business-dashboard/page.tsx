@@ -251,6 +251,12 @@ export default function BusinessDashboard() {
     setEditingClientIndex(null);
   };
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setIsCollapsed(true);
+    }
+  }, []);
+
   // Commented out to prevent page shifting and cutting off the top header on mount
   // useEffect(() => {
   //   if (showFooterMenu && footerMenuRef.current) {
