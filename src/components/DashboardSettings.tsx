@@ -89,7 +89,7 @@ export default function DashboardSettings() {
       svg: (
         <svg className="w-5 h-3.5 shrink-0 rounded-[1px] shadow-[0px_0.5px_2px_rgba(0,0,0,0.25)]" viewBox="0 0 20 13" xmlns="http://www.w3.org/2000/svg">
           <rect width="20" height="13" fill="#b22234"/>
-          <path d="M0,1h20M0,3h20M0,5h20M0,7h20M0,9h20M0,11h20" stroke="#fff" stroke-width="1"/>
+          <path d="M0,1h20M0,3h20M0,5h20M0,7h20M0,9h20M0,11h20" stroke="#fff" strokeWidth="1"/>
           <rect width="8" height="7" fill="#3c3b6e"/>
           <circle cx="2" cy="2" r="0.4" fill="#fff"/>
           <circle cx="6" cy="2" r="0.4" fill="#fff"/>
@@ -105,10 +105,10 @@ export default function DashboardSettings() {
       svg: (
         <svg className="w-5 h-3.5 shrink-0 rounded-[1px] shadow-[0px_0.5px_2px_rgba(0,0,0,0.25)]" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
           <rect width="60" height="30" fill="#012169"/>
-          <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
-          <path d="M0,0 L60,30 M60,0 L0,30" stroke="#012169" stroke-width="4"/>
-          <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
-          <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+          <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6"/>
+          <path d="M0,0 L60,30 M60,0 L0,30" stroke="#012169" strokeWidth="4"/>
+          <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10"/>
+          <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6"/>
         </svg>
       )
     },
