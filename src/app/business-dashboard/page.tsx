@@ -38,6 +38,7 @@ import DashboardPayoutsList from "@/components/dashboard/DashboardPayoutsList";
 import DashboardAnalytics from "@/components/dashboard/DashboardAnalytics";
 import DashboardSettings from "@/components/dashboard/DashboardSettings";
 import ContactSupport from "@/components/support/ContactSupport";
+import { CompleteModal } from "@/components/dashboard/CalendarActionModals";
 
 interface Booking {
   clientInitials: string;
@@ -119,6 +120,7 @@ export default function BusinessDashboard() {
   // Viewing booking details states
   const [viewingBookingIndex, setViewingBookingIndex] = useState<number | null>(null);
   const [isViewingBookingDetails, setIsViewingBookingDetails] = useState(false);
+  const [showCompleteModalForBooking, setShowCompleteModalForBooking] = useState(false);
   const [isCreatingBusiness, setIsCreatingBusiness] = useState(false);
   const [businessProfileMode, setBusinessProfileMode] = useState<"create" | "edit" | "view">("create");
 
@@ -537,12 +539,7 @@ export default function BusinessDashboard() {
                       : undefined
                 }
                 onCompleteBooking={() => {
-                  const updated = [...bookingsData];
-                  updated[viewingBookingIndex] = {
-                    ...updated[viewingBookingIndex],
-                    status: "Completed"
-                  };
-                  setBookingsData(updated);
+                  setShowCompleteModalForBooking(true);
                 }}
                 onReschedule={(newDate, newTime) => {
                   const updated = [...bookingsData];
@@ -668,6 +665,23 @@ export default function BusinessDashboard() {
         footerMenuRef={footerMenuRef}
       />
       {renderMainContent()}
+
+      {/* Complete Booking Modal Overlay */}
+      <CompleteModal
+        isOpen={showCompleteModalForBooking}
+        onClose={() => setShowCompleteModalForBooking(false)}
+        onConfirm={() => {
+          if (viewingBookingIndex !== null) {
+            const updated = [...bookingsData];
+            updated[viewingBookingIndex] = {
+              ...updated[viewingBookingIndex],
+              status: "Completed"
+            };
+            setBookingsData(updated);
+          }
+          setShowCompleteModalForBooking(false);
+        }}
+      />
     </div>
   );
 }
