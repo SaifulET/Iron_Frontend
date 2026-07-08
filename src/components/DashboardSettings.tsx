@@ -59,6 +59,72 @@ export default function DashboardSettings() {
   // Security Toggles
   const [twoFactor, setTwoFactor] = useState(false);
 
+  // Country Picker State
+  const [selectedCountry, setSelectedCountry] = useState({
+    code: "+880",
+    name: "Bangladesh",
+    svg: (
+      <svg className="w-5 h-3.5 shrink-0 rounded-[1px] shadow-[0px_0.5px_2px_rgba(0,0,0,0.25)]" viewBox="0 0 20 12" xmlns="http://www.w3.org/2000/svg">
+        <rect width="20" height="12" fill="#006a4e"/>
+        <circle cx="9" cy="6" r="4" fill="#f42a41"/>
+      </svg>
+    )
+  });
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+
+  const countries = [
+    {
+      code: "+880",
+      name: "Bangladesh",
+      svg: (
+        <svg className="w-5 h-3.5 shrink-0 rounded-[1px] shadow-[0px_0.5px_2px_rgba(0,0,0,0.25)]" viewBox="0 0 20 12" xmlns="http://www.w3.org/2000/svg">
+          <rect width="20" height="12" fill="#006a4e"/>
+          <circle cx="9" cy="6" r="4" fill="#f42a41"/>
+        </svg>
+      )
+    },
+    {
+      code: "+1",
+      name: "United States",
+      svg: (
+        <svg className="w-5 h-3.5 shrink-0 rounded-[1px] shadow-[0px_0.5px_2px_rgba(0,0,0,0.25)]" viewBox="0 0 20 13" xmlns="http://www.w3.org/2000/svg">
+          <rect width="20" height="13" fill="#b22234"/>
+          <path d="M0,1h20M0,3h20M0,5h20M0,7h20M0,9h20M0,11h20" stroke="#fff" stroke-width="1"/>
+          <rect width="8" height="7" fill="#3c3b6e"/>
+          <circle cx="2" cy="2" r="0.4" fill="#fff"/>
+          <circle cx="6" cy="2" r="0.4" fill="#fff"/>
+          <circle cx="4" cy="3.5" r="0.4" fill="#fff"/>
+          <circle cx="2" cy="5" r="0.4" fill="#fff"/>
+          <circle cx="6" cy="5" r="0.4" fill="#fff"/>
+        </svg>
+      )
+    },
+    {
+      code: "+44",
+      name: "United Kingdom",
+      svg: (
+        <svg className="w-5 h-3.5 shrink-0 rounded-[1px] shadow-[0px_0.5px_2px_rgba(0,0,0,0.25)]" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="30" fill="#012169"/>
+          <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+          <path d="M0,0 L60,30 M60,0 L0,30" stroke="#012169" stroke-width="4"/>
+          <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+          <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+        </svg>
+      )
+    },
+    {
+      code: "+357",
+      name: "Cyprus",
+      svg: (
+        <svg className="w-5 h-3.5 shrink-0 rounded-[1px] shadow-[0px_0.5px_2px_rgba(0,0,0,0.25)]" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+          <rect width="900" height="600" fill="#fff"/>
+          <path d="M418 135c3 1 12 1 18 3 7 3 20 6 30 11 11 6 22 13 32 20 15 11 31 24 41 38 7 11 14 26 15 39 1 14-3 30-10 42-10 17-27 28-44 36-16 8-36 12-54 13-18 1-38-3-54-10-18-8-32-23-40-41-4-9-6-20-6-30s1-19 5-28c9-21 27-37 46-49 13-8 27-14 42-17 11-3 20-5 27-5 2-8 3-15 4-22-2-6-5-12-8-17-7-14-19-25-33-33-14-9-31-13-48-12-17 0-35 5-49 15-13 9-23 23-28 38-5 13-6 29-2 43 4 15 12 28 22 39 12 13 27 23 44 29 18 7 38 9 57 7 19-2 38-9 54-19s28-25 35-43c7-17 9-37 4-55-4-19-14-36-28-49-14-13-32-21-50-25-18-4-37-3-55 2-17 5-33 14-46 26-12 12-21 28-24 45-3 15-2 32 4 47 6 15 16 27 28 37s27 16 43 19c15 3 32 2 47-3 15-5 28-15 37-28 9-12 13-28 12-43" fill="#D47000"/>
+          <path d="M290 400s30 50 160 50 160-50 160-50-60 10-160 10-160-10-160-10z" fill="#006A3B"/>
+        </svg>
+      )
+    }
+  ];
+
   const subTabs = [
     { name: "Personal info", icon: User02Icon },
     { name: "Role", icon: UserGroup03Icon },
@@ -192,27 +258,41 @@ export default function DashboardSettings() {
                   <span className="font-poppins font-semibold text-[10px] tracking-[0.8px] uppercase text-[#6B7280]">
                     MOBILE NUMBER
                   </span>
-                  <div className="flex items-center border border-[#D3D1C7] rounded-[8px] overflow-hidden h-10">
-                    <div className="flex items-center gap-1.5 px-3 border-r border-[#D3D1C7] bg-neutral-50 h-full select-none cursor-pointer">
-                      <svg className="w-5 h-3.5 shrink-0 rounded-[1px] shadow-[0px_0.5px_2px_rgba(0,0,0,0.25)]" viewBox="0 0 20 13" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="20" height="13" fill="#b22234"/>
-                        <path d="M0,1h20M0,3h20M0,5h20M0,7h20M0,9h20M0,11h20" stroke="#fff" stroke-width="1"/>
-                        <rect width="8" height="7" fill="#3c3b6e"/>
-                        <circle cx="2" cy="2" r="0.4" fill="#fff"/>
-                        <circle cx="6" cy="2" r="0.4" fill="#fff"/>
-                        <circle cx="4" cy="3.5" r="0.4" fill="#fff"/>
-                        <circle cx="2" cy="5" r="0.4" fill="#fff"/>
-                        <circle cx="6" cy="5" r="0.4" fill="#fff"/>
-                      </svg>
-                      <span className="text-xs font-semibold text-neutral-600">+880</span>
+                  <div className="flex items-center border border-[#D3D1C7] rounded-[8px] h-10 relative">
+                    <div 
+                      onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                      className="flex items-center gap-1.5 px-3 border-r border-[#D3D1C7] bg-neutral-50 h-full select-none cursor-pointer hover:bg-neutral-100 transition-colors"
+                    >
+                      {selectedCountry.svg}
+                      <span className="text-xs font-semibold text-neutral-600">{selectedCountry.code}</span>
                       <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 text-neutral-500" strokeWidth={1.5} />
                     </div>
                     <input
                       type="text"
                       value={personalPhone}
                       onChange={(e) => setPersonalPhone(e.target.value)}
-                      className="flex-1 px-3 text-[14px] text-[#1A1A1A] font-poppins focus:outline-none h-full"
+                      className="flex-1 px-3 text-[14px] text-[#1A1A1A] font-poppins focus:outline-none h-full bg-transparent"
                     />
+
+                    {/* Country Code Dropdown */}
+                    {isCountryDropdownOpen && (
+                      <div className="absolute top-11 left-0 bg-white border border-[#D3D1C7] rounded-lg shadow-lg w-[200px] z-[999] py-1 max-h-[220px] overflow-y-auto">
+                        {countries.map((c) => (
+                          <div
+                            key={c.code}
+                            onClick={() => {
+                              setSelectedCountry(c);
+                              setIsCountryDropdownOpen(false);
+                            }}
+                            className="flex items-center gap-3 px-3 py-2 hover:bg-neutral-50 cursor-pointer transition-colors"
+                          >
+                            {c.svg}
+                            <span className="text-xs font-semibold text-neutral-600 w-10 shrink-0">{c.code}</span>
+                            <span className="text-xs text-neutral-700 truncate">{c.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
