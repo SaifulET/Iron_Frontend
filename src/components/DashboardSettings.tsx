@@ -1,5 +1,6 @@
 "use client";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import DashboardHeader from "@/components/DashboardHeader";
+
 
 import React, { useState, useEffect, useRef } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -167,21 +168,11 @@ export default function DashboardSettings() {
   ];
 
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] pl-[25px] pr-4 md:pr-[129px] pt-[37px] pb-24 select-none font-poppins relative">
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] md: select-none font-poppins relative">
       
       {/* Header Row */}
-      <div className="flex items-center justify-between mb-[30px] select-none w-full">
-        <div className="flex flex-col gap-[2px]">
-          <h1 className="font-poppins font-semibold text-[28px] leading-[28px] tracking-[-0.84px] text-[#484946]">
-            Settings
-          </h1>
-          <p className="font-poppins font-medium text-[14px] leading-[21px] text-[#686B64]">
-            Bank information, notifications, integration and more
-          </p>
-        </div>
-
-        <NotificationBell />
-      </div>
+      <DashboardHeader title="Settings" subtitle="Bank information, notifications, integration and more" />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
       {/* Settings Panel Grid */}
       <div className="flex flex-col lg:flex-row items-start gap-6 w-full mt-4">
@@ -776,6 +767,7 @@ export default function DashboardSettings() {
         </div>
 
       </div>
-    </main>
+    
+      </div></main>
   );
 }

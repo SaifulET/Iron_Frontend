@@ -1,5 +1,6 @@
 "use client";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import DashboardHeader from "@/components/DashboardHeader";
+
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -258,16 +259,10 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
 
   if (viewingAllImages) {
     return (
-      <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] pl-[25px] pr-4 md:pr-[129px] pt-[37px] pb-24 select-none font-poppins relative">
+      <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] md: select-none font-poppins relative">
         {/* Header Row */}
-        <div className="flex items-center justify-between mb-[40px] select-none w-full">
-          <div className="flex flex-col gap-[2px]">
-            <h1 className="text-base font-semibold text-[#0F1E35] leading-6 font-poppins">Images</h1>
-            <p className="text-xs text-[#6B7280] leading-[18px] font-poppins">All the images that you have uploaded so far</p>
-          </div>
-
-          <NotificationBell />
-        </div>
+        <DashboardHeader title="Images" subtitle="All the images that you have uploaded so far" />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
         {/* Breadcrumbs (Frame 2147240055) */}
         <div className="flex flex-row items-center gap-3 mb-[40px] select-none w-full">
@@ -386,22 +381,19 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
             </div>
           </div>
         )}
-      </main>
+      
+      </div></main>
     );
   }
 
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] pl-[25px] pr-4 md:pr-[129px] pt-[37px] pb-24 select-none font-poppins">
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] md: select-none font-poppins">
 
-      {/* Header Row */}
-      <div className="flex items-center justify-between mb-[40px] select-none w-full">
-        <div className="flex flex-col">
-          <h1 className="text-xl font-bold text-[#1A1A1A]">Business</h1>
-          <p className="text-[11px] text-neutral-500 mt-0.5">Create your business at our platform</p>
-        </div>
-
-        <NotificationBell />
-      </div>
+      <DashboardHeader 
+        title="Business Profile" 
+        subtitle="Create your business at our platform" 
+      />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 text-xs font-medium text-neutral-500 mb-8 select-none w-full">
@@ -601,6 +593,7 @@ export default function DashboardCreateBusiness({ onBack }: DashboardCreateBusin
         </div>
 
       </div>
-    </main>
+    
+      </div></main>
   );
 }

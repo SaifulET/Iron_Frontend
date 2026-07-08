@@ -1,5 +1,6 @@
 "use client";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import DashboardHeader from "@/components/DashboardHeader";
+
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -21,17 +22,11 @@ export default function DashboardReviewsList() {
   );
 
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] pl-[25px] pr-4 md:pr-[129px] pt-[37px] pb-24 select-none font-poppins relative">
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] md: select-none font-poppins relative">
       
       {/* Header Row */}
-      <div className="flex items-center justify-between mb-[40px] select-none w-full">
-        <div className="flex flex-col gap-[2px]">
-          <h1 className="text-base font-semibold text-[#0F1E35] leading-6">Reviews</h1>
-          <p className="text-xs text-[#6B7280] leading-[18px]">Verified reviews from Bookly customers</p>
-        </div>
-
-        <NotificationBell />
-      </div>
+      <DashboardHeader title="Reviews" subtitle="Verified reviews from Bookly customers" />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
       {/* Main Alignment Wrapper */}
       <div className="flex flex-col gap-5 w-full">
@@ -172,6 +167,7 @@ export default function DashboardReviewsList() {
         </div>
 
       </div>
-    </main>
+    
+      </div></main>
   );
 }

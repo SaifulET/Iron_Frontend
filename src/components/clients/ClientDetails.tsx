@@ -1,5 +1,6 @@
 "use client";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import DashboardHeader from "@/components/DashboardHeader";
+
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -57,15 +58,10 @@ export default function ClientDetails({
   const [historySearch, setHistorySearch] = useState("");
 
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] relative">
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] relative">
       {/* Client Info Header */}
-      <div className="h-16 border-b border-[#C6C6CB] bg-[#FCF8F8] px-6 flex items-center justify-between shrink-0 select-none">
-        <div>
-          <h1 className="text-xl font-bold text-[#1A1A1A] font-poppins">Client Info</h1>
-          <p className="text-[11px] text-neutral-500 font-poppins mt-0.5">View client information in details</p>
-        </div>
-        <NotificationBell />
-      </div>
+      <DashboardHeader title="Client Info" subtitle="View client information in details" />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
       {/* Scrollable Container */}
       <div className="flex-1 p-6 md:p-8 xl:p-10 flex flex-col gap-6 w-full max-w-[1095px] mx-auto">
@@ -355,6 +351,7 @@ export default function ClientDetails({
           </div>
         )}
       </div>
-    </main>
+    
+      </div></main>
   );
 }

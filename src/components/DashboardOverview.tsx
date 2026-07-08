@@ -1,5 +1,5 @@
 "use client";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import DashboardHeader from "@/components/DashboardHeader";
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -19,34 +19,26 @@ export default function DashboardOverview() {
   const activityFeed = initialActivityFeed;
 
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] p-6 md:p-8 select-none">
-      {/* Dashboard Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-semibold text-[#0F1E35] font-poppins">Dashboard</h1>
-          <p className="text-xs text-neutral-500 font-poppins mt-0.5">Wednesday, 27 May 2026 · Good morning, Elena</p>
-        </div>
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] select-none">
+      <DashboardHeader title="Dashboard" subtitle="Wednesday, 27 May 2026 · Good morning, Elena" />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
-        <div className="flex flex-col items-end gap-3">
-          {/* Bell Icon Notification Button */}
-          <NotificationBell />
-
-          {/* Time Toggle Buttons */}
-          <div className="bg-white border border-[#E2E8F0] p-1 rounded-xl shadow-sm flex items-center gap-1">
-            {["Today", "7D", "30D", "Custom"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setTimeFilter(tab)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                  timeFilter === tab
-                    ? "bg-[#F1F5F9] text-[#0F172A] shadow-sm"
-                    : "text-neutral-500 hover:text-neutral-900"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+      {/* Time Toggle Buttons Row */}
+      <div className="flex justify-end mb-6 mt-4">
+        <div className="bg-white border border-[#E2E8F0] p-1 rounded-xl shadow-sm flex items-center gap-1">
+          {["Today", "7D", "30D", "Custom"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setTimeFilter(tab)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                timeFilter === tab
+                  ? "bg-[#F1F5F9] text-[#0F172A] shadow-sm"
+                  : "text-neutral-500 hover:text-neutral-900"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -234,6 +226,7 @@ export default function DashboardOverview() {
           </div>
         </div>
       </div>
-    </main>
+    
+      </div></main>
   );
 }

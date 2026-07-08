@@ -1,5 +1,5 @@
 "use client";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import DashboardHeader from "@/components/DashboardHeader";
 
 import React from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -147,17 +147,12 @@ interface DashboardBusinessProfileProps {
 
 export default function DashboardBusinessProfile({ onAddBusiness }: DashboardBusinessProfileProps) {
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] p-6 md:p-8 select-none font-poppins w-full">
-      {/* Header block */}
-      <div className="flex items-center justify-between mb-8 select-none w-full">
-        <div>
-          <h1 className="text-xl font-bold text-[#1A1A1A] font-poppins">Business</h1>
-          <p className="text-[11px] text-neutral-500 font-poppins mt-0.5">
-            Public facing information shown on your booking page
-          </p>
-        </div>
-        <NotificationBell />
-      </div>
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] select-none font-poppins w-full">
+      <DashboardHeader 
+        title="Business Profile" 
+        subtitle="Public facing information shown on your booking page" 
+      />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
       {/* Frame 2147240061 Wrapper */}
       <div className="flex flex-col items-start gap-5 w-full">
@@ -215,6 +210,7 @@ export default function DashboardBusinessProfile({ onAddBusiness }: DashboardBus
         </div>
 
       </div>
-    </main>
+    
+      </div></main>
   );
 }

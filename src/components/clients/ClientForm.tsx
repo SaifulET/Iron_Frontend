@@ -1,5 +1,6 @@
 "use client";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import DashboardHeader from "@/components/DashboardHeader";
+
 
 import React, { RefObject } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -125,19 +126,10 @@ export default function ClientForm({
   handleAddClient
 }: ClientFormProps) {
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] relative">
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] relative">
       {/* Client Add/Edit Header */}
-      <div className="h-16 border-b border-[#C6C6CB] bg-[#FCF8F8] px-6 flex items-center justify-between shrink-0 select-none">
-        <div>
-          <h1 className="text-xl font-bold text-[#1A1A1A] font-poppins">
-            {editingClientIndex !== null ? "Edit Client" : "Add Client"}
-          </h1>
-          <p className="text-[11px] text-neutral-500 font-poppins mt-0.5">
-            {editingClientIndex !== null ? "Update client info in your system" : "Create new client info in your system"}
-          </p>
-        </div>
-        <NotificationBell />
-      </div>
+      <DashboardHeader title={editingClientIndex !== null ? "Edit Client" : "Add Client"} subtitle={editingClientIndex !== null ? "Update client info in your system" : "Create new client info in your system"} />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
       {/* Client Form Wrapper */}
       <div className="flex-1 p-6 md:p-8 xl:p-10 flex flex-col lg:flex-row gap-8 items-start w-full">
@@ -605,6 +597,7 @@ export default function ClientForm({
           </div>
         </div>
       </div>
-    </main>
+    
+      </div></main>
   );
 }

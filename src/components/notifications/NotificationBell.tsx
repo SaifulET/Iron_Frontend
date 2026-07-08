@@ -53,7 +53,7 @@ export default function NotificationBell() {
   return (
     <div className="relative" ref={dropdownRef}>
       {/* Bell Button */}
-      <button 
+      <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="w-9 h-9 border border-[#E8E8E6] bg-white rounded-lg flex items-center justify-center hover:bg-neutral-50 transition-all shadow-sm cursor-pointer"
@@ -66,10 +66,10 @@ export default function NotificationBell() {
 
       {/* Dropdown Card */}
       {isOpen && (
-        <div className="absolute right-0 top-11 z-50 w-[90vw] sm:w-[564px] h-[384px] bg-white rounded-[12px] border border-neutral-100 shadow-xl overflow-hidden animate-fadeIn">
+        <div className="absolute right-0 top-11 z-50 w-[270px] xs:w-[320px] sm:w-[564px] h-[384px] bg-white rounded-[12px] border border-neutral-100 shadow-xl overflow-hidden animate-fadeIn">
           {/* Header */}
           <div className="flex flex-col items-center pt-6 pb-4 gap-6 w-full">
-            <h3 className="font-urbanist font-semibold text-lg leading-6 text-center text-[#08002B]">
+            <h3 className="font-urbanist font-semibold text-sm sm:text-lg leading-6 text-center text-[#08002B]">
               Notifications
             </h3>
           </div>
@@ -81,7 +81,7 @@ export default function NotificationBell() {
               {notifications.map((item) => (
                 <div 
                   key={item.id}
-                  className="flex flex-row items-center py-3 gap-2.5 w-full border-b border-neutral-50 hover:bg-neutral-50/50 px-2 rounded-lg transition-colors cursor-pointer select-none"
+                  className="flex flex-row items-center py-3 gap-2.5 w-full border-b border-neutral-50 hover:bg-neutral-50/50 px-2 rounded-lg transition-colors cursor-pointer select-none min-w-0"
                 >
                   {/* Avatar */}
                   <img
@@ -95,14 +95,14 @@ export default function NotificationBell() {
                   />
 
                   {/* Text Container */}
-                  <div className="flex flex-col items-start">
-                    <span className="font-urbanist font-semibold text-base leading-[22px] text-[#08002B]">
+                  <div className="flex flex-col items-start min-w-0 flex-1">
+                    <span className="font-urbanist font-semibold text-[11px] sm:text-base leading-[18px] sm:leading-[22px] text-[#08002B] break-words w-full">
                       {item.name} {item.action}{" "}
                       {item.highlight && (
                         <span className="text-[#E24B4A] font-semibold">{item.target}</span>
                       )}
                     </span>
-                    <span className="font-urbanist font-normal text-sm leading-5 text-[#5C526D]">
+                    <span className="font-urbanist font-normal text-[10px] sm:text-sm leading-4 sm:leading-5 text-[#5C526D]">
                       {item.time}
                     </span>
                   </div>

@@ -1,5 +1,6 @@
 "use client";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import DashboardHeader from "@/components/DashboardHeader";
+
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -15,21 +16,11 @@ export default function DashboardPayoutsList() {
   const [selectedMonth, setSelectedMonth] = useState("May");
 
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] pl-[25px] pr-4 md:pr-[129px] pt-[37px] pb-24 select-none font-poppins relative">
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] md: select-none font-poppins relative">
       
       {/* Header Row */}
-      <div className="flex items-center justify-between mb-[30px] select-none w-full">
-        <div className="flex flex-col gap-[4px] w-full">
-          <h1 className="font-poppins font-semibold text-[28px] leading-[28px] tracking-[-0.84px] text-[#484946]">
-            Payouts & Finance
-          </h1>
-          <p className="font-poppins font-medium text-[14px] leading-[21px] text-[#686B64]">
-            Your earnings, fee breakdown, and payout history
-          </p>
-        </div>
-
-        <NotificationBell />
-      </div>
+      <DashboardHeader title="Payouts & Finance" subtitle="Your earnings, fee breakdown, and payout history" />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
       {/* Main Content Alignment Wrapper */}
       <div className="pt-[20px] flex flex-col gap-[20px] w-full">
@@ -154,6 +145,7 @@ export default function DashboardPayoutsList() {
         </div>
 
       </div>
-    </main>
+    
+      </div></main>
   );
 }

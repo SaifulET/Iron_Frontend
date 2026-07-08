@@ -5,7 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Tick02Icon } from "@hugeicons/core-free-icons";
 
 // Modular sub-components inside same folder
-import SupportHeader from "./SupportHeader";
+import DashboardHeader from "@/components/DashboardHeader";
 import SupportBreadcrumbs from "./SupportBreadcrumbs";
 import SupportFormFields from "./SupportFormFields";
 import SupportFormActions from "./SupportFormActions";
@@ -48,16 +48,16 @@ export default function ContactSupport({
   };
 
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] relative">
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] relative">
       {/* 1. Header with Title & Date/Greeting */}
-      <SupportHeader />
+      <DashboardHeader title="Contact Support" subtitle="Wednesday, 27 May 2026 · Good morning, Elena" />
 
-      <div className="flex-1 pl-12 pr-6 md:pr-8 py-6 flex flex-col gap-[30px] w-full max-w-[864px]">
+      <div className="flex-1 overflow-y-auto pl-12 pr-6 md:pr-8 py-6 flex flex-col gap-[30px] w-full max-w-[864px]">
         {/* 2. Breadcrumbs */}
         <SupportBreadcrumbs setActiveTab={setActiveTab} />
 
         {/* 3. Main Support Card Frame */}
-        <form onSubmit={handleSubmit} className="flex flex-col w-full bg-white border border-[#F1F5F9] rounded-2xl shadow-sm overflow-hidden ml-0 md:ml-[118px]">
+        <form onSubmit={handleSubmit} className="flex flex-col w-full md:w-[calc(100%-118px)] bg-white border border-[#F1F5F9] rounded-2xl shadow-sm overflow-hidden ml-0 md:ml-[118px]">
           {/* HorizontalBorder Header */}
           <div className="flex flex-row items-center p-6 gap-1 bg-[#F8FAFC] border-b border-[#F1F5F9] shrink-0">
             <div className="flex flex-row items-center gap-1 w-full h-[26px]">

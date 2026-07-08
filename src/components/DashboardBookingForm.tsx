@@ -1,5 +1,6 @@
 "use client";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import DashboardHeader from "@/components/DashboardHeader";
+
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -141,19 +142,10 @@ export default function DashboardBookingForm({
   const [isPhoneDropdownOpen, setIsPhoneDropdownOpen] = useState(false);
 
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] p-6 md:p-8 select-none">
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] select-none">
       {/* New/Edit booking Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-xl font-bold text-[#1A1A1A] font-poppins">
-            {isEditingBooking ? "Edit booking" : "New booking"}
-          </h1>
-          <p className="text-[11px] text-neutral-500 font-poppins mt-0.5">
-            {isEditingBooking ? "Edit booking details for your business" : "Create a new booking for your business"}
-          </p>
-        </div>
-        <NotificationBell />
-      </div>
+      <DashboardHeader title={isEditingBooking ? "Edit booking" : "New booking"} subtitle={isEditingBooking ? "Edit booking details for your business" : "Create a new booking for your business"} />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 text-xs font-poppins text-neutral-500 mb-6 select-none">
@@ -816,6 +808,7 @@ export default function DashboardBookingForm({
           </div>
         </div>
       </div>
-    </main>
+    
+      </div></main>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
-import NotificationBell from "@/components/notifications/NotificationBell";
+import DashboardHeader from "@/components/DashboardHeader";
+
 
 import React from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -89,20 +90,10 @@ export default function DashboardBookingsList({
     });
 
   return (
-    <main className="flex-1 min-w-0 flex flex-col h-full overflow-y-auto bg-[#FCF8F8] p-6 md:p-8 select-none">
+    <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] select-none">
       {/* Bookings Header */}
-      <div className="flex items-center justify-between mb-8 select-none">
-        <div>
-          <h1 className="text-xl font-bold text-[#1A1A1A] font-poppins">
-            {activeTab === "Upcoming" ? "Upcoming bookings" : activeTab === "Canceled" ? "Canceled bookings" : "All bookings"}
-          </h1>
-          <p className="text-[11px] text-neutral-500 font-poppins mt-0.5">
-            {activeTab === "Upcoming" ? "View all upcoming bookings" : activeTab === "Canceled" ? "View all canceled bookings" : "View all bookings in details"}
-          </p>
-        </div>
-
-        <NotificationBell />
-      </div>
+      <DashboardHeader title={activeTab === "Upcoming" ? "Upcoming bookings" : activeTab === "Canceled" ? "Canceled bookings" : "All bookings"} subtitle={activeTab === "Upcoming" ? "View all upcoming bookings" : activeTab === "Canceled" ? "View all canceled bookings" : "View all bookings in details"} />
+      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
       {/* Bookings Filter Bar Toolbar */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6 select-none">
@@ -496,6 +487,7 @@ export default function DashboardBookingsList({
           </div>
         </div>
       </div>
-    </main>
+    
+      </div></main>
   );
 }
