@@ -14,9 +14,9 @@ import {
   ArrowDown01Icon,
   Search01Icon
 } from "@hugeicons/core-free-icons";
-import ClientBookingHistoryCard from "@/components/ClientBookingHistoryCard";
+import ClientBookingHistoryCard from "./ClientBookingHistoryCard";
 
-interface DashboardClientDetailsProps {
+interface ClientDetailsProps {
   clientFirstName: string;
   clientLastName: string;
   clientEmail: string;
@@ -30,11 +30,12 @@ interface DashboardClientDetailsProps {
   clientStreetNumber: string;
   clientFloor: string;
   clientAptNo: string;
+  clientAvatar?: string;
   setIsViewingClient: (val: boolean) => void;
   setEditingClientIndex: (idx: number | null) => void;
 }
 
-export default function DashboardClientDetails({
+export default function ClientDetails({
   clientFirstName,
   clientLastName,
   clientEmail,
@@ -48,9 +49,10 @@ export default function DashboardClientDetails({
   clientStreetNumber,
   clientFloor,
   clientAptNo,
+  clientAvatar,
   setIsViewingClient,
   setEditingClientIndex
-}: DashboardClientDetailsProps) {
+}: ClientDetailsProps) {
   const [viewClientTab, setViewClientTab] = useState("PROFILE");
   const [historySearch, setHistorySearch] = useState("");
 
@@ -125,15 +127,12 @@ export default function DashboardClientDetails({
 
             {/* Profile Avatar section */}
             <div className="flex items-center gap-6">
-              <div className="relative w-[120px] h-[120px] rounded-full border border-neutral-200 overflow-hidden shadow-sm shrink-0">
+              <div className="relative w-[120px] h-[120px] rounded-full border border-neutral-200 overflow-hidden shadow-sm shrink-0 bg-neutral-100 flex items-center justify-center">
                 <img
-                  src="/businessDashboard/downLogo.png"
+                  src={clientAvatar || "/businessDashboard/downLogo.png"}
                   alt="Client Avatar"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute right-1 bottom-1 w-8 h-8 bg-[#F1F1F4] border border-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-neutral-200 transition-colors">
-                  <HugeiconsIcon icon={Camera01Icon} className="w-4 h-4 text-[#454070]" />
-                </div>
               </div>
             </div>
 
@@ -209,7 +208,7 @@ export default function DashboardClientDetails({
                 <label className="font-poppins text-xs font-semibold text-[#111111] uppercase tracking-[0.09em]">Property Type</label>
                 <div className="flex items-center border border-[#ECEBEF] rounded-xl px-4 bg-[#FFFFFF] h-[60px] w-full select-none">
                   <span className="font-poppins text-sm font-semibold text-[#111111]">
-                    {clientPropertyType || "Vila"}
+                    {clientPropertyType || "Villa"}
                   </span>
                 </div>
               </div>
@@ -234,9 +233,9 @@ export default function DashboardClientDetails({
                 </div>
               </div>
 
-              {/* STREET ADDRESS */}
+              {/* STREET NUMBER */}
               <div className="md:col-span-2 flex flex-col gap-2">
-                <label className="font-poppins text-xs font-semibold text-[#111111] uppercase tracking-[0.09em]">Street Address</label>
+                <label className="font-poppins text-xs font-semibold text-[#111111] uppercase tracking-[0.09em]">Street Number</label>
                 <div className="flex items-center border border-[#ECEBEF] rounded-xl px-4 bg-[#FFFFFF] h-[60px] w-full select-none">
                   <span className="font-poppins text-sm font-semibold text-[#111111]">
                     {clientStreetNumber || "14"}
@@ -244,59 +243,36 @@ export default function DashboardClientDetails({
                 </div>
               </div>
 
-              {/* FLOOR/UNIT */}
+              {/* FLOOR / UNIT */}
               <div className="md:col-span-2 flex flex-col gap-2">
-                <label className="font-poppins text-xs font-semibold text-[#111111] uppercase tracking-[0.09em]">Floor/Unit</label>
+                <label className="font-poppins text-xs font-semibold text-[#111111] uppercase tracking-[0.09em]">Floor / Unit</label>
                 <div className="flex items-center border border-[#ECEBEF] rounded-xl px-4 bg-[#FFFFFF] h-[60px] w-full select-none">
                   <span className="font-poppins text-sm font-semibold text-[#111111]">
-                    {clientFloor || "4"}
+                    {clientFloor || "—"}
                   </span>
                 </div>
               </div>
 
-              {/* APT/ROOM NO */}
+              {/* APT/ROOM NO. */}
               <div className="md:col-span-2 flex flex-col gap-2">
-                <label className="font-poppins text-xs font-semibold text-[#111111] uppercase tracking-[0.09em]">Apt/Room No</label>
+                <label className="font-poppins text-xs font-semibold text-[#111111] uppercase tracking-[0.09em]">Apt/Room No.</label>
                 <div className="flex items-center border border-[#ECEBEF] rounded-xl px-4 bg-[#FFFFFF] h-[60px] w-full select-none">
                   <span className="font-poppins text-sm font-semibold text-[#111111]">
-                    {clientAptNo || "5"}
+                    {clientAptNo || "—"}
                   </span>
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col gap-6 w-full">
-            {/* Filters Row */}
-            <div className="flex flex-wrap items-center justify-end gap-3 w-full animate-fadeIn">
-              {/* Month Select */}
-              <div className="relative">
-                <select className="appearance-none bg-white border border-neutral-900 rounded-xl px-4 py-2 pr-8 text-xs font-poppins font-medium text-[#111111] h-10 focus:outline-none cursor-pointer">
-                  <option>Month</option>
-                  <option>May</option>
-                  <option>June</option>
-                </select>
-                <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 absolute right-3 top-3.5 text-neutral-500 pointer-events-none" />
-              </div>
-              {/* Year Select */}
-              <div className="relative">
-                <select className="appearance-none bg-white border border-neutral-900 rounded-xl px-3 py-2 pr-7 text-xs font-poppins font-medium text-[#111111] h-10 focus:outline-none cursor-pointer">
-                  <option>Year</option>
-                  <option>2026</option>
-                  <option>2025</option>
-                </select>
-                <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 absolute right-2.5 top-3.5 text-neutral-500 pointer-events-none" />
-              </div>
-              {/* Status Select */}
-              <div className="relative">
-                <select className="appearance-none bg-white border border-neutral-900 rounded-xl px-4 py-2 pr-8 text-xs font-poppins font-medium text-[#111111] h-10 focus:outline-none cursor-pointer">
-                  <option>Status</option>
-                  <option>Upcoming</option>
+          <div className="flex flex-col w-full bg-[#FFFFFF] border border-[#ECEBEF] rounded-2xl p-6 md:p-8 gap-6 shadow-sm">
+            {/* History Control bar */}
+            <div className="flex flex-row justify-between items-center w-full select-none shrink-0 flex-wrap gap-4">
+              <div className="relative w-[214px]">
+                <select className="w-full h-10 border border-[#ECEBEF] rounded-xl px-4 text-xs font-semibold text-[#111111] appearance-none focus:outline-none focus:border-neutral-800 font-poppins">
+                  <option>All bookings</option>
                   <option>Completed</option>
-                  <option>No-show - charged</option>
-                  <option>No-show - cancelled</option>
-                  <option>No-show - waived</option>
-                  <option>Cancelled by customer</option>
+                  <option>Cancelled by client</option>
                   <option>Cancelled by business</option>
                   <option>Late cancellation</option>
                   <option>Pending</option>

@@ -21,7 +21,7 @@ interface Client {
   avatar?: string;
 }
 
-interface DashboardClientsListProps {
+interface ClientsListProps {
   clientsData: Client[];
   setClientsData: React.Dispatch<React.SetStateAction<Client[]>>;
   setIsAddingClient: (val: boolean) => void;
@@ -39,7 +39,7 @@ interface DashboardClientsListProps {
   setClientAvatar?: (val: string) => void;
 }
 
-export default function DashboardClientsList({
+export default function ClientsList({
   clientsData,
   setClientsData,
   setIsAddingClient,
@@ -54,8 +54,60 @@ export default function DashboardClientsList({
   setClientPhoneCode,
   setClientPhoneFlag,
   setClientAvatar
-}: DashboardClientsListProps) {
+}: ClientsListProps) {
   const [dropdownCoords, setDropdownCoords] = React.useState<{ top: number; left: number } | null>(null);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [selectedTag, setSelectedTag] = React.useState("All Tags");
+  const [selectedStaff, setSelectedStaff] = React.useState("All Staff");
+  const [isTagDropdownOpen, setIsTagDropdownOpen] = React.useState(false);
+  const [isStaffDropdownOpen, setIsStaffDropdownOpen] = React.useState(false);
+
+  const tagsList = ["All Tags", "VIP", "Regular", "New", "No-show"];
+  const staffList = ["All Staff", "Elena G.", "Valeriia M.", "Rafael A.", "Nicolas K."];
+
+  const getClientStaff = (clientName: string) => {
+    const staffListNames = ["Elena G.", "Valeriia M.", "Rafael A.", "Nicolas K."];
+    const charCodeSum = clientName.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return staffListNames[charCodeSum % staffListNames.length];
+  };
+
+  const filteredClients = clientsData.filter((client) => {
+    const query = searchQuery.toLowerCase();
+    const nameMatch = client.name.toLowerCase().includes(query);
+    const phoneMatch = client.phone.toLowerCase().includes(query);
+    const matchesSearch = nameMatch || phoneMatch;
+
+    const matchesTag = selectedTag === "All Tags" || client.tag === selectedTag;
+
+    const clientStaff = getClientStaff(client.name);
+    const matchesStaff = selectedStaff === "All Staff" || clientStaff === selectedStaff;
+
+    return matchesSearch && matchesTag && matchesStaff;
+  });
+
+  const handleExportCSV = () => {
+    const headers = ["Name", "Phone", "Joined", "Last Visit / Next", "Visits", "Spent", "Tags"];
+    const rows = filteredClients.map(c => [
+      c.name,
+      c.phone,
+      c.joined,
+      c.visitText,
+      c.visits.toString(),
+      c.spent,
+      c.tag || ""
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + [headers.join(","), ...rows.map(e => e.map(val => `"${val.replace(/"/g, '""')}"`).join(","))].join("\n");
+      
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `clients_export_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] relative">
       {/* Client management Header */}
@@ -113,25 +165,84 @@ export default function DashboardClientsList({
               </span>
               <input
                 type="text"
-                placeholder="Search name, phone or email..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search name or phone..."
                 className="w-full h-full pl-9 pr-4 bg-white border border-[#D3D1C7] rounded-lg text-xs font-poppins placeholder-neutral-400 focus:outline-none focus:border-neutral-800"
               />
             </div>
 
             {/* Dropdown 1: Tags */}
-            <button className="h-9 px-3 border border-[#111111] rounded-lg flex items-center justify-between bg-white text-xs font-semibold text-[#111111] gap-2">
-              <span>Tags</span>
-              <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5" />
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => {
+                  setIsTagDropdownOpen(!isTagDropdownOpen);
+                  setIsStaffDropdownOpen(false);
+                }}
+                className="h-9 px-3 border border-[#111111] rounded-lg flex items-center justify-between bg-white text-xs font-semibold text-[#111111] gap-2 min-w-[90px] cursor-pointer"
+              >
+                <span>{selectedTag}</span>
+                <HugeiconsIcon icon={ArrowDown01Icon} className={`w-3.5 h-3.5 transition-transform duration-200 ${isTagDropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+              {isTagDropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsTagDropdownOpen(false)} />
+                  <div className="absolute top-10 left-0 bg-white border border-[#E8E8E6] rounded-lg shadow-lg z-50 w-[140px] py-1 flex flex-col text-xs font-medium font-poppins">
+                    {tagsList.map(t => (
+                      <button
+                        key={t}
+                        onClick={() => {
+                          setSelectedTag(t);
+                          setIsTagDropdownOpen(false);
+                        }}
+                        className={`px-4 py-2 hover:bg-neutral-50 text-left w-full transition-colors ${selectedTag === t ? "font-bold text-black" : "text-[#5F5E5A]"}`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* Dropdown 2: All staff */}
-            <button className="h-9 px-3 border border-[#111111] rounded-lg flex items-center justify-between bg-white text-xs font-semibold text-[#111111] gap-2">
-              <span>All Staff</span>
-              <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5" />
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => {
+                  setIsStaffDropdownOpen(!isStaffDropdownOpen);
+                  setIsTagDropdownOpen(false);
+                }}
+                className="h-9 px-3 border border-[#111111] rounded-lg flex items-center justify-between bg-white text-xs font-semibold text-[#111111] gap-2 min-w-[100px] cursor-pointer"
+              >
+                <span>{selectedStaff}</span>
+                <HugeiconsIcon icon={ArrowDown01Icon} className={`w-3.5 h-3.5 transition-transform duration-200 ${isStaffDropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+              {isStaffDropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setIsStaffDropdownOpen(false)} />
+                  <div className="absolute top-10 left-0 bg-white border border-[#E8E8E6] rounded-lg shadow-lg z-50 w-[160px] py-1 flex flex-col text-xs font-medium font-poppins">
+                    {staffList.map(s => (
+                      <button
+                        key={s}
+                        onClick={() => {
+                          setSelectedStaff(s);
+                          setIsStaffDropdownOpen(false);
+                        }}
+                        className={`px-4 py-2 hover:bg-neutral-50 text-left w-full transition-colors ${selectedStaff === s ? "font-bold text-black" : "text-[#5F5E5A]"}`}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* Dropdown 3: Export */}
-            <button className="h-9 px-3 border border-[#111111] rounded-lg flex items-center justify-between bg-white text-xs font-semibold text-[#111111] gap-2">
+            <button 
+              onClick={handleExportCSV}
+              className="h-9 px-3 border border-[#111111] rounded-lg flex items-center justify-between bg-white text-xs font-semibold text-[#111111] gap-2 cursor-pointer hover:bg-neutral-50"
+            >
               <span>Export</span>
               <svg className="w-3.5 h-3.5 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -164,7 +275,7 @@ export default function DashboardClientsList({
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E8E8E6] font-poppins text-xs">
-                {clientsData.map((client, idx) => (
+                {filteredClients.map((client, idx) => (
                   <tr key={idx} className="hover:bg-neutral-50/50 transition-colors">
                     {/* Client details */}
                     <td className="px-5 py-3.5 flex items-center gap-3">
@@ -253,7 +364,6 @@ export default function DashboardClientsList({
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setOpenActionIdx(null);
-                                // Populate view fields
                                 const c = clientsData[idx];
                                 const parts = c.name.split(" ");
                                 setClientFirstName(parts[0] || "");
@@ -283,7 +393,6 @@ export default function DashboardClientsList({
                                 setClientPhone(phoneSuffix);
                                 setClientTagState(c.tag || "VIP");
                                 if (setClientAvatar) setClientAvatar(c.avatar || "");
-                                // Enable View mode
                                 setIsViewingClient(true);
                                 setEditingClientIndex(idx);
                               }}
@@ -295,7 +404,6 @@ export default function DashboardClientsList({
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setOpenActionIdx(null);
-                                // Populate fields for editing
                                 const c = clientsData[idx];
                                 const parts = c.name.split(" ");
                                 setClientFirstName(parts[0] || "");
@@ -325,7 +433,6 @@ export default function DashboardClientsList({
                                 setClientPhone(phoneSuffix);
                                 setClientTagState(c.tag || "VIP");
                                 if (setClientAvatar) setClientAvatar(c.avatar || "");
-                                // Go directly to Edit Form
                                 setIsViewingClient(false);
                                 setEditingClientIndex(idx);
                               }}
