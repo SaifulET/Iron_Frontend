@@ -17,6 +17,54 @@ interface DashboardCalendarProps {
 }
 
 export default function DashboardCalendar({ onNewBookingClick }: DashboardCalendarProps) {
+
+
+  const [viewMode, setViewMode] = useState("Today");
+  const [isViewDropdownOpen, setIsViewDropdownOpen] = useState(false);
+
+  const [currentDate, setCurrentDate] = useState(new Date(2026, 5, 21)); // June 21, 2026
+  
+  const [selectedStaffFilter, setSelectedStaffFilter] = useState("All Staff");
+  const [isStaffDropdownOpen, setIsStaffDropdownOpen] = useState(false);
+
+  const formatDate = (date: Date) => {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    if (viewMode === "Today") {
+      return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+    } else if (viewMode === "Weekly") {
+      const endOfWeek = new Date(date);
+      endOfWeek.setDate(date.getDate() + 6);
+      return `${date.getDate()} ${months[date.getMonth()]} - ${endOfWeek.getDate()} ${months[endOfWeek.getMonth()]}`;
+    } else {
+      const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      return `${fullMonths[date.getMonth()]} ${date.getFullYear()}`;
+    }
+  };
+
+  const handlePrevDate = () => {
+    const newDate = new Date(currentDate);
+    if (viewMode === "Today") {
+      newDate.setDate(newDate.getDate() - 1);
+    } else if (viewMode === "Weekly") {
+      newDate.setDate(newDate.getDate() - 7);
+    } else {
+      newDate.setMonth(newDate.getMonth() - 1);
+    }
+    setCurrentDate(newDate);
+  };
+
+  const handleNextDate = () => {
+    const newDate = new Date(currentDate);
+    if (viewMode === "Today") {
+      newDate.setDate(newDate.getDate() + 1);
+    } else if (viewMode === "Weekly") {
+      newDate.setDate(newDate.getDate() + 7);
+    } else {
+      newDate.setMonth(newDate.getMonth() + 1);
+    }
+    setCurrentDate(newDate);
+  };
   const [openDropdownCardId, setOpenDropdownCardId] = useState<string | null>(null);
 
   const renderDropdown = (cardId: string) => {
@@ -52,24 +100,54 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
       <div className="flex flex-col sm:flex-row gap-4 py-3 sm:py-0 sm:h-16 border-b border-[#C6C6CB] bg-[#FCF8F8] px-6 items-center justify-between shrink-0 select-none">
         {/* Left side: Today & Date picker */}
         <div className="flex items-center gap-4">
-          {/* Today Button */}
-          <button className="border border-[#111111] rounded-md px-3 py-1.5 flex items-center gap-1.5 h-9 bg-white hover:bg-neutral-50 transition-all text-sm font-medium text-[#111111]">
-            <span>Today</span>
-            <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5" />
-          </button>
+          {/* Today View Toggle Dropdown */}
+          <div className="relative">
+            <button 
+              onClick={() => {
+                setIsViewDropdownOpen(!isViewDropdownOpen);
+                setIsStaffDropdownOpen(false);
+              }}
+              className="border border-[#111111] rounded-md px-3 py-1.5 flex items-center gap-1.5 h-9 bg-white hover:bg-neutral-50 transition-all text-sm font-medium text-[#111111] cursor-pointer"
+            >
+              <span>{viewMode}</span>
+              <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5" />
+            </button>
+            {isViewDropdownOpen && (
+              <div className="absolute left-0 mt-1.5 z-50 w-32 bg-white rounded-lg shadow-xl border border-neutral-200 flex flex-col py-1 text-xs select-none">
+                {["Today", "Weekly", "Monthly"].map((mode) => (
+                  <button 
+                    key={mode}
+                    onClick={() => {
+                      setViewMode(mode);
+                      setIsViewDropdownOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-neutral-50 text-left text-[#111111] font-medium"
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Date Navigator */}
           <div className="flex items-center border border-[#C6C6CB] rounded-lg bg-white h-9 overflow-hidden">
-            <button className="px-3 h-full border-r border-[#C6C6CB] hover:bg-neutral-50 transition-all text-neutral-600 flex items-center justify-center">
+            <button 
+              onClick={handlePrevDate}
+              className="px-3 h-full border-r border-[#C6C6CB] hover:bg-neutral-50 transition-all text-neutral-600 flex items-center justify-center cursor-pointer"
+            >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             <div className="flex items-center gap-2 px-4 h-full">
               <HugeiconsIcon icon={Calendar03Icon} className="w-4 h-4 text-[#0C0C0C]" />
-              <span className="font-poppins text-xs font-semibold text-[#1C1B1C]">Wednesday 21 Jun</span>
+              <span className="font-poppins text-xs font-semibold text-[#1C1B1C] whitespace-nowrap">{formatDate(currentDate)}</span>
             </div>
-            <button className="px-3 h-full border-l border-[#C6C6CB] hover:bg-neutral-50 transition-all text-neutral-600 flex items-center justify-center">
+            <button 
+              onClick={handleNextDate}
+              className="px-3 h-full border-l border-[#C6C6CB] hover:bg-neutral-50 transition-all text-neutral-600 flex items-center justify-center cursor-pointer"
+            >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
@@ -79,11 +157,35 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
 
         {/* Right side: Staff, New Booking, Notifications */}
         <div className="flex items-center gap-4">
-          {/* Staff filter */}
-          <button className="border border-[#111111] rounded-md px-3 py-1.5 flex items-center gap-1.5 h-9 bg-white hover:bg-neutral-50 transition-all text-sm font-medium text-[#111111]">
-            <span>All Staff</span>
-            <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5" />
-          </button>
+          {/* Staff filter dropdown */}
+          <div className="relative">
+            <button 
+              onClick={() => {
+                setIsStaffDropdownOpen(!isStaffDropdownOpen);
+                setIsViewDropdownOpen(false);
+              }}
+              className="border border-[#111111] rounded-md px-3 py-1.5 flex items-center gap-1.5 h-9 bg-white hover:bg-neutral-50 transition-all text-sm font-medium text-[#111111] cursor-pointer"
+            >
+              <span>{selectedStaffFilter}</span>
+              <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5" />
+            </button>
+            {isStaffDropdownOpen && (
+              <div className="absolute right-0 mt-1.5 z-50 w-40 bg-white rounded-lg shadow-xl border border-neutral-200 flex flex-col py-1 text-xs select-none">
+                {["All Staff", "John", "Maria", "Marilana", "Julie"].map((staff) => (
+                  <button 
+                    key={staff}
+                    onClick={() => {
+                      setSelectedStaffFilter(staff);
+                      setIsStaffDropdownOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-neutral-50 text-left text-[#111111] font-medium"
+                  >
+                    {staff}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* New Booking */}
           <button
@@ -108,13 +210,13 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
             <div className="w-16 h-20 border-r border-[#C6C6CB] shrink-0"></div>
 
             {/* Staff list */}
-            <div className="flex-1 grid grid-cols-4 divide-x divide-[#C6C6CB]">
+            <div className={`flex-1 grid divide-x divide-[#C6C6CB] ${selectedStaffFilter === "All Staff" ? "grid-cols-4" : "grid-cols-1"}`}>
               {[
                 { name: "John", hasBorder: true },
                 { name: "Maria", hasBorder: false },
                 { name: "Marilana", hasBorder: false },
                 { name: "Julie", hasBorder: false }
-              ].map((staff, index) => (
+              ].filter(staff => selectedStaffFilter === "All Staff" || staff.name === selectedStaffFilter).map((staff, index) => (
                 <div key={index} className="flex flex-col items-center justify-center py-3.5 gap-1.5">
                   <div className={`p-[1px] rounded-full ${staff.hasBorder ? "border-2 border-[#0CC0DF]" : "border border-neutral-200"}`}>
                     <img
@@ -165,9 +267,10 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
               </div>
 
               {/* Columns for Staff */}
-              <div className="flex-1 grid grid-cols-4 divide-x divide-[#C6C6CB] relative">
+              <div className={`flex-1 grid divide-x divide-[#C6C6CB] relative ${selectedStaffFilter === "All Staff" ? "grid-cols-4" : "grid-cols-1"}`}>
                 {/* Column 1: John */}
-                <div className="relative h-full">
+                {(selectedStaffFilter === "All Staff" || selectedStaffFilter === "John") && (
+                  <div className="relative h-full">
                   {/* Brenda Massey */}
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "john-brenda" ? null : "john-brenda")}
@@ -237,9 +340,11 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                     {renderDropdown("john-zain")}
                   </div>
                 </div>
+                )}
 
                 {/* Column 2: Maria */}
-                <div className="relative h-full">
+                {(selectedStaffFilter === "All Staff" || selectedStaffFilter === "Maria") && (
+                  <div className="relative h-full">
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "maria-alena" ? null : "maria-alena")}
                     className={`absolute left-[3%] right-[3%] top-[0px] h-[83px] bg-[#FFD18B] border-l-4 border-[#F59E0B] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "maria-alena" ? "z-40" : "z-20"}`}
@@ -282,9 +387,11 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                     {renderDropdown("maria-marilyn")}
                   </div>
                 </div>
+                )}
 
                 {/* Column 3: Marilana */}
-                <div className="relative h-full">
+                {(selectedStaffFilter === "All Staff" || selectedStaffFilter === "Marilana") && (
+                  <div className="relative h-full">
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "marilana-phillip" ? null : "marilana-phillip")}
                     className={`absolute left-[3%] right-[3%] top-[80px] h-[100px] bg-[#FFB5D3] border-l-4 border-[#FF6B9E] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "marilana-phillip" ? "z-40" : "z-20"}`}
@@ -335,9 +442,11 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                     {renderDropdown("marilana-desirae")}
                   </div>
                 </div>
+                )}
 
                 {/* Column 4: Julie */}
-                <div className="relative h-full">
+                {(selectedStaffFilter === "All Staff" || selectedStaffFilter === "Julie") && (
+                  <div className="relative h-full">
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "julie-james" ? null : "julie-james")}
                     className={`absolute left-[3%] right-[3%] top-[40px] h-[100px] bg-[#89E6D5] border-l-4 border-[#10B981] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "julie-james" ? "z-40" : "z-20"}`}
@@ -380,6 +489,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                     {renderDropdown("julie-amy")}
                   </div>
                 </div>
+                )}
               </div>
             </div>
           </div>
