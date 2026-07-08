@@ -72,7 +72,7 @@ interface Client {
 }
 
 export default function BusinessDashboard() {
-  const [activeTab, setActiveTab] = useState("Business Profile");
+  const [activeTab, setActiveTab] = useState("Dashboard");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showFooterMenu, setShowFooterMenu] = useState(true);
   const footerMenuRef = useRef<HTMLDivElement>(null);
@@ -119,7 +119,7 @@ export default function BusinessDashboard() {
   // Viewing booking details states
   const [viewingBookingIndex, setViewingBookingIndex] = useState<number | null>(null);
   const [isViewingBookingDetails, setIsViewingBookingDetails] = useState(false);
-  const [isCreatingBusiness, setIsCreatingBusiness] = useState(true);
+  const [isCreatingBusiness, setIsCreatingBusiness] = useState(false);
 
   // Clients Data states
   const [clientsData, setClientsData] = useState<Client[]>(initialClientsData as Client[]);
@@ -256,6 +256,13 @@ export default function BusinessDashboard() {
       setIsCollapsed(true);
     }
   }, []);
+
+  const handleSetActiveTab = (tab: string) => {
+    if (tab === "Business Profile") {
+      setIsCreatingBusiness(false);
+    }
+    setActiveTab(tab);
+  };
 
   // Commented out to prevent page shifting and cutting off the top header on mount
   // useEffect(() => {
@@ -607,7 +614,7 @@ export default function BusinessDashboard() {
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleSetActiveTab}
         showFooterMenu={showFooterMenu}
         setShowFooterMenu={setShowFooterMenu}
         footerMenuRef={footerMenuRef}
