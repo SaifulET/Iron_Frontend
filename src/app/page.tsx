@@ -819,46 +819,7 @@ export default function LandingPage() {
         />
       )}
 
-      {/* 5.5 Popular Businesses Section */}
-      <section className="w-full px-4 md:px-8 xl:px-[68px] mt-[56px]">
-        {/* Section Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl md:text-[28px] font-medium tracking-tight text-[#1C1B1C]">
-            Popular businesses
-          </h2>
-          <a href="#" className="text-sm md:text-base font-medium text-[#1C1B1C] hover:underline transition-all">
-            See all
-          </a>
-        </div>
 
-        {/* Card Grid / Carousel */}
-        {popularBusinesses.length > 5 ? (
-          <Carousel>
-            {popularBusinesses.map((rec) => (
-              <div key={rec.id} className="w-[calc(50%-7.5px)] sm:w-[360px] md:w-[406px] shrink-0 snap-start">
-                <ServiceCard
-                  rec={rec}
-                  isFavorite={favorites.includes(rec.id)}
-                  onToggleFavorite={toggleFavorite}
-                  onBookNow={(id) => console.log("Booking item", id)}
-                />
-              </div>
-            ))}
-          </Carousel>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-            {popularBusinesses.map((rec) => (
-              <ServiceCard
-                key={rec.id}
-                rec={rec}
-                isFavorite={favorites.includes(rec.id)}
-                onToggleFavorite={toggleFavorite}
-                onBookNow={(id) => console.log("Booking item", id)}
-              />
-            ))}
-          </div>
-        )}
-      </section>
 
       {/* 6. Recommended Section */}
       <section className="w-full px-4 md:px-8 xl:px-[68px] mt-16 relative z-10">
