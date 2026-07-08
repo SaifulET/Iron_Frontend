@@ -237,7 +237,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
           {/* Scrollable Grid Area */}
           <div className="flex-1 overflow-y-auto relative bg-[#FCF8F8] select-none min-h-0">
             {/* Grid Container */}
-            <div className="flex w-full h-[800px] relative">
+            <div className="flex w-full h-[1600px] relative">
               {/* Backdrop overlay to close dropdown on clicking outside */}
               {openDropdownCardId && (
                 <div
@@ -248,11 +248,11 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
               {/* Background Horizontal Grid Lines */}
               <div className="absolute left-16 right-0 top-0 bottom-0 pointer-events-none flex flex-col">
                 {Array.from({ length: 10 }).map((_, idx) => (
-                  <div key={idx} className="h-20 w-full flex flex-col">
+                  <div key={idx} className="h-40 w-full flex flex-col">
                     {/* Dashed half hour line */}
-                    <div className="h-10 border-b border-dashed border-[#C6C6CB]/20"></div>
+                    <div className="h-20 border-b border-dashed border-[#C6C6CB]/20"></div>
                     {/* Solid hour line */}
-                    <div className="h-10 border-b border-[#C6C6CB]/40"></div>
+                    <div className="h-20 border-b border-[#C6C6CB]/40"></div>
                   </div>
                 ))}
               </div>
@@ -260,7 +260,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
               {/* Time Column (Left Side Axis) */}
               <div className="w-16 border-r border-[#C6C6CB] bg-[#FCF8F8] flex flex-col shrink-0 relative z-10">
                 {["8:00", "9:00", "10:00", "11:00", "12:00", "1:00", "2:00", "3:00", "4:00", "5:00"].map((time, idx) => (
-                  <div key={idx} className="h-20 flex justify-center items-start pt-2">
+                  <div key={idx} className="h-40 flex justify-center items-start pt-2">
                     <span className="font-poppins text-[11px] font-semibold text-[#45474B]">{time}</span>
                   </div>
                 ))}
@@ -274,7 +274,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                   {/* Brenda Massey */}
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "john-brenda" ? null : "john-brenda")}
-                    className={`absolute left-[3%] right-[3%] top-[0px] h-[83px] bg-[#BBEBFF] border-l-4 border-[#0CC0DF] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "john-brenda" ? "z-40" : "z-20"}`}
+                    className={`absolute left-[3%] right-[3%] bg-[#BBEBFF] border-l-4 border-[#0CC0DF] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "john-brenda" ? "z-40" : "z-20"}`} style={{ top: '0px', height: '80px' }}
                   >
                     <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none">
                       <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
@@ -296,7 +296,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                   {/* Craig Mango */}
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "john-craig" ? null : "john-craig")}
-                    className={`absolute left-[3%] right-[3%] top-[153px] h-[83px] bg-[#FFB5D3] border-l-4 border-[#FF6B9E] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "john-craig" ? "z-40" : "z-20"}`}
+                    className={`absolute left-[3%] right-[3%] bg-[#FFB5D3] border-l-4 border-[#FF6B9E] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "john-craig" ? "z-40" : "z-20"}`} style={{ top: '320px', height: '80px' }}
                   >
                     <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none">
                       <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
@@ -321,7 +321,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                   {/* Zain Dias */}
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "john-zain" ? null : "john-zain")}
-                    className={`absolute left-[3%] right-[3%] top-[241px] h-[83px] bg-[#FFD18B] border-l-4 border-[#F59E0B] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "john-zain" ? "z-40" : "z-20"}`}
+                    className={`absolute left-[3%] right-[3%] bg-[#FFD18B] border-l-4 border-[#F59E0B] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "john-zain" ? "z-40" : "z-20"}`} style={{ top: '480px', height: '80px' }}
                   >
                     <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none">
                       <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
@@ -347,7 +347,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                   <div className="relative h-full">
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "maria-alena" ? null : "maria-alena")}
-                    className={`absolute left-[3%] right-[3%] top-[0px] h-[83px] bg-[#FFD18B] border-l-4 border-[#F59E0B] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "maria-alena" ? "z-40" : "z-20"}`}
+                    className={`absolute left-[3%] right-[3%] bg-[#FFD18B] border-l-4 border-[#F59E0B] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "maria-alena" ? "z-40" : "z-20"}`} style={{ top: '0px', height: '80px' }}
                   >
                     <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none">
                       <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
@@ -368,7 +368,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
 
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "maria-marilyn" ? null : "maria-marilyn")}
-                    className={`absolute left-[3%] right-[3%] top-[80px] h-[83px] bg-[#86EFAC]/65 border-l-4 border-[#10B981] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "maria-marilyn" ? "z-40" : "z-20"}`}
+                    className={`absolute left-[3%] right-[3%] bg-[#86EFAC]/65 border-l-4 border-[#10B981] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "maria-marilyn" ? "z-40" : "z-20"}`} style={{ top: '160px', height: '160px' }}
                   >
                     <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none">
                       <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
@@ -394,7 +394,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                   <div className="relative h-full">
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "marilana-phillip" ? null : "marilana-phillip")}
-                    className={`absolute left-[3%] right-[3%] top-[80px] h-[100px] bg-[#FFB5D3] border-l-4 border-[#FF6B9E] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "marilana-phillip" ? "z-40" : "z-20"}`}
+                    className={`absolute left-[3%] right-[3%] bg-[#FFB5D3] border-l-4 border-[#FF6B9E] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "marilana-phillip" ? "z-40" : "z-20"}`} style={{ top: '160px', height: '160px' }}
                   >
                     <div>
                       <div className="flex justify-between items-center pr-4">
@@ -420,7 +420,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
 
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "marilana-desirae" ? null : "marilana-desirae")}
-                    className={`absolute left-[3%] right-[3%] top-[324px] h-[100px] bg-[#BBEBFF] border-l-4 border-[#0CC0DF] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "marilana-desirae" ? "z-40" : "z-20"}`}
+                    className={`absolute left-[3%] right-[3%] bg-[#BBEBFF] border-l-4 border-[#0CC0DF] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "marilana-desirae" ? "z-40" : "z-20"}`} style={{ top: '720px', height: '160px' }}
                   >
                     <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none">
                       <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
@@ -449,7 +449,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                   <div className="relative h-full">
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "julie-james" ? null : "julie-james")}
-                    className={`absolute left-[3%] right-[3%] top-[40px] h-[100px] bg-[#89E6D5] border-l-4 border-[#10B981] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "julie-james" ? "z-40" : "z-20"}`}
+                    className={`absolute left-[3%] right-[3%] bg-[#89E6D5] border-l-4 border-[#10B981] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "julie-james" ? "z-40" : "z-20"}`} style={{ top: '0px', height: '240px' }}
                   >
                     <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none">
                       <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
@@ -470,7 +470,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
 
                   <div
                     onClick={() => setOpenDropdownCardId(openDropdownCardId === "julie-amy" ? null : "julie-amy")}
-                    className={`absolute left-[3%] right-[3%] top-[140px] h-[120px] bg-[#BBEBFF] border-l-4 border-[#0CC0DF] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "julie-amy" ? "z-40" : "z-20"}`}
+                    className={`absolute left-[3%] right-[3%] bg-[#BBEBFF] border-l-4 border-[#0CC0DF] rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === "julie-amy" ? "z-40" : "z-20"}`} style={{ top: '240px', height: '240px' }}
                   >
                     <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none">
                       <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
@@ -479,7 +479,7 @@ export default function DashboardCalendar({ onNewBookingClick }: DashboardCalend
                     </button>
                     <div>
                       <div className="flex justify-between items-center pr-4">
-                        <span className="text-[9px] font-medium text-[#45474B] leading-none">9:00 - 9:30</span>
+                        <span className="text-[9px] font-medium text-[#45474B] leading-none">9:30 - 11:00</span>
                         <span className="bg-white/50 px-1 py-0.5 rounded text-[8px] font-semibold text-[#45474B] leading-none">Upcoming</span>
                       </div>
                       <h4 className="font-poppins text-xs font-semibold text-[#020305] mt-1.5 truncate">Amy Jones</h4>

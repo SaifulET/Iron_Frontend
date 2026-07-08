@@ -261,6 +261,7 @@ export default function BusinessDashboard() {
     if (tab === "Business Profile") {
       setIsCreatingBusiness(false);
     }
+    setIsCreatingBooking(false);
     setActiveTab(tab);
   };
 
@@ -280,7 +281,10 @@ export default function BusinessDashboard() {
     if (activeTab === "Calendar") {
       return (
         <DashboardCalendar
-          onNewBookingClick={() => setIsCreatingBooking(true)}
+          onNewBookingClick={() => {
+            setIsCreatingBooking(true);
+            setActiveTab("All Bookings");
+          }}
         />
       );
     }
