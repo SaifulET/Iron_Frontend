@@ -221,29 +221,36 @@ export default function DashboardSidebar({
 
         {/* Floating popover/modal for profile menu */}
         {showFooterMenu && (
-          <div
-            ref={footerMenuRef}
-            className={`absolute bottom-[72px] ${isCollapsed ? "left-[4px] right-[4px] w-48 shadow-2xl z-50 bg-[#B8CED1]" : "left-[16px] right-[16px]"} z-50 bg-[#B8CED1] border border-[#757575]/25 rounded-xl shadow-2xl flex flex-col py-2 px-3 gap-1 animate-fadeIn`}
-          >
-            <button 
-              onClick={() => {
-                setActiveTab("Contact Support");
-                setShowFooterMenu(false);
-              }}
-              className="flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all cursor-pointer w-full"
-            >
-              <HugeiconsIcon icon={HeadsetIcon} className="w-5 h-5 text-[#111111] shrink-0" />
-              <span className="font-manrope font-medium text-xs text-[#111111]">Contact Support</span>
-            </button>
-            {/* Logout */}
-            <button 
+          <>
+            {/* Backdrop to catch clicks outside the popover */}
+            <div 
+              className="fixed inset-0 z-40 bg-transparent cursor-default" 
               onClick={() => setShowFooterMenu(false)}
-              className="flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all cursor-pointer w-full"
+            />
+            <div
+              ref={footerMenuRef}
+              className={`absolute bottom-[72px] left-4 z-50 w-52 bg-[#B8CED1] border border-[#757575]/25 rounded-xl shadow-2xl flex flex-col py-2 px-3 gap-1 animate-fadeIn`}
             >
-              <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
-              <span className="font-manrope font-medium text-xs text-[#111111]">Logout</span>
-            </button>
-          </div>
+              <button 
+                onClick={() => {
+                  setActiveTab("Contact Support");
+                  setShowFooterMenu(false);
+                }}
+                className="flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all cursor-pointer w-full"
+              >
+                <HugeiconsIcon icon={HeadsetIcon} className="w-5 h-5 text-[#111111] shrink-0" />
+                <span className="font-manrope font-medium text-xs text-[#111111]">Contact Support</span>
+              </button>
+              {/* Logout */}
+              <button 
+                onClick={() => setShowFooterMenu(false)}
+                className="flex items-center gap-3 py-2 px-2.5 hover:bg-[#A8BEC1] rounded-lg text-left transition-all cursor-pointer w-full"
+              >
+                <HugeiconsIcon icon={Logout01Icon} className="w-5 h-5 text-[#111111] shrink-0" />
+                <span className="font-manrope font-medium text-xs text-[#111111]">Logout</span>
+              </button>
+            </div>
+          </>
         )}
       </div>
     </aside>
