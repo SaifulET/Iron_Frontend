@@ -285,6 +285,22 @@ export default function DashboardAddonsList() {
             key={addon.id}
             addon={addon}
             onToggleActive={toggleAddonActive}
+            isMenuOpen={activeMenuIdx === addon.id}
+            onMenuClick={(id) => setActiveMenuIdx(id)}
+            onViewClick={(a) => {
+              setAddonName(a.title);
+              setPrice(a.price.replace("€", ""));
+              setCategory(a.category);
+              setAddonActive(a.isActive);
+              setIsCreating(true);
+            }}
+            onEditClick={(a) => {
+              setAddonName(a.title);
+              setPrice(a.price.replace("€", ""));
+              setCategory(a.category);
+              setAddonActive(a.isActive);
+              setIsCreating(true);
+            }}
           />
         ))}
       </div>

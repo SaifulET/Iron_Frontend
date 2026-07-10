@@ -643,7 +643,11 @@ export default function BusinessDashboard() {
     }
 
     if (activeTab === "Analytics") {
-      return <DashboardAnalytics />;
+      return (
+        <DashboardAnalytics 
+          onBookingStatusClick={() => setActiveTab("All Bookings")} 
+        />
+      );
     }
 
     if (activeTab === "Settings") {

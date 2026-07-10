@@ -48,6 +48,7 @@ export default function DashboardServicesList() {
   // Toggle states
   const [gapElimination, setGapElimination] = useState(true);
   const [allowDoubleBooking, setAllowDoubleBooking] = useState(false);
+  const [openActiveMenuId, setOpenActiveMenuId] = useState<number | null>(null);
   
   // Create Service Form States
   const [isCreating, setIsCreating] = useState(false);
@@ -1003,9 +1004,50 @@ export default function DashboardServicesList() {
                   <h3 className="font-semibold text-lg text-[#1C1917] leading-7">{service.title}</h3>
                   <span className="text-xs font-light text-[#757575] mt-0.5">{service.category}</span>
                 </div>
-                <button className="w-8 h-8 rounded-full hover:bg-neutral-50 flex items-center justify-center text-neutral-400 cursor-pointer">
-                  <EditDotsIcon />
-                </button>
+                <div className="relative">
+                  <button 
+                    onClick={() => setOpenActiveMenuId(openActiveMenuId === service.id ? null : service.id)}
+                    className="w-8 h-8 rounded-full hover:bg-neutral-50 flex items-center justify-center text-neutral-400 cursor-pointer"
+                  >
+                    <EditDotsIcon />
+                  </button>
+                  {openActiveMenuId === service.id && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-40 bg-transparent" 
+                        onClick={() => setOpenActiveMenuId(null)}
+                      />
+                      <div className="absolute right-0 top-9 bg-white border border-[#EFEFED] rounded-lg shadow-lg w-28 py-1.5 z-50 text-xs font-poppins font-medium text-[#111111] animate-fadeIn">
+                        <button 
+                          onClick={() => {
+                            setOpenActiveMenuId(null);
+                            setServiceName(service.title);
+                            setServiceDesc("Mock bridal make-up service description");
+                            setDurationVal(service.duration);
+                            setBundlePrice(service.price.replace("€", ""));
+                            setIsCreating(true);
+                          }}
+                          className="px-4 py-2 hover:bg-neutral-50 w-full text-left cursor-pointer"
+                        >
+                          View
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setOpenActiveMenuId(null);
+                            setServiceName(service.title);
+                            setServiceDesc("Mock bridal make-up service description");
+                            setDurationVal(service.duration);
+                            setBundlePrice(service.price.replace("€", ""));
+                            setIsCreating(true);
+                          }}
+                          className="px-4 py-2 hover:bg-neutral-50 w-full text-left cursor-pointer"
+                        >
+                          Edit
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Price row */}

@@ -17,9 +17,20 @@ const EditDotsIcon = () => (
 interface AddonCardProps {
   addon: Addon;
   onToggleActive: (id: number) => void;
+  isMenuOpen?: boolean;
+  onMenuClick?: (id: number | null) => void;
+  onViewClick?: (addon: Addon) => void;
+  onEditClick?: (addon: Addon) => void;
 }
 
-export default function AddonCard({ addon, onToggleActive }: AddonCardProps) {
+export default function AddonCard({ 
+  addon, 
+  onToggleActive,
+  isMenuOpen = false,
+  onMenuClick,
+  onViewClick,
+  onEditClick
+}: AddonCardProps) {
   const isPlus3 = addon.attachedTo.includes("+");
   const baseText = addon.attachedTo.split(" +")[0];
 
@@ -37,9 +48,46 @@ export default function AddonCard({ addon, onToggleActive }: AddonCardProps) {
             {addon.price}
           </span>
         </div>
-        <button className="w-8 h-8 rounded-full hover:bg-neutral-50 flex items-center justify-center text-[#A6A09B] cursor-pointer">
-          <EditDotsIcon />
-        </button>
+        <div className="relative">
+          <button 
+            onClick={() => {
+              if (onMenuClick) onMenuClick(addon.id);
+            }}
+            className="w-8 h-8 rounded-full hover:bg-neutral-50 flex items-center justify-center text-[#A6A09B] cursor-pointer"
+          >
+            <EditDotsIcon />
+          </button>
+          {isMenuOpen && (
+            <>
+              <div 
+                className="fixed inset-0 z-40 bg-transparent" 
+                onClick={() => {
+                  if (onMenuClick) onMenuClick(null);
+                }}
+              />
+              <div className="absolute right-0 top-9 bg-white border border-[#EFEFED] rounded-lg shadow-lg w-28 py-1.5 z-50 text-xs font-poppins font-medium text-[#111111] animate-fadeIn">
+                <button 
+                  onClick={() => {
+                    if (onMenuClick) onMenuClick(null);
+                    if (onViewClick) onViewClick(addon);
+                  }}
+                  className="px-4 py-2 hover:bg-neutral-50 w-full text-left cursor-pointer"
+                >
+                  View
+                </button>
+                <button 
+                  onClick={() => {
+                    if (onMenuClick) onMenuClick(null);
+                    if (onEditClick) onEditClick(addon);
+                  }}
+                  className="px-4 py-2 hover:bg-neutral-50 w-full text-left cursor-pointer"
+                >
+                  Edit
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Middle Row: Details */}

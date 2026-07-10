@@ -415,7 +415,6 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
                     </div>
                     <div className="flex items-center gap-1 cursor-pointer">
                       <span className="font-poppins text-xs font-semibold text-[#020305]">{staff.name}</span>
-                      <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 text-[#141B34]" />
                     </div>
                   </div>
                 ))}

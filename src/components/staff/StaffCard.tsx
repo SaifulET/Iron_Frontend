@@ -87,7 +87,11 @@ export default function StaffCard({ staff, onToggleStatus, onEdit }: StaffCardPr
         </div>
 
         {/* Role badge */}
-        <div className="flex flex-row justify-center items-center px-2.5 py-1 h-6 bg-[#DFF3F5] text-[#2E9DA7] rounded-full text-[11px] font-medium">
+        <div className={`flex flex-row justify-center items-center px-2.5 py-1 h-6 rounded-full text-[11px] font-medium ${
+          (staff.cardRoleText || staff.role) === "Owner" ? "bg-[#E0F3F5] text-[#2E9DA7]" :
+          (staff.cardRoleText || staff.role) === "Supervisor" ? "bg-[#E6F1FB] text-[#3760B7]" :
+          "bg-[#F5F4EE] text-[#5F5E5A]"
+        }`}>
           <span>{staff.cardRoleText || staff.role}</span>
         </div>
 

@@ -13,7 +13,11 @@ import {
   heatmapData
 } from "@/data/analyticsMockData";
 
-export default function DashboardAnalytics() {
+interface DashboardAnalyticsProps {
+  onBookingStatusClick?: () => void;
+}
+
+export default function DashboardAnalytics({ onBookingStatusClick }: DashboardAnalyticsProps) {
   const [selectedYear, setSelectedYear] = useState("2026");
   const [selectedMonth, setSelectedMonth] = useState("May");
 
@@ -151,11 +155,16 @@ export default function DashboardAnalytics() {
 
           {/* Bookings by Status Panel */}
           <div className="bg-white border border-[#E1DED6] rounded-[16px] overflow-hidden flex flex-col h-[330px]">
-            <div className="box-sizing-border-box flex flex-row justify-between items-center px-5 py-3.5 bg-[#F1F0EA] border-b border-[#E1DED6] w-full h-[52px]">
+            <div 
+              onClick={() => {
+                if (onBookingStatusClick) onBookingStatusClick();
+              }}
+              className="box-sizing-border-box flex flex-row justify-between items-center px-5 py-3.5 bg-[#F1F0EA] border-b border-[#E1DED6] w-full h-[52px] cursor-pointer hover:bg-neutral-100/50 transition-colors"
+            >
               <h3 className="font-poppins font-semibold text-[18px] leading-[27px] tracking-[-0.54px] text-[#282A27]">
                 Bookings by status
               </h3>
-              <span className="font-poppins font-normal text-[11px] leading-[16px] text-[#1C1B1C] cursor-pointer hover:underline">
+              <span className="font-poppins font-normal text-[11px] leading-[16px] text-[#1C1B1C] hover:underline">
                 Booking State &gt;
               </span>
             </div>

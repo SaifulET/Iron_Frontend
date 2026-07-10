@@ -136,20 +136,30 @@ export default function DashboardReviewsList() {
                   </span>
                 </div>
 
-                {/* Client Profile details */}
-                <div className="flex flex-row items-center gap-5 w-full">
-                  <div className="flex flex-row items-center gap-1.5 h-10">
-                    <img 
-                      src={review.clientAvatar || "/img/dumyUser.jpeg"} 
-                      alt={review.clientName} 
-                      className="w-7 h-7 rounded-full object-cover" 
-                    />
-                    <div className="flex flex-col justify-center items-start">
-                      <span className="font-poppins font-normal text-[12px] leading-[20px] text-[#111111]">{review.clientName}</span>
-                      <span className="font-poppins font-normal text-[12px] leading-[20px] text-[#666666]">{review.clientRole}</span>
-                    </div>
-                  </div>
-                </div>
+                 {/* Client Profile details */}
+                 <div className="flex flex-row items-center gap-5 w-full justify-between">
+                   <div className="flex flex-row items-center gap-1.5 h-10">
+                     <img 
+                       src={review.clientAvatar || "/img/dumyUser.jpeg"} 
+                       alt={review.clientName} 
+                       className="w-7 h-7 rounded-full object-cover" 
+                     />
+                     <div className="flex flex-col justify-center items-start">
+                       <span className="font-poppins font-normal text-[12px] leading-[20px] text-[#111111]">{review.clientName}</span>
+                       <span className="font-poppins font-normal text-[12px] leading-[20px] text-[#666666]">{review.clientRole}</span>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-0.5">
+                     {Array.from({ length: 5 }).map((_, idx) => (
+                       <span 
+                         key={idx} 
+                         className={`text-base ${idx < review.rating ? "text-[#E49D12]" : "text-neutral-200"}`}
+                       >
+                         ★
+                       </span>
+                     ))}
+                   </div>
+                 </div>
 
                 {/* Comment Text */}
                 <p className="font-poppins font-normal text-sm leading-[20px] text-[#111111]/60 w-full text-left">

@@ -7,7 +7,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Search01Icon,
   ArrowDown01Icon,
-  Add01Icon
+  Add01Icon,
+  FilterHorizontalIcon
 } from "@hugeicons/core-free-icons";
 
 interface Booking {
@@ -73,11 +74,37 @@ export default function DashboardBookingsList({
   onViewBookingDetails
 }: DashboardBookingsListProps) {
   const [dropdownCoords, setDropdownCoords] = React.useState<{ top: number; left: number } | null>(null);
+  const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
+  const [selectedDate, setSelectedDate] = React.useState<string | null>(null); // Format: "MMM D" e.g. "May 11"
+  const [tempMonth, setTempMonth] = React.useState(7); // August 2026 index 7
+  const [tempDay, setTempDay] = React.useState(18); // Default 18
+
   const filteredBookings = bookingsData
     .map((b, originalIdx) => ({ ...b, originalIdx }))
     .filter((b) => {
+      // Exclude "Canceled" status completely from all bookings
+      if (b.status === "Canceled" || b.status === "Cancelled") return false;
       if (activeTab === "Upcoming" && b.status !== "Upcoming") return false;
       if (activeTab === "Canceled" && !b.status.toLowerCase().includes("cancel") && !b.status.toLowerCase().includes("waived")) return false;
+      
+      // Filter by custom date if selected
+      if (selectedDate) {
+        // b.date is like "Mon, 11 May" or "Saturday, May 9" or "Apr 3, 2026"
+        // Let's check if the booking's date string contains our selectedDate e.g. "May 11" or "May 9"
+        const cleanBookingDate = b.date.toLowerCase();
+        // convert selectedDate "May 11" to parts like "may" and "11"
+        const parts = selectedDate.toLowerCase().split(" ");
+        if (parts.length === 2) {
+          const [monthPart, dayPart] = parts;
+          // check if cleanBookingDate contains both month and day
+          const matchMonth = cleanBookingDate.includes(monthPart);
+          const matchDay = cleanBookingDate.includes(dayPart) || cleanBookingDate.match(new RegExp(`\\b${dayPart}\\b`));
+          if (!matchMonth || !matchDay) {
+            return false;
+          }
+        }
+      }
+
       if (bookingSearch) {
         const q = bookingSearch.toLowerCase();
         if (!b.clientName.toLowerCase().includes(q) && !b.clientPhone.toLowerCase().includes(q) && !b.bookingId.toLowerCase().includes(q)) return false;
@@ -132,7 +159,6 @@ export default function DashboardBookingsList({
                   <option value="Cancelled by customer">Cancelled by customer</option>
                   <option value="Cancelled by business">Cancelled by business</option>
                   <option value="Late cancellation">Late cancellation</option>
-                  <option value="Canceled">Canceled</option>
                 </>
               ) : (
                 <>
@@ -145,7 +171,6 @@ export default function DashboardBookingsList({
                   <option value="Cancelled by customer">Cancelled by customer</option>
                   <option value="Cancelled by business">Cancelled by business</option>
                   <option value="Late cancellation">Late cancellation</option>
-                  <option value="Canceled">Canceled</option>
                   <option value="Pending">Pending</option>
                 </>
               )}
@@ -167,6 +192,158 @@ export default function DashboardBookingsList({
               <option value="Vivi">Vivi</option>
             </select>
             <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 absolute right-2.5 top-2.5 text-neutral-600 pointer-events-none" />
+          </div>
+
+          {/* Date Filter Button */}
+          <div className="relative">
+            <button
+              onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+              className="h-9 px-4 bg-white border border-[#D5D2C9] hover:bg-neutral-50 rounded-[12px] text-xs font-medium font-poppins text-[#111111] flex items-center justify-center gap-2 transition-all shrink-0 cursor-pointer"
+            >
+              <span>{selectedDate ? selectedDate : "Filter Date"}</span>
+              <HugeiconsIcon icon={FilterHorizontalIcon} className="w-4 h-4 text-[#111111]" />
+            </button>
+
+            {/* Custom Date Picker Modal Popup */}
+            {isDatePickerOpen && (
+              <div 
+                className="absolute top-11 left-0 bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.1)] border border-[#E8E8E6] p-6 z-50 w-[360px] animate-fadeIn"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-center w-full pb-3">
+                  <h3 className="font-poppins font-semibold text-lg text-black">Custom date</h3>
+                </div>
+
+                <div className="flex flex-row justify-between items-center w-full py-2 mb-2">
+                  <div className="relative">
+                    <select
+                      value={tempMonth}
+                      onChange={(e) => setTempMonth(parseInt(e.target.value))}
+                      className="appearance-none bg-transparent font-poppins font-medium text-xs text-[#111111] pr-4 focus:outline-none cursor-pointer"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>")`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'right center',
+                        backgroundSize: '10px'
+                      }}
+                    >
+                      {["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((m, i) => (
+                        <option key={i} value={i}>{m} 2026</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        if (tempMonth === 0) {
+                          setTempMonth(11);
+                        } else {
+                          setTempMonth(tempMonth - 1);
+                        }
+                      }}
+                      type="button"
+                      className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-neutral-50 text-neutral-800 transition-colors"
+                    >
+                      {"<"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (tempMonth === 11) {
+                          setTempMonth(0);
+                        } else {
+                          setTempMonth(tempMonth + 1);
+                        }
+                      }}
+                      type="button"
+                      className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-neutral-50 text-neutral-800 transition-colors"
+                    >
+                      {">"}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="w-full text-left font-poppins text-2xl font-bold text-black pb-4 border-b border-[#EFEFED]">
+                  {(() => {
+                    const tempDateObj = new Date(2026, tempMonth, tempDay);
+                    const weekday = tempDateObj.toLocaleDateString("en-US", { weekday: "short" });
+                    const mName = tempDateObj.toLocaleDateString("en-US", { month: "short" });
+                    return `${weekday}, ${mName} ${tempDay}`;
+                  })()}
+                </div>
+
+                {/* Weekdays Header */}
+                <div className="grid grid-cols-7 text-center w-full font-poppins text-xs font-semibold text-neutral-500 my-2">
+                  {["S", "M", "T", "W", "T", "F", "S"].map((day, idx) => (
+                    <div key={idx} className="h-8 flex items-center justify-center">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Calendar Grid cells */}
+                <div className="grid grid-cols-7 gap-y-1 text-center w-full mb-6">
+                  {(() => {
+                    const cellsList = [];
+                    const firstDayIdx = new Date(2026, tempMonth, 1).getDay();
+                    const daysInM = new Date(2026, tempMonth + 1, 0).getDate();
+                    for (let i = 0; i < firstDayIdx; i++) {
+                      cellsList.push(<div key={`empty-${i}`} className="h-8" />);
+                    }
+                    for (let d = 1; d <= daysInM; d++) {
+                      const isSelected = d === tempDay;
+                      const isTodayHighlight = d === 17 && !isSelected && tempMonth === 7; // Highlight 17 like the screenshot
+                      cellsList.push(
+                        <div key={d} className="h-8 flex items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={() => setTempDay(d)}
+                            className={`w-8 h-8 rounded-full flex items-center justify-center font-poppins text-xs font-semibold transition-all ${
+                              isSelected
+                                ? "bg-black text-white"
+                                : isTodayHighlight
+                                ? "bg-[#D5D2C9] text-black"
+                                : "text-black hover:bg-neutral-100"
+                            }`}
+                          >
+                            {d}
+                          </button>
+                        </div>
+                      );
+                    }
+                    return cellsList;
+                  })()}
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#EFEFED]">
+                  <button
+                    onClick={() => {
+                      setSelectedDate(null);
+                      setIsDatePickerOpen(false);
+                    }}
+                    className="px-4 py-2 border border-[#D5D2C9] rounded-lg text-xs font-semibold text-neutral-600 hover:bg-neutral-50 transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      const tempDateObj = new Date(2026, tempMonth, tempDay);
+                      // Format to match booking dates e.g. "Mon, 11 May" or "Saturday, May 9"
+                      // Since bookings data has dates like "Mon, 11 May" or "Saturday, May 9",
+                      // we can check if it matches in the filter. We will format to a unified standard for matching
+                      const formatted = tempDateObj.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short" });
+                      // formatted is "Mon, May 11" or similar. Let's store date object parts
+                      setSelectedDate(tempDateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" }));
+                      setIsDatePickerOpen(false);
+                    }}
+                    className="px-4 py-2 bg-[#8EBAC5] hover:opacity-90 text-[#141B34] font-semibold rounded-lg text-xs transition-colors cursor-pointer"
+                  >
+                    Filter
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -437,12 +614,6 @@ export default function DashboardBookingsList({
                                 className="px-4 py-2 hover:bg-neutral-50 font-medium text-neutral-700 w-full text-left"
                               >
                                 Edit booking
-                              </button>
-                              <button
-                                onClick={() => setOpenBookingActionIdx(null)}
-                                className="px-4 py-2 hover:bg-neutral-50 font-medium text-neutral-700 w-full text-left"
-                              >
-                                Change status
                               </button>
                               <button
                                 onClick={() => {

@@ -17,7 +17,7 @@ export default function StaffRolePermissions() {
         {/* Business Owner */}
         <div className="flex flex-col items-start px-6 py-7 w-full border-b md:border-b-0 md:border-r border-[#E8E5DE] min-h-[342.5px]">
           <div className="flex flex-row items-start">
-            <span className="px-3 py-1 bg-[#DFF3F5] text-[#2E9DA7] font-poppins font-medium text-[13px] leading-[20px] rounded-full">
+            <span className="px-3 py-1 bg-[#E0F3F5] text-[#2E9DA7] font-poppins font-medium text-[13px] leading-[20px] rounded-full">
               Owner
             </span>
           </div>
@@ -56,7 +56,7 @@ export default function StaffRolePermissions() {
         {/* Supervisor */}
         <div className="flex flex-col items-start px-6 py-7 w-full border-b md:border-b-0 md:border-r border-[#E8E5DE] min-h-[342.5px]">
           <div className="flex flex-row items-start">
-            <span className="px-3 py-1 bg-[#DDECFF] text-[#32649F] font-poppins font-medium text-[13px] leading-[20px] rounded-full">
+            <span className="px-3 py-1 bg-[#E6F1FB] text-[#3760B7] font-poppins font-medium text-[13px] leading-[20px] rounded-full">
               Supervisor
             </span>
           </div>
@@ -95,7 +95,7 @@ export default function StaffRolePermissions() {
         {/* Staff */}
         <div className="flex flex-col items-start px-6 py-7 w-full min-h-[342.5px]">
           <div className="flex flex-row items-start">
-            <span className="px-3 py-1 bg-[#F1F0EA] text-[#6C6D66] font-poppins font-medium text-[13px] leading-[20px] rounded-full">
+            <span className="px-3 py-1 bg-[#F5F4EE] text-[#5F5E5A] font-poppins font-medium text-[13px] leading-[20px] rounded-full">
               Staff
             </span>
           </div>
