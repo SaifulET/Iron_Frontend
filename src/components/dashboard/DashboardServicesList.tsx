@@ -221,7 +221,7 @@ export default function DashboardServicesList() {
         </div>
 
         {/* Create Service Page Form Container */}
-        <div className="md:ml-[110px] ml-0 w-full flex flex-col gap-[40px]">
+        <div className="pl-0 md:pl-[110px] w-full max-w-full flex flex-col gap-[40px]">
           
           {/* Section 1: Visibility & Type */}
           <div className="flex flex-col gap-[16px] w-full">
@@ -524,7 +524,7 @@ export default function DashboardServicesList() {
           <div className="flex flex-col gap-[20px] w-full">
             
             {/* Custom schedule active toggle card */}
-            <div className="box-sizing-border-box flex flex-row justify-between items-center p-[20px] bg-[#F5F4EE] border border-[#C6C19F] rounded-[12px] w-full h-[99px]">
+            <div className="box-sizing-border-box flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 bg-[#F5F4EE] border border-[#C6C19F] rounded-[12px] w-full gap-4">
               <div className="flex flex-col gap-[2px] w-full max-w-[640px]">
                 <span className="font-poppins font-medium text-sm text-[#111111]">Custom schedule for this service</span>
                 <span className="font-poppins font-normal text-xs text-[#111111]/60 leading-[18px]">
@@ -536,7 +536,7 @@ export default function DashboardServicesList() {
                 onClick={() => setCustomSchedule(!customSchedule)}
                 className={`w-[38px] h-[21px] rounded-full p-[3px] transition-colors duration-200 focus:outline-none flex items-center ${
                   customSchedule ? "bg-[#0F6E56]" : "bg-neutral-300"
-                } cursor-pointer`}
+                } cursor-pointer shrink-0`}
               >
                 <div className={`w-[15px] h-[15px] bg-white rounded-full transition-transform duration-200 ${
                   customSchedule ? "translate-x-[17px]" : "translate-x-0"
@@ -606,8 +606,8 @@ export default function DashboardServicesList() {
                           !dayData.isOpen ? "opacity-25 pointer-events-none" : ""
                         }`}>
                           {/* Time selector block */}
-                          <div className="flex flex-row gap-3 items-center w-full">
-                            <div className="box-sizing-border-box flex flex-row justify-between items-center p-[10px] bg-[#FBFAF8] border border-[#DEDBD3] rounded-[16px] w-[300px] h-[46px]">
+                          <div className="flex flex-row flex-wrap gap-2.5 items-center w-full">
+                            <div className="box-sizing-border-box flex flex-row justify-between items-center p-[6px] bg-[#FBFAF8] border border-[#DEDBD3] rounded-[16px] flex-1 max-w-[300px] h-[38px] sm:h-[46px] shrink-0">
                               <input
                                 type="text"
                                 disabled={!dayData.isOpen}
@@ -618,9 +618,9 @@ export default function DashboardServicesList() {
                                     [day]: { ...dayData, newTime: e.target.value }
                                   });
                                 }}
-                                className="font-poppins font-medium text-[17px] leading-[26px] tracking-[-0.34px] text-black bg-transparent w-20 text-center focus:outline-none"
+                                className="font-poppins font-medium text-sm sm:text-[17px] leading-[20px] sm:leading-[26px] tracking-[-0.34px] text-black bg-transparent w-16 sm:w-20 text-center focus:outline-none"
                               />
-                              <div className="flex flex-row gap-1">
+                              <div className="flex flex-row gap-0.5 sm:gap-1">
                                 <button
                                   type="button"
                                   disabled={!dayData.isOpen}
@@ -630,7 +630,7 @@ export default function DashboardServicesList() {
                                       [day]: { ...dayData, amPm: "AM" }
                                     });
                                   }}
-                                  className={`px-2 py-0.5 rounded text-sm font-medium ${
+                                  className={`px-1.5 sm:px-2 py-0.5 rounded text-xs sm:text-sm font-medium ${
                                     dayData.amPm === "AM" ? "bg-[#8EBAC5] text-[#111111]" : "text-neutral-500"
                                   }`}
                                 >
@@ -645,7 +645,7 @@ export default function DashboardServicesList() {
                                       [day]: { ...dayData, amPm: "PM" }
                                     });
                                   }}
-                                  className={`px-2 py-0.5 rounded text-sm font-medium ${
+                                  className={`px-1.5 sm:px-2 py-0.5 rounded text-xs sm:text-sm font-medium ${
                                     dayData.amPm === "PM" ? "bg-[#8EBAC5] text-[#111111]" : "text-neutral-500"
                                   }`}
                                 >
