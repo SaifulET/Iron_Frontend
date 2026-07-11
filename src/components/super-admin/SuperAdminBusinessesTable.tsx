@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { StarIcon, ArrowDown01Icon } from "@hugeicons/core-free-icons";
+import { StarIcon, ArrowDown01Icon, Car04Icon } from "@hugeicons/core-free-icons";
 
 interface BusinessItem {
   id: string;
@@ -132,15 +132,13 @@ export default function SuperAdminBusinessesTable({
                       </div>
                       <div className="flex flex-col min-w-0">
                         <span className="font-semibold text-sm text-[#111827] truncate">{b.name}</span>
-                        <div className="flex items-center gap-1 text-[11px] text-[#4E5F78]">
-                          <span>Category</span>
-                          <span className="w-1 h-1 rounded-full bg-gray-400" />
-                          {b.type === "Mobile" ? (
-                            <span className="flex items-center gap-0.5">
-                              🚗 Mobile
-                            </span>
-                          ) : (
-                            <span>🏢 Premises</span>
+                        <div className="flex items-center gap-1.5 text-[12px] text-[#6B7280] font-sans">
+                          <span>{b.category}</span>
+                          {b.type === "Mobile" && (
+                            <>
+                              <span className="w-[3px] h-[3px] rounded-full bg-[#6B7280]" />
+                              <HugeiconsIcon icon={Car04Icon} className="w-4 h-4 text-[#4E5F78] shrink-0" />
+                            </>
                           )}
                         </div>
                       </div>
