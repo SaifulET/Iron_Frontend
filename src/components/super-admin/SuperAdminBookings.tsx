@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import SuperAdminBookingsFilter from "./SuperAdminBookingsFilter";
 import SuperAdminBookingsTabs from "./SuperAdminBookingsTabs";
 import SuperAdminBookingsTable from "./SuperAdminBookingsTable";
+import SuperAdminBookingDrawer from "./SuperAdminBookingDrawer";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Download01Icon } from "@hugeicons/core-free-icons";
 
@@ -31,6 +32,7 @@ export default function SuperAdminBookings() {
   const [selectedStaff, setSelectedStaff] = useState("All");
   const [selectedBusinessType, setSelectedBusinessType] = useState("All");
   const [selectedCustomerType, setSelectedCustomerType] = useState("All");
+  const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null);
 
   const [bookings, setBookings] = useState<BookingItem[]>([
     {
@@ -221,6 +223,13 @@ export default function SuperAdminBookings() {
       <SuperAdminBookingsTable
         filteredBookings={filteredBookings}
         toggleStatus={toggleStatus}
+        onSelectBooking={setSelectedBooking}
+      />
+
+      {/* Booking Detail Slide-out Drawer */}
+      <SuperAdminBookingDrawer
+        booking={selectedBooking}
+        onClose={() => setSelectedBooking(null)}
       />
     </div>
   );

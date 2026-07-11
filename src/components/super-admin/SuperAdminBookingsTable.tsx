@@ -23,11 +23,13 @@ interface BookingItem {
 interface SuperAdminBookingsTableProps {
   filteredBookings: BookingItem[];
   toggleStatus: (id: string, newStatus: "Upcoming" | "Completed" | "Cancelled" | "No-Shows") => void;
+  onSelectBooking: (booking: BookingItem) => void;
 }
 
 export default function SuperAdminBookingsTable({
   filteredBookings,
-  toggleStatus
+  toggleStatus,
+  onSelectBooking
 }: SuperAdminBookingsTableProps) {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownCoords, setDropdownCoords] = useState<{ top: number; left: number } | null>(null);
@@ -100,7 +102,12 @@ export default function SuperAdminBookingsTable({
                 <tr key={b.id} className="hover:bg-gray-50/50 transition-colors">
                   {/* Booking ID */}
                   <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
-                    {b.bookingCode}
+                    <button
+                      onClick={() => onSelectBooking(b)}
+                      className="hover:underline hover:text-[#6366F1] font-semibold transition-colors cursor-pointer text-left focus:outline-none"
+                    >
+                      {b.bookingCode}
+                    </button>
                   </td>
 
                   {/* Customer */}
@@ -190,6 +197,7 @@ export default function SuperAdminBookingsTable({
                       >
                         <button
                           onClick={() => {
+                            onSelectBooking(b);
                             setOpenDropdownId(null);
                             setDropdownCoords(null);
                           }}
