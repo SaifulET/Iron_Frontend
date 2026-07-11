@@ -42,14 +42,14 @@ export default function SuperAdminSidebar({
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen bg-white flex flex-col justify-between border-r border-gray-200 z-30 transition-all duration-300 ${
+      className={`fixed left-0 top-0 h-screen bg-white flex flex-col justify-between z-30 transition-all duration-300 ${
         isCollapsed ? "w-[72px]" : "w-[240px]"
       }`}
     >
       <div className="flex flex-col w-full">
         {/* Header container */}
         <div
-          className={`flex items-center justify-between py-4 h-[54px] border-b border-gray-200 transition-all duration-300 ${
+          className={`flex items-center justify-between py-4 h-[70px] border-b border-gray-200 transition-all duration-300 ${
             isCollapsed ? "px-3 justify-center" : "px-4"
           }`}
         >
@@ -134,6 +134,8 @@ export default function SuperAdminSidebar({
           )}
         </div>
       </div>
+      {/* Right border line starting below the header to merge sidebar and topbar headers seamlessly */}
+      <div className="absolute right-0 top-[70px] bottom-0 w-[1px] bg-gray-200 pointer-events-none" />
     </aside>
   );
 }
