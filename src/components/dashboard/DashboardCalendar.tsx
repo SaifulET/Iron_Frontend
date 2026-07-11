@@ -18,6 +18,8 @@ import {
 interface DashboardCalendarProps {
   onNewBookingClick?: () => void;
   onViewBookingClick?: (clientName: string) => void;
+  isStaffDashboard?: boolean;
+  staffName?: string;
 }
 
 interface Booking {
@@ -36,7 +38,12 @@ interface Booking {
   isCancelled?: boolean;
 }
 
-export default function DashboardCalendar({ onNewBookingClick, onViewBookingClick }: DashboardCalendarProps) {
+export default function DashboardCalendar({ 
+  onNewBookingClick, 
+  onViewBookingClick,
+  isStaffDashboard = false,
+  staffName = "Basel"
+}: DashboardCalendarProps) {
   const [openDropdownCardId, setOpenDropdownCardId] = useState<string | null>(null);
 
   const [viewMode, setViewMode] = useState("Today");
@@ -44,7 +51,7 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
 
   const [currentDate, setCurrentDate] = useState(new Date(2026, 5, 21)); // June 21, 2026
   
-  const [selectedStaffFilter, setSelectedStaffFilter] = useState("All Staff");
+  const [selectedStaffFilter, setSelectedStaffFilter] = useState(isStaffDashboard ? staffName : "All Staff");
   const [isStaffDropdownOpen, setIsStaffDropdownOpen] = useState(false);
 
   // Modal State for Viewing Booking
@@ -57,8 +64,8 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
   // Stateful bookings list
   const [bookings, setBookings] = useState<Booking[]>([
     {
-      id: "john-brenda",
-      staff: "John",
+      id: "basel-brenda",
+      staff: "Basel",
       client: "Brenda Massey",
       time: "8:00 - 8:30",
       status: "Upcoming",
@@ -70,8 +77,8 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
       height: 80,
     },
     {
-      id: "john-craig",
-      staff: "John",
+      id: "basel-craig",
+      staff: "Basel",
       client: "Craig Mango",
       time: "10:00 - 10:30",
       status: "No-show - charged",
@@ -83,8 +90,8 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
       height: 80,
     },
     {
-      id: "john-zain",
-      staff: "John",
+      id: "basel-zain",
+      staff: "Basel",
       client: "Zain Dias",
       time: "11:00 - 11:30",
       status: "No-show - cancelled ✓",
@@ -278,12 +285,14 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
     );
   };
 
-  const staffColumns = [
-    { name: "John", hasBorder: true },
-    { name: "Maria", hasBorder: false },
-    { name: "Marilana", hasBorder: false },
-    { name: "Julie", hasBorder: false }
-  ];
+  const staffColumns = isStaffDashboard 
+    ? [{ name: staffName, hasBorder: true }]
+    : [
+        { name: "John", hasBorder: true },
+        { name: "Maria", hasBorder: false },
+        { name: "Marilana", hasBorder: false },
+        { name: "Julie", hasBorder: false }
+      ];
 
   return (
     <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] relative">
@@ -349,43 +358,47 @@ export default function DashboardCalendar({ onNewBookingClick, onViewBookingClic
         {/* Right side: Staff, New Booking, Notifications */}
         <div className="flex items-center gap-4">
           {/* Staff filter dropdown */}
-          <div className="relative">
-            <button 
-              onClick={() => {
-                setIsStaffDropdownOpen(!isStaffDropdownOpen);
-                setIsViewDropdownOpen(false);
-              }}
-              className="border border-[#111111] rounded-md px-3 py-1.5 flex items-center gap-1.5 h-9 bg-white hover:bg-neutral-50 transition-all text-sm font-medium text-[#111111] cursor-pointer"
-            >
-              <span>{selectedStaffFilter}</span>
-              <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5" />
-            </button>
-            {isStaffDropdownOpen && (
-              <div className="absolute right-0 mt-1.5 z-50 w-40 bg-white rounded-lg shadow-xl border border-neutral-200 flex flex-col py-1 text-xs select-none">
-                {["All Staff", "John", "Maria", "Marilana", "Julie"].map((staff) => (
-                  <button 
-                    key={staff}
-                    onClick={() => {
-                      setSelectedStaffFilter(staff);
-                      setIsStaffDropdownOpen(false);
-                    }}
-                    className="px-4 py-2 hover:bg-neutral-50 text-left text-[#111111] font-medium cursor-pointer"
-                  >
-                    {staff}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {!isStaffDashboard && (
+            <div className="relative">
+              <button 
+                onClick={() => {
+                  setIsStaffDropdownOpen(!isStaffDropdownOpen);
+                  setIsViewDropdownOpen(false);
+                }}
+                className="border border-[#111111] rounded-md px-3 py-1.5 flex items-center gap-1.5 h-9 bg-white hover:bg-neutral-50 transition-all text-sm font-medium text-[#111111] cursor-pointer"
+              >
+                <span>{selectedStaffFilter}</span>
+                <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5" />
+              </button>
+              {isStaffDropdownOpen && (
+                <div className="absolute right-0 mt-1.5 z-50 w-40 bg-white rounded-lg shadow-xl border border-neutral-200 flex flex-col py-1 text-xs select-none">
+                  {["All Staff", "John", "Maria", "Marilana", "Julie"].map((staff) => (
+                    <button 
+                      key={staff}
+                      onClick={() => {
+                        setSelectedStaffFilter(staff);
+                        setIsStaffDropdownOpen(false);
+                      }}
+                      className="px-4 py-2 hover:bg-neutral-50 text-left text-[#111111] font-medium cursor-pointer"
+                    >
+                      {staff}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* New Booking */}
-          <button
-            onClick={onNewBookingClick}
-            className="bg-[#020305] text-white rounded-lg h-9 px-4 flex items-center gap-2 text-xs font-semibold hover:bg-neutral-800 transition-colors shadow-sm cursor-pointer"
-          >
-            <HugeiconsIcon icon={Add01Icon} className="w-4 h-4" />
-            <span>New Booking</span>
-          </button>
+          {!isStaffDashboard && (
+            <button
+              onClick={onNewBookingClick}
+              className="bg-[#020305] text-white rounded-lg h-9 px-4 flex items-center gap-2 text-xs font-semibold hover:bg-neutral-800 transition-colors shadow-sm cursor-pointer"
+            >
+              <HugeiconsIcon icon={Add01Icon} className="w-4 h-4" />
+              <span>New Booking</span>
+            </button>
+          )}
 
           {/* Bell Notification Button */}
           <NotificationBell />

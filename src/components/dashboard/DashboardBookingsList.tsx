@@ -48,6 +48,7 @@ interface DashboardBookingsListProps {
   setNewBookingTime: (val: string) => void;
   setNewBookingStaff: (val: string) => void;
   onViewBookingDetails?: (idx: number) => void;
+  isStaffDashboard?: boolean;
 }
 
 export default function DashboardBookingsList({
@@ -71,7 +72,8 @@ export default function DashboardBookingsList({
   setNewBookingDate,
   setNewBookingTime,
   setNewBookingStaff,
-  onViewBookingDetails
+  onViewBookingDetails,
+  isStaffDashboard = false
 }: DashboardBookingsListProps) {
   const [dropdownCoords, setDropdownCoords] = React.useState<{ top: number; left: number } | null>(null);
   const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
@@ -140,59 +142,63 @@ export default function DashboardBookingsList({
           </div>
 
           {/* Status filter select */}
-          <div className="relative h-9">
-            <select
-              value={bookingStatusFilter}
-              onChange={(e) => setBookingStatusFilter(e.target.value)}
-              className="appearance-none bg-white border border-[#111111] rounded-lg px-4 h-full pr-8 text-xs font-poppins font-medium text-[#111111] focus:outline-none cursor-pointer hover:bg-neutral-50 transition-all"
-            >
-              {activeTab === "Upcoming" ? (
-                <>
-                  <option value="All">All Status</option>
-                  <option value="Upcoming">Upcoming</option>
-                </>
-              ) : activeTab === "Canceled" ? (
-                <>
-                  <option value="All">All Status</option>
-                  <option value="No-show - cancelled">No-show - cancelled</option>
-                  <option value="No-show - waived">No-show - waived</option>
-                  <option value="Cancelled by customer">Cancelled by customer</option>
-                  <option value="Cancelled by business">Cancelled by business</option>
-                  <option value="Late cancellation">Late cancellation</option>
-                </>
-              ) : (
-                <>
-                  <option value="All">All Status</option>
-                  <option value="Upcoming">Upcoming</option>
-                  <option value="Completed">Completed</option>
-                  <option value="No-show - charged">No-show - charged</option>
-                  <option value="No-show - cancelled">No-show - cancelled</option>
-                  <option value="No-show - waived">No-show - waived</option>
-                  <option value="Cancelled by customer">Cancelled by customer</option>
-                  <option value="Cancelled by business">Cancelled by business</option>
-                  <option value="Late cancellation">Late cancellation</option>
-                  <option value="Pending">Pending</option>
-                </>
-              )}
-            </select>
-            <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 absolute right-2.5 top-2.5 text-neutral-600 pointer-events-none" />
-          </div>
+          {!isStaffDashboard && (
+            <div className="relative h-9">
+              <select
+                value={bookingStatusFilter}
+                onChange={(e) => setBookingStatusFilter(e.target.value)}
+                className="appearance-none bg-white border border-[#111111] rounded-lg px-4 h-full pr-8 text-xs font-poppins font-medium text-[#111111] focus:outline-none cursor-pointer hover:bg-neutral-50 transition-all"
+              >
+                {activeTab === "Upcoming" ? (
+                  <>
+                    <option value="All">All Status</option>
+                    <option value="Upcoming">Upcoming</option>
+                  </>
+                ) : activeTab === "Canceled" ? (
+                  <>
+                    <option value="All">All Status</option>
+                    <option value="No-show - cancelled">No-show - cancelled</option>
+                    <option value="No-show - waived">No-show - waived</option>
+                    <option value="Cancelled by customer">Cancelled by customer</option>
+                    <option value="Cancelled by business">Cancelled by business</option>
+                    <option value="Late cancellation">Late cancellation</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="All">All Status</option>
+                    <option value="Upcoming">Upcoming</option>
+                    <option value="Completed">Completed</option>
+                    <option value="No-show - charged">No-show - charged</option>
+                    <option value="No-show - cancelled">No-show - cancelled</option>
+                    <option value="No-show - waived">No-show - waived</option>
+                    <option value="Cancelled by customer">Cancelled by customer</option>
+                    <option value="Cancelled by business">Cancelled by business</option>
+                    <option value="Late cancellation">Late cancellation</option>
+                    <option value="Pending">Pending</option>
+                  </>
+                )}
+              </select>
+              <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 absolute right-2.5 top-2.5 text-neutral-600 pointer-events-none" />
+            </div>
+          )}
 
           {/* Staff filter select */}
-          <div className="relative h-9">
-            <select
-              value={bookingStaffFilter}
-              onChange={(e) => setBookingStaffFilter(e.target.value)}
-              className="appearance-none bg-white border border-[#111111] rounded-lg px-4 h-full pr-8 text-xs font-poppins font-medium text-[#111111] focus:outline-none cursor-pointer hover:bg-neutral-50 transition-all"
-            >
-              <option value="All Staff">All Staff</option>
-              <option value="Anna">Anna</option>
-              <option value="George">George</option>
-              <option value="Andreas">Andreas</option>
-              <option value="Vivi">Vivi</option>
-            </select>
-            <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 absolute right-2.5 top-2.5 text-neutral-600 pointer-events-none" />
-          </div>
+          {!isStaffDashboard && (
+            <div className="relative h-9">
+              <select
+                value={bookingStaffFilter}
+                onChange={(e) => setBookingStaffFilter(e.target.value)}
+                className="appearance-none bg-white border border-[#111111] rounded-lg px-4 h-full pr-8 text-xs font-poppins font-medium text-[#111111] focus:outline-none cursor-pointer hover:bg-neutral-50 transition-all"
+              >
+                <option value="All Staff">All Staff</option>
+                <option value="Anna">Anna</option>
+                <option value="George">George</option>
+                <option value="Andreas">Andreas</option>
+                <option value="Vivi">Vivi</option>
+              </select>
+              <HugeiconsIcon icon={ArrowDown01Icon} className="w-3.5 h-3.5 absolute right-2.5 top-2.5 text-neutral-600 pointer-events-none" />
+            </div>
+          )}
 
           {/* Date Filter Button */}
           <div className="relative">
@@ -346,15 +352,16 @@ export default function DashboardBookingsList({
             )}
           </div>
         </div>
-
         {/* Manual Booking Button */}
-        <button
-          onClick={() => setIsCreatingBooking(true)}
-          className="h-9 px-4 bg-[#111111] text-white rounded-lg text-xs font-medium flex items-center justify-center gap-1.5 hover:bg-neutral-800 transition-colors w-full md:w-auto shrink-0 shadow-sm"
-        >
-          <HugeiconsIcon icon={Add01Icon} className="w-4 h-4 text-white" />
-          <span>Manual Booking</span>
-        </button>
+        {!isStaffDashboard && (
+          <button
+            onClick={() => setIsCreatingBooking(true)}
+            className="h-9 px-4 bg-[#111111] text-white rounded-lg text-xs font-medium flex items-center justify-center gap-1.5 hover:bg-neutral-800 transition-colors w-full md:w-auto shrink-0 shadow-sm"
+          >
+            <HugeiconsIcon icon={Add01Icon} className="w-4 h-4 text-white" />
+            <span>Manual Booking</span>
+          </button>
+        )}
       </div>
 
       {/* Bookings Table Block */}

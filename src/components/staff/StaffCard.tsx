@@ -20,11 +20,11 @@ export default function StaffCard({ staff, onToggleStatus, onEdit }: StaffCardPr
       <div className="absolute right-6 top-6">
         <button
           type="button"
-          disabled={staff.role === "Owner"}
+          disabled={staff.role === "Owner" || staff.role === "Supervisor"}
           onClick={() => onToggleStatus(staff.id)}
           className={`w-[38px] h-[21px] rounded-full p-[3px] transition-colors duration-200 focus:outline-none flex items-center ${
             staff.status === "Active" ? "bg-[#0F6E56]" : "bg-neutral-300"
-          } ${staff.role === "Owner" ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
+          } ${staff.role === "Owner" || staff.role === "Supervisor" ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
         >
           <div
             className={`w-[15px] h-[15px] bg-white rounded-full transition-transform duration-200 ${
@@ -97,7 +97,7 @@ export default function StaffCard({ staff, onToggleStatus, onEdit }: StaffCardPr
         </div>
 
         {/* Edit button */}
-        {staff.role !== "Owner" && (
+        {staff.role !== "Owner" && staff.role !== "Supervisor" && (
           <button
             type="button"
             onClick={() => onEdit(staff.id)}
