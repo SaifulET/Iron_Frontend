@@ -1057,7 +1057,7 @@ export default function LandingPage() {
           </div>
 
           {/* Curved Arrow Image */}
-          <div className="absolute left-[60px] xl:left-[209px] top-[186px] xl:top-[278px] w-[80px] xl:w-[114px] h-[90px] xl:h-[151px] pointer-events-none opacity-95 z-20 add-home-screen-arrow-icon">
+          <div className="absolute left-[120px] xl:left-[260px] top-[215px] xl:top-[240px] w-[36px] xl:w-[114px] h-[40px] xl:h-[151px] pointer-events-none opacity-95 z-20 add-home-screen-arrow-icon">
             <img
               src="/Icons/direction.png"
               alt="Direction Arrow"
