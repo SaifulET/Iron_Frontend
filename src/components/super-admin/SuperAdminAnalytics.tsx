@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import SuperAdminAnalyticsOverview from "./SuperAdminAnalyticsOverview";
 import SuperAdminBookingsAnalytics from "./SuperAdminBookingsAnalytics";
 import SuperAdminBusinessesAnalytics from "./SuperAdminBusinessesAnalytics";
+import SuperAdminCustomersAnalytics from "./SuperAdminCustomersAnalytics";
+import SuperAdminCitiesAnalytics from "./SuperAdminCitiesAnalytics";
 
 type AnalyticsTab = "Overview" | "Bookings" | "Businesses" | "Customers" | "Cities";
 
@@ -151,14 +153,8 @@ export default function SuperAdminAnalytics() {
       {activeSubTab === "Overview" && <SuperAdminAnalyticsOverview />}
       {activeSubTab === "Bookings" && <SuperAdminBookingsAnalytics />}
       {activeSubTab === "Businesses" && <SuperAdminBusinessesAnalytics />}
-      {activeSubTab !== "Overview" && activeSubTab !== "Bookings" && activeSubTab !== "Businesses" && (
-        <div className="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 p-8 text-center min-h-[300px] flex flex-col items-center justify-center">
-          <h3 className="font-semibold text-lg text-gray-800">{activeSubTab} Insights</h3>
-          <p className="text-sm text-gray-500 mt-2 max-w-md">
-            Detailed performance charts and breakdown metrics for {activeSubTab.toLowerCase()} are currently compiling and generating.
-          </p>
-        </div>
-      )}
+      {activeSubTab === "Customers" && <SuperAdminCustomersAnalytics />}
+      {activeSubTab === "Cities" && <SuperAdminCitiesAnalytics />}
     </div>
   );
 }
