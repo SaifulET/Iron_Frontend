@@ -594,28 +594,28 @@ export default function SuperAdminSupport() {
         {/* Total Tickets */}
         <div className="bg-white p-5 rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 flex flex-col justify-between min-h-[108px] transition-all hover:shadow-md">
           <span className="text-[13px] font-medium text-gray-500">Total Tickets</span>
-          <span className="text-3xl font-bold text-[#111827] mt-2 mb-1">142</span>
+          <span className="text-3xl font-bold text-[#111827] mt-2 mb-1">{totalCount}</span>
           <span className="text-xs text-gray-400 font-normal">All time</span>
         </div>
 
         {/* Open Tickets */}
         <div className="bg-white p-5 rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 border-l-[2.4px] border-l-[#2563EB] flex flex-col justify-between min-h-[108px] transition-all hover:shadow-md">
           <span className="text-[13px] font-medium text-gray-500">Open</span>
-          <span className="text-3xl font-bold text-[#2563EB] mt-2 mb-1">23</span>
+          <span className="text-3xl font-bold text-[#2563EB] mt-2 mb-1">{openCount}</span>
           <span className="text-xs text-gray-400 font-normal">Awaiting reply</span>
         </div>
 
         {/* Pending Tickets */}
         <div className="bg-white p-5 rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 border-l-[2.4px] border-l-[#D97706] flex flex-col justify-between min-h-[108px] transition-all hover:shadow-md">
           <span className="text-[13px] font-medium text-gray-500">Pending</span>
-          <span className="text-3xl font-bold text-[#D97706] mt-2 mb-1">7</span>
+          <span className="text-3xl font-bold text-[#D97706] mt-2 mb-1">{pendingCount}</span>
           <span className="text-xs text-gray-400 font-normal">Waiting on user</span>
         </div>
 
         {/* Resolved Today */}
         <div className="bg-white p-5 rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 border-l-[2.4px] border-l-[#16A34A] flex flex-col justify-between min-h-[108px] transition-all hover:shadow-md">
           <span className="text-[13px] font-medium text-gray-500">Resolved Today</span>
-          <span className="text-3xl font-bold text-[#16A34A] mt-2 mb-1">11</span>
+          <span className="text-3xl font-bold text-[#16A34A] mt-2 mb-1">{resolvedCount}</span>
           <span className="text-xs text-gray-400 font-normal">31 May 2026</span>
         </div>
       </div>
@@ -627,11 +627,11 @@ export default function SuperAdminSupport() {
           {(["All", "Open", "Pending", "Resolved", "Closed"] as const).map((tab) => {
             const isActive = activeSubTab === tab;
             const countMap = {
-              All: 142,
-              Open: 23,
-              Pending: 7,
-              Resolved: 11,
-              Closed: 101,
+              All: totalCount,
+              Open: openCount,
+              Pending: pendingCount,
+              Resolved: resolvedCount,
+              Closed: closedCount,
             };
 
             // Badge color mapping
