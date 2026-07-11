@@ -8,6 +8,7 @@ import SuperAdminBusinesses from "./SuperAdminBusinesses";
 import SuperAdminCustomers from "./SuperAdminCustomers";
 import SuperAdminBookings from "./SuperAdminBookings";
 import SuperAdminFinance from "./SuperAdminFinance";
+import SuperAdminAnalytics from "./SuperAdminAnalytics";
 
 export default function SuperAdminDashboard() {
   const [activeTab, setActiveTab] = useState("Dashboard");
@@ -58,6 +59,8 @@ export default function SuperAdminDashboard() {
           <SuperAdminBookings />
         ) : activeTab === "Finance" ? (
           <SuperAdminFinance />
+        ) : activeTab === "Analytics" ? (
+          <SuperAdminAnalytics />
         ) : (
           <div className="flex flex-col items-center justify-center min-h-[600px] bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
             <h3 className="font-sans font-semibold text-xl text-gray-800">{activeTab} Page</h3>
