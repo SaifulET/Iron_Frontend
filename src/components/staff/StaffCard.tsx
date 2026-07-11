@@ -20,10 +20,11 @@ export default function StaffCard({ staff, onToggleStatus, onEdit }: StaffCardPr
       <div className="absolute right-6 top-6">
         <button
           type="button"
+          disabled={staff.role === "Owner"}
           onClick={() => onToggleStatus(staff.id)}
           className={`w-[38px] h-[21px] rounded-full p-[3px] transition-colors duration-200 focus:outline-none flex items-center ${
             staff.status === "Active" ? "bg-[#0F6E56]" : "bg-neutral-300"
-          } cursor-pointer`}
+          } ${staff.role === "Owner" ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
         >
           <div
             className={`w-[15px] h-[15px] bg-white rounded-full transition-transform duration-200 ${
@@ -96,14 +97,16 @@ export default function StaffCard({ staff, onToggleStatus, onEdit }: StaffCardPr
         </div>
 
         {/* Edit button */}
-        <button
-          type="button"
-          onClick={() => onEdit(staff.id)}
-          className="flex flex-row items-center justify-center px-3 py-1 gap-1 h-6 bg-[#111111] hover:bg-black text-white rounded-full text-[11px] font-medium transition-all cursor-pointer"
-        >
-          <HugeiconsIcon icon={PencilEdit02Icon} className="w-3 h-3 text-white" />
-          <span>Edit</span>
-        </button>
+        {staff.role !== "Owner" && (
+          <button
+            type="button"
+            onClick={() => onEdit(staff.id)}
+            className="flex flex-row items-center justify-center px-3 py-1 gap-1 h-6 bg-[#111111] hover:bg-black text-white rounded-full text-[11px] font-medium transition-all cursor-pointer"
+          >
+            <HugeiconsIcon icon={PencilEdit02Icon} className="w-3 h-3 text-white" />
+            <span>Edit</span>
+          </button>
+        )}
       </div>
     </div>
   );
