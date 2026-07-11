@@ -9,6 +9,7 @@ import SuperAdminCustomers from "./SuperAdminCustomers";
 import SuperAdminBookings from "./SuperAdminBookings";
 import SuperAdminFinance from "./SuperAdminFinance";
 import SuperAdminAnalytics from "./SuperAdminAnalytics";
+import SuperAdminSupport from "./SuperAdminSupport";
 
 export default function SuperAdminDashboard() {
   const [activeTab, setActiveTab] = useState("Dashboard");
@@ -22,16 +23,16 @@ export default function SuperAdminDashboard() {
         setIsCollapsed(false);
       }
     };
-    
+
     // Check width on client-side mount
     handleResize();
-    
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
-    <div className="relative min-h-[950px] w-full bg-[#F9FAFB] overflow-x-hidden">
+    <div className="fixed inset-0 bg-[#F9FAFB] overflow-hidden flex flex-col">
       {/* Sidebar */}
       <SuperAdminSidebar
         activeTab={activeTab}
@@ -45,8 +46,8 @@ export default function SuperAdminDashboard() {
 
       {/* Main Content Area */}
       <main
-        className={`pr-6 pt-[94px] min-h-[900px] w-full transition-all duration-300 ${
-          isCollapsed ? "pl-[96px]" : "pl-[264px]"
+        className={`pr-2 pt-[78px] flex-grow w-full transition-all duration-300 overflow-hidden ${
+          isCollapsed ? "pl-[80px]" : "pl-[248px]"
         }`}
       >
         {activeTab === "Dashboard" ? (
@@ -61,6 +62,8 @@ export default function SuperAdminDashboard() {
           <SuperAdminFinance />
         ) : activeTab === "Analytics" ? (
           <SuperAdminAnalytics />
+        ) : activeTab === "Support" ? (
+          <SuperAdminSupport />
         ) : (
           <div className="flex flex-col items-center justify-center min-h-[600px] bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
             <h3 className="font-sans font-semibold text-xl text-gray-800">{activeTab} Page</h3>
