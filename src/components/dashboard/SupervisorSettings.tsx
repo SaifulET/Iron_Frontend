@@ -366,10 +366,7 @@ export default function SupervisorSettings() {
 
           {/* SECURITY & LOGIN TAB */}
           {activeSubTab === "Security & Login" && (
-            <Security2FAPanel
-              twoFactor={twoFactor}
-              setTwoFactor={setTwoFactor}
-            />
+            <Security2FAPanel />
           )}
 
         </div>

@@ -21,7 +21,9 @@ import {
 import { bookingsList } from "../mockBookings";
 import RescheduleModal from "../RescheduleModal";
 
-export default function BookingViewPage() {
+import { Suspense } from "react";
+
+function BookingViewContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const bookingId = searchParams.get("id") || "booking-1";
@@ -315,5 +317,13 @@ export default function BookingViewPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function BookingViewPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookingViewContent />
+    </Suspense>
   );
 }

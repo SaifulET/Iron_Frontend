@@ -306,8 +306,6 @@ export default function SupervisorDashboard() {
           setNewBookingTags={setNewBookingTags}
           newBookingNotes={newBookingNotes}
           setNewBookingNotes={setNewBookingNotes}
-          onSave={handleAddNewBooking}
-          onCancel={() => setIsCreatingBooking(false)}
         />
       );
     }
@@ -366,8 +364,6 @@ export default function SupervisorDashboard() {
           setNewBookingTags={setNewBookingTags}
           newBookingNotes={newBookingNotes}
           setNewBookingNotes={setNewBookingNotes}
-          onSave={handleSaveBookingChanges}
-          onCancel={() => setIsEditingBooking(false)}
         />
       );
     }
@@ -379,9 +375,33 @@ export default function SupervisorDashboard() {
     if (activeTab === "Calendar") {
       return (
         <DashboardCalendar
-          onEditBooking={handleEditBooking}
-          bookings={bookingsData}
-          onAddBooking={() => setIsCreatingBooking(true)}
+          onNewBookingClick={() => {
+            setIsCreatingBooking(true);
+            setActiveTab("All Bookings");
+          }}
+          onViewBookingClick={(clientName) => {
+            let index = bookingsData.findIndex(b => b.clientName.toLowerCase().includes(clientName.toLowerCase()));
+            if (index === -1) {
+              const newBookingObj: Booking = {
+                clientName: clientName,
+                clientPhone: "+357 99 999 999",
+                clientInitials: clientName.split(' ').map(n => n[0]).join(''),
+                isNew: true,
+                bookingId: `#BK-${Math.floor(1000 + Math.random() * 9000)}`,
+                date: "Wed, 21 Jun",
+                time: "10:00",
+                staff: "John",
+                status: "Upcoming",
+                amount: "€54",
+                paymentType: "Pay at venue"
+              };
+              setBookingsData(prev => [newBookingObj, ...prev]);
+              index = 0;
+            }
+            setViewingBookingIndex(index);
+            setIsViewingBookingDetails(true);
+            setActiveTab("All Bookings");
+          }}
         />
       );
     }
@@ -390,6 +410,11 @@ export default function SupervisorDashboard() {
       if (isAddingClient) {
         return (
           <ClientForm
+            editingClientIndex={editingClientIndex}
+            isViewingClient={isViewingClient}
+            setIsAddingClient={setIsAddingClient}
+            setEditingClientIndex={setEditingClientIndex}
+            setIsViewingClient={setIsViewingClient}
             clientFirstName={clientFirstName}
             setClientFirstName={setClientFirstName}
             clientLastName={clientLastName}
@@ -409,31 +434,53 @@ export default function SupervisorDashboard() {
             clientArea={clientArea}
             setClientArea={setClientArea}
             clientStreetName={clientStreetName}
-            setClientStreetName={setStreetName}
+            setClientStreetName={setClientStreetName}
             clientStreetNumber={clientStreetNumber}
             setClientStreetNumber={setClientStreetNumber}
             clientFloor={clientFloor}
             setClientFloor={setClientFloor}
             clientAptNo={clientAptNo}
             setClientAptNo={setClientAptNo}
-            onSave={editingClientIndex !== null ? handleSaveClientChanges : handleAddClient}
-            onCancel={() => {
-              setIsAddingClient(false);
-              setEditingClientIndex(null);
-            }}
+            clientDirections=""
+            setClientDirections={() => {}}
+            clientNotes=""
+            setClientNotes={() => {}}
+            clientTag=""
+            setClientTagState={() => {}}
+            clientAvatar=""
+            clientAvatarInputRef={{ current: null }}
+            handleClientAvatarChange={() => {}}
+            clientPhoneCode="+357"
+            setClientPhoneCode={() => {}}
+            clientPhoneFlag="cy"
+            setClientPhoneFlag={() => {}}
+            isClientPhoneDropdownOpen={false}
+            setIsClientPhoneDropdownOpen={() => {}}
+            phoneCountries={[]}
+            handleSaveClient={handleSaveClientChanges}
+            handleAddClient={handleAddClient}
           />
         );
       }
 
       if (isViewingClient && viewingBookingIndex !== null) {
-        const clientItem = clientsData[viewingBookingIndex];
         return (
           <ClientDetails
-            client={clientItem}
-            onBack={() => {
-              setIsViewingClient(false);
-              setViewingBookingIndex(null);
-            }}
+            clientFirstName={clientFirstName}
+            clientLastName={clientLastName}
+            clientEmail={clientEmail}
+            clientGender={clientGender}
+            clientDob={clientDob}
+            clientPhone={clientPhone}
+            clientCity={clientCity}
+            clientPropertyType={clientPropertyType}
+            clientArea={clientArea}
+            clientStreetName={clientStreetName}
+            clientStreetNumber={clientStreetNumber}
+            clientFloor={clientFloor}
+            clientAptNo={clientAptNo}
+            setIsViewingClient={setIsViewingClient}
+            setEditingClientIndex={setEditingClientIndex}
           />
         );
       }
@@ -497,17 +544,17 @@ export default function SupervisorDashboard() {
             {/* Details Card */}
             <div className="w-full flex justify-start">
               <ClientBookingHistoryCard
+                bookingId={b.bookingId}
                 status={b.status}
                 statusType={statusType}
-                bookingId={b.bookingId}
-                amount={b.amount}
                 clientName={b.clientName}
                 clientPhone={b.clientPhone}
-                dateTime={`${b.date} at ${b.time}`}
-                paymentType={b.paymentType}
+                dateText={b.date}
+                timeText={b.time}
                 staffName={b.staff}
+                servicePrice={b.amount}
                 onCompleteBooking={() => setShowCompleteModalForBooking(true)}
-                onNoShowBooking={() => setShowNoShowModal(true)}
+                onCancelNoShowClick={() => setShowNoShowModal(true)}
               />
             </div>
           </main>
@@ -580,51 +627,44 @@ export default function SupervisorDashboard() {
       {renderMainContent()}
 
       {/* Floating Action Modals */}
-      {showCompleteModalForBooking && (
-        <CompleteModal
-          onClose={() => setShowCompleteModalForBooking(false)}
-          onConfirm={() => {
-            if (viewingBookingIndex !== null) {
-              const updated = [...bookingsData];
-              updated[viewingBookingIndex].status = "Completed";
-              setBookingsData(updated);
-            }
-            setShowCompleteModalForBooking(false);
-          }}
-        />
-      )}
+      <CompleteModal
+        isOpen={showCompleteModalForBooking}
+        onClose={() => setShowCompleteModalForBooking(false)}
+        onConfirm={() => {
+          if (viewingBookingIndex !== null) {
+            const updated = [...bookingsData];
+            updated[viewingBookingIndex].status = "Completed";
+            setBookingsData(updated);
+          }
+          setShowCompleteModalForBooking(false);
+        }}
+      />
 
-      {showNoShowModal && (
-        <NoShowModal
-          onClose={() => setShowNoShowModal(false)}
-          onConfirmCharge={() => {
-            if (viewingBookingIndex !== null) {
-              const updated = [...bookingsData];
-              updated[viewingBookingIndex].status = "No-show · Charged";
-              setBookingsData(updated);
-            }
-            setShowNoShowModal(false);
-          }}
-          onWaiveFee={() => {
-            setShowNoShowModal(false);
-            setShowWaiveFeeModal(true);
-          }}
-        />
-      )}
+      <NoShowModal
+        isOpen={showNoShowModal}
+        onClose={() => setShowNoShowModal(false)}
+        onConfirm={() => {
+          if (viewingBookingIndex !== null) {
+            const updated = [...bookingsData];
+            updated[viewingBookingIndex].status = "No-show · Charged";
+            setBookingsData(updated);
+          }
+          setShowNoShowModal(false);
+        }}
+      />
 
-      {showWaiveFeeModal && (
-        <WaiveChargeModal
-          onClose={() => setShowWaiveFeeModal(false)}
-          onConfirm={() => {
-            if (viewingBookingIndex !== null) {
-              const updated = [...bookingsData];
-              updated[viewingBookingIndex].status = "No-show · Waived";
-              setBookingsData(updated);
-            }
-            setShowWaiveFeeModal(false);
-          }}
-        />
-      )}
+      <WaiveChargeModal
+        isOpen={showWaiveFeeModal}
+        onClose={() => setShowWaiveFeeModal(false)}
+        onConfirm={() => {
+          if (viewingBookingIndex !== null) {
+            const updated = [...bookingsData];
+            updated[viewingBookingIndex].status = "No-show · Waived";
+            setBookingsData(updated);
+          }
+          setShowWaiveFeeModal(false);
+        }}
+      />
     </div>
   );
 }

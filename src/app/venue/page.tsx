@@ -17,7 +17,9 @@ import PaymentStep from "./components/PaymentStep";
 import ConfirmedStep from "./components/ConfirmedStep";
 import CheckoutSummaryAside from "./components/CheckoutSummaryAside";
 
-export default function VenueDetailsPage() {
+import { Suspense } from "react";
+
+function VenueDetailsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const venueId = searchParams.get("id") || "1";
@@ -1345,5 +1347,13 @@ export default function VenueDetailsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function VenueDetailsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VenueDetailsContent />
+    </Suspense>
   );
 }

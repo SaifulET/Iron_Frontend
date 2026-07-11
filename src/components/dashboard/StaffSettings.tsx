@@ -311,10 +311,7 @@ export default function StaffSettings() {
 
           {/* SECURITY & LOGIN TAB */}
           {activeSubTab === "Security & Login" && (
-            <Security2FAPanel
-              twoFactor={twoFactor}
-              setTwoFactor={() => {}}
-            />
+            <Security2FAPanel />
           )}
 
         </div>

@@ -6,7 +6,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 
-export default function BlogDetailPage() {
+import { Suspense } from "react";
+
+function BlogDetailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || "post-featured";
@@ -180,5 +182,13 @@ export default function BlogDetailPage() {
       {/* Footer */}
       <Footer />
     </div>
+  );
+}
+
+export default function BlogDetailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BlogDetailContent />
+    </Suspense>
   );
 }

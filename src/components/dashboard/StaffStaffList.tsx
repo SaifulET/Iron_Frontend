@@ -104,6 +104,10 @@ export default function StaffStaffList() {
         name: staffName,
         role: staffRole,
         subRole: "Staff",
+        avatarText: staffName.split(" ").map(n => n[0] || "").join("").toUpperCase(),
+        avatarBg: "bg-[#7C3AED]",
+        servicesAssigned: "All 6 services assigned",
+        schedule: "Mon-Fri 09:00-20:00 • Sat 10:00-16:00",
         status: "Active",
         phone: staffPhone,
         email: staffEmail
