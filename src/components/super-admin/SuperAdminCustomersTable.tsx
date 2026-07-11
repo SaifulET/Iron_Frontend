@@ -19,11 +19,13 @@ interface CustomerItem {
 interface SuperAdminCustomersTableProps {
   filteredCustomers: CustomerItem[];
   toggleStatus: (id: string, newStatus: "Active" | "Suspended") => void;
+  onSelectCustomer?: (id: string) => void;
 }
 
 export default function SuperAdminCustomersTable({
   filteredCustomers,
-  toggleStatus
+  toggleStatus,
+  onSelectCustomer
 }: SuperAdminCustomersTableProps) {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownCoords, setDropdownCoords] = useState<{ top: number; left: number } | null>(null);
@@ -93,7 +95,12 @@ export default function SuperAdminCustomersTable({
                         {avatar.initials}
                       </div>
                       <div className="flex flex-col min-w-0">
-                        <span className="font-semibold text-sm text-[#111827] truncate">{c.name}</span>
+                        <span
+                          onClick={() => onSelectCustomer?.(c.id)}
+                          className="font-semibold text-sm text-[#111827] hover:text-[#6366F1] hover:underline cursor-pointer truncate"
+                        >
+                          {c.name}
+                        </span>
                         <span className="text-[11px] text-[#4E5F78] truncate">{c.email}</span>
                         <span className="text-[11px] text-[#4E5F78] truncate">{c.phone}</span>
                       </div>

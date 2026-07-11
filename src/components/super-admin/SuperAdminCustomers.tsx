@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import SuperAdminCustomersFilter from "./SuperAdminCustomersFilter";
 import SuperAdminCustomersTabs from "./SuperAdminCustomersTabs";
 import SuperAdminCustomersTable from "./SuperAdminCustomersTable";
+import SuperAdminCustomerDetail from "./SuperAdminCustomerDetail";
 
 interface CustomerItem {
   id: string;
@@ -20,6 +21,7 @@ interface CustomerItem {
 export default function SuperAdminCustomers() {
   const [activeStatusFilter, setActiveStatusFilter] = useState<"All" | "Active" | "Doormat" | "Suspended">("All");
   const [selectedStatusDropdown, setSelectedStatusDropdown] = useState("All");
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
 
   const [customers, setCustomers] = useState<CustomerItem[]>([
     {
@@ -121,6 +123,15 @@ export default function SuperAdminCustomers() {
     document.body.removeChild(link);
   };
 
+  if (selectedCustomerId !== null) {
+    return (
+      <SuperAdminCustomerDetail
+        customerId={selectedCustomerId}
+        onBack={() => setSelectedCustomerId(null)}
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6 w-full pb-12">
       {/* Title & Dropdowns Filter Row */}
@@ -148,6 +159,7 @@ export default function SuperAdminCustomers() {
       <SuperAdminCustomersTable
         filteredCustomers={filteredCustomers}
         toggleStatus={toggleStatus}
+        onSelectCustomer={setSelectedCustomerId}
       />
     </div>
   );
