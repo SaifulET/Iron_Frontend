@@ -9,9 +9,44 @@ import SuperAdminFinanceLog from "./SuperAdminFinanceLog";
 export default function SuperAdminFinance() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [appliedFromDate, setAppliedFromDate] = useState("");
+  const [appliedToDate, setAppliedToDate] = useState("");
 
   const handleApplyRange = () => {
-    alert(`Setting custom range: From ${fromDate || "Any"} To ${toDate || "Any"}`);
+    setAppliedFromDate(fromDate);
+    setAppliedToDate(toDate);
+  };
+
+  const handlePresetLastMonth = () => {
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastDay = new Date(now.getFullYear(), now.getMonth(), 0);
+    
+    const fromStr = firstDay.toISOString().split("T")[0];
+    const toStr = lastDay.toISOString().split("T")[0];
+    setFromDate(fromStr);
+    setToDate(toStr);
+    setAppliedFromDate(fromStr);
+    setAppliedToDate(toStr);
+  };
+
+  const handlePresetThisMonth = () => {
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    const fromStr = firstDay.toISOString().split("T")[0];
+    const toStr = now.toISOString().split("T")[0];
+    setFromDate(fromStr);
+    setToDate(toStr);
+    setAppliedFromDate(fromStr);
+    setAppliedToDate(toStr);
+  };
+
+  const handlePresetAllTime = () => {
+    setFromDate("");
+    setToDate("");
+    setAppliedFromDate("");
+    setAppliedToDate("");
   };
 
   return (
@@ -32,13 +67,13 @@ export default function SuperAdminFinance() {
           {/* Preset Buttons Group */}
           <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2">
             <button
-              onClick={() => alert("Setting filter to: Last Month")}
+              onClick={handlePresetLastMonth}
               className="border border-[#111111] text-[#111111] bg-white hover:bg-gray-50 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors text-center w-full sm:w-auto"
             >
               Last Month
             </button>
             <button
-              onClick={() => alert("Setting filter to: This Month")}
+              onClick={handlePresetThisMonth}
               className="border border-[#111111] text-[#111111] bg-white hover:bg-gray-50 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors text-center w-full sm:w-auto"
             >
               This Month
@@ -80,7 +115,7 @@ export default function SuperAdminFinance() {
           <div className="hidden xl:block w-px h-5 bg-gray-200" />
 
           <button
-            onClick={() => alert("Setting filter to: All Time")}
+            onClick={handlePresetAllTime}
             className="bg-[#111111] hover:bg-black text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors w-full xl:w-auto text-center"
           >
             All time
@@ -95,7 +130,7 @@ export default function SuperAdminFinance() {
       <SuperAdminFinanceStats />
 
       {/* Pending Payouts Section */}
-      <SuperAdminFinancePending />
+      <SuperAdminFinancePending fromDate={appliedFromDate} toDate={appliedToDate} />
 
       {/* Transaction Log list */}
       <SuperAdminFinanceLog />

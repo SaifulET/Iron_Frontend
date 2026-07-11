@@ -29,6 +29,8 @@ export default function SuperAdminBookings() {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [appliedFromDate, setAppliedFromDate] = useState("");
+  const [appliedToDate, setAppliedToDate] = useState("");
   const [selectedStaff, setSelectedStaff] = useState("All");
   const [selectedBusinessType, setSelectedBusinessType] = useState("All");
   const [selectedCustomerType, setSelectedCustomerType] = useState("All");
@@ -120,6 +122,26 @@ export default function SuperAdminBookings() {
       if (selectedBusinessType === "Premises" && isMobile) return false;
     }
 
+    // Date range filter
+    if (appliedFromDate || appliedToDate) {
+      const datePart = b.dateTime.split(" - ")[0]; // e.g. "16 May 2026"
+      const bookingDate = new Date(datePart);
+      
+      if (appliedFromDate) {
+        const fromLimit = new Date(appliedFromDate);
+        fromLimit.setHours(0, 0, 0, 0);
+        bookingDate.setHours(0, 0, 0, 0);
+        if (bookingDate < fromLimit) return false;
+      }
+      
+      if (appliedToDate) {
+        const toLimit = new Date(appliedToDate);
+        toLimit.setHours(23, 59, 59, 999);
+        bookingDate.setHours(0, 0, 0, 0);
+        if (bookingDate > toLimit) return false;
+      }
+    }
+
     return true;
   });
 
@@ -130,7 +152,8 @@ export default function SuperAdminBookings() {
   };
 
   const handleApplyFilters = () => {
-    alert(`Applying date range filters: From ${fromDate || "Anytime"} To ${toDate || "Anytime"}`);
+    setAppliedFromDate(fromDate);
+    setAppliedToDate(toDate);
   };
 
   const handleExport = () => {

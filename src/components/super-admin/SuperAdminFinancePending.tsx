@@ -20,7 +20,15 @@ interface PendingPayout {
   status: "Pending" | "Sent";
 }
 
-export default function SuperAdminFinancePending() {
+interface SuperAdminFinancePendingProps {
+  fromDate?: string;
+  toDate?: string;
+}
+
+export default function SuperAdminFinancePending({
+  fromDate,
+  toDate
+}: SuperAdminFinancePendingProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedPayout, setSelectedPayout] = useState<PendingPayout | null>(null);
   const [payouts, setPayouts] = useState<PendingPayout[]>([
@@ -86,9 +94,34 @@ export default function SuperAdminFinancePending() {
     }
   ]);
 
+  const filteredPayouts = payouts.filter((p) => {
+    if (fromDate || toDate) {
+      const monthPart = p.payoutMonth.split(" ")[0]; // "Jul"
+      const yearPart = p.payoutMonth.split(" ")[1]; // "2026"
+      const payoutDate = new Date(`${monthPart} 1, ${yearPart}`);
+      
+      if (fromDate) {
+        const fromLimit = new Date(fromDate);
+        fromLimit.setDate(1);
+        fromLimit.setHours(0, 0, 0, 0);
+        payoutDate.setHours(0, 0, 0, 0);
+        if (payoutDate < fromLimit) return false;
+      }
+      
+      if (toDate) {
+        const toLimit = new Date(toDate);
+        toLimit.setDate(1);
+        toLimit.setHours(0, 0, 0, 0);
+        payoutDate.setHours(0, 0, 0, 0);
+        if (payoutDate > toLimit) return false;
+      }
+    }
+    return true;
+  });
+
   const handleExportCSV = () => {
     const headers = ["Business", "City", "Category", "Transactions", "No-show €", "Late cancel €", "Payout Period", "Net Amount", "IBAN", "Status"];
-    const rows = payouts.map((p) => [
+    const rows = filteredPayouts.map((p) => [
       `"${p.businessName}"`,
       `"${p.city}"`,
       `"${p.category}"`,
@@ -126,7 +159,7 @@ export default function SuperAdminFinancePending() {
       <div className="bg-[#F5F5F5] p-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-gray-200 w-full">
         <div className="flex flex-col gap-1 w-full sm:w-auto">
           <h3 className="font-semibold text-base text-[#111111] leading-tight">
-            Pending SEPA payouts - {payouts.filter((p) => p.status === "Pending").length} businesses
+            Pending SEPA payouts - {filteredPayouts.filter((p) => p.status === "Pending").length} businesses
           </h3>
           <p className="text-xs text-gray-500 font-normal">
             Each payout requires individual confirmation before executing
@@ -156,7 +189,7 @@ export default function SuperAdminFinancePending() {
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left font-sans text-xs border-collapse">
             <tbody className="divide-y divide-gray-100">
-              {payouts.map((p) => {
+              {filteredPayouts.map((p) => {
                 const initials = p.businessName
                   .split(" ")
                   .map((n) => n[0])

@@ -23,6 +23,8 @@ export default function SuperAdminFinanceLog() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [appliedFromDate, setAppliedFromDate] = useState("");
+  const [appliedToDate, setAppliedToDate] = useState("");
   const [activeTab, setActiveTab] = useState<"No-show & late cancel" | "Activation fees" | "Refunds issued" | "SEPA sent">("No-show & late cancel");
 
   const [transactions] = useState<TransactionItem[]>([
@@ -85,7 +87,8 @@ export default function SuperAdminFinanceLog() {
   ]);
 
   const handleApplyFilters = () => {
-    alert(`Applying date range: From ${fromDate || "Any"} To ${toDate || "Any"}`);
+    setAppliedFromDate(fromDate);
+    setAppliedToDate(toDate);
   };
 
   const handleExportCSV = () => {
@@ -114,7 +117,29 @@ export default function SuperAdminFinanceLog() {
     document.body.removeChild(link);
   };
 
-  const filteredTransactions = transactions.filter((t) => t.tabType === activeTab);
+  const filteredTransactions = transactions.filter((t) => {
+    if (t.tabType !== activeTab) return false;
+
+    if (appliedFromDate || appliedToDate) {
+      const transactionDate = new Date(t.dateTime);
+      
+      if (appliedFromDate) {
+        const fromLimit = new Date(appliedFromDate);
+        fromLimit.setHours(0, 0, 0, 0);
+        transactionDate.setHours(0, 0, 0, 0);
+        if (transactionDate < fromLimit) return false;
+      }
+      
+      if (appliedToDate) {
+        const toLimit = new Date(appliedToDate);
+        toLimit.setHours(23, 59, 59, 999);
+        transactionDate.setHours(0, 0, 0, 0);
+        if (transactionDate > toLimit) return false;
+      }
+    }
+
+    return true;
+  });
 
   const getStatusBadgeStyle = (status: string) => {
     switch (status) {
