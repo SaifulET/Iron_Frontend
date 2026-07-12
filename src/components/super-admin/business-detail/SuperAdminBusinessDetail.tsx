@@ -75,69 +75,71 @@ export default function SuperAdminBusinessDetail({
 
       {/* Business Identity Card */}
       <div className="w-full bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 p-6 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
-        <div className="flex items-start gap-4 w-full min-w-0">
+        <div className="flex flex-col sm:flex-row items-start gap-4 w-full min-w-0">
           {/* Avatar GL */}
           <div className="w-16 h-16 rounded-full bg-[#EEF2FF] flex items-center justify-center font-bold text-lg text-[#4338CA] shrink-0 select-none">
             GL
           </div>
 
-          <div className="flex flex-col gap-2 min-w-0">
-            {/* Row 1: Title, Active, Mobile */}
+          <div className="flex flex-col gap-2.5 min-w-0 w-full">
+            {/* Title, Active, Mobile */}
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="font-sans font-bold text-2xl text-[#111827] tracking-tight">
                 Glam Studio
               </h2>
-              {/* Active Badge */}
-              <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-xs font-semibold py-0.5 px-3">
-                <HugeiconsIcon icon={Tick01Icon} className="w-3.5 h-3.5 shrink-0" />
-                <span>Active</span>
-              </div>
-              {/* Mobile Badge */}
-              <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-xs font-semibold py-0.5 px-3">
-                <HugeiconsIcon icon={Car04Icon} className="w-3.5 h-3.5 shrink-0" />
-                <span>Mobile</span>
+              <div className="flex flex-wrap items-center gap-1.5">
+                {/* Active Badge */}
+                <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-xs font-semibold py-0.5 px-3 shrink-0">
+                  <HugeiconsIcon icon={Tick01Icon} className="w-3.5 h-3.5 shrink-0" />
+                  <span>Active</span>
+                </div>
+                {/* Mobile Badge */}
+                <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-xs font-semibold py-0.5 px-3 shrink-0">
+                  <HugeiconsIcon icon={Car04Icon} className="w-3.5 h-3.5 shrink-0" />
+                  <span>Mobile</span>
+                </div>
               </div>
             </div>
 
-            {/* Row 2: Secondary Tags */}
-            <div className="flex flex-wrap items-center gap-2 mt-1">
+            {/* Secondary Tags */}
+            <div className="flex flex-wrap items-center gap-2">
               {/* Gap Elimination Tag */}
-              <div className="border border-[#861464] bg-[#FDF2FA] text-[#861464] rounded-full text-xs font-semibold py-0.5 px-3">
+              <div className="border border-[#861464] bg-[#FDF2FA] text-[#861464] rounded-full text-xs font-semibold py-0.5 px-3 shrink-0">
                 Gap Elimination
               </div>
               {/* Auto Booking Tag */}
-              <div className="border border-[#201486] bg-[#F3F2FD] text-[#201486] rounded-full text-xs font-semibold py-0.5 px-3">
+              <div className="border border-[#201486] bg-[#F3F2FD] text-[#201486] rounded-full text-xs font-semibold py-0.5 px-3 shrink-0">
                 Auto Booking
               </div>
             </div>
 
             {/* Sub details row */}
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-[#6B7280]">
-              <span>Category</span>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-x-3 gap-y-1.5 text-xs text-[#6B7280] mt-1">
+              <span className="font-medium text-gray-700">Category</span>
+              <span className="hidden sm:inline w-1 h-1 rounded-full bg-gray-300" />
               <div className="flex items-center gap-1">
                 <HugeiconsIcon icon={Location05Icon} className="w-3.5 h-3.5 shrink-0" />
                 <span>Nicosia</span>
               </div>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
+              <span className="hidden sm:inline w-1 h-1 rounded-full bg-gray-300" />
               <div className="flex items-center gap-1">
                 <HugeiconsIcon icon={Calendar01Icon} className="w-3.5 h-3.5 shrink-0" />
                 <span>Member since 12 Jan 2024</span>
               </div>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
+              <span className="hidden sm:inline w-1 h-1 rounded-full bg-gray-300" />
               <div className="flex items-center gap-1">
                 <HugeiconsIcon icon={StarIcon} className="w-3.5 h-3.5 text-[#E49D12] fill-[#E49D12] shrink-0" />
                 <span className="font-semibold text-gray-800">4.8</span>
                 <span>(124 reviews)</span>
               </div>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
+              <span className="hidden sm:inline w-1 h-1 rounded-full bg-gray-300" />
               <span>Last login 2 days ago</span>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto mt-2 xl:mt-0 justify-start xl:justify-end">
+        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto mt-4 xl:mt-0 justify-start xl:justify-end">
           <button
             onClick={() => onSuspend(businessId)}
             className="flex items-center justify-center gap-1 px-4 py-2 border border-[#DC2626] text-[#DC2626] rounded-full text-xs font-semibold hover:bg-red-50 cursor-pointer bg-white transition-colors"
