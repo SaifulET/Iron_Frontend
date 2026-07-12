@@ -84,7 +84,7 @@ export default function SuperAdminBusinessReview({
       </div>
 
       {/* Header / Title Row */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 w-full border-b border-gray-150 pb-5">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 w-full">
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="font-sans font-semibold text-2xl text-[#111827] leading-[32px]">
             Business Application
