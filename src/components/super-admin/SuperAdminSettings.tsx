@@ -25,6 +25,7 @@ export default function SuperAdminSettings() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [language, setLanguage] = useState<"EN" | "GR">("EN");
+  const [alertModal, setAlertModal] = useState<{ isOpen: boolean; message: string } | null>(null);
 
   // --- Platform Configuration State ---
   const [maxServices, setMaxServices] = useState(5);
@@ -72,13 +73,13 @@ export default function SuperAdminSettings() {
 
   const handleSavePassword = () => {
     if (newPassword && newPassword === confirmPassword) {
-      alert("Password updated successfully!");
+      setAlertModal({ isOpen: true, message: "Password updated successfully!" });
       setIsEditingPassword(false);
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } else {
-      alert("Passwords do not match or are empty.");
+      setAlertModal({ isOpen: true, message: "Passwords do not match or are empty." });
     }
   };
 
@@ -605,6 +606,37 @@ export default function SuperAdminSettings() {
           </div>
         </div>
       </div>
+
+      {alertModal?.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white w-[380px] rounded-xl overflow-hidden shadow-xl p-6 flex flex-col gap-4">
+            <div className="flex justify-between items-center shrink-0">
+              <h3 className="font-bold text-base text-[#111827]">Notification</h3>
+              <button
+                type="button"
+                onClick={() => setAlertModal(null)}
+                className="text-gray-400 hover:text-gray-600 bg-transparent border-none cursor-pointer"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 leading-5">
+              {alertModal.message}
+            </p>
+            <div className="flex justify-end mt-2 pt-2 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={() => setAlertModal(null)}
+                className="px-5 py-2 rounded-full bg-[#6366F1] hover:bg-indigo-650 text-xs font-semibold text-white border-none cursor-pointer"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

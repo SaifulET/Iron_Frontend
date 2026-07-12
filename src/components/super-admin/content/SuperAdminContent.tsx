@@ -77,6 +77,13 @@ export default function SuperAdminContent() {
   const [showPageModal, setShowPageModal] = useState(false);
   const [editingPage, setEditingPage] = useState<StaticPage | null>(null);
 
+  // Custom Delete Confirm state
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    isOpen: boolean;
+    type: "post" | "faq" | "page";
+    id: string;
+  } | null>(null);
+
   // --- Blog Handlers ---
   const handleSavePost = (data: Omit<BlogPost, "id" | "date">) => {
     if (editingPost) {
@@ -95,9 +102,7 @@ export default function SuperAdminContent() {
   };
 
   const handleDeletePost = (id: string) => {
-    if (confirm("Are you sure you want to delete this post?")) {
-      setPosts((prev) => prev.filter((p) => p.id !== id));
-    }
+    setDeleteConfirm({ isOpen: true, type: "post", id });
   };
 
   // --- FAQ Handlers ---
@@ -122,11 +127,7 @@ export default function SuperAdminContent() {
   };
 
   const handleDeleteFaq = (id: string) => {
-    if (confirm("Are you sure you want to delete this FAQ?")) {
-      const isCustomer = activeTab === "FAQ — Customers";
-      const faqSetter = isCustomer ? setCustomerFaqs : setBusinessFaqs;
-      faqSetter((prev) => prev.filter((f) => f.id !== id));
-    }
+    setDeleteConfirm({ isOpen: true, type: "faq", id });
   };
 
   // --- Static Page Handlers ---
@@ -148,9 +149,22 @@ export default function SuperAdminContent() {
   };
 
   const handleDeletePage = (id: string) => {
-    if (confirm("Are you sure you want to delete this Static Page?")) {
+    setDeleteConfirm({ isOpen: true, type: "page", id });
+  };
+
+  const executeDelete = () => {
+    if (!deleteConfirm) return;
+    const { type, id } = deleteConfirm;
+    if (type === "post") {
+      setPosts((prev) => prev.filter((p) => p.id !== id));
+    } else if (type === "faq") {
+      const isCustomer = activeTab === "FAQ — Customers";
+      const faqSetter = isCustomer ? setCustomerFaqs : setBusinessFaqs;
+      faqSetter((prev) => prev.filter((f) => f.id !== id));
+    } else if (type === "page") {
       setStaticPages((prev) => prev.filter((sp) => sp.id !== id));
     }
+    setDeleteConfirm(null);
   };
 
   if (isEditingBlogPost) {
@@ -265,6 +279,44 @@ export default function SuperAdminContent() {
         onSave={handleSavePage}
         editingPage={editingPage}
       />
+
+      {deleteConfirm?.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white w-[400px] rounded-xl overflow-hidden shadow-xl p-6 flex flex-col gap-4">
+            <div className="flex justify-between items-center shrink-0">
+              <h3 className="font-bold text-base text-[#111827]">Confirm Deletion</h3>
+              <button
+                type="button"
+                onClick={() => setDeleteConfirm(null)}
+                className="text-gray-400 hover:text-gray-600 bg-transparent border-none cursor-pointer"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 leading-5">
+              Are you sure you want to delete this {deleteConfirm.type === "post" ? "blog post" : deleteConfirm.type === "faq" ? "FAQ item" : "static page"}? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-2.5 mt-2 pt-2 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirm(null)}
+                className="px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 text-xs font-semibold text-gray-600 border-none cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={executeDelete}
+                className="px-4 py-2 rounded-full bg-red-600 hover:bg-red-700 text-xs font-semibold text-white border-none cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

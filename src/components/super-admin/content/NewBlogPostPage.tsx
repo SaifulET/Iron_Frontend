@@ -34,6 +34,7 @@ export default function NewBlogPostPage({ editingPost, onDiscard, onSave }: NewB
 
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
+  const [warningModal, setWarningModal] = useState<{ isOpen: boolean; message: string } | null>(null);
 
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -146,7 +147,7 @@ export default function NewBlogPostPage({ editingPost, onDiscard, onSave }: NewB
     e.preventDefault();
     const contentText = editorRef.current ? editorRef.current.innerHTML : "";
     if (!title || !contentText) {
-      alert("Please enter a title and content.");
+      setWarningModal({ isOpen: true, message: "Please enter a title and content." });
       return;
     }
     onSave({
@@ -598,6 +599,36 @@ export default function NewBlogPostPage({ editingPost, onDiscard, onSave }: NewB
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {warningModal?.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white w-[380px] rounded-xl overflow-hidden shadow-xl p-6 flex flex-col gap-4">
+            <div className="flex justify-between items-center shrink-0">
+              <h3 className="font-bold text-base text-[#111827]">Validation Error</h3>
+              <button
+                type="button"
+                onClick={() => setWarningModal(null)}
+                className="text-gray-400 hover:text-gray-600 bg-transparent border-none cursor-pointer"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 leading-5">
+              {warningModal.message}
+            </p>
+            <div className="flex justify-end mt-2 pt-2 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={() => setWarningModal(null)}
+                className="px-5 py-2 rounded-full bg-[#6366F1] hover:bg-indigo-650 text-xs font-semibold text-white border-none cursor-pointer"
+              >
+                OK
+              </button>
+            </div>
           </div>
         </div>
       )}
