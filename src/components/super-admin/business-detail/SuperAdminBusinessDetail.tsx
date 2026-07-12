@@ -7,6 +7,7 @@ import {
   Calendar01Icon,
   Tick01Icon,
   StarIcon,
+  Car04Icon,
 } from "@hugeicons/core-free-icons";
 import BusinessOverviewTab from "./BusinessOverviewTab";
 import BusinessBookingsTab from "./BusinessBookingsTab";
@@ -93,9 +94,7 @@ export default function SuperAdminBusinessDetail({
               </div>
               {/* Mobile Badge */}
               <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-xs font-semibold py-0.5 px-3">
-                <svg className="w-3.5 h-3.5 shrink-0 text-[#148655]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 17h.01M16 17h.01M3 12h18M5 12V8a2 2 0 012-2h10a2 2 0 012 2v4M5 12H3a1 1 0 00-1 1v3a1 1 0 001 1h2m14-5h2a1 1 0 011 1v3a1 1 0 01-1 1h-2" />
-                </svg>
+                <HugeiconsIcon icon={Car04Icon} className="w-3.5 h-3.5 shrink-0" />
                 <span>Mobile</span>
               </div>
             </div>
