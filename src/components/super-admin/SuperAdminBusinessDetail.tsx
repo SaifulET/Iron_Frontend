@@ -1014,11 +1014,21 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
 
   // Filter logic
   const filteredBookings = bookings.filter((b) => {
-    if (activeStatusFilter !== "All" && b.status.toLowerCase() !== activeStatusFilter.toLowerCase()) return false;
+    // Map tab label 'No-Shows' to compare with 'No-Show' status in state
+    const normalizedFilter = activeStatusFilter === "No-Shows" ? "No-Show" : activeStatusFilter;
+    if (activeStatusFilter !== "All" && b.status.toLowerCase() !== normalizedFilter.toLowerCase()) return false;
     if (selectedStatus !== "Status" && b.status.toLowerCase() !== selectedStatus.toLowerCase()) return false;
     if (selectedCustomerType !== "Customer type" && b.customerType.toLowerCase() !== selectedCustomerType.toLowerCase()) return false;
     return true;
   });
+
+  const counts = {
+    All: bookings.length,
+    Upcoming: bookings.filter((b) => b.status === "Upcoming").length,
+    Completed: bookings.filter((b) => b.status === "Completed").length,
+    Cancelled: bookings.filter((b) => b.status === "Cancelled").length,
+    "No-Shows": bookings.filter((b) => b.status === "No-Show").length,
+  };
 
   return (
     <div className="flex flex-col gap-6 w-full font-sans">
@@ -1026,11 +1036,11 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
       {/* Sub-status filter pills */}
       <div className="flex items-center gap-4 w-full border-b border-[#E5E7EB] pb-px overflow-x-auto">
         {[
-          { label: "All", count: null, color: "bg-[#6B7280]" },
-          { label: "Upcoming", count: 52, color: "bg-[#6366F1]" },
-          { label: "Completed", count: 35, color: "bg-[#16A34A]" },
-          { label: "Cancelled", count: 35, color: "bg-[#A31616]" },
-          { label: "No-Shows", count: 35, color: "bg-[#A36116]" },
+          { label: "All", count: counts.All, color: "bg-[#6B7280]" },
+          { label: "Upcoming", count: counts.Upcoming, color: "bg-[#6366F1]" },
+          { label: "Completed", count: counts.Completed, color: "bg-[#16A34A]" },
+          { label: "Cancelled", count: counts.Cancelled, color: "bg-[#A31616]" },
+          { label: "No-Shows", count: counts["No-Shows"], color: "bg-[#A36116]" },
         ].map((tab) => {
           const isActive = activeStatusFilter === tab.label;
           return (
