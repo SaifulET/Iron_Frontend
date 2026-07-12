@@ -84,40 +84,41 @@ export default function SuperAdminBusinessReview({
       </div>
 
       {/* Header / Title Row */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 w-full">
-        <h2 className="font-sans font-semibold text-2xl text-[#111827] leading-[32px]">
-          Business Application
-        </h2>
-
-        {/* Action badges and buttons */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 w-full border-b border-gray-150 pb-5">
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="font-sans font-semibold text-2xl text-[#111827] leading-[32px]">
+            Business Application
+          </h2>
           {/* Status Badge */}
-          <div className="bg-[#D97706]/10 text-[#D97706] font-semibold text-xs py-1.5 px-3.5 rounded-full">
+          <div className="bg-[#D97706]/10 text-[#D97706] font-semibold text-xs py-1.5 px-3.5 rounded-full shrink-0">
             Pending Review
           </div>
+        </div>
 
+        {/* Action buttons (stack on mobile, row on tablet/desktop) */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
           {/* Reject button */}
           <button
             onClick={() => onReject(detail.id)}
-            className="flex items-center gap-2 border border-[#DC2626] bg-[#F5EEEE] text-[#DC2626] rounded-full text-xs font-semibold py-1.5 px-5 cursor-pointer hover:bg-red-50 transition-colors"
+            className="flex items-center justify-center gap-2 border border-[#DC2626] bg-[#F5EEEE] text-[#DC2626] rounded-full text-xs font-semibold py-2 px-5 cursor-pointer hover:bg-red-50 transition-colors w-full sm:w-auto"
           >
             {/* Close Circle Icon */}
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Reject Application
+            <span className="whitespace-nowrap">Reject Application</span>
           </button>
 
           {/* Approve button */}
           <button
             onClick={() => onApprove(detail.id)}
-            className="flex items-center gap-2 bg-[#16A34A] text-white rounded-full text-xs font-semibold py-1.5 px-5 cursor-pointer hover:bg-[#16A34A]/90 transition-colors"
+            className="flex items-center justify-center gap-2 bg-[#16A34A] text-white rounded-full text-xs font-semibold py-2 px-5 cursor-pointer hover:bg-[#16A34A]/90 transition-colors w-full sm:w-auto"
           >
             {/* Check Circle Icon */}
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Approve & Create Account
+            <span className="whitespace-nowrap">Approve & Create Account</span>
           </button>
         </div>
       </div>
