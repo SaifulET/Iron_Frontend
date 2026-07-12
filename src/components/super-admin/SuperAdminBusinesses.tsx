@@ -5,7 +5,7 @@ import SuperAdminBusinessesFilter from "./SuperAdminBusinessesFilter";
 import SuperAdminBusinessesTabs from "./SuperAdminBusinessesTabs";
 import SuperAdminBusinessesTable from "./SuperAdminBusinessesTable";
 import SuperAdminBusinessReview from "./SuperAdminBusinessReview";
-import SuperAdminBusinessDetail from "./SuperAdminBusinessDetail";
+import SuperAdminBusinessDetail from "./business-detail/SuperAdminBusinessDetail";
 
 interface BusinessItem {
   id: string;

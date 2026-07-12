@@ -8,9 +8,9 @@ import {
   Tick01Icon,
   StarIcon,
 } from "@hugeicons/core-free-icons";
-import BusinessOverviewTab from "./business-detail/BusinessOverviewTab";
-import BusinessBookingsTab from "./business-detail/BusinessBookingsTab";
-import BusinessFinanceTab from "./business-detail/BusinessFinanceTab";
+import BusinessOverviewTab from "./BusinessOverviewTab";
+import BusinessBookingsTab from "./BusinessBookingsTab";
+import BusinessFinanceTab from "./BusinessFinanceTab";
 
 interface SuperAdminBusinessDetailProps {
   businessId: string;
