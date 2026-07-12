@@ -21,11 +21,13 @@ interface BusinessItem {
 interface SuperAdminBusinessesTableProps {
   filteredBusinesses: BusinessItem[];
   toggleStatus: (id: string, newStatus: "Approved" | "Suspended") => void;
+  onView?: (id: string) => void;
 }
 
 export default function SuperAdminBusinessesTable({
   filteredBusinesses,
-  toggleStatus
+  toggleStatus,
+  onView
 }: SuperAdminBusinessesTableProps) {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownCoords, setDropdownCoords] = useState<{ top: number; left: number } | null>(null);
@@ -215,6 +217,7 @@ export default function SuperAdminBusinessesTable({
                       >
                         <button
                           onClick={() => {
+                            if (onView) onView(b.id);
                             setOpenDropdownId(null);
                             setDropdownCoords(null);
                           }}

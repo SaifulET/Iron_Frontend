@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import SuperAdminBusinessesFilter from "./SuperAdminBusinessesFilter";
 import SuperAdminBusinessesTabs from "./SuperAdminBusinessesTabs";
 import SuperAdminBusinessesTable from "./SuperAdminBusinessesTable";
+import SuperAdminBusinessReview from "./SuperAdminBusinessReview";
 
 interface BusinessItem {
   id: string;
@@ -24,6 +25,7 @@ export default function SuperAdminBusinesses() {
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedType, setSelectedType] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [viewingBusinessId, setViewingBusinessId] = useState<string | null>(null);
 
   const [businesses, setBusinesses] = useState<BusinessItem[]>([
     {
@@ -143,6 +145,23 @@ export default function SuperAdminBusinesses() {
     );
   };
 
+  if (viewingBusinessId) {
+    return (
+      <SuperAdminBusinessReview
+        businessId={viewingBusinessId}
+        onBack={() => setViewingBusinessId(null)}
+        onApprove={(id) => {
+          toggleStatus(id, "Approved");
+          setViewingBusinessId(null);
+        }}
+        onReject={(id) => {
+          toggleStatus(id, "Suspended");
+          setViewingBusinessId(null);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6 w-full pb-12">
       {/* Title & Top Dropdown Filters Row */}
@@ -173,6 +192,7 @@ export default function SuperAdminBusinesses() {
       <SuperAdminBusinessesTable
         filteredBusinesses={filteredBusinesses}
         toggleStatus={toggleStatus}
+        onView={(id) => setViewingBusinessId(id)}
       />
     </div>
   );
