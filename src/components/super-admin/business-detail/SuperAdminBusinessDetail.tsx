@@ -110,42 +110,42 @@ export default function SuperAdminBusinessDetail({
             </div>
 
             {/* Sub details row */}
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-[#6B7280]">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-y-1.5 sm:gap-x-3 text-xs text-[#6B7280]">
               <span>Category</span>
-              <span className="w-1 h-1 rounded-full bg-gray-300 shrink-0" />
+              <span className="hidden sm:inline w-1 h-1 rounded-full bg-gray-300 shrink-0" />
               <div className="flex items-center gap-1">
                 <HugeiconsIcon icon={Location05Icon} className="w-3.5 h-3.5 shrink-0" />
                 <span>Nicosia</span>
               </div>
-              <span className="w-1 h-1 rounded-full bg-gray-300 shrink-0" />
+              <span className="hidden sm:inline w-1 h-1 rounded-full bg-gray-300 shrink-0" />
               <div className="flex items-center gap-1">
                 <HugeiconsIcon icon={Calendar01Icon} className="w-3.5 h-3.5 shrink-0" />
                 <span>Member since 12 Jan 2024</span>
               </div>
-              <span className="w-1 h-1 rounded-full bg-gray-300 shrink-0" />
+              <span className="hidden sm:inline w-1 h-1 rounded-full bg-gray-300 shrink-0" />
               <div className="flex items-center gap-1">
                 <HugeiconsIcon icon={StarIcon} className="w-3.5 h-3.5 text-[#E49D12] fill-[#E49D12] shrink-0" />
                 <span className="font-semibold text-gray-800">4.8</span>
                 <span>(124 reviews)</span>
               </div>
-              <span className="w-1 h-1 rounded-full bg-gray-300 shrink-0" />
+              <span className="hidden sm:inline w-1 h-1 rounded-full bg-gray-300 shrink-0" />
               <span>Last login 2 days ago</span>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-row items-center gap-3 w-full xl:w-auto mt-4 xl:mt-0 justify-start xl:justify-end">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto mt-4 xl:mt-0 justify-start xl:justify-end">
           <button
             onClick={() => onSuspend(businessId)}
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-4 h-[32px] border border-[#DC2626] text-[#DC2626] rounded-full text-xs font-semibold hover:bg-red-50 cursor-pointer bg-white transition-colors"
+            className="w-full sm:w-auto flex items-center justify-center gap-1 px-4 h-[32px] border border-[#DC2626] text-[#DC2626] rounded-full text-xs font-semibold hover:bg-red-50 cursor-pointer bg-white transition-colors"
           >
             Suspend
           </button>
           
           <button
             onClick={() => setIsFoundingPartner(!isFoundingPartner)}
-            className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 h-[32px] border rounded-full text-xs font-semibold cursor-pointer transition-all ${
+            className={`w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 h-[32px] border rounded-full text-xs font-semibold cursor-pointer transition-all ${
               isFoundingPartner
                 ? "bg-[#2E9DA7]/10 border-[#2E9DA7] text-[#2E9DA7]"
                 : "bg-white border-gray-300 text-gray-700 hover:bg-gray-55"
