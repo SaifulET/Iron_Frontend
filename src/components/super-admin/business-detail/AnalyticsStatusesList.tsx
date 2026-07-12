@@ -20,7 +20,7 @@ export default function AnalyticsStatusesList({ statusData }: AnalyticsStatusesL
       </h3>
       <div className="flex flex-col gap-4.5 mt-2">
         {statusData.map((status, idx) => (
-          <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-1.5 border-b border-gray-55 last:border-0">
+          <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-1.5">
             <span className="text-sm font-medium text-[#111827] w-[180px] shrink-0">
               {status.label}
             </span>
