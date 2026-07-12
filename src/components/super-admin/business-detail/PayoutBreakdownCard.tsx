@@ -92,29 +92,33 @@ export default function PayoutBreakdownCard() {
 
       {/* Interactive Green Payments Bar */}
       {!showDetails ? (
-        <div className="mx-6 mb-6 p-4 bg-[#E5F5EF] rounded-xl flex items-center justify-center border border-emerald-100 min-h-[72px] transition-all">
+        <div className="mx-6 mb-6 flex flex-row justify-center items-center p-2 sm:px-5 gap-2 w-auto h-[72px] bg-[#E5F5EF] rounded-xl flex-none order-1 grow-0 border border-emerald-100">
           <button
             onClick={() => setShowDetails(true)}
-            className="w-full md:w-auto px-6 py-2.5 border border-[#111111] hover:bg-emerald-50 rounded-lg text-sm font-semibold text-[#111111] cursor-pointer bg-white transition-colors text-center"
+            className="box-sizing-border-box flex flex-row justify-center items-center px-5 py-1.5 gap-2 w-full md:max-w-[1112px] h-[56px] border border-[#111111] rounded-lg cursor-pointer bg-white hover:bg-emerald-50 transition-colors flex-none order-1 grow"
           >
-            For Payments click on this button
+            <span className="w-[300px] h-[20px] font-sans font-medium text-[18px] leading-[20px] text-center text-[#111111]">
+              For Payments click on this button
+            </span>
           </button>
         </div>
       ) : (
-        <div className="mx-6 mb-6 p-5 bg-[#E5F5EF] rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-emerald-100 transition-all">
-          <div className="flex flex-col gap-1.5 max-w-[800px]">
-            <span className="text-lg font-semibold text-[#224F42]">
+        <div className="mx-6 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center p-5 gap-4 w-auto bg-[#E5F5EF] rounded-xl flex-none order-1 grow-0 border border-emerald-100 transition-all">
+          <div className="flex flex-col justify-center items-start p-0 gap-2 w-full md:max-w-[858px] flex-none order-0 grow">
+            <span className="w-full md:max-w-[858px] h-auto md:h-[24px] font-sans font-semibold text-2xl text-[#224F42] flex items-center">
               Ready to send €34.06 to Glam Studio
             </span>
-            <p className="text-xs text-[#39725E] leading-normal">
+            <p className="w-full md:max-w-[858px] h-auto md:h-[72px] font-sans font-normal text-[15.9px] leading-[24px] text-[#39725E] flex items-center">
               2 transations pending - Jul 2026 - Net after Stripe($0.69) and SEPA ($0.25) - You are about to mark €34.06 as paid to Glam Studio via SEPA. This action is permanent and cannot be undone. A SEPA reference will be generated and the business will be notified. Confirm?
             </p>
           </div>
           <button
             onClick={() => setShowDetails(false)}
-            className="w-full md:w-auto px-6 py-2.5 border border-[#111111] hover:bg-emerald-50 rounded-lg text-sm font-semibold text-[#111111] cursor-pointer bg-white shrink-0 transition-colors"
+            className="box-sizing-border-box flex flex-row justify-center items-center px-5 py-1.5 gap-2 w-full md:max-w-[1112px] h-[56px] border border-[#111111] rounded-lg cursor-pointer bg-white hover:bg-emerald-50 transition-colors flex-none order-1 grow shrink-0 md:w-auto"
           >
-            For Payments click on this button
+            <span className="w-[300px] h-[20px] font-sans font-medium text-[18px] leading-[20px] text-center text-[#111111]">
+              For Payments click on this button
+            </span>
           </button>
         </div>
       )}
