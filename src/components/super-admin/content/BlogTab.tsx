@@ -47,11 +47,10 @@ export default function BlogTab({
               <button
                 key={filterVal}
                 onClick={() => setBlogFilter(filterVal)}
-                className={`px-3 py-1 text-xs font-semibold rounded-full border transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shrink-0 ${
-                  isActive
+                className={`px-3 py-1 text-xs font-semibold rounded-full border transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shrink-0 ${isActive
                     ? "bg-[#6366F1]/10 border-[#6366F1] text-[#6366F1]"
                     : "bg-white border-[#E5E7EB] text-[#374151] hover:bg-gray-55"
-                }`}
+                  }`}
               >
                 {filterVal === "Founding Partner" && (
                   <HugeiconsIcon icon={StarIcon} className="w-3.5 h-3.5 text-amber-500" />
@@ -112,20 +111,18 @@ export default function BlogTab({
               <div className="flex-grow flex flex-col gap-2 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   <span
-                    className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${
-                      post.category === "Founding Partner"
+                    className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${post.category === "Founding Partner"
                         ? "bg-amber-100/60 text-[#92400E]"
                         : "bg-blue-100/60 text-[#1D4ED8]"
-                    }`}
+                      }`}
                   >
                     {post.category}
                   </span>
                   <span
-                    className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] ${
-                      post.status === "Published"
+                    className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] ${post.status === "Published"
                         ? "bg-green-100/60 text-[#16A34A]"
                         : "bg-gray-100 text-gray-500 border border-gray-200"
-                    }`}
+                      }`}
                   >
                     {post.status}
                   </span>
@@ -155,7 +152,10 @@ export default function BlogTab({
               {/* Actions column */}
               <div className="flex flex-row lg:flex-col items-center justify-end gap-3 shrink-0 w-full lg:w-auto mt-2 lg:mt-0 border-t border-gray-100 pt-3 lg:border-t-0 lg:pt-0">
                 <button
-                  onClick={() => window.open(`/blog/view?id=post-${post.id}`, "_blank")}
+                  onClick={() => {
+                    const finalId = post.id.startsWith("post-") ? post.id : `post-${post.id}`;
+                    window.open(`/blog/view?id=${finalId}`, "_blank");
+                  }}
                   className="text-xs font-semibold text-[#6366F1] bg-transparent border-none hover:underline cursor-pointer px-3 py-1"
                 >
                   View
