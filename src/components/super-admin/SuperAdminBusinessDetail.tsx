@@ -1024,28 +1024,28 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
     <div className="flex flex-col gap-6 w-full font-sans">
       
       {/* Sub-status filter pills */}
-      <div className="flex flex-row items-center border-b border-[#E5E7EB] gap-1 w-full overflow-x-auto no-scrollbar shrink-0">
+      <div className="flex items-center gap-4 w-full border-b border-[#E5E7EB] pb-px overflow-x-auto">
         {[
-          { label: "All", count: null, color: "text-[#6366F1] bg-[#6366F1]" },
-          { label: "Upcoming", count: 52, color: "bg-[#6366F1] text-white" },
-          { label: "Completed", count: 35, color: "bg-[#16A34A] text-white" },
-          { label: "Cancelled", count: 35, color: "bg-[#A31616] text-white" },
-          { label: "No-Shows", count: 35, color: "bg-[#A36116] text-white" },
+          { label: "All", count: null, color: "bg-[#6B7280]" },
+          { label: "Upcoming", count: 52, color: "bg-[#6366F1]" },
+          { label: "Completed", count: 35, color: "bg-[#16A34A]" },
+          { label: "Cancelled", count: 35, color: "bg-[#A31616]" },
+          { label: "No-Shows", count: 35, color: "bg-[#A36116]" },
         ].map((tab) => {
           const isActive = activeStatusFilter === tab.label;
           return (
             <button
               key={tab.label}
               onClick={() => setActiveStatusFilter(tab.label)}
-              className={`h-[38px] px-4 py-2 text-sm font-medium whitespace-nowrap transition-all border-b border-t-0 border-x-0 cursor-pointer bg-transparent flex items-center justify-center gap-2 ${
+              className={`flex items-center gap-2 pb-2.5 px-1.5 text-sm font-medium transition-all duration-150 border-b-2 whitespace-nowrap cursor-pointer bg-transparent border-t-0 border-x-0 ${
                 isActive
-                  ? "border-b-2 border-b-[#6366F1] text-[#6366F1]"
-                  : "border-b-transparent text-[#6B7280] hover:text-gray-900"
+                  ? "border-[#6366F1] text-[#6366F1]"
+                  : "border-transparent text-gray-500 hover:text-gray-900"
               }`}
             >
               <span>{tab.label}</span>
               {tab.count !== null && (
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isActive ? tab.color : "bg-gray-100 text-gray-500"}`}>
+                <span className={`px-2 py-0.5 text-[11px] font-bold text-white rounded-full ${tab.color}`}>
                   {tab.count}
                 </span>
               )}
