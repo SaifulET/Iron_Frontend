@@ -95,9 +95,9 @@ export default function PayoutBreakdownCard() {
         <div className="mx-6 mb-6 flex flex-row justify-center items-center p-2 sm:px-5 gap-2 w-auto h-[72px] bg-[#E5F5EF] rounded-xl flex-none order-1 grow-0 border border-emerald-100">
           <button
             onClick={() => setShowDetails(true)}
-            className="box-sizing-border-box flex flex-row justify-center items-center px-5 py-1.5 gap-2 w-full md:max-w-[1112px] h-[56px] border border-[#111111] rounded-lg cursor-pointer bg-white hover:bg-emerald-50 transition-colors flex-none order-1 grow"
+            className="box-sizing-border-box flex flex-row justify-center items-center px-4 py-1.5 gap-2 w-full md:max-w-[1112px] h-[56px] border border-[#111111] rounded-lg cursor-pointer bg-white hover:bg-emerald-50 transition-colors flex-none order-1 grow"
           >
-            <span className="w-[300px] h-[20px] font-sans font-medium text-[18px] leading-[20px] text-center text-[#111111]">
+            <span className="font-sans font-medium text-[14px] sm:text-[18px] leading-[20px] text-center text-[#111111] whitespace-nowrap">
               For Payments click on this button
             </span>
           </button>
@@ -114,9 +114,9 @@ export default function PayoutBreakdownCard() {
           </div>
           <button
             onClick={() => setShowDetails(false)}
-            className="box-sizing-border-box flex flex-row justify-center items-center px-5 py-1.5 gap-2 w-full md:max-w-[1112px] h-[56px] border border-[#111111] rounded-lg cursor-pointer bg-white hover:bg-emerald-50 transition-colors flex-none order-1 grow shrink-0 md:w-auto"
+            className="box-sizing-border-box flex flex-row justify-center items-center px-4 py-1.5 gap-2 w-full md:max-w-[1112px] h-[56px] border border-[#111111] rounded-lg cursor-pointer bg-white hover:bg-emerald-50 transition-colors flex-none order-1 grow shrink-0 md:w-auto"
           >
-            <span className="w-[300px] h-[20px] font-sans font-medium text-[18px] leading-[20px] text-center text-[#111111]">
+            <span className="font-sans font-medium text-[14px] sm:text-[18px] leading-[20px] text-center text-[#111111] whitespace-nowrap">
               For Payments click on this button
             </span>
           </button>
