@@ -89,12 +89,12 @@ export default function SuperAdminBusinessDetail({
               </h2>
               <div className="flex flex-wrap items-center gap-1.5">
                 {/* Active Badge */}
-                <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-[13px] font-semibold h-[28px] px-3 shrink-0">
+                <div className="flex items-center justify-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-[13px] font-semibold h-[28px] w-[88px] shrink-0">
                   <HugeiconsIcon icon={Tick01Icon} className="w-3.5 h-3.5 shrink-0" />
                   <span>Active</span>
                 </div>
                 {/* Mobile Badge */}
-                <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-[13px] font-semibold h-[28px] px-3 shrink-0">
+                <div className="flex items-center justify-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-[13px] font-semibold h-[28px] w-[88px] shrink-0">
                   <HugeiconsIcon icon={Car04Icon} className="w-3.5 h-3.5 shrink-0" />
                   <span>Mobile</span>
                 </div>
