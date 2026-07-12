@@ -9,9 +9,11 @@ import BlogFormModal from "./BlogFormModal";
 import FaqFormModal from "./FaqFormModal";
 import NewBlogPostPage from "./NewBlogPostPage";
 import StaticPageEditorPage from "./StaticPageEditorPage";
+import BlogDetailBody from "@/components/BlogDetailBody";
 
 export default function SuperAdminContent() {
   const [activeTab, setActiveTab] = useState<"Blog" | "Static Pages" | "FAQ — Customers" | "FAQ — Businesses">("Blog");
+  const [viewingPostId, setViewingPostId] = useState<string | null>(null);
   
   // Blog Filters state
   const [blogFilter, setBlogFilter] = useState<"All" | "Founding Partner" | "Bookly News" | "For Business" | "Customer Tips">("All");
@@ -166,6 +168,18 @@ export default function SuperAdminContent() {
     setDeleteConfirm(null);
   };
 
+  if (viewingPostId) {
+    const finalId = viewingPostId.startsWith("post-") ? viewingPostId : `post-${viewingPostId}`;
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-[730px] mx-auto w-full">
+        <BlogDetailBody
+          id={finalId}
+          onBack={() => setViewingPostId(null)}
+        />
+      </div>
+    );
+  }
+
   if (isEditingBlogPost) {
     return (
       <NewBlogPostPage
@@ -245,6 +259,7 @@ export default function SuperAdminContent() {
               setEditingPost(null);
               setIsEditingBlogPost(true);
             }}
+            onView={(post) => setViewingPostId(post.id)}
           />
         )}
 
