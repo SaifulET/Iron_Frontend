@@ -123,7 +123,7 @@ export default function SuperAdminBusinessReview({
       </div>
 
       {/* 2-Column Grid Layout for Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
         {/* Step 1 — Business Info Card */}
         <div className="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 p-6 flex flex-col gap-4">
           <div className="pb-3 border-b border-gray-200">
