@@ -75,6 +75,45 @@ export default function Navbar({
     };
   }, [isLoggedIn]);
 
+  const [hasAddedToHomeScreen, setHasAddedToHomeScreen] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState("/explore");
+
+  useEffect(() => {
+    const checkHomeScreenState = () => {
+      if (typeof window !== "undefined") {
+        const added = localStorage.getItem("addedToHomeScreen") === "true";
+        setHasAddedToHomeScreen(added);
+        const url = localStorage.getItem("homeScreenRedirectUrl") || "/explore";
+        setRedirectUrl(url);
+      }
+    };
+
+    checkHomeScreenState();
+    window.addEventListener("addedToHomeScreenUpdated", checkHomeScreenState);
+    window.addEventListener("storage", checkHomeScreenState);
+    
+    return () => {
+      window.removeEventListener("addedToHomeScreenUpdated", checkHomeScreenState);
+      window.removeEventListener("storage", checkHomeScreenState);
+    };
+  }, []);
+
+  const handleAddToHomeScreen = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowUserDropdown(false);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("addedToHomeScreen", "true");
+      localStorage.setItem("homeScreenRedirectUrl", window.location.pathname + window.location.search);
+      window.dispatchEvent(new Event("addedToHomeScreenUpdated"));
+      alert("Bookly PWA has been added to your Home Screen! Closing this window/tab...");
+      window.close();
+      // Fallback
+      setTimeout(() => {
+        router.push("/explore");
+      }, 500);
+    }
+  };
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent | TouchEvent) {
       const clickedDesktop = userDropdownRef.current && userDropdownRef.current.contains(event.target as Node);
@@ -319,7 +358,7 @@ export default function Navbar({
                     <div className="border-t border-[#ACAAB4] w-full"></div>
 
                     {/* 8. Add to Home Screen */}
-                    <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+                    <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={handleAddToHomeScreen}>
                       <HugeiconsIcon icon={Home01Icon} className="w-5 h-5 text-[#141B34]" />
                       <span className="font-medium text-base text-[#1C1B1C]">Add to Home Screen</span>
                     </button>
@@ -662,7 +701,7 @@ export default function Navbar({
           <div className="border-t border-[#ACAAB4] w-full"></div>
 
           {/* 8. Add to Home Screen */}
-          <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+          <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={handleAddToHomeScreen}>
             <HugeiconsIcon icon={Home01Icon} className="w-5 h-5 text-[#141B34]" />
             <span className="font-medium text-base text-[#1C1B1C]">Add to Home Screen</span>
           </button>
@@ -714,6 +753,33 @@ export default function Navbar({
             <span className="font-medium text-base">Logout</span>
           </button>
 
+        </div>
+      )}
+
+      {hasAddedToHomeScreen && (
+        <div 
+          onClick={() => {
+            router.push(redirectUrl);
+          }}
+          className="fixed bottom-6 right-6 z-50 bg-[#111111] hover:bg-black text-white rounded-2xl shadow-[0px_8px_30px_rgba(0,0,0,0.3)] border border-[#2E9DA7]/50 p-4 flex items-center gap-3 cursor-pointer hover:scale-105 transition-all select-none animate-bounce"
+        >
+          <div className="w-10 h-10 rounded-xl bg-[#2E9DA7] flex items-center justify-center font-bold text-white shadow-inner shrink-0">
+            B
+          </div>
+          <div className="flex flex-col text-left">
+            <span className="text-[10px] text-[#2E9DA7] font-bold uppercase tracking-wider">Launch Shortcut</span>
+            <span className="text-sm font-semibold text-white">Bookly PWA</span>
+          </div>
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              localStorage.removeItem("addedToHomeScreen");
+              setHasAddedToHomeScreen(false);
+            }} 
+            className="text-gray-400 hover:text-white bg-transparent border-none p-1 cursor-pointer ml-1 text-sm font-semibold"
+          >
+            ✕
+          </button>
         </div>
       )}
     </header>

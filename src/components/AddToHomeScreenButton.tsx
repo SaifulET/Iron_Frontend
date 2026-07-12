@@ -1,6 +1,6 @@
 interface AddToHomeScreenButtonProps {
   className?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   showTextOnMobile?: boolean;
   size?: "small" | "large";
 }
@@ -11,10 +11,28 @@ export default function AddToHomeScreenButton({
   showTextOnMobile = false,
   size = "large",
 }: AddToHomeScreenButtonProps) {
+  const handleDefaultClick = (e: React.MouseEvent) => {
+    if (onClick) {
+      onClick(e);
+      return;
+    }
+    if (typeof window !== "undefined") {
+      localStorage.setItem("addedToHomeScreen", "true");
+      localStorage.setItem("homeScreenRedirectUrl", window.location.pathname + window.location.search);
+      window.dispatchEvent(new Event("addedToHomeScreenUpdated"));
+      alert("Bookly PWA has been added to your Home Screen! Closing this window/tab...");
+      window.close();
+      // Fallback
+      setTimeout(() => {
+        window.location.href = "/explore";
+      }, 500);
+    }
+  };
+
   if (size === "small") {
     return (
       <button
-        onClick={onClick || (() => console.log("Add to Home Screen clicked"))}
+        onClick={handleDefaultClick}
         className={`bg-white hover:bg-neutral-100 text-[#1C1B1C] rounded-full font-semibold shadow-sm transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap ${className}`}
       >
         <span className={showTextOnMobile ? "inline" : "hidden sm:inline"}>
@@ -29,7 +47,7 @@ export default function AddToHomeScreenButton({
 
   return (
     <button
-      onClick={onClick || (() => console.log("Add to Home Screen clicked"))}
+      onClick={handleDefaultClick}
       className={`bg-white hover:bg-neutral-100 text-[#1C1B1C] border-[0.41px] border-[#4E5F78] rounded-[1651.73px] py-2 px-4 xs:py-2.5 xs:px-6 sm:py-3 sm:px-8 md:py-[13.2px] md:px-[33px] gap-1.5 xs:gap-2 md:gap-[19.8px] font-poppins font-normal text-xs xs:text-sm sm:text-lg md:text-[26.45px] leading-normal md:leading-[40px] shadow-sm transition-all active:scale-95 cursor-pointer flex items-center justify-center whitespace-nowrap ${className}`}
     >
       <span className={showTextOnMobile ? "inline" : "hidden sm:inline"}>
