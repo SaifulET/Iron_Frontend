@@ -8,6 +8,67 @@ import Image from "next/image";
 
 import { Suspense } from "react";
 
+const postsData: Record<string, {
+  title: string;
+  category: string;
+  date: string;
+  author: string;
+  paragraphs: string[];
+  image: string;
+}> = {
+  "post-featured": {
+    title: "Meet the Partners: Why The Whitening Clinic chose Bookly as the software to run their business",
+    category: "Meet the partners",
+    date: "June 26, 2024",
+    author: "Bookly",
+    paragraphs: [
+      "In the suburbs of Waverley in New South Wales, Australia, sits The Whitening Clinic. Owned by Alissa Brandtman, it’s been around for three years and has quickly become the go-to place for a brighter and healthier smile.",
+      "The Whitening Clinic does more than just aesthetic teeth whitening. They make sure they always talk to their clients about maintaining oral health, microbiome and how to whiten teeth “from the inside”.",
+      "We sat down with Alissa to find out more about her clinic, and learn more about how she has used Bookly to build her business from the ground up, and grow it into what it is today. On why Alissa started The Whitening Clinic, she said “I really felt the dental industry needed something that was a little more in the beauty space. So I developed a business that looks at wellness, and not just teeth whitening, and we really tried to create a space that feels like a salon.”",
+      "“Teeth whitening is our core service, but we also have an oral health therapist who comes and does dental cleans. We offer oral microbiome testing, as well as a range of oral care products that we recommend to our clients.”",
+      "“When the client first comes in, we do a whole education session about how the whitening works, how the actual process works, how teeth work, and so give people a full understanding of what to expect, what their expectations will be, not just guarantee them 14 shades lighter.”",
+      "While many clients might think of sterile chairs, bright lights and pain when they think about the dental industry, The Whitening Clinic could not be any more different. “It’s not like the dentist. There’s a lot of anxiety around what’s going to happen at the dentist, but here that doesn’t happen. Clients come in and comment on how calm it feels.”"
+    ],
+    image: "/image/blogProfile.png"
+  },
+  "post-1": {
+    title: "Meet Our Founding Partners: Building Cyprus's First Booking Platform",
+    category: "Founding Partner",
+    date: "May 22, 2026",
+    author: "Bookly Team",
+    paragraphs: [
+      "We're proud to introduce the visionary businesses that believed in Bookly from day one. These founding partners helped shape the platform you see today.",
+      "Building a platform tailored to the unique landscape of Cyprus required local insight, dedication, and strong collaboration with early adopters. Our founding partners represent the very best of Cyprus's local services, from premium beauty salons to top-tier wellness centers.",
+      "Through their feedback, we've refined our scheduling tools, deposit systems, and customer management flows to create a seamless experience for both businesses and clients. We thank them for their ongoing partnership and vision."
+    ],
+    image: "/image/blogProfile.png"
+  },
+  "post-2": {
+    title: "Bookly.cy Launches Mobile Application for Staff Members",
+    category: "Bookly News",
+    date: "May 22, 2026",
+    author: "Bookly News",
+    paragraphs: [
+      "Staff members can now manage bookings, view schedules, and interact with customers on the go. Read more about our release notes...",
+      "Our new mobile app is built natively for both iOS and Android platforms, ensuring optimal performance and intuitive user experience. Staff members can view real-time shifts, update appointment statuses, and communicate with clients seamlessly.",
+      "Additionally, push notifications will alert staff about any last-minute cancellations or booking updates, ensuring your operations run smoothly even when you're away from the front desk."
+    ],
+    image: "/image/blogProfile.png"
+  },
+  "post-3": {
+    title: "Upcoming Features: SMS Reminders & Multi-location Support",
+    category: "Bookly News",
+    date: "May 22, 2026",
+    author: "Bookly Product Team",
+    paragraphs: [
+      "We are testing automated SMS alerts to drastically reduce client no-shows. Learn how to configure this for your branch...",
+      "No-shows are one of the biggest revenue leaks for service-based businesses. Our upcoming SMS Reminders feature will send automatic text confirmations 24 hours before appointments, prompting clients to confirm or reschedule in a single tap.",
+      "We are also rolling out multi-location support, allowing owners to manage staff schedules, clients, and bookings across multiple branches from a single unified dashboard."
+    ],
+    image: "/image/blogProfile.png"
+  }
+};
+
 function BlogDetailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -16,6 +77,18 @@ function BlogDetailContent() {
   // States for Navbar
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("ENG");
+
+  const post = postsData[id] || {
+    title: "Why Self-Care Is No Longer a Luxury",
+    category: "Bookly News",
+    date: "April 9, 2026",
+    author: "Bookly Team",
+    paragraphs: [
+      "In today’s fast-moving world, people are constantly balancing work, relationships, health, and personal goals. Taking care of your mind and body is vital...",
+      "This is a preview of the content for blog post with ID: " + id + "."
+    ],
+    image: "/image/blogProfile.png"
+  };
 
   return (
     <div className="min-h-screen bg-[#FCFAF9] flex flex-col relative overflow-x-hidden">
@@ -51,7 +124,7 @@ function BlogDetailContent() {
 
         {/* Heading */}
         <h1 className="w-full text-[#141414] font-medium text-[32px] sm:text-[44.6px] leading-[42px] sm:leading-[58px]">
-          Meet the Partners: Why The Whitening Clinic chose Bookly as the software to run their business
+          {post.title}
         </h1>
 
         {/* socialSharing widget */}
@@ -62,10 +135,10 @@ function BlogDetailContent() {
             <div className="w-[64px] h-[64px] rounded-full bg-gradient-to-tr from-[#985FF9] to-[#0CC0DF] flex-shrink-0 relative overflow-hidden" />
             <div className="flex flex-col gap-[1px]">
               <span className="font-inter font-normal text-[14.8px] leading-[24px] text-[#0CC0DF]">
-                Bookly
+                {post.author}
               </span>
               <span className="font-inter font-normal text-[13.9px] leading-[20px] text-[#878C93]">
-                Last updated on June 26, 2024 Published June 21, 2024
+                Published {post.date}
               </span>
             </div>
           </div>
@@ -87,94 +160,19 @@ function BlogDetailContent() {
 
         {/* Article Content Body */}
         <div className="w-full flex flex-col gap-6 text-[15.3px] font-inter text-[#000000] leading-[22px]">
-          <p>
-            In the suburbs of Waverley in New South Wales, Australia, sits The Whitening Clinic. Owned by Alissa Brandtman, it’s been around for three years and has quickly become the go-to place for a brighter and healthier smile.
-          </p>
-          
-          <p className="font-semibold text-lg">
-            The Whitening Clinic does more than just aesthetic teeth whitening
-          </p>
-          
-          <p>
-            They make sure they always talk to their clients about maintaining oral health, microbiome and how to whiten teeth “from the inside”.
-          </p>
-          
-          <p>
-            We sat down with Alissa to find out more about her clinic, and learn more about how she has used Bookly to build her business from the ground up, and grow it into what it is today. On why Alissa started The Whitening Clinic, she said “I really felt the dental industry needed something that was a little more in the beauty space. So I developed a business that looks at wellness, and not just teeth whitening, and we really tried to create a space that feels like a salon.”
-          </p>
+          {post.paragraphs.map((p, idx) => (
+            <p key={idx}>{p}</p>
+          ))}
 
-          {/* Image 1 */}
+          {/* Image */}
           <div className="w-full h-[380px] sm:h-[480px] relative rounded-xl overflow-hidden my-4 border border-neutral-100 shadow-sm">
             <Image
-              src="/image/blogProfile.png"
-              alt="Teeth whitening session"
+              src={post.image}
+              alt={post.title}
               fill
               className="object-cover"
             />
           </div>
-
-          <p>
-            “Teeth whitening is our core service, but we also have an oral health therapist who comes and does dental cleans. We offer oral microbiome testing, as well as a range of oral care products that we recommend to our clients.”
-          </p>
-
-          <p>
-            “When the client first comes in, we do a whole education session about how the whitening works, how the actual process works, how teeth work, and so give people a full understanding of what to expect, what their expectations will be, not just guarantee them 14 shades lighter.”
-          </p>
-
-          <p className="font-semibold text-lg">
-            A space calm enough for clients to fall asleep
-          </p>
-
-          <p>
-            While many clients might think of sterile chairs, bright lights and pain when they think about the dental industry, The Whitening Clinic could not be any more different. “It’s not like the dentist. There’s a lot of anxiety around what’s going to happen at the dentist, but here that doesn’t happen. Clients come in and comment on how calm it feels.”
-          </p>
-
-          {/* Image 2 */}
-          <div className="w-full h-[380px] sm:h-[480px] relative rounded-xl overflow-hidden my-4 border border-neutral-100 shadow-sm">
-            <Image
-              src="/image/blogProfile.png"
-              alt="Quiet treatment room"
-              fill
-              className="object-cover"
-            />
-          </div>
-
-          <p>
-            And Alissa tells us that when it came to choosing the software, she was eager to do the research beforehand to make sure she was getting the right one for her. A software that would be easy to use, a great experience for her clients, and would match the sleek and clean aesthetic of her clinic.
-          </p>
-
-          {/* Callout quote text */}
-          <div className="py-6 my-6 border-y-2 border-neutral-200 text-center">
-            <p className="font-semibold text-xl sm:text-2xl text-[#141414] italic max-w-2xl mx-auto leading-relaxed">
-              “Coming from a software background, I wanted to compare different systems to work with, and Bookly was definitely the best system for me”
-            </p>
-          </div>
-
-          <p>
-            I looked at all the features of the booking softwares and did a whole cost analysis. I chose Bookly because of how easy it is to use, and it’s really user friendly. And because it’s free to sign up, I only started paying for what I use as I go.
-          </p>
-
-          <p className="font-bold">
-            “Without Bookly, we wouldn’t have a business”
-          </p>
-          <p>
-            “Bookly has contributed to the growth of our business in a lot of ways” Alissa goes on. “Because it’s a combination of our customer management system, our marketing, and our reporting, we use it for everything we need to do. We have a marketing plan which incorporates how we market through Bookly, and we do our reporting and our goals and our budgeting all through Bookly as well.”
-          </p>
-
-          <p className="font-bold">
-            “We ask all the relevant questions we need, then it’s right there at our fingertips”
-          </p>
-          <p>
-            “We use consent forms that we send out to all of our clients when they first book. This has been a great system because it stays in our customer database on Bookly. They get to do it on their phone as soon as they book and it comes straight through to us”
-          </p>
-
-          <p className="font-bold">
-            “Bookly is a beautiful platform that aligns with our business”
-          </p>
-          <p>
-            “Bookly came and took the photos on our marketplace for us. They’re gorgeous photos and they represent our brand really well. And then there’s an ease of use of actually booking in through the marketplace.”
-          </p>
-
         </div>
 
       </main>
