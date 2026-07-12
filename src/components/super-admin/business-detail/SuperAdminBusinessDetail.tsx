@@ -12,6 +12,7 @@ import BusinessOverviewTab from "./BusinessOverviewTab";
 import BusinessBookingsTab from "./BusinessBookingsTab";
 import BusinessFinanceTab from "./BusinessFinanceTab";
 import BusinessIssuesTab from "./BusinessIssuesTab";
+import BusinessAnalyticsTab from "./BusinessAnalyticsTab";
 
 interface SuperAdminBusinessDetailProps {
   businessId: string;
@@ -190,6 +191,10 @@ export default function SuperAdminBusinessDetail({
 
       {activeSubTab === "Issues" && (
         <BusinessIssuesTab businessId={businessId} />
+      )}
+
+      {activeSubTab === "Analytics" && (
+        <BusinessAnalyticsTab businessId={businessId} />
       )}
     </div>
   );
