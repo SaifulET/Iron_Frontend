@@ -107,7 +107,7 @@ export default function SuperAdminBusinessDetail({
 
       {/* Business Identity Card */}
       <div className="w-full bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 p-6 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
-        <div className="flex items-start gap-4 flex-wrap sm:flex-nowrap">
+        <div className="flex items-start gap-4 w-full min-w-0">
           {/* Avatar GL */}
           <div className="w-16 h-16 rounded-full bg-[#EEF2FF] flex items-center justify-center font-bold text-lg text-[#4338CA] shrink-0 select-none">
             GL
@@ -159,7 +159,7 @@ export default function SuperAdminBusinessDetail({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3 w-full sm:w-auto self-end xl:self-auto shrink-0 justify-end">
+        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto mt-2 xl:mt-0 justify-start xl:justify-end">
           <button
             onClick={() => onSuspend(businessId)}
             className="flex items-center justify-center gap-1 px-4 py-2 border border-[#DC2626] text-[#DC2626] rounded-full text-xs font-semibold hover:bg-red-50 cursor-pointer bg-white transition-colors"
