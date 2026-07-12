@@ -3,13 +3,7 @@
 import React, { useState } from "react";
 import AdminAccountSettings from "./AdminAccountSettings";
 import PlatformConfigurationSettings from "./PlatformConfigurationSettings";
-
-interface NoShowWindow {
-  category: string;
-  opens: number; // mins
-  closes: number; // mins
-  reversal: number; // mins
-}
+import { NoShowWindow, INITIAL_NO_SHOW_WINDOWS } from "./types";
 
 export default function SuperAdminSettings() {
   // --- Admin Account State ---
@@ -35,16 +29,7 @@ export default function SuperAdminSettings() {
   const [tempMaxServices, setTempMaxServices] = useState(maxServices);
 
   // No-show charge window list
-  const [noShowWindows, setNoShowWindows] = useState<NoShowWindow[]>([
-    { category: "Beauty & Wellness", opens: 15, closes: 120, reversal: 90 },
-    { category: "Health & Fitness", opens: 15, closes: 120, reversal: 90 },
-    { category: "Sports & Activities", opens: 15, closes: 120, reversal: 90 },
-    { category: "Automotive", opens: 15, closes: 180, reversal: 90 },
-    { category: "Pets & Home", opens: 15, closes: 45, reversal: 90 },
-    { category: "Experiences & Tours", opens: 15, closes: 360, reversal: 90 },
-    { category: "Entertainment & Events", opens: 15, closes: 1440, reversal: 90 },
-    { category: "Creative & Education", opens: 15, closes: 120, reversal: 90 },
-  ]);
+  const [noShowWindows, setNoShowWindows] = useState<NoShowWindow[]>(INITIAL_NO_SHOW_WINDOWS);
 
   // Track which row index is being edited (-1 means none)
   const [editingRowIndex, setEditingRowIndex] = useState<number>(-1);

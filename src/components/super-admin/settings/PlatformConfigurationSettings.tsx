@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-
-interface NoShowWindow {
-  category: string;
-  opens: number;
-  closes: number;
-  reversal: number;
-}
+import { NoShowWindow } from "./types";
 
 interface PlatformConfigurationSettingsProps {
   maxServices: number;
