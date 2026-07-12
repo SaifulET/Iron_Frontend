@@ -259,6 +259,11 @@ export default function SuperAdminSupport() {
 
     return (
       <div className="flex flex-col bg-white h-full w-full border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+        <style>{`
+          .no-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
         {/* Chat top header container */}
         <div className="flex flex-row justify-between items-center px-3 md:px-6 py-2.5 md:h-16 bg-white border-b border-[#E5E7EB] shadow-[0px_1px_2px_rgba(0,0,0,0.05)] w-full gap-2 flex-shrink-0">
           <div className="flex items-center gap-2 md:gap-4 min-w-0">
@@ -444,7 +449,10 @@ export default function SuperAdminSupport() {
           {/* Right Conversation & Reply box */}
           <div className="flex flex-col flex-grow bg-[#F9FAFB] min-h-0">
             {/* Scrollable messages area */}
-            <div className="flex-grow p-6 flex flex-col gap-6 overflow-y-auto">
+            <div 
+              className="flex-grow p-6 flex flex-col gap-6 overflow-y-auto no-scrollbar"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
               {messages.map((msg, idx) => {
                 const isCustomer = msg.sender === "customer";
                 const showDateLabel = idx === 0 || messages[idx - 1].dateGroup !== msg.dateGroup;

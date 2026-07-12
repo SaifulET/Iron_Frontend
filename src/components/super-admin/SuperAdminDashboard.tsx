@@ -11,6 +11,7 @@ import SuperAdminFinance from "./SuperAdminFinance";
 import SuperAdminAnalytics from "./SuperAdminAnalytics";
 import SuperAdminSupport from "./SuperAdminSupport";
 import SuperAdminSettings from "./SuperAdminSettings";
+import SuperAdminContent from "./content/SuperAdminContent";
 
 export default function SuperAdminDashboard() {
   const [activeTab, setActiveTab] = useState("Dashboard");
@@ -47,8 +48,8 @@ export default function SuperAdminDashboard() {
 
       {/* Main Content Area */}
       <main
-        className={`pr-2 pt-[78px] flex-grow w-full transition-all duration-300 overflow-hidden ${
-          isCollapsed ? "pl-[80px]" : "pl-[248px]"
+        className={`pr-2 pt-[78px] flex-grow transition-all duration-300 overflow-hidden min-w-0 ${
+          isCollapsed ? "pl-[88px]" : "pl-[256px]"
         }`}
       >
         {activeTab === "Dashboard" ? (
@@ -67,6 +68,8 @@ export default function SuperAdminDashboard() {
           <SuperAdminSupport />
         ) : activeTab === "Settings" ? (
           <SuperAdminSettings />
+        ) : activeTab === "Content" ? (
+          <SuperAdminContent />
         ) : (
           <div className="flex flex-col items-center justify-center min-h-[600px] bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
             <h3 className="font-sans font-semibold text-xl text-gray-800">{activeTab} Page</h3>

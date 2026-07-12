@@ -123,7 +123,15 @@ export default function SuperAdminSettings() {
   };
 
   return (
-    <div className="h-full overflow-y-auto pr-2 pb-8 flex flex-col gap-6 font-sans">
+    <div 
+      className="h-full overflow-y-auto overflow-x-hidden no-scrollbar pr-2 pb-8 flex flex-col gap-6 font-sans"
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+    >
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
       {/* Title section */}
       <div className="flex flex-col gap-1 flex-shrink-0">
         <h1 className="text-2xl font-semibold text-[#111827] leading-8">Settings</h1>
