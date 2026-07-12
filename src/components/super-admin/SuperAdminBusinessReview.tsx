@@ -84,13 +84,13 @@ export default function SuperAdminBusinessReview({
       </div>
 
       {/* Header / Title Row */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 w-full">
         <h2 className="font-sans font-semibold text-2xl text-[#111827] leading-[32px]">
           Business Application
         </h2>
 
         {/* Action badges and buttons */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
           {/* Status Badge */}
           <div className="bg-[#D97706]/10 text-[#D97706] font-semibold text-xs py-1.5 px-3.5 rounded-full">
             Pending Review
