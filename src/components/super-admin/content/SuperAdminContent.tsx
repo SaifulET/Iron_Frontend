@@ -8,6 +8,7 @@ import FaqTab from "./FaqTab";
 import BlogFormModal from "./BlogFormModal";
 import FaqFormModal from "./FaqFormModal";
 import PageFormModal from "./PageFormModal";
+import NewBlogPostPage from "./NewBlogPostPage";
 
 export default function SuperAdminContent() {
   const [activeTab, setActiveTab] = useState<"Blog" | "Static Pages" | "FAQ — Customers" | "FAQ — Businesses">("Blog");
@@ -67,7 +68,7 @@ export default function SuperAdminContent() {
   ]);
 
   // --- Modals Toggle & Editing Item state ---
-  const [showBlogModal, setShowBlogModal] = useState(false);
+  const [isEditingBlogPost, setIsEditingBlogPost] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
 
   const [showFaqModal, setShowFaqModal] = useState(false);
@@ -77,8 +78,7 @@ export default function SuperAdminContent() {
   const [editingPage, setEditingPage] = useState<StaticPage | null>(null);
 
   // --- Blog Handlers ---
-  const handleSavePost = (e: React.FormEvent, data: Omit<BlogPost, "id" | "date">) => {
-    e.preventDefault();
+  const handleSavePost = (data: Omit<BlogPost, "id" | "date">) => {
     if (editingPost) {
       setPosts((prev) =>
         prev.map((p) => (p.id === editingPost.id ? { ...p, ...data } : p))
@@ -91,7 +91,7 @@ export default function SuperAdminContent() {
       };
       setPosts([newPost, ...posts]);
     }
-    setShowBlogModal(false);
+    setIsEditingBlogPost(false);
   };
 
   const handleDeletePost = (id: string) => {
@@ -153,6 +153,16 @@ export default function SuperAdminContent() {
     }
   };
 
+  if (isEditingBlogPost) {
+    return (
+      <NewBlogPostPage
+        editingPost={editingPost}
+        onDiscard={() => setIsEditingBlogPost(false)}
+        onSave={handleSavePost}
+      />
+    );
+  }
+
   return (
     <div
       className="h-full overflow-y-auto overflow-x-hidden no-scrollbar pr-2 pb-8 flex flex-col gap-6 font-sans"
@@ -205,12 +215,12 @@ export default function SuperAdminContent() {
             setStatusFilter={setStatusFilter}
             onEdit={(post) => {
               setEditingPost(post);
-              setShowBlogModal(true);
+              setIsEditingBlogPost(true);
             }}
             onDelete={handleDeletePost}
             onNewPost={() => {
               setEditingPost(null);
-              setShowBlogModal(true);
+              setIsEditingBlogPost(true);
             }}
           />
         )}
@@ -242,13 +252,6 @@ export default function SuperAdminContent() {
       </div>
 
       {/* Modals Mounting */}
-      <BlogFormModal
-        show={showBlogModal}
-        onClose={() => setShowBlogModal(false)}
-        onSave={handleSavePost}
-        editingPost={editingPost}
-      />
-
       <FaqFormModal
         show={showFaqModal}
         onClose={() => setShowFaqModal(false)}
