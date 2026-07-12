@@ -154,7 +154,10 @@ export default function BlogTab({
 
               {/* Actions column */}
               <div className="flex flex-row lg:flex-col items-center justify-end gap-3 shrink-0 w-full lg:w-auto mt-2 lg:mt-0 border-t border-gray-100 pt-3 lg:border-t-0 lg:pt-0">
-                <button className="text-xs font-semibold text-[#6366F1] bg-transparent border-none hover:underline cursor-pointer px-3 py-1">
+                <button
+                  onClick={() => window.open(`/blog/view?id=post-${post.id}`, "_blank")}
+                  className="text-xs font-semibold text-[#6366F1] bg-transparent border-none hover:underline cursor-pointer px-3 py-1"
+                >
                   View
                 </button>
                 <button
