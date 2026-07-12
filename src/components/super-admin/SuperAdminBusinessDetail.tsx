@@ -507,7 +507,7 @@ export default function SuperAdminBusinessDetail({
             </button>
             {servicesExpanded && (
               <div className="border-t border-gray-100 overflow-x-auto w-full">
-                <table className="w-full text-left text-xs border-collapse">
+                <table className="min-w-[600px] md:min-w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="bg-gray-55 border-b border-gray-100 font-semibold text-[#6B7280]">
                       <th className="p-4">SERVICE</th>
