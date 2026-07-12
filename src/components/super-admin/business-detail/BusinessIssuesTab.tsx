@@ -9,6 +9,8 @@ interface BusinessIssuesTabProps {
 export default function BusinessIssuesTab({ businessId }: BusinessIssuesTabProps) {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [appliedFromDate, setAppliedFromDate] = useState("");
+  const [appliedToDate, setAppliedToDate] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("Status");
   const [selectedStaff, setSelectedStaff] = useState("Staff");
   const [selectedCustomerType, setSelectedCustomerType] = useState("Customer type");
@@ -43,35 +45,58 @@ export default function BusinessIssuesTab({ businessId }: BusinessIssuesTabProps
     },
   ];
 
+  // Filtering implementation
+  const filteredIssues = issues.filter((issue) => {
+    if (selectedStatus !== "Status" && issue.status.toLowerCase() !== selectedStatus.toLowerCase()) return false;
+    if (selectedStaff !== "Staff" && issue.staffName.toLowerCase() !== selectedStaff.toLowerCase()) return false;
+    if (selectedCustomerType !== "Customer type" && issue.customerType.toLowerCase() !== selectedCustomerType.toLowerCase()) return false;
+
+    if (appliedFromDate || appliedToDate) {
+      const datePart = issue.dateTime.split(" · ")[0];
+      const issueDate = new Date(datePart);
+      if (appliedFromDate && issueDate < new Date(appliedFromDate)) return false;
+      if (appliedToDate && issueDate > new Date(appliedToDate)) return false;
+    }
+    return true;
+  });
+
+  const handleApplyFilters = () => {
+    setAppliedFromDate(fromDate);
+    setAppliedToDate(toDate);
+  };
+
   return (
     <div className="flex flex-col gap-6 w-full font-sans text-gray-900">
       
-      {/* Date Filters & Dropdowns Selector Row */}
-      <div className="flex flex-wrap items-center gap-3 w-full text-xs text-gray-600">
+      {/* Date Filters & Dropdowns Selector Row (Responsive Grid) */}
+      <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center gap-3 w-full text-xs text-gray-600">
         {/* From Date */}
-        <div className="flex items-center gap-2">
-          <span>From</span>
+        <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
+          <span className="shrink-0 w-8 text-left">From</span>
           <input
             type="date"
             value={fromDate}
             onChange={(e) => setFromDate(e.target.value)}
-            className="border border-[#E2E8F0] rounded-lg px-2.5 py-1.5 bg-white text-[#314158] focus:outline-none"
+            className="w-full sm:w-auto border border-[#E2E8F0] rounded-lg px-2.5 py-1.5 bg-white text-[#314158] focus:outline-none"
           />
         </div>
 
         {/* To Date */}
-        <div className="flex items-center gap-2">
-          <span>To</span>
+        <div className="flex items-center gap-2 col-span-2 sm:col-span-1">
+          <span className="shrink-0 w-8 text-left">To</span>
           <input
             type="date"
             value={toDate}
             onChange={(e) => setToDate(e.target.value)}
-            className="border border-[#E2E8F0] rounded-lg px-2.5 py-1.5 bg-white text-[#314158] focus:outline-none"
+            className="w-full sm:w-auto border border-[#E2E8F0] rounded-lg px-2.5 py-1.5 bg-white text-[#314158] focus:outline-none"
           />
         </div>
 
         {/* Apply Button */}
-        <button className="border border-[#111111] rounded-lg px-4 py-1.5 bg-white hover:bg-gray-55 font-semibold text-[#111111] cursor-pointer">
+        <button
+          onClick={handleApplyFilters}
+          className="col-span-2 sm:col-span-1 border border-[#111111] rounded-lg px-4 py-1.5 bg-white hover:bg-gray-55 font-semibold text-[#111111] cursor-pointer"
+        >
           Apply
         </button>
 
@@ -79,27 +104,27 @@ export default function BusinessIssuesTab({ businessId }: BusinessIssuesTabProps
         <select
           value={selectedStatus}
           onChange={(e) => setSelectedStatus(e.target.value)}
-          className="border border-[#E2E8F0] bg-white rounded-lg px-3 py-1.5 focus:outline-none cursor-pointer"
+          className="col-span-1 border border-[#E2E8F0] bg-white rounded-lg px-3 py-1.5 focus:outline-none cursor-pointer w-full sm:w-auto"
         >
           <option>Status</option>
-          <option value="cancelled">Cancelled by business</option>
+          <option value="cancelled by business">Cancelled by business</option>
         </select>
 
         {/* Staff Dropdown */}
         <select
           value={selectedStaff}
           onChange={(e) => setSelectedStaff(e.target.value)}
-          className="border border-[#E2E8F0] bg-white rounded-lg px-3 py-1.5 focus:outline-none cursor-pointer"
+          className="col-span-1 border border-[#E2E8F0] bg-white rounded-lg px-3 py-1.5 focus:outline-none cursor-pointer w-full sm:w-auto"
         >
           <option>Staff</option>
-          <option>Maria</option>
+          <option value="maria">Maria</option>
         </select>
 
         {/* Customer Type Dropdown */}
         <select
           value={selectedCustomerType}
           onChange={(e) => setSelectedCustomerType(e.target.value)}
-          className="border border-[#E2E8F0] bg-white rounded-lg px-3 py-1.5 focus:outline-none cursor-pointer"
+          className="col-span-2 sm:col-span-1 border border-[#E2E8F0] bg-white rounded-lg px-3 py-1.5 focus:outline-none cursor-pointer w-full sm:w-auto"
         >
           <option>Customer type</option>
           <option value="new">New</option>
@@ -124,7 +149,7 @@ export default function BusinessIssuesTab({ businessId }: BusinessIssuesTabProps
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 text-gray-800">
-              {issues.map((issue, idx) => (
+              {filteredIssues.map((issue, idx) => (
                 <tr key={idx} className="hover:bg-gray-55/30 transition-colors">
                   {/* Date/Time */}
                   <td className="p-4 font-normal text-gray-900">{issue.dateTime}</td>
