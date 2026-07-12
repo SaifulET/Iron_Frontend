@@ -72,11 +72,15 @@ export default function BusinessAnalyticsTab({ businessId }: BusinessAnalyticsTa
         </div>
 
         {/* Monthly Bar Chart Display */}
-        <div className="w-full flex items-end justify-between h-[200px] border-b border-gray-100 pb-2 mt-4 overflow-x-auto no-scrollbar gap-2 min-w-[600px]">
+        <div className="w-full flex items-end justify-between h-[220px] border-b border-gray-100 pb-2 mt-4 overflow-x-auto no-scrollbar gap-2 min-w-[600px]">
           {monthlyData.map((data, idx) => {
             const barHeight = animate ? `${data.height}px` : "0px";
             return (
-              <div key={idx} className="flex flex-col items-center gap-2 flex-grow">
+              <div key={idx} className="flex flex-col items-center gap-1.5 flex-grow">
+                {/* Display Value above bar */}
+                <span className="text-[11px] font-semibold text-gray-700 h-4">
+                  {data.height}
+                </span>
                 <div
                   className={`w-full max-w-[77.54px] rounded-t-md transition-all duration-1000 ease-out border ${
                     data.active
