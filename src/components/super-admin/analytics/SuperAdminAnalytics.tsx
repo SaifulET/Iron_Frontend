@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import SuperAdminAnalyticsOverview from "./SuperAdminAnalyticsOverview";
-import SuperAdminBookingsAnalytics from "./SuperAdminBookingsAnalytics";
-import SuperAdminBusinessesAnalytics from "./SuperAdminBusinessesAnalytics";
-import SuperAdminCustomersAnalytics from "./SuperAdminCustomersAnalytics";
+import SuperAdminBookingsAnalytics from "../bookings/SuperAdminBookingsAnalytics";
+import SuperAdminBusinessesAnalytics from "../businesses/SuperAdminBusinessesAnalytics";
+import SuperAdminCustomersAnalytics from "../customers/SuperAdminCustomersAnalytics";
 import SuperAdminCitiesAnalytics from "./SuperAdminCitiesAnalytics";
 
 type AnalyticsTab = "Overview" | "Bookings" | "Businesses" | "Customers" | "Cities";

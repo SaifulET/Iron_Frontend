@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import SuperAdminOverviewBanner from "./SuperAdminOverviewBanner";
 import SuperAdminStatsGrid from "./SuperAdminStatsGrid";
 import SuperAdminAttentionSection from "./SuperAdminAttentionSection";
-import SuperAdminCityCoverage from "./SuperAdminCityCoverage";
+import SuperAdminCityCoverage from "../analytics/SuperAdminCityCoverage";
 import SuperAdminTopServices from "./SuperAdminTopServices";
 import SuperAdminRecentActivity from "./SuperAdminRecentActivity";
 

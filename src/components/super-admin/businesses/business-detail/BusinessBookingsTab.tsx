@@ -6,7 +6,7 @@ import {
   Car04Icon,
   ArrowDown01Icon,
 } from "@hugeicons/core-free-icons";
-import SuperAdminBookingDrawer from "../SuperAdminBookingDrawer";
+import SuperAdminBookingDrawer from "../../bookings/SuperAdminBookingDrawer";
 
 interface BusinessBookingsTabProps {
   businessId: string;

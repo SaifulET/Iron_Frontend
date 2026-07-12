@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import SuperAdminSidebar from "./SuperAdminSidebar";
-import SuperAdminHeader from "./SuperAdminHeader";
-import SuperAdminDashboardContent from "./SuperAdminDashboardContent";
-import SuperAdminBusinesses from "./SuperAdminBusinesses";
-import SuperAdminCustomers from "./SuperAdminCustomers";
-import SuperAdminBookings from "./SuperAdminBookings";
-import SuperAdminFinance from "./SuperAdminFinance";
-import SuperAdminAnalytics from "./SuperAdminAnalytics";
-import SuperAdminSupport from "./SuperAdminSupport";
-import SuperAdminSettings from "./SuperAdminSettings";
+import SuperAdminSidebar from "./layout/SuperAdminSidebar";
+import SuperAdminHeader from "./layout/SuperAdminHeader";
+import SuperAdminDashboardContent from "./overview/SuperAdminDashboardContent";
+import SuperAdminBusinesses from "./businesses/SuperAdminBusinesses";
+import SuperAdminCustomers from "./customers/SuperAdminCustomers";
+import SuperAdminBookings from "./bookings/SuperAdminBookings";
+import SuperAdminFinance from "./finance/SuperAdminFinance";
+import SuperAdminAnalytics from "./analytics/SuperAdminAnalytics";
+import SuperAdminSupport from "./support/SuperAdminSupport";
+import SuperAdminSettings from "./settings/SuperAdminSettings";
 import SuperAdminContent from "./content/SuperAdminContent";
 
 export default function SuperAdminDashboard() {
