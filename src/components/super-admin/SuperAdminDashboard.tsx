@@ -48,7 +48,7 @@ export default function SuperAdminDashboard() {
 
       {/* Main Content Area */}
       <main
-        className={`pr-2 pt-[78px] flex-grow transition-all duration-300 overflow-hidden min-w-0 ${
+        className={`pr-2 pt-[78px] pb-6 flex-grow transition-all duration-300 overflow-y-auto min-w-0 ${
           isCollapsed ? "pl-[88px]" : "pl-[256px]"
         }`}
       >
