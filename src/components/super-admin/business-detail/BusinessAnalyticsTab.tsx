@@ -30,15 +30,15 @@ export default function BusinessAnalyticsTab({ businessId }: BusinessAnalyticsTa
 
   // Mock data for Statuses progress bars
   const statusData = [
-    { label: "New customers", value: 28, percent: 72 },
-    { label: "Returning customers", value: 28, percent: 48 },
-    { label: "No-shows charged", value: 28, percent: 28 },
-    { label: "No-shows waived", value: 28, percent: 28 },
-    { label: "No-shows cancelled", value: 28, percent: 28 },
-    { label: "Late cancellation", value: 28, percent: 28 },
-    { label: "Completed", value: 28, percent: 28 },
-    { label: "Cancelled by customer", value: 28, percent: 28 },
-    { label: "Cancelled by business", value: 28, percent: 28 },
+    { label: "New customers", value: 237, percent: 52 },
+    { label: "Returning customers", value: 216, percent: 48 },
+    { label: "No-shows charged", value: 95, percent: 21 },
+    { label: "No-shows waived", value: 4, percent: 1 },
+    { label: "No-shows cancelled", value: 18, percent: 4 },
+    { label: "Late cancellation", value: 14, percent: 3 },
+    { label: "Completed", value: 363, percent: 80 },
+    { label: "Cancelled by customer", value: 23, percent: 5 },
+    { label: "Cancelled by business", value: 4, percent: 1 },
   ];
 
   return (
