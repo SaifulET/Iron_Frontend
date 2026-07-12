@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Location05Icon,
@@ -899,6 +899,23 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
   const [selectedCustomerType, setSelectedCustomerType] = useState("Customer type");
   const [openActionDropdownId, setOpenActionDropdownId] = useState<string | null>(null);
   const [selectedBookingForDrawer, setSelectedBookingForDrawer] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (!openActionDropdownId) return;
+
+    const handleOutsideClick = () => {
+      setOpenActionDropdownId(null);
+    };
+
+    const timer = setTimeout(() => {
+      document.addEventListener("click", handleOutsideClick);
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [openActionDropdownId]);
 
   const openBookingDrawer = (b: any) => {
     const mappedBooking = {
