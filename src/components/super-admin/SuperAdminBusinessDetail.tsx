@@ -10,6 +10,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import BusinessOverviewTab from "./business-detail/BusinessOverviewTab";
 import BusinessBookingsTab from "./business-detail/BusinessBookingsTab";
+import BusinessFinanceTab from "./business-detail/BusinessFinanceTab";
 
 interface SuperAdminBusinessDetailProps {
   businessId: string;
@@ -180,6 +181,10 @@ export default function SuperAdminBusinessDetail({
 
       {activeSubTab === "Bookings" && (
         <BusinessBookingsTab businessId={businessId} />
+      )}
+
+      {activeSubTab === "Finance" && (
+        <BusinessFinanceTab businessId={businessId} />
       )}
     </div>
   );
