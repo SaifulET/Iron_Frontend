@@ -81,6 +81,7 @@ export default function SuperAdminBusinessDetail({
           </div>
 
           <div className="flex flex-col gap-2 min-w-0">
+            {/* Row 1: Title, Active, Mobile */}
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="font-sans font-bold text-2xl text-[#111827] tracking-tight">
                 Glam Studio
@@ -90,13 +91,24 @@ export default function SuperAdminBusinessDetail({
                 <HugeiconsIcon icon={Tick01Icon} className="w-3.5 h-3.5 shrink-0" />
                 <span>Active</span>
               </div>
+              {/* Mobile Badge */}
+              <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-xs font-semibold py-0.5 px-3">
+                <svg className="w-3.5 h-3.5 shrink-0 text-[#148655]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 17h.01M16 17h.01M3 12h18M5 12V8a2 2 0 012-2h10a2 2 0 012 2v4M5 12H3a1 1 0 00-1 1v3a1 1 0 001 1h2m14-5h2a1 1 0 011 1v3a1 1 0 01-1 1h-2" />
+                </svg>
+                <span>Mobile</span>
+              </div>
+            </div>
+
+            {/* Row 2: Secondary Tags */}
+            <div className="flex flex-wrap items-center gap-2 mt-1">
               {/* Gap Elimination Tag */}
               <div className="border border-[#861464] bg-[#FDF2FA] text-[#861464] rounded-full text-xs font-semibold py-0.5 px-3">
                 Gap Elimination
               </div>
-              {/* Manual Booking Tag */}
+              {/* Auto Booking Tag */}
               <div className="border border-[#201486] bg-[#F3F2FD] text-[#201486] rounded-full text-xs font-semibold py-0.5 px-3">
-                Manual Booking
+                Auto Booking
               </div>
             </div>
 
