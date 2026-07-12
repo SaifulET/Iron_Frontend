@@ -1119,7 +1119,7 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 text-gray-800">
-              {filteredBookings.map((b) => {
+              {filteredBookings.map((b, idx) => {
                 const isManual = b.customerType === "Manual";
                 return (
                   <tr key={b.id} className="hover:bg-gray-55/30 transition-colors">
@@ -1204,7 +1204,9 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
                       </button>
 
                       {openActionDropdownId === b.id && (
-                        <div className="absolute right-4 mt-1 w-44 bg-white border border-gray-100 rounded-lg shadow-lg z-20 overflow-hidden text-left">
+                        <div className={`absolute right-4 w-44 bg-white border border-gray-100 rounded-lg shadow-lg z-30 overflow-hidden text-left ${
+                          idx >= filteredBookings.length - 2 ? "bottom-full mb-1.5" : "top-full mt-1"
+                        }`}>
                           <button
                             onClick={() => {
                               openBookingDrawer(b);
