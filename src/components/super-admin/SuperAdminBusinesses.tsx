@@ -5,6 +5,7 @@ import SuperAdminBusinessesFilter from "./SuperAdminBusinessesFilter";
 import SuperAdminBusinessesTabs from "./SuperAdminBusinessesTabs";
 import SuperAdminBusinessesTable from "./SuperAdminBusinessesTable";
 import SuperAdminBusinessReview from "./SuperAdminBusinessReview";
+import SuperAdminBusinessDetail from "./SuperAdminBusinessDetail";
 
 interface BusinessItem {
   id: string;
@@ -146,6 +147,19 @@ export default function SuperAdminBusinesses() {
   };
 
   if (viewingBusinessId) {
+    const viewingBusiness = businesses.find((b) => b.id === viewingBusinessId);
+    if (viewingBusiness && viewingBusiness.status !== "Pending") {
+      return (
+        <SuperAdminBusinessDetail
+          businessId={viewingBusinessId}
+          onBack={() => setViewingBusinessId(null)}
+          onSuspend={(id) => {
+            toggleStatus(id, "Suspended");
+            setViewingBusinessId(null);
+          }}
+        />
+      );
+    }
     return (
       <SuperAdminBusinessReview
         businessId={viewingBusinessId}
