@@ -99,11 +99,11 @@ export default function SuperAdminBusinessDetail({
                   <span>Mobile</span>
                 </div>
                 {/* Gap Elimination Tag */}
-                <div className="flex items-center border border-[#861464] bg-[#FDF2FA] text-[#861464] rounded-full text-[13px] font-semibold h-[28px] px-3 shrink-0">
+                <div className="flex items-center justify-center border border-[#861464] bg-[#FDF2FA] text-[#861464] rounded-full text-[13px] font-semibold h-[28px] w-[124px] shrink-0">
                   <span>Gap Elimination</span>
                 </div>
                 {/* Auto Booking Tag */}
-                <div className="flex items-center border border-[#201486] bg-[#F3F2FD] text-[#201486] rounded-full text-[13px] font-semibold h-[28px] px-3 shrink-0">
+                <div className="flex items-center justify-center border border-[#201486] bg-[#F3F2FD] text-[#201486] rounded-full text-[13px] font-semibold h-[28px] w-[124px] shrink-0">
                   <span>Auto Booking</span>
                 </div>
               </div>
