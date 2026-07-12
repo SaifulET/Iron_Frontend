@@ -7,8 +7,8 @@ import StaticPagesTab from "./StaticPagesTab";
 import FaqTab from "./FaqTab";
 import BlogFormModal from "./BlogFormModal";
 import FaqFormModal from "./FaqFormModal";
-import PageFormModal from "./PageFormModal";
 import NewBlogPostPage from "./NewBlogPostPage";
+import StaticPageEditorPage from "./StaticPageEditorPage";
 
 export default function SuperAdminContent() {
   const [activeTab, setActiveTab] = useState<"Blog" | "Static Pages" | "FAQ — Customers" | "FAQ — Businesses">("Blog");
@@ -74,7 +74,7 @@ export default function SuperAdminContent() {
   const [showFaqModal, setShowFaqModal] = useState(false);
   const [editingFaq, setEditingFaq] = useState<FaqItem | null>(null);
 
-  const [showPageModal, setShowPageModal] = useState(false);
+  const [isEditingStaticPage, setIsEditingStaticPage] = useState(false);
   const [editingPage, setEditingPage] = useState<StaticPage | null>(null);
 
   // Custom Delete Confirm state
@@ -131,8 +131,7 @@ export default function SuperAdminContent() {
   };
 
   // --- Static Page Handlers ---
-  const handleSavePage = (e: React.FormEvent, data: Omit<StaticPage, "id" | "lastUpdated">) => {
-    e.preventDefault();
+  const handleSavePage = (data: Omit<StaticPage, "id" | "lastUpdated">) => {
     if (editingPage) {
       setStaticPages((prev) =>
         prev.map((sp) => (sp.id === editingPage.id ? { ...sp, ...data, lastUpdated: "15 Jan 2026" } : sp))
@@ -145,7 +144,7 @@ export default function SuperAdminContent() {
       };
       setStaticPages((prev) => [...prev, newPage]);
     }
-    setShowPageModal(false);
+    setIsEditingStaticPage(false);
   };
 
   const handleDeletePage = (id: string) => {
@@ -173,6 +172,16 @@ export default function SuperAdminContent() {
         editingPost={editingPost}
         onDiscard={() => setIsEditingBlogPost(false)}
         onSave={handleSavePost}
+      />
+    );
+  }
+
+  if (isEditingStaticPage && editingPage) {
+    return (
+      <StaticPageEditorPage
+        editingPage={editingPage}
+        onDiscard={() => setIsEditingStaticPage(false)}
+        onSave={handleSavePage}
       />
     );
   }
@@ -244,7 +253,7 @@ export default function SuperAdminContent() {
             staticPages={staticPages}
             onEdit={(page) => {
               setEditingPage(page);
-              setShowPageModal(true);
+              setIsEditingStaticPage(true);
             }}
           />
         )}
@@ -271,13 +280,6 @@ export default function SuperAdminContent() {
         onClose={() => setShowFaqModal(false)}
         onSave={handleSaveFaq}
         editingFaq={editingFaq}
-      />
-
-      <PageFormModal
-        show={showPageModal}
-        onClose={() => setShowPageModal(false)}
-        onSave={handleSavePage}
-        editingPage={editingPage}
       />
 
       {deleteConfirm?.isOpen && (
