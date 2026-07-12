@@ -18,7 +18,7 @@ export default function AnalyticsBarChart({
   monthlyData,
 }: AnalyticsBarChartProps) {
   return (
-    <div className="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 overflow-hidden flex flex-col w-full">
+    <div className="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 flex flex-col w-full">
       {/* Header */}
       <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h3 className="font-semibold text-base sm:text-lg text-[#111827]">
@@ -57,7 +57,7 @@ export default function AnalyticsBarChart({
         </div>
 
         {/* Chart Visualizer bars */}
-        <div className="flex items-end justify-between gap-1 sm:gap-2 h-[250px] border-b border-gray-200 pb-2 px-2 overflow-x-auto select-none pt-16">
+        <div className="flex items-end justify-between gap-1 sm:gap-2 h-[280px] border-b border-gray-200 pb-2 px-2 overflow-x-auto select-none pt-20">
           {monthlyData.map((d, idx) => {
             const isSelected = selectedMonth === d.month;
             const volume = d.height * 12;
