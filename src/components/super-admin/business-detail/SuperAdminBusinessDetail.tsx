@@ -89,22 +89,22 @@ export default function SuperAdminBusinessDetail({
               </h2>
               <div className="flex flex-wrap items-center gap-1.5">
                 {/* Active Badge */}
-                <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-xs font-semibold py-0.5 px-3 shrink-0">
+                <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-[13px] font-semibold h-[28px] px-3 shrink-0">
                   <HugeiconsIcon icon={Tick01Icon} className="w-3.5 h-3.5 shrink-0" />
                   <span>Active</span>
                 </div>
                 {/* Mobile Badge */}
-                <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-xs font-semibold py-0.5 px-3 shrink-0">
+                <div className="flex items-center gap-1 border border-[#148655] bg-[#ECF7F3] text-[#148655] rounded-full text-[13px] font-semibold h-[28px] px-3 shrink-0">
                   <HugeiconsIcon icon={Car04Icon} className="w-3.5 h-3.5 shrink-0" />
                   <span>Mobile</span>
                 </div>
                 {/* Gap Elimination Tag */}
-                <div className="border border-[#861464] bg-[#FDF2FA] text-[#861464] rounded-full text-xs font-semibold py-0.5 px-3 shrink-0">
-                  Gap Elimination
+                <div className="flex items-center border border-[#861464] bg-[#FDF2FA] text-[#861464] rounded-full text-[13px] font-semibold h-[28px] px-3 shrink-0">
+                  <span>Gap Elimination</span>
                 </div>
                 {/* Auto Booking Tag */}
-                <div className="border border-[#201486] bg-[#F3F2FD] text-[#201486] rounded-full text-xs font-semibold py-0.5 px-3 shrink-0">
-                  Auto Booking
+                <div className="flex items-center border border-[#201486] bg-[#F3F2FD] text-[#201486] rounded-full text-[13px] font-semibold h-[28px] px-3 shrink-0">
+                  <span>Auto Booking</span>
                 </div>
               </div>
             </div>
@@ -138,14 +138,14 @@ export default function SuperAdminBusinessDetail({
         <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto mt-4 xl:mt-0 justify-start xl:justify-end">
           <button
             onClick={() => onSuspend(businessId)}
-            className="flex items-center justify-center gap-1 px-4 py-2 border border-[#DC2626] text-[#DC2626] rounded-full text-xs font-semibold hover:bg-red-50 cursor-pointer bg-white transition-colors"
+            className="flex items-center justify-center gap-1 px-4 h-[32px] border border-[#DC2626] text-[#DC2626] rounded-full text-xs font-semibold hover:bg-red-50 cursor-pointer bg-white transition-colors"
           >
             Suspend
           </button>
           
           <button
             onClick={() => setIsFoundingPartner(!isFoundingPartner)}
-            className={`flex items-center justify-center gap-1.5 px-4 py-2 border rounded-full text-xs font-semibold cursor-pointer transition-all ${
+            className={`flex items-center justify-center gap-1.5 px-4 h-[32px] border rounded-full text-xs font-semibold cursor-pointer transition-all ${
               isFoundingPartner
                 ? "bg-[#2E9DA7]/10 border-[#2E9DA7] text-[#2E9DA7]"
                 : "bg-white border-gray-300 text-gray-700 hover:bg-gray-55"
