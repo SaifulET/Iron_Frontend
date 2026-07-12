@@ -38,8 +38,39 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
   const [linkUrl, setLinkUrl] = useState("");
   const [warningModal, setWarningModal] = useState<{ isOpen: boolean; message: string } | null>(null);
 
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
+  const [isStrike, setIsStrike] = useState(false);
+  const [alignment, setAlignment] = useState<"left" | "center" | "right">("left");
+  const [listType, setListType] = useState<"bullet" | "ordered" | "none">("none");
+
   const editorRef = useRef<HTMLDivElement>(null);
   const savedSelectionRange = useRef<Range | null>(null);
+
+  const checkActiveStates = () => {
+    if (typeof document === "undefined") return;
+    setIsBold(document.queryCommandState("bold"));
+    setIsItalic(document.queryCommandState("italic"));
+    setIsUnderline(document.queryCommandState("underline"));
+    setIsStrike(document.queryCommandState("strikeThrough"));
+
+    if (document.queryCommandState("justifyCenter")) {
+      setAlignment("center");
+    } else if (document.queryCommandState("justifyRight")) {
+      setAlignment("right");
+    } else {
+      setAlignment("left");
+    }
+
+    if (document.queryCommandState("insertUnorderedList")) {
+      setListType("bullet");
+    } else if (document.queryCommandState("insertOrderedList")) {
+      setListType("ordered");
+    } else {
+      setListType("none");
+    }
+  };
 
   // Initialize
   useEffect(() => {
@@ -82,6 +113,7 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
   const execCommand = (command: string, value: string = "") => {
     document.execCommand(command, false, value);
     updateWordCount();
+    checkActiveStates();
     if (editorRef.current) {
       editorRef.current.focus();
     }
@@ -158,23 +190,31 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
           padding-left: 0.5rem !important;
           margin-bottom: 1rem !important;
         }
-        .editor-content h2 {
-          font-size: 24px !important;
-          font-weight: 700 !important;
-          margin-bottom: 1rem !important;
-          color: #111827;
-        }
-        .editor-content h3 {
-          font-size: 18px !important;
+        .editor-content h1, .editor-content h1 * {
+          font-size: 28px !important;
           font-weight: 700 !important;
           margin-top: 1.5rem !important;
-          margin-bottom: 0.75rem !important;
-          color: #111827;
-        }
-        .editor-content p {
           margin-bottom: 1rem !important;
+          color: #111827 !important;
+        }
+        .editor-content h2, .editor-content h2 * {
+          font-size: 24px !important;
+          font-weight: 700 !important;
+          margin-top: 1.5rem !important;
+          margin-bottom: 1rem !important;
+          color: #111827 !important;
+        }
+        .editor-content h3, .editor-content h3 * {
+          font-size: 18px !important;
+          font-weight: 700 !important;
+          margin-top: 1.25rem !important;
+          margin-bottom: 0.75rem !important;
+          color: #111827 !important;
+        }
+        .editor-content p, .editor-content p * {
+          font-size: 15px !important;
           line-height: 1.75 !important;
-          color: #374151;
+          color: #374151 !important;
         }
         .editor-content a {
           color: #6366F1 !important;
@@ -245,10 +285,10 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
       {/* Editor & Sidebar panels container */}
       <div className="flex flex-col lg:flex-row gap-6 items-start w-full">
         {/* Left Column: Editor Tab switcher and Main Box */}
-        <div className="flex-grow flex flex-col w-full lg:max-w-none bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 overflow-hidden">
+        <div className="flex-grow flex flex-col w-full lg:max-w-none bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border border-gray-100 overflow-hidden h-[660px]">
           
           {/* Language selection tabs */}
-          <div className="flex flex-row items-center border-b border-[#E5E7EB] px-4">
+          <div className="flex flex-row items-center border-b border-[#E5E7EB] px-4 shrink-0">
             <button
               onClick={() => handleTabChange("EN")}
               className={`h-[38px] px-4 py-2 text-xs font-semibold whitespace-nowrap transition-all border-b-[1.5px] border-t-0 border-x-0 cursor-pointer bg-transparent flex items-center justify-center gap-2 ${
@@ -274,7 +314,7 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
           </div>
 
           {/* Editor Body */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full flex-grow overflow-hidden">
             {/* Toolbar block */}
             <div className="flex flex-wrap items-center justify-between gap-1 bg-[#F9FAFB] border-b border-[#E5E7EB] p-2.5 shrink-0">
               <div className="flex flex-wrap items-center gap-1">
@@ -293,7 +333,11 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
                 <button
                   type="button"
                   onClick={() => execCommand("bold")}
-                  className="w-7 h-7 flex items-center justify-center text-xs font-bold text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-50 rounded cursor-pointer"
+                  className={`w-7 h-7 flex items-center justify-center text-xs font-bold rounded-md cursor-pointer transition-colors ${
+                    isBold
+                      ? "bg-[#6366F1]/10 border border-[#6366F1]/30 text-[#6366F1]"
+                      : "text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-50"
+                  }`}
                   title="Bold"
                 >
                   B
@@ -301,7 +345,11 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
                 <button
                   type="button"
                   onClick={() => execCommand("italic")}
-                  className="w-7 h-7 flex items-center justify-center text-xs font-serif italic text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-50 rounded cursor-pointer"
+                  className={`w-7 h-7 flex items-center justify-center text-xs font-serif italic rounded-md cursor-pointer transition-colors ${
+                    isItalic
+                      ? "bg-[#6366F1]/10 border border-[#6366F1]/30 text-[#6366F1]"
+                      : "text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55"
+                  }`}
                   title="Italic"
                 >
                   I
@@ -309,7 +357,11 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
                 <button
                   type="button"
                   onClick={() => execCommand("underline")}
-                  className="w-7 h-7 flex items-center justify-center text-xs underline text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-50 rounded cursor-pointer"
+                  className={`w-7 h-7 flex items-center justify-center text-xs underline rounded-md cursor-pointer transition-colors ${
+                    isUnderline
+                      ? "bg-[#6366F1]/10 border border-[#6366F1]/30 text-[#6366F1]"
+                      : "text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55"
+                  }`}
                   title="Underline"
                 >
                   U
@@ -317,7 +369,11 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
                 <button
                   type="button"
                   onClick={() => execCommand("strikeThrough")}
-                  className="w-7 h-7 flex items-center justify-center text-xs line-through text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-50 rounded cursor-pointer"
+                  className={`w-7 h-7 flex items-center justify-center text-xs line-through rounded-md cursor-pointer transition-colors ${
+                    isStrike
+                      ? "bg-[#6366F1]/10 border border-[#6366F1]/30 text-[#6366F1]"
+                      : "text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55"
+                  }`}
                   title="Strikethrough"
                 >
                   S
@@ -327,44 +383,93 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
                 <button
                   type="button"
                   onClick={() => execCommand("justifyLeft")}
-                  className="w-7 h-7 flex items-center justify-center text-xs text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55 rounded cursor-pointer"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md cursor-pointer transition-colors ${
+                    alignment === "left"
+                      ? "bg-[#6366F1]/10 border border-[#6366F1]/30 text-[#6366F1]"
+                      : "text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-50"
+                  }`}
                   title="Align Left"
                 >
-                  📄
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="17" y1="10" x2="3" y2="10"></line>
+                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                    <line x1="17" y1="18" x2="3" y2="18"></line>
+                  </svg>
                 </button>
                 <button
                   type="button"
                   onClick={() => execCommand("justifyCenter")}
-                  className="w-7 h-7 flex items-center justify-center text-xs text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55 rounded cursor-pointer"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md cursor-pointer transition-colors ${
+                    alignment === "center"
+                      ? "bg-[#6366F1]/10 border border-[#6366F1]/30 text-[#6366F1]"
+                      : "text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-50"
+                  }`}
                   title="Align Center"
                 >
-                  📰
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="10" x2="6" y2="10"></line>
+                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                    <line x1="18" y1="18" x2="6" y2="18"></line>
+                  </svg>
                 </button>
                 <button
                   type="button"
                   onClick={() => execCommand("justifyRight")}
-                  className="w-7 h-7 flex items-center justify-center text-xs text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55 rounded cursor-pointer"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md cursor-pointer transition-colors ${
+                    alignment === "right"
+                      ? "bg-[#6366F1]/10 border border-[#6366F1]/30 text-[#6366F1]"
+                      : "text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-50"
+                  }`}
                   title="Align Right"
                 >
-                  📑
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="21" y1="10" x2="7" y2="10"></line>
+                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                    <line x1="21" y1="18" x2="7" y2="18"></line>
+                  </svg>
                 </button>
 
                 <div className="w-[1px] h-5 bg-[#E5E7EB] mx-1 shrink-0" />
                 <button
                   type="button"
                   onClick={() => execCommand("insertUnorderedList")}
-                  className="w-7 h-7 flex items-center justify-center text-xs text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55 rounded cursor-pointer"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md cursor-pointer transition-colors ${
+                    listType === "bullet"
+                      ? "bg-[#6366F1]/10 border border-[#6366F1]/30 text-[#6366F1]"
+                      : "text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55"
+                  }`}
                   title="Unordered List"
                 >
-                  • List
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                  </svg>
                 </button>
                 <button
                   type="button"
                   onClick={() => execCommand("insertOrderedList")}
-                  className="w-7 h-7 flex items-center justify-center text-xs text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55 rounded cursor-pointer"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md cursor-pointer transition-colors ${
+                    listType === "ordered"
+                      ? "bg-[#6366F1]/10 border border-[#6366F1]/30 text-[#6366F1]"
+                      : "text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55"
+                  }`}
                   title="Ordered List"
                 >
-                  1. List
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="10" y1="6" x2="21" y2="6"></line>
+                    <line x1="10" y1="12" x2="21" y2="12"></line>
+                    <line x1="10" y1="18" x2="21" y2="18"></line>
+                    <path d="M4 6H2v4h2"></path>
+                    <path d="M4 10h-2"></path>
+                    <path d="M6 18H2v-2h4"></path>
+                  </svg>
                 </button>
 
                 <div className="w-[1px] h-5 bg-[#E5E7EB] mx-1 shrink-0" />
@@ -397,18 +502,24 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
                 <button
                   type="button"
                   onClick={() => execCommand("undo")}
-                  className="w-7 h-7 flex items-center justify-center text-xs text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55 rounded cursor-pointer"
+                  className="w-7 h-7 flex items-center justify-center text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55 rounded cursor-pointer"
                   title="Undo"
                 >
-                  ↶
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 7v6h6"></path>
+                    <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path>
+                  </svg>
                 </button>
                 <button
                   type="button"
                   onClick={() => execCommand("redo")}
-                  className="w-7 h-7 flex items-center justify-center text-xs text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55 rounded cursor-pointer"
+                  className="w-7 h-7 flex items-center justify-center text-[#374151] bg-white border border-[#E5E7EB] hover:bg-gray-55 rounded cursor-pointer"
                   title="Redo"
                 >
-                  ↷
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 7v6h-6"></path>
+                    <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7"></path>
+                  </svg>
                 </button>
               </div>
 
@@ -423,6 +534,9 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
               ref={editorRef}
               contentEditable
               onInput={updateWordCount}
+              onKeyUp={checkActiveStates}
+              onMouseUp={checkActiveStates}
+              onFocus={checkActiveStates}
               onClick={(e) => {
                 const target = e.target as HTMLElement;
                 if (target.tagName === "A") {
@@ -433,7 +547,7 @@ export default function StaticPageEditorPage({ editingPage, onDiscard, onSave }:
                   }
                 }
               }}
-              className="editor-content p-8 min-h-[500px] text-gray-800 focus:outline-none overflow-y-auto"
+              className="editor-content p-8 flex-grow h-[550px] overflow-y-auto text-gray-800 focus:outline-none"
             />
           </div>
         </div>
