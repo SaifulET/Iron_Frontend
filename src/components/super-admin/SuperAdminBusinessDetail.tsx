@@ -1177,6 +1177,15 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
                       {openActionDropdownId === b.id && (
                         <div className="absolute right-4 mt-1 w-44 bg-white border border-gray-100 rounded-lg shadow-lg z-20 overflow-hidden text-left">
                           <button
+                            onClick={() => {
+                              alert(`Viewing booking details for ${b.id}`);
+                              setOpenActionDropdownId(null);
+                            }}
+                            className="w-full px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 cursor-pointer text-left border-none bg-transparent"
+                          >
+                            View
+                          </button>
+                          <button
                             onClick={() => updateBookingStatus(b.id, "Completed")}
                             className="w-full px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 cursor-pointer text-left border-none bg-transparent"
                           >
