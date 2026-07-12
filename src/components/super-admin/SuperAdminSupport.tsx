@@ -773,7 +773,7 @@ export default function SuperAdminSupport() {
                     </svg>
                   </span>
                 </th>
-                <th className="py-3 px-6 text-right font-medium">Actions</th>
+                 <th className="py-3 px-6 text-right font-medium"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 text-sm">
@@ -844,11 +844,11 @@ export default function SuperAdminSupport() {
                     {/* Actions Dropdown Button */}
                     <td className="py-4 px-6 text-right">
                       <div className="inline-flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                        <button className="inline-flex items-center gap-1.5 px-4 py-1.5 border border-[#111827] text-sm font-medium rounded-full hover:bg-gray-50 transition-colors text-gray-900">
-                          <span>Action</span>
-                          <svg className="w-4 h-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
+                        <button
+                          onClick={() => setSelectedTicket(ticket)}
+                          className="inline-flex items-center gap-1.5 px-4 py-1.5 border border-[#2E9DA7] text-sm font-semibold rounded-full bg-[#2E9DA7]/10 text-[#2E9DA7] hover:bg-[#2E9DA7]/20 transition-colors"
+                        >
+                          <span>View</span>
                         </button>
                       </div>
                     </td>
