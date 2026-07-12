@@ -17,6 +17,7 @@ import {
   Tick01Icon,
   StarIcon,
 } from "@hugeicons/core-free-icons";
+import SuperAdminBookingDrawer from "./SuperAdminBookingDrawer";
 
 interface SuperAdminBusinessDetailProps {
   businessId: string;
@@ -897,6 +898,26 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
   const [selectedStaff, setSelectedStaff] = useState("Staff");
   const [selectedCustomerType, setSelectedCustomerType] = useState("Customer type");
   const [openActionDropdownId, setOpenActionDropdownId] = useState<string | null>(null);
+  const [selectedBookingForDrawer, setSelectedBookingForDrawer] = useState<any | null>(null);
+
+  const openBookingDrawer = (b: any) => {
+    const mappedBooking = {
+      id: b.id,
+      bookingCode: b.id,
+      customerName: b.customerName,
+      customerTag: b.customerType as "New" | "Manual" | "Returning",
+      serviceName: b.serviceName,
+      staffName: b.staffName,
+      extraDetails: b.addon || undefined,
+      travelInfo: b.travelFee || undefined,
+      dateTime: b.dateTime,
+      amount: `€${b.amount}`,
+      businessName: "Glam Studio",
+      businessCity: "Nicosia",
+      status: (b.status === "No-Show" ? "No-Shows" : b.status) as any,
+    };
+    setSelectedBookingForDrawer(mappedBooking);
+  };
 
   // Mock Bookings State
   const [bookings, setBookings] = useState([
@@ -1103,12 +1124,20 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
                 return (
                   <tr key={b.id} className="hover:bg-gray-55/30 transition-colors">
                     {/* Booking ID */}
-                    <td className="p-4 font-normal text-center text-gray-900">{b.id}</td>
+                    <td
+                      className="p-4 font-normal text-center text-gray-900 cursor-pointer hover:underline"
+                      onClick={() => openBookingDrawer(b)}
+                    >
+                      {b.id}
+                    </td>
 
                     {/* Customer */}
                     <td className="p-4">
                       <div className="flex flex-col gap-1 items-start">
-                        <span className="font-semibold text-[#6366F1] cursor-pointer hover:underline">
+                        <span
+                          className="font-semibold text-[#6366F1] cursor-pointer hover:underline"
+                          onClick={() => openBookingDrawer(b)}
+                        >
                           {b.customerName}
                         </span>
                         <span className={`px-3 py-0.5 rounded-full text-[10px] font-semibold ${
@@ -1178,7 +1207,7 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
                         <div className="absolute right-4 mt-1 w-44 bg-white border border-gray-100 rounded-lg shadow-lg z-20 overflow-hidden text-left">
                           <button
                             onClick={() => {
-                              alert(`Viewing booking details for ${b.id}`);
+                              openBookingDrawer(b);
                               setOpenActionDropdownId(null);
                             }}
                             className="w-full px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 cursor-pointer text-left border-none bg-transparent"
@@ -1229,6 +1258,11 @@ function BookingsTabContent({ businessId }: { businessId: string }) {
         </div>
       </div>
 
+      {/* Render Booking Drawer */}
+      <SuperAdminBookingDrawer
+        booking={selectedBookingForDrawer}
+        onClose={() => setSelectedBookingForDrawer(null)}
+      />
     </div>
   );
 }
