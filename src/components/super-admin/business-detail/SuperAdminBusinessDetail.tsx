@@ -135,17 +135,17 @@ export default function SuperAdminBusinessDetail({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto mt-4 xl:mt-0 justify-start xl:justify-end">
+        <div className="flex flex-row items-center gap-3 w-full xl:w-auto mt-4 xl:mt-0 justify-start xl:justify-end">
           <button
             onClick={() => onSuspend(businessId)}
-            className="flex items-center justify-center gap-1 px-4 h-[32px] border border-[#DC2626] text-[#DC2626] rounded-full text-xs font-semibold hover:bg-red-50 cursor-pointer bg-white transition-colors"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-4 h-[32px] border border-[#DC2626] text-[#DC2626] rounded-full text-xs font-semibold hover:bg-red-50 cursor-pointer bg-white transition-colors"
           >
             Suspend
           </button>
           
           <button
             onClick={() => setIsFoundingPartner(!isFoundingPartner)}
-            className={`flex items-center justify-center gap-1.5 px-4 h-[32px] border rounded-full text-xs font-semibold cursor-pointer transition-all ${
+            className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 h-[32px] border rounded-full text-xs font-semibold cursor-pointer transition-all ${
               isFoundingPartner
                 ? "bg-[#2E9DA7]/10 border-[#2E9DA7] text-[#2E9DA7]"
                 : "bg-white border-gray-300 text-gray-700 hover:bg-gray-55"
@@ -153,13 +153,13 @@ export default function SuperAdminBusinessDetail({
           >
             {isFoundingPartner ? (
               <>
-                <svg className="w-3.5 h-3.5 text-[#2E9DA7]" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-3.5 h-3.5 text-[#2E9DA7] shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Marked as Founding Partner</span>
+                <span className="truncate">Marked as Founding Partner</span>
               </>
             ) : (
-              <span>Mark as Founding Partner</span>
+              <span className="truncate">Mark as Founding Partner</span>
             )}
           </button>
         </div>
