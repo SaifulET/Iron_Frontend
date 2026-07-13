@@ -107,7 +107,7 @@ export default function ServiceCard({
             {rec.title}
           </h3>
           <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
-            <img src="/icons/star.svg" alt="star" className="w-[12px] h-[12px] sm:w-[16px] sm:h-[16px]" draggable="false" />
+            <img src="/Icons/star.svg" alt="star" className="w-[12px] h-[12px] sm:w-[16px] sm:h-[16px]" draggable="false" />
             <span className="text-[10px] sm:text-xs font-semibold text-[#1C1B1C]">{rec.rating}</span>
             <span className="text-[9px] sm:text-xs font-medium text-[#757575]">({rec.reviews})</span>
           </div>

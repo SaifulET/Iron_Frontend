@@ -35,8 +35,8 @@ export function usePWAInstall() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Register service worker if supported
-    if ("serviceWorker" in navigator) {
+    // Register service worker only in production to prevent Next.js dev-server/HMR reload loops
+    if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js")
         .then((reg) => {

@@ -122,7 +122,7 @@ export default function DashboardSidebar({
           <>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                <img src="/img/smallBlacklogo.svg" alt="Bookly" className="w-full h-full object-contain" />
+                <img src="/img/smallBlackLogo.svg" alt="Bookly" className="w-full h-full object-contain" />
               </div>
               <div className="flex flex-col leading-none">
                 <span className="font-bold text-[#111111] text-[15px] tracking-wide font-poppins">Bookly.cy</span>
