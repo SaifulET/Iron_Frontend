@@ -701,10 +701,12 @@ export default function LandingPage() {
             onClick={() => setSelectedCategory("all")}
             className={`flex w-[150px] h-[108px] flex-col items-center justify-center gap-[24px] rounded-xl transition-all duration-200 cursor-pointer shrink-0 ${selectedCategory === "all"
               ? "bg-[#111111] text-[#FCFAF9] shadow-md scale-105"
-              : "bg-white text-[#817469] border border-neutral-100 hover:shadow-sm"
+              : "bg-white text-[#111111] border border-neutral-100 hover:shadow-sm"
               }`}
           >
-            <HugeiconsIcon icon={DashboardSquare02Icon} />
+            <HugeiconsIcon icon={DashboardSquare02Icon}   size={24}
+  strokeWidth={1.5}
+  />
             <span className="text-xs font-semibold tracking-wider uppercase">All</span>
           </button>
 
@@ -717,7 +719,9 @@ export default function LandingPage() {
               }`}
           >
             <div className="p-1 rounded bg-[#EDE3DE]">
-              <HugeiconsIcon icon={WellnessIcon} />
+              <HugeiconsIcon icon={WellnessIcon}   size={24}
+  strokeWidth={1.5}
+  color="#111111"/>
             </div>
             <span className="text-xs font-semibold tracking-wider uppercase text-center">Beauty & Wellness</span>
           </button>
@@ -731,7 +735,9 @@ export default function LandingPage() {
               }`}
           >
             <div className="p-1 rounded bg-[#EDE3DE]">
-              <HugeiconsIcon icon={HealtcareIcon} />
+              <HugeiconsIcon icon={HealtcareIcon}   size={24}
+  strokeWidth={1.5}
+  color="#111111"/>
             </div>
             <span className="text-xs font-semibold tracking-wider uppercase text-center">Health Care</span>
           </button>
@@ -745,7 +751,9 @@ export default function LandingPage() {
               }`}
           >
             <div className="p-1 rounded bg-[#EDE3DE]">
-              <HugeiconsIcon icon={FootballIcon} />
+              <HugeiconsIcon icon={FootballIcon}   size={24}
+  strokeWidth={1.5}
+  color="#111111"/>
             </div>
             <span className="text-xs font-semibold tracking-wider uppercase text-center">Sports & Activities</span>
           </button>
@@ -759,7 +767,9 @@ export default function LandingPage() {
               }`}
           >
             <div className="p-1 rounded bg-[#EDE3DE]">
-              <HugeiconsIcon icon={SailboatOffshoreIcon} />
+              <HugeiconsIcon icon={SailboatOffshoreIcon}   size={24}
+  strokeWidth={1.5}
+  color="#111111"/>
             </div>
             <span className="text-xs font-semibold tracking-wider uppercase text-center">Experience & Tours</span>
           </button>
@@ -773,7 +783,9 @@ export default function LandingPage() {
               }`}
           >
             <div className="p-1 rounded bg-[#EDE3DE]">
-              <HugeiconsIcon icon={PartyIcon} />
+              <HugeiconsIcon icon={PartyIcon}   size={24}
+  strokeWidth={1.5}
+  color="#111111"/>
             </div>
             <span className="text-xs font-semibold tracking-wider uppercase text-center">Entertainment & Events</span>
           </button>
@@ -801,7 +813,9 @@ export default function LandingPage() {
               }`}
           >
             <div className="p-1 rounded bg-[#EDE3DE]">
-              <HugeiconsIcon icon={Car04Icon} />
+              <HugeiconsIcon icon={Car04Icon}   size={24}
+  strokeWidth={1.5}
+  color="#111111"/>
             </div>
             <span className="text-xs font-semibold tracking-wider uppercase text-center">Automotive</span>
           </button>
