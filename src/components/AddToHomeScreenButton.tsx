@@ -1,3 +1,5 @@
+import { usePWAInstall } from "@/hooks/usePWAInstall";
+
 interface AddToHomeScreenButtonProps {
   className?: string;
   onClick?: () => void;
@@ -11,10 +13,20 @@ export default function AddToHomeScreenButton({
   showTextOnMobile = false,
   size = "large",
 }: AddToHomeScreenButtonProps) {
+  const { installPWA } = usePWAInstall();
+
+  const handleInstallClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      installPWA();
+    }
+  };
+
   if (size === "small") {
     return (
       <button
-        onClick={onClick || (() => console.log("Add to Home Screen clicked"))}
+        onClick={handleInstallClick}
         className={`bg-white hover:bg-neutral-100 text-[#1C1B1C] rounded-full font-semibold shadow-sm transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap ${className}`}
       >
         <span className={showTextOnMobile ? "inline" : "hidden sm:inline"}>
@@ -29,7 +41,7 @@ export default function AddToHomeScreenButton({
 
   return (
     <button
-      onClick={onClick || (() => console.log("Add to Home Screen clicked"))}
+      onClick={handleInstallClick}
       className={`bg-white hover:bg-neutral-100 text-[#1C1B1C] border-[0.41px] border-[#4E5F78] rounded-[1651.73px] py-2 px-4 xs:py-2.5 xs:px-6 sm:py-3 sm:px-8 md:py-[13.2px] md:px-[33px] gap-1.5 xs:gap-2 md:gap-[19.8px] font-poppins font-normal text-xs xs:text-sm sm:text-lg md:text-[26.45px] leading-normal md:leading-[40px] shadow-sm transition-all active:scale-95 cursor-pointer flex items-center justify-center whitespace-nowrap ${className}`}
     >
       <span className={showTextOnMobile ? "inline" : "hidden sm:inline"}>
