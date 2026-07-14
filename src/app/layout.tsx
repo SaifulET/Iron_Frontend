@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Bookly - Authentication",
   description: "Sign in or register for Bookly",
   icons: {
-    icon: "/img/logo.png",
+    icon: "/img/smallBlackLogo.svg",
   },
   manifest: "/manifest.json",
 };

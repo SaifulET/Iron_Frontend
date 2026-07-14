@@ -1,12 +1,12 @@
 // Minimal Service Worker to satisfy PWA installability requirements
-const CACHE_NAME = "bookly-cache-v1";
+const CACHE_NAME = "bookly-cache-v2";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll([
         "/",
-        "/img/logo.png",
+        "/img/smallBlackLogo.svg",
       ]).catch(() => {
         // Fail-safe if some resource is not available during install
       });
