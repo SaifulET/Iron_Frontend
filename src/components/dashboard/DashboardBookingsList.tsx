@@ -125,10 +125,10 @@ export default function DashboardBookingsList({
       <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
       {/* Bookings Filter Bar Toolbar */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6 select-none">
-        <div className="flex flex-col sm:flex-row gap-4 items-center w-full md:w-auto">
+      <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between mb-6 select-none">
+        <div className="grid grid-cols-2 sm:flex sm:flex-row gap-2.5 items-stretch sm:items-center w-full md:w-auto">
           {/* Search bar input */}
-          <div className="relative w-full sm:w-[260px] h-9">
+          <div className="relative col-span-2 sm:w-[240px] h-9">
             <span className="absolute left-3 top-2.5">
               <HugeiconsIcon icon={Search01Icon} className="w-4 h-4 text-[#ABAAA6]" />
             </span>
@@ -137,17 +137,17 @@ export default function DashboardBookingsList({
               value={bookingSearch}
               onChange={(e) => setBookingSearch(e.target.value)}
               placeholder="Search by client or booking ID..."
-              className="w-full h-full pl-9 pr-4 bg-white border border-[#111111] rounded-lg text-xs font-poppins placeholder-neutral-400 focus:outline-none"
+              className="w-full h-full pl-9 pr-4 bg-white border border-[#D5D2C9] rounded-xl text-xs font-poppins placeholder-neutral-400 focus:outline-none focus:border-[#2E9DA7] transition-all"
             />
           </div>
 
           {/* Status filter select */}
           {!isStaffDashboard && (
-            <div className="relative h-9">
+            <div className="relative h-9 w-full sm:w-auto">
               <select
                 value={bookingStatusFilter}
                 onChange={(e) => setBookingStatusFilter(e.target.value)}
-                className="appearance-none bg-white border border-[#111111] rounded-lg px-4 h-full pr-8 text-xs font-poppins font-medium text-[#111111] focus:outline-none cursor-pointer hover:bg-neutral-50 transition-all"
+                className="w-full appearance-none bg-white border border-[#D5D2C9] rounded-xl px-4 h-full pr-8 text-xs font-poppins font-medium text-[#111111] focus:outline-none focus:border-[#2E9DA7] cursor-pointer hover:bg-neutral-50 transition-all"
               >
                 {activeTab === "Upcoming" ? (
                   <>
@@ -184,11 +184,11 @@ export default function DashboardBookingsList({
 
           {/* Staff filter select */}
           {!isStaffDashboard && (
-            <div className="relative h-9">
+            <div className="relative h-9 w-full sm:w-auto">
               <select
                 value={bookingStaffFilter}
                 onChange={(e) => setBookingStaffFilter(e.target.value)}
-                className="appearance-none bg-white border border-[#111111] rounded-lg px-4 h-full pr-8 text-xs font-poppins font-medium text-[#111111] focus:outline-none cursor-pointer hover:bg-neutral-50 transition-all"
+                className="w-full appearance-none bg-white border border-[#D5D2C9] rounded-xl px-4 h-full pr-8 text-xs font-poppins font-medium text-[#111111] focus:outline-none focus:border-[#2E9DA7] cursor-pointer hover:bg-neutral-50 transition-all"
               >
                 <option value="All Staff">All Staff</option>
                 <option value="Anna">Anna</option>
@@ -201,10 +201,10 @@ export default function DashboardBookingsList({
           )}
 
           {/* Date Filter Button */}
-          <div className="relative">
+          <div className="relative h-9 col-span-2 sm:col-span-1 sm:w-auto">
             <button
               onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-              className="h-9 px-4 bg-white border border-[#D5D2C9] hover:bg-neutral-50 rounded-[12px] text-xs font-medium font-poppins text-[#111111] flex items-center justify-center gap-2 transition-all shrink-0 cursor-pointer"
+              className="w-full h-full px-4 bg-white border border-[#D5D2C9] hover:bg-neutral-50 rounded-xl text-xs font-medium font-poppins text-[#111111] flex items-center justify-center gap-2 transition-all shrink-0 cursor-pointer"
             >
               <span>{selectedDate ? selectedDate : "Filter Date"}</span>
               <HugeiconsIcon icon={FilterHorizontalIcon} className="w-4 h-4 text-[#111111]" />
@@ -213,7 +213,7 @@ export default function DashboardBookingsList({
             {/* Custom Date Picker Modal Popup */}
             {isDatePickerOpen && (
               <div 
-                className="absolute top-11 left-0 bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.1)] border border-[#E8E8E6] p-6 z-50 w-[360px] animate-fadeIn"
+                className="absolute top-11 left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.1)] border border-[#E8E8E6] p-6 z-50 w-[calc(100vw-32px)] sm:w-[360px] max-w-[360px] animate-fadeIn"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-center w-full pb-3">

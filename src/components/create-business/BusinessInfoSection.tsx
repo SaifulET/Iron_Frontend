@@ -44,38 +44,38 @@ export default function BusinessInfoSection({
 
       <div className="flex flex-col gap-4 w-full">
         {/* Business name */}
-        <div className="flex flex-col md:flex-row justify-start md:items-center gap-2">
-          <label className="text-xs font-semibold text-[#1A1A1A] w-[180px] shrink-0">Business name</label>
+        <div className="flex flex-col gap-2 w-full">
+          <label className="text-xs font-semibold text-[#1A1A1A]">Business name</label>
           <input
             type="text"
             placeholder="Salon Cyprus"
             value={businessName}
             onChange={(e) => setBusinessName(e.target.value)}
-            className="flex-1 h-9 bg-white border border-[#D3D1C7] rounded-lg px-3 text-xs font-poppins focus:outline-none focus:border-black"
+            className="w-full h-11 bg-white border border-[#D5D2C9] rounded-lg px-3 text-xs font-poppins focus:outline-none focus:border-black"
           />
         </div>
 
         {/* Registration number */}
-        <div className="flex flex-col md:flex-row justify-start md:items-center gap-2">
-          <label className="text-xs font-semibold text-[#1A1A1A] w-[180px] shrink-0">Business registration number</label>
+        <div className="flex flex-col gap-2 w-full">
+          <label className="text-xs font-semibold text-[#1A1A1A]">Business registration number</label>
           <input
             type="text"
             placeholder="e.g. HE 123455"
             value={regNumber}
             onChange={(e) => setRegNumber(e.target.value)}
-            className="flex-1 h-9 bg-white border border-[#D3D1C7] rounded-lg px-3 text-xs font-poppins focus:outline-none focus:border-black"
+            className="w-full h-11 bg-white border border-[#D5D2C9] rounded-lg px-3 text-xs font-poppins focus:outline-none focus:border-black"
           />
         </div>
 
         {/* Phone number */}
-        <div className="flex flex-col md:flex-row justify-start md:items-start gap-2">
-          <label className="text-xs font-semibold text-[#1A1A1A] w-[180px] shrink-0 pt-2">Phone number</label>
-          <div className="flex-1 flex h-9 relative">
+        <div className="flex flex-col gap-2 w-full">
+          <label className="text-xs font-semibold text-[#1A1A1A]">Phone number</label>
+          <div className="flex h-11 w-full relative">
             {/* Flag Selector Trigger */}
             <button
               type="button"
               onClick={() => setShowCountryDropdown(!showCountryDropdown)}
-              className="box-border flex flex-row items-center justify-center gap-1.5 px-3 w-[96px] h-9 bg-white border border-[#E8E8E4] rounded-l-lg hover:bg-neutral-50 transition-colors select-none text-xs"
+              className="box-border flex flex-row items-center justify-center gap-1.5 px-3 w-[96px] h-11 bg-white border border-[#D5D2C9] rounded-l-lg hover:bg-neutral-50 transition-colors select-none text-xs"
             >
               <img src={`https://flagcdn.com/w40/${phoneFlag}.png`} className="w-[26px] h-[14px] object-cover rounded-sm shrink-0 border border-neutral-100" alt="flag" />
               <span className="text-[#1C1C1A]/50 font-medium">{phoneCode}</span>
@@ -84,7 +84,7 @@ export default function BusinessInfoSection({
 
             {/* Country dropdown */}
             {showCountryDropdown && (
-              <div className="absolute top-10 left-0 bg-white border border-neutral-200 rounded-lg shadow-lg z-20 w-[180px] p-1">
+              <div className="absolute top-12 left-0 bg-white border border-neutral-200 rounded-lg shadow-lg z-20 w-[180px] p-1">
                 {countries.map((c) => (
                   <button
                     key={c.code}
@@ -110,7 +110,7 @@ export default function BusinessInfoSection({
               placeholder="1111111111"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              className="flex-1 h-9 bg-white border border-[#E8E8E4] border-l-0 rounded-r-lg px-3 text-xs font-poppins focus:outline-none focus:border-black"
+              className="flex-1 h-11 bg-white border border-[#D5D2C9] border-l-0 rounded-r-lg px-3 text-xs font-poppins focus:outline-none focus:border-black"
             />
           </div>
         </div>

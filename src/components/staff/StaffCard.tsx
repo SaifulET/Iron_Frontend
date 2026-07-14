@@ -97,16 +97,14 @@ export default function StaffCard({ staff, onToggleStatus, onEdit }: StaffCardPr
         </div>
 
         {/* Edit button */}
-        {staff.role !== "Owner" && staff.role !== "Supervisor" && (
-          <button
-            type="button"
-            onClick={() => onEdit(staff.id)}
-            className="flex flex-row items-center justify-center px-3 py-1 gap-1 h-6 bg-[#111111] hover:bg-black text-white rounded-full text-[11px] font-medium transition-all cursor-pointer"
-          >
-            <HugeiconsIcon icon={PencilEdit02Icon} className="w-3 h-3 text-white" />
-            <span>Edit</span>
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => onEdit(staff.id)}
+          className="flex flex-row items-center justify-center px-3 py-1 gap-1 h-6 bg-[#111111] hover:bg-black text-white rounded-full text-[11px] font-medium transition-all cursor-pointer"
+        >
+          <HugeiconsIcon icon={PencilEdit02Icon} className="w-3 h-3 text-white" />
+          <span>Edit</span>
+        </button>
       </div>
     </div>
   );
