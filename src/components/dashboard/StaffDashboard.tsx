@@ -290,6 +290,7 @@ export default function StaffDashboard() {
           setClientLastName={setClientLastName}
           setClientPhone={setClientPhone}
           setClientTagState={() => {}}
+          isStaffDashboard={true}
         />
       );
     }
