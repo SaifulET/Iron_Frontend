@@ -589,7 +589,7 @@ export default function DashboardBookingForm({
           </div>
 
           {/* 7. City for this Service */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 hidden">
             <span className="font-poppins text-xs font-semibold text-[#5F5E5A] tracking-[0.06em] uppercase">
               City for this service
             </span>
