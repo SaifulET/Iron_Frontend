@@ -772,6 +772,7 @@ export default function DashboardBookingForm({
                         .toUpperCase()
                         .substring(0, 2) || "NK",
                       isNew: true,
+                      isManual: true,
                       bookingId: `#BK-00${Math.floor(Math.random() * 90) + 10}`,
                       date: newBookingDate,
                       time: newBookingTime,
