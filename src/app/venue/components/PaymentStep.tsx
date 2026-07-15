@@ -49,7 +49,7 @@ export default function PaymentStep({
               </button>
               <button
                 onClick={() => setIsReplacingCard(true)}
-                className="px-5 py-2.5 bg-[#8EBAC5] text-white rounded-lg text-sm font-semibold hover:opacity-90 cursor-pointer transition-opacity"
+                className="px-5 py-2.5 bg-[#2E9DA7] text-white rounded-lg text-sm font-semibold hover:opacity-90 cursor-pointer transition-opacity"
               >
                 Replace card
               </button>
@@ -124,7 +124,7 @@ export default function PaymentStep({
 
             {/* Save card checkbox */}
             <div className="flex items-center gap-2.5 mt-2">
-              <input type="checkbox" id="save-card-check" className="w-4 h-4 border border-neutral-300 rounded cursor-pointer accent-[#8EBAC5]" />
+              <input type="checkbox" id="save-card-check" className="w-4 h-4 border border-neutral-300 rounded cursor-pointer accent-[#2E9DA7]" />
               <label htmlFor="save-card-check" className="text-xs font-semibold text-[#5F5E5A] cursor-pointer">Save information</label>
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function PaymentStep({
               </button>
               <button
                 onClick={() => setIsReplacingCard(false)}
-                className="px-5 py-2.5 bg-[#8EBAC5] text-white rounded-lg text-sm font-semibold hover:opacity-90 cursor-pointer transition-opacity"
+                className="px-5 py-2.5 bg-[#2E9DA7] text-white rounded-lg text-sm font-semibold hover:opacity-90 cursor-pointer transition-opacity"
               >
                 Save card
               </button>

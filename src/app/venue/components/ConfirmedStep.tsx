@@ -33,7 +33,7 @@ export default function ConfirmedStep({
 
       {/* Celebration Header */}
       <div className="flex flex-col items-center gap-3 text-center w-full">
-        <div className="w-[76px] h-[76px] flex items-center justify-center p-3.5 rounded-full border-2 border-[#3586B8] shrink-0" style={{ background: "linear-gradient(0deg, rgba(12, 192, 223, 0.2), rgba(12, 192, 223, 0.2)), #8EBAC5" }}>
+        <div className="w-[76px] h-[76px] flex items-center justify-center p-3.5 rounded-full border-2 border-[#3586B8] shrink-0" style={{ background: "linear-gradient(0deg, rgba(12, 192, 223, 0.2), rgba(12, 192, 223, 0.2)), #2E9DA7" }}>
           <HugeiconsIcon icon={Tick01Icon} size={48} className="text-[#1A5A60] shrink-0" />
         </div>
         <div className="pt-3 pb-0 flex flex-col items-center w-full">

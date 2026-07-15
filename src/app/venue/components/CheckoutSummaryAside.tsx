@@ -267,7 +267,7 @@ export default function CheckoutSummaryAside({
             setBookingStep("confirmed");
           }
         }}
-        className="w-full h-12 bg-[#8EBAC5] text-white font-poppins font-semibold text-base rounded-[12px] hover:opacity-95 transition-opacity cursor-pointer flex items-center justify-center gap-2 shadow-sm"
+        className="w-full h-12 bg-[#2E9DA7] text-white font-poppins font-semibold text-base rounded-[12px] hover:opacity-95 transition-opacity cursor-pointer flex items-center justify-center gap-2 shadow-sm"
       >
         <span>{bookingStep === "payment" ? "Confirm" : "Continue →"}</span>
       </button>

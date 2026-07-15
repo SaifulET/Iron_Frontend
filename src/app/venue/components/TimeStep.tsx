@@ -119,7 +119,7 @@ export default function TimeStep({
                 }}
                 className={`aspect-square flex flex-col items-center justify-center rounded-xl text-sm font-semibold transition-all cursor-pointer border ${
                   isSelected
-                    ? "bg-[#8EBAC5] border-[#8EBAC5] text-white"
+                    ? "bg-[#2E9DA7] border-[#2E9DA7] text-white"
                     : isToday
                     ? "bg-[#D1D1D1] border-neutral-300 text-black hover:bg-neutral-200"
                     : day.weekend
