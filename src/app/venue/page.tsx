@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import Image from "next/image";
 import { mockVenueDetails, ServiceItem } from "./mockVenue";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowLeft01Icon, ArrowLeft02Icon, ArrowRight01Icon, ArrowRight02Icon, Clock04Icon, Location05Icon, SquareLock01Icon, InformationCircleIcon, Location01Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
+import { ArrowLeft01Icon, ArrowLeft02Icon, ArrowRight01Icon, ArrowRight02Icon, Clock04Icon, Location05Icon, SquareLock01Icon, InformationCircleIcon, Location01Icon, Cancel01Icon, FavouriteIcon } from "@hugeicons/core-free-icons";
 import ServiceCard, { Recommendation } from "@/components/ServiceCard";
 import Carousel from "@/components/Carousel";
 import AddonsStep from "./components/AddonsStep";
@@ -125,7 +125,92 @@ function VenueDetailsContent() {
   // Dynamic user logged in state toggle (checkbox/button for demo representation)
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("ENG");
-  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  
+  const heroScrollRef = React.useRef<HTMLDivElement>(null);
+  const [showLeftHeroArrow, setShowLeftHeroArrow] = useState(false);
+  const [showRightHeroArrow, setShowRightHeroArrow] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [showCopiedToast, setShowCopiedToast] = useState(false);
+  const [sortBy, setSortBy] = useState<"Latest" | "Highest Rated" | "Lowest Rated">("Latest");
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
+
+  const sortedReviews = React.useMemo(() => {
+    const list = [...mockVenueDetails.reviews];
+    if (sortBy === "Highest Rated") {
+      return list.sort((a, b) => b.rating - a.rating);
+    } else if (sortBy === "Lowest Rated") {
+      return list.sort((a, b) => a.rating - b.rating);
+    }
+    return list;
+  }, [sortBy]);
+
+  // Mouse Drag States for touch emulation on desktop
+  const [isDragActive, setIsDragActive] = useState(false);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [dragScrollLeft, setDragScrollLeft] = useState(0);
+
+  const handleHeroMouseDown = (e: React.MouseEvent) => {
+    if (!heroScrollRef.current) return;
+    setIsDragActive(true);
+    setDragStartX(e.pageX - heroScrollRef.current.offsetLeft);
+    setDragScrollLeft(heroScrollRef.current.scrollLeft);
+  };
+
+  const handleHeroMouseMove = (e: React.MouseEvent) => {
+    if (!isDragActive || !heroScrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - heroScrollRef.current.offsetLeft;
+    const walk = (x - dragStartX) * 1.5; // adjust scroll speed
+    heroScrollRef.current.scrollLeft = dragScrollLeft - walk;
+  };
+
+  const handleHeroMouseUpOrLeave = () => {
+    setIsDragActive(false);
+  };
+
+  const handleShare = async () => {
+    if (typeof window !== "undefined") {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: mockVenueDetails.name,
+            text: `Check out ${mockVenueDetails.name} on Iron`,
+            url: window.location.href,
+          });
+        } catch (err) {
+          console.log("Sharing failed", err);
+        }
+      } else {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          setShowCopiedToast(true);
+          setTimeout(() => setShowCopiedToast(false), 2000);
+        } catch (err) {
+          console.error("Clipboard copy failed", err);
+        }
+      }
+    }
+  };
+
+  const handleHeroScroll = () => {
+    if (!heroScrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = heroScrollRef.current;
+    setShowLeftHeroArrow(scrollLeft > 10);
+    setShowRightHeroArrow(scrollLeft + clientWidth < scrollWidth - 10);
+  };
+
+  const scrollHeroLeft = () => {
+    if (!heroScrollRef.current) return;
+    const { clientWidth } = heroScrollRef.current;
+    heroScrollRef.current.scrollBy({ left: -clientWidth, behavior: "smooth" });
+  };
+
+  const scrollHeroRight = () => {
+    if (!heroScrollRef.current) return;
+    const { clientWidth } = heroScrollRef.current;
+    heroScrollRef.current.scrollBy({ left: clientWidth, behavior: "smooth" });
+  };
+
   const heroImages = [
     "/image/imgOfService.png",
     "/img/authImg.png",
@@ -243,40 +328,63 @@ function VenueDetailsContent() {
         <div className="w-full relative group">
           {/* Inner Image Container (rounded and overflow-hidden) */}
           <div className="w-full h-[320px] sm:h-[450px] relative rounded-2xl overflow-hidden shadow-md border border-neutral-100">
-            <Image
-              src={heroImages[currentHeroIndex]}
-              alt={mockVenueDetails.name}
-              fill
-              className="object-cover transition-all duration-500 ease-in-out"
-              priority
-            />
+            <div 
+              ref={heroScrollRef}
+              onScroll={handleHeroScroll}
+              onMouseDown={handleHeroMouseDown}
+              onMouseMove={handleHeroMouseMove}
+              onMouseUp={handleHeroMouseUpOrLeave}
+              onMouseLeave={handleHeroMouseUpOrLeave}
+              className={`w-full h-full flex flex-nowrap overflow-x-auto scrollbar-hide select-none ${
+                isDragActive ? "cursor-grabbing" : "cursor-grab snap-x snap-mandatory scroll-smooth"
+              }`}
+            >
+              {heroImages.map((img, idx) => (
+                <div key={idx} className="w-full h-full shrink-0 snap-start relative">
+                  <Image
+                    src={img}
+                    alt={`${mockVenueDetails.name} ${idx + 1}`}
+                    fill
+                    className="object-cover pointer-events-none"
+                    priority={idx === 0}
+                  />
+                </div>
+              ))}
+            </div>
             {/* See all images button */}
-            <button className="absolute right-4 bottom-4 bg-[#FFFFFF] border border-[#D3D3D3] rounded-xl px-4 py-2 flex items-center justify-center gap-1.5 shadow-md hover:bg-neutral-50 transition-colors cursor-pointer z-10 text-[14.2px] font-medium font-inter text-[#0D0D0D]">
+            <button 
+              onClick={() => scrollToSection("gallery")}
+              className="absolute right-4 bottom-4 bg-[#FFFFFF] border border-[#D3D3D3] rounded-xl px-4 py-2 flex items-center justify-center gap-1.5 shadow-md hover:bg-neutral-50 transition-colors cursor-pointer z-10 text-[14.2px] font-medium font-inter text-[#0D0D0D]"
+            >
               <span>See all images</span>
             </button>
           </div>
 
           {/* Left Navigation Arrow (Outside) */}
-          <button
-            onClick={() => setCurrentHeroIndex((prev) => (prev === 0 ? heroImages.length - 1 : prev - 1))}
-            className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md hover:bg-neutral-50 active:scale-95 transition-all cursor-pointer opacity-0 group-hover:opacity-100 z-20 text-neutral-800 border border-neutral-100"
-            aria-label="Previous image"
-          >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
+          {showLeftHeroArrow && (
+            <button
+              onClick={scrollHeroLeft}
+              className="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md hover:bg-neutral-50 active:scale-95 transition-all cursor-pointer opacity-0 group-hover:opacity-100 z-20 text-neutral-800 border border-neutral-100"
+              aria-label="Previous image"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          )}
 
           {/* Right Navigation Arrow (Outside) */}
-          <button
-            onClick={() => setCurrentHeroIndex((prev) => (prev === heroImages.length - 1 ? 0 : prev + 1))}
-            className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md hover:bg-neutral-50 active:scale-95 transition-all cursor-pointer opacity-100 sm:opacity-0 group-hover:opacity-100 z-20 text-neutral-800 border border-neutral-100"
-            aria-label="Next image"
-          >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+          {showRightHeroArrow && (
+            <button
+              onClick={scrollHeroRight}
+              className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md hover:bg-neutral-50 active:scale-95 transition-all cursor-pointer opacity-100 sm:opacity-0 group-hover:opacity-100 z-20 text-neutral-800 border border-neutral-100"
+              aria-label="Next image"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          )}
         </div>
 
         {/* 3. Salon Header Info (Title, Rating, Category) */}
@@ -313,11 +421,26 @@ function VenueDetailsContent() {
 
           {/* Share (Download) and Favorite buttons */}
           <div className="flex items-center gap-3 self-end sm:self-start">
-            <button className="w-12 h-12 rounded-full bg-white border border-[#D3D3D3] flex items-center justify-center shadow-sm hover:bg-neutral-50 transition-colors cursor-pointer">
+            <button 
+              onClick={handleShare}
+              className="w-12 h-12 rounded-full bg-white border border-[#D3D3D3] flex items-center justify-center shadow-sm hover:bg-neutral-50 transition-colors cursor-pointer text-[#1C1B1C]"
+              title="Share / Copy Link"
+            >
               <img src="/Icons/downloadIcon.svg" alt="Download/Share" className="w-5 h-5 object-contain" />
             </button>
-            <button className="w-12 h-12 rounded-full bg-white border border-[#D3D3D3] flex items-center justify-center shadow-sm hover:bg-neutral-50 transition-colors cursor-pointer">
-              <img src="/Icons/favouriteIcon.svg" alt="Favorite" className="w-5 h-5 object-contain" />
+            <button 
+              onClick={() => setIsFavorite(!isFavorite)}
+              className={`w-12 h-12 rounded-full border flex items-center justify-center shadow-sm transition-all cursor-pointer ${
+                isFavorite 
+                  ? "bg-[#FFEBEB] border-[#FFC1C1] text-[#DE350B]" 
+                  : "bg-white border-[#D3D3D3] text-[#1C1B1C] hover:bg-neutral-50"
+              }`}
+              title="Add to Favorites"
+            >
+              <HugeiconsIcon 
+                icon={FavouriteIcon} 
+                className={`w-5 h-5 transition-colors ${isFavorite ? "text-[#DE350B] fill-[#DE350B]" : "text-neutral-800"}`} 
+              />
             </button>
           </div>
         </div>
@@ -652,16 +775,40 @@ function VenueDetailsContent() {
                       </h3>
 
                       {/* Sort Selector */}
-                      <div className="flex items-center gap-2 w-[165px] h-[28px]">
-                        <div className="flex items-center justify-center px-2 py-0.5 w-[65px] h-6 rounded-full">
+                      <div className="flex items-center gap-2 h-[28px] relative">
+                        <div className="flex items-center justify-center px-2 py-0.5 w-[65px] h-6 rounded-full shrink-0">
                           <span className="font-poppins text-sm text-[#4E5F78]">Sort by</span>
                         </div>
-                        <div className="flex items-center justify-center gap-1 px-2 py-0.5 w-[92px] h-7 border border-[#111111] rounded-full bg-white cursor-pointer hover:bg-neutral-50 transition-colors">
-                          <span className="font-poppins text-sm text-[#111111]">Latest</span>
-                          <svg className="w-4 h-4 text-[#141B34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <button 
+                          onClick={() => setShowSortDropdown(!showSortDropdown)}
+                          className="flex items-center justify-center gap-1 px-3 py-0.5 min-w-[100px] h-7 border border-[#111111] rounded-full bg-white cursor-pointer hover:bg-neutral-50 transition-colors text-sm font-poppins text-[#111111] relative z-10 whitespace-nowrap"
+                        >
+                          <span>{sortBy}</span>
+                          <svg className="w-4 h-4 text-[#141B34] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                           </svg>
-                        </div>
+                        </button>
+                        
+                        {showSortDropdown && (
+                          <>
+                            {/* Backdrop to close dropdown when clicking outside */}
+                            <div className="fixed inset-0 z-10" onClick={() => setShowSortDropdown(false)} />
+                            <div className="absolute right-0 top-8 mt-1 w-[140px] bg-white border border-[#ACAAB4]/40 rounded-xl shadow-lg z-20 overflow-hidden py-1">
+                              {(["Latest", "Highest Rated", "Lowest Rated"] as const).map((option) => (
+                                <button
+                                  key={option}
+                                  onClick={() => {
+                                    setSortBy(option);
+                                    setShowSortDropdown(false);
+                                  }}
+                                  className="w-full text-left px-4 py-2 text-xs font-poppins hover:bg-neutral-100 transition-colors text-[#0d0d0d] whitespace-nowrap"
+                                >
+                                  {option}
+                                </button>
+                              ))}
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
 
@@ -680,7 +827,7 @@ function VenueDetailsContent() {
 
                     {/* Reviews stack */}
                     <div className="flex flex-col py-3 gap-6 w-full">
-                      {mockVenueDetails.reviews.map((review) => (
+                      {sortedReviews.map((review) => (
                         <div key={review.id} className="flex flex-col items-start py-5 gap-2 w-full border-b border-neutral-100">
 
                           {/* Author info row */}
@@ -760,12 +907,6 @@ function VenueDetailsContent() {
                               <div className="w-[117.87px] h-[117.87px] rounded-full overflow-hidden relative">
                                 <Image src={member.avatar} alt={member.name} fill className="object-cover" />
                               </div>
-                            </div>
-
-                            {/* Rating Badge Overlay absolute positioned bottom-center */}
-                            <div className="box-border flex items-center justify-center gap-1 absolute left-1/2 -translate-x-1/2 -bottom-2 w-[62.13px] h-[30.13px] bg-white border border-[#DBDDFF] rounded-full shadow-sm">
-                              <img src="/Icons/rattingfull.svg" alt="star" className="w-4 h-4 object-contain" />
-                              <span className="font-inter font-semibold text-[15px] leading-5 text-[#0D0D0D]">5.0</span>
                             </div>
                           </div>
 
@@ -1246,7 +1387,7 @@ function VenueDetailsContent() {
                 </button>
 
                 {/* Breadcrumbs List */}
-                <div className="flex items-center gap-3 text-sm font-medium font-poppins">
+                <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-medium font-poppins overflow-x-auto scrollbar-hide whitespace-nowrap max-w-[calc(100%-100px)] sm:max-w-none pr-4">
                   <span className="text-[#ACAAB4] cursor-pointer" onClick={() => setBookingStep(null)}>Services</span>
                   <HugeiconsIcon icon={ArrowRight01Icon} size={14} className="text-[#ACAAB4]" />
                   
@@ -1343,6 +1484,11 @@ function VenueDetailsContent() {
               />
             )}
 
+          {showCopiedToast && (
+            <div className="fixed bottom-6 right-6 bg-[#1C1B1C] text-white px-4 py-2 rounded-xl shadow-lg z-50 font-inter text-sm flex items-center gap-2">
+              <span>✓ Link copied to clipboard!</span>
+            </div>
+          )}
           </div>
         </div>
       )}

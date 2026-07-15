@@ -516,6 +516,7 @@ export default function StaffStaffList() {
               staff={staff}
               onToggleStatus={toggleStaffStatus}
               onEdit={handleEditStaff}
+              canEdit={staff.role !== "Owner" && staff.role !== "Supervisor"}
             />
           ))}
         </div>

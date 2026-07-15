@@ -37,7 +37,7 @@ export default function CheckoutSummaryAside({
   setBookingStep,
 }: CheckoutSummaryAsideProps) {
   return (
-    <aside className="w-full lg:w-[537px] bg-white border border-neutral-200 rounded-xl p-8 flex flex-col gap-5 lg:sticky lg:top-28">
+    <aside className="w-full lg:w-[537px] bg-white border border-neutral-200 rounded-xl p-4 sm:p-8 flex flex-col gap-5 lg:sticky lg:top-28">
       {/* Business Overview Header */}
       <div className="flex items-center gap-4 border-b border-[#E5E5E5] pb-5">
         <div className="w-16 h-16 bg-neutral-200 rounded overflow-hidden relative shrink-0">

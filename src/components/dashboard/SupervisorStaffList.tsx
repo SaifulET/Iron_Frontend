@@ -515,6 +515,7 @@ export default function SupervisorStaffList() {
               staff={staff}
               onToggleStatus={toggleStaffStatus}
               onEdit={handleEditStaff}
+              canEdit={staff.role !== "Owner"}
             />
           ))}
         </div>

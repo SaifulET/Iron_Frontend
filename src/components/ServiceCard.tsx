@@ -43,7 +43,7 @@ export default function ServiceCard({
 }: ServiceCardProps) {
   const router = useRouter();
   return (
-    <div 
+    <div
       onClick={() => router.push(`/venue?id=${rec.id}`)}
       className={`${className} h-full bg-white border border-[#E8E6FF] rounded-2xl overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col group font-poppins shrink-0 cursor-pointer`}
     >

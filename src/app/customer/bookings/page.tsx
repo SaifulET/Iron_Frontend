@@ -26,25 +26,7 @@ export default function BookingsPage() {
   const [cancelBookingId, setCancelBookingId] = useState<string | null>(null);
 
   // Collapsible Policy State (stores boolean for each booking ID)
-  const [openPolicies, setOpenPolicies] = useState<Record<string, boolean>>({
-    "booking-1": true,
-    "booking-2": true,
-    "booking-3": true,
-    "booking-4": true,
-    "booking-5": true,
-    "booking-6": true,
-    "booking-noshow-1": true,
-    "booking-noshow-2": true,
-    "booking-noshow-3": true,
-    "booking-noshow-4": true,
-    "booking-noshow-5": true,
-    "booking-canceled-1": true,
-    "booking-canceled-2": true,
-    "booking-canceled-3": true,
-    "booking-canceled-4": true,
-    "booking-canceled-5": true,
-    "booking-canceled-6": true,
-  });
+  const [openPolicies, setOpenPolicies] = useState<Record<string, boolean>>({});
 
   // Local state for review form submission simulation
   const [submittedReviews, setSubmittedReviews] = useState<Record<string, { stars: number; text: string; date: string }>>({});

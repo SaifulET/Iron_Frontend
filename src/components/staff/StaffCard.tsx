@@ -9,9 +9,10 @@ interface StaffCardProps {
   staff: Staff;
   onToggleStatus: (id: number) => void;
   onEdit: (id: number) => void;
+  canEdit?: boolean;
 }
 
-export default function StaffCard({ staff, onToggleStatus, onEdit }: StaffCardProps) {
+export default function StaffCard({ staff, onToggleStatus, onEdit, canEdit = true }: StaffCardProps) {
   return (
     <div
       className="box-sizing-border-box bg-white border border-[#E2E8F0] rounded-[14px] p-6 flex flex-col items-center text-center shadow-[0px_1px_3px_rgba(0,0,0,0.1),_0px_1px_2px_-1px_rgba(0,0,0,0.1)] w-full max-w-[352.33px] min-h-[251.5px] relative"
@@ -20,11 +21,11 @@ export default function StaffCard({ staff, onToggleStatus, onEdit }: StaffCardPr
       <div className="absolute right-6 top-6">
         <button
           type="button"
-          disabled={staff.role === "Owner" || staff.role === "Supervisor"}
+          disabled={staff.role === "Owner" || staff.role === "Supervisor" || !canEdit}
           onClick={() => onToggleStatus(staff.id)}
           className={`w-[38px] h-[21px] rounded-full p-[3px] transition-colors duration-200 focus:outline-none flex items-center ${
             staff.status === "Active" ? "bg-[#0F6E56]" : "bg-neutral-300"
-          } ${staff.role === "Owner" || staff.role === "Supervisor" ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
+          } ${staff.role === "Owner" || staff.role === "Supervisor" || !canEdit ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
         >
           <div
             className={`w-[15px] h-[15px] bg-white rounded-full transition-transform duration-200 ${
@@ -56,18 +57,21 @@ export default function StaffCard({ staff, onToggleStatus, onEdit }: StaffCardPr
         </h3>
       </div>
 
+      {/* Role */}
       <div className="flex flex-col items-center pb-1">
         <p className="font-poppins font-normal text-xs leading-[20px] text-[#62748E]">
           {staff.subRole}
         </p>
       </div>
 
+      {/* Assigned services */}
       <div className="flex flex-col items-center pb-1">
         <p className="font-poppins font-medium text-xs leading-[20px] text-[#BB4D00]">
           {staff.servicesAssigned}
         </p>
       </div>
 
+      {/* Schedule */}
       <div className="flex flex-col items-center pb-4">
         <p className="font-poppins font-normal text-[11px] leading-[18px] text-[#90A1B9]">
           {staff.schedule}
@@ -97,14 +101,16 @@ export default function StaffCard({ staff, onToggleStatus, onEdit }: StaffCardPr
         </div>
 
         {/* Edit button */}
-        <button
-          type="button"
-          onClick={() => onEdit(staff.id)}
-          className="flex flex-row items-center justify-center px-3 py-1 gap-1 h-6 bg-[#111111] hover:bg-black text-white rounded-full text-[11px] font-medium transition-all cursor-pointer"
-        >
-          <HugeiconsIcon icon={PencilEdit02Icon} className="w-3 h-3 text-white" />
-          <span>Edit</span>
-        </button>
+        {canEdit && (
+          <button
+            type="button"
+            onClick={() => onEdit(staff.id)}
+            className="flex flex-row items-center justify-center px-3 py-1 gap-1 h-6 bg-[#111111] hover:bg-black text-white rounded-full text-[11px] font-medium transition-all cursor-pointer"
+          >
+            <HugeiconsIcon icon={PencilEdit02Icon} className="w-3 h-3 text-white" />
+            <span>Edit</span>
+          </button>
+        )}
       </div>
     </div>
   );
