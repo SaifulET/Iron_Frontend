@@ -4,7 +4,11 @@ import React from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
 
-export default function SuperAdminAttentionSection() {
+interface SuperAdminAttentionSectionProps {
+  setActiveTab?: (tab: string) => void;
+}
+
+export default function SuperAdminAttentionSection({ setActiveTab }: SuperAdminAttentionSectionProps) {
   const cards = [
     {
       title: "Pending Applications",
@@ -12,7 +16,8 @@ export default function SuperAdminAttentionSection() {
       sub: "Glam Studio Nicosia +5 more awaiting review",
       linkText: "Review",
       bg: "bg-[#FFF2EB]",
-      textColor: "text-[#E05E2B]"
+      textColor: "text-[#E05E2B]",
+      targetTab: "Businesses"
     },
     {
       title: "Flagged Businesses",
@@ -20,7 +25,8 @@ export default function SuperAdminAttentionSection() {
       sub: "TopCut Barbers +5 more Businesses flagged",
       linkText: "Review",
       bg: "bg-[#FFEBEB]",
-      textColor: "text-[#E24B4A]"
+      textColor: "text-[#E24B4A]",
+      targetTab: "Businesses"
     },
     {
       title: "Unread Support Messages",
@@ -28,7 +34,8 @@ export default function SuperAdminAttentionSection() {
       sub: "You have messages that needs attention",
       linkText: "Open inbox",
       bg: "bg-[#EEF2FF]",
-      textColor: "text-[#4338CA]"
+      textColor: "text-[#4338CA]",
+      targetTab: "Support"
     },
     {
       title: "Pending Payouts",
@@ -36,7 +43,8 @@ export default function SuperAdminAttentionSection() {
       sub: "18 Business due 1 July 2026",
       linkText: "Process",
       bg: "bg-[#FEF9C3]/70",
-      textColor: "text-[#854D0E]"
+      textColor: "text-[#854D0E]",
+      targetTab: "Finance"
     }
   ];
 
@@ -58,7 +66,10 @@ export default function SuperAdminAttentionSection() {
               <span className="font-sans font-normal text-xs text-gray-500 leading-4">{card.sub}</span>
             </div>
 
-            <button className="flex items-center gap-1.5 text-xs font-semibold text-[#195156] mt-4 hover:underline self-start">
+            <button
+              onClick={() => setActiveTab?.(card.targetTab)}
+              className="flex items-center gap-1.5 text-xs font-semibold text-[#195156] mt-4 hover:underline self-start cursor-pointer"
+            >
               <span>{card.linkText}</span>
               <HugeiconsIcon icon={ArrowRight02Icon} className="w-4 h-4" />
             </button>

@@ -8,7 +8,11 @@ import SuperAdminCityCoverage from "../analytics/SuperAdminCityCoverage";
 import SuperAdminTopServices from "./SuperAdminTopServices";
 import SuperAdminRecentActivity from "./SuperAdminRecentActivity";
 
-export default function SuperAdminDashboardContent() {
+interface SuperAdminDashboardContentProps {
+  setActiveTab?: (tab: string) => void;
+}
+
+export default function SuperAdminDashboardContent({ setActiveTab }: SuperAdminDashboardContentProps) {
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedDay, setSelectedDay] = useState("All");
   const [selectedPeriod, setSelectedPeriod] = useState("Month");
@@ -92,7 +96,7 @@ export default function SuperAdminDashboardContent() {
       <SuperAdminStatsGrid />
 
       {/* 3. Needs your attention */}
-      <SuperAdminAttentionSection />
+      <SuperAdminAttentionSection setActiveTab={setActiveTab} />
 
       {/* 4. Two columns split */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">

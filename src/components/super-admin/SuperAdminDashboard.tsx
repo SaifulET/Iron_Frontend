@@ -53,7 +53,7 @@ export default function SuperAdminDashboard() {
         }`}
       >
         {activeTab === "Dashboard" ? (
-          <SuperAdminDashboardContent />
+          <SuperAdminDashboardContent setActiveTab={setActiveTab} />
         ) : activeTab === "Businesses" ? (
           <SuperAdminBusinesses />
         ) : activeTab === "Customers" ? (
