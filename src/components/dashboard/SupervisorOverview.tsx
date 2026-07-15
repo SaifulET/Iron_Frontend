@@ -13,6 +13,9 @@ import {
 export default function SupervisorOverview() {
   const [timeFilter, setTimeFilter] = useState("Today");
   const [scheduleFilter, setScheduleFilter] = useState("All");
+  const [customStartDate, setCustomStartDate] = useState("");
+  const [customEndDate, setCustomEndDate] = useState("");
+  const [showCustomPicker, setShowCustomPicker] = useState(false);
 
   const scheduleData = initialScheduleData;
   const timelineEvents = initialTimelineEvents;
@@ -24,22 +27,84 @@ export default function SupervisorOverview() {
       <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6">
 
         {/* Time Toggle Buttons Row */}
-        <div className="flex justify-end mb-6 mt-4">
+        <div className="flex justify-end mb-6 mt-4 relative">
           <div className="bg-white border border-[#E2E8F0] p-1 rounded-xl shadow-sm flex items-center gap-1">
             {["Today", "7D", "30D", "Custom"].map((tab) => (
               <button
                 key={tab}
-                onClick={() => setTimeFilter(tab)}
+                onClick={() => {
+                  setTimeFilter(tab);
+                  if (tab === "Custom") {
+                    setShowCustomPicker(prev => !prev);
+                  } else {
+                    setShowCustomPicker(false);
+                  }
+                }}
                 className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
                   timeFilter === tab
                     ? "bg-[#F1F5F9] text-[#0F172A] shadow-sm"
                     : "text-neutral-500 hover:text-neutral-900"
                 }`}
               >
-                {tab}
+                {tab === "Custom" && customStartDate && customEndDate
+                  ? `Custom (${new Date(customStartDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})} - ${new Date(customEndDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})})`
+                  : tab}
               </button>
             ))}
           </div>
+
+          {/* Custom Date Range Picker Dropdown */}
+          {showCustomPicker && (
+            <div className="absolute right-0 top-11 bg-white border border-[#E2E8F0] rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-4 z-40 w-72 flex flex-col gap-3 font-poppins text-left">
+              <span className="text-[11px] font-bold text-[#888780] uppercase tracking-wider">Select Date Range</span>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs text-[#5F5E5A] font-medium">Start Date</label>
+                <input
+                  type="date"
+                  value={customStartDate}
+                  onChange={(e) => setCustomStartDate(e.target.value)}
+                  className="border border-[#ECEBEF] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2E9DA7] text-[#0D0D0D] bg-white cursor-pointer"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs text-[#5F5E5A] font-medium">End Date</label>
+                <input
+                  type="date"
+                  value={customEndDate}
+                  onChange={(e) => setCustomEndDate(e.target.value)}
+                  className="border border-[#ECEBEF] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2E9DA7] text-[#0D0D0D] bg-white cursor-pointer"
+                />
+              </div>
+              {customStartDate && customEndDate && (
+                <div className="text-[11px] font-medium text-[#2E9DA7] bg-[#2E9DA7]/10 rounded px-2.5 py-1.5 text-center mt-1">
+                  Selected: {new Date(customStartDate).toLocaleDateString()} – {new Date(customEndDate).toLocaleDateString()}
+                </div>
+              )}
+              <div className="flex gap-2 mt-2">
+                <button
+                  onClick={() => {
+                    setShowCustomPicker(false);
+                    setCustomStartDate("");
+                    setCustomEndDate("");
+                    setTimeFilter("Today");
+                  }}
+                  className="flex-1 px-3 py-2 border border-neutral-300 rounded-lg text-xs font-semibold hover:bg-neutral-50 cursor-pointer text-[#1C1B1C] text-center"
+                >
+                  Clear
+                </button>
+                <button
+                  onClick={() => {
+                    if (customStartDate && customEndDate) {
+                      setShowCustomPicker(false);
+                    }
+                  }}
+                  className="flex-1 px-3 py-2 bg-[#2E9DA7] text-white rounded-lg text-xs font-semibold hover:opacity-90 cursor-pointer text-center"
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Metric Strip Row: Removed 'To collect today' and 'Monthly revenue' */}

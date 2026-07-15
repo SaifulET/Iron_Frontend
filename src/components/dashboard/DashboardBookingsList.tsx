@@ -322,31 +322,41 @@ export default function DashboardBookingsList({
                 </div>
 
                 {/* Action buttons */}
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#EFEFED]">
+                <div className="flex items-center justify-between gap-3 pt-3 border-t border-[#EFEFED]">
                   <button
+                    type="button"
                     onClick={() => {
-                      setSelectedDate(null);
+                      setTempMonth(7); // August
+                      setTempDay(18); // Default today's date
+                      setSelectedDate(null); // Clear filter to show all bookings
                       setIsDatePickerOpen(false);
                     }}
-                    className="px-4 py-2 border border-[#D5D2C9] rounded-lg text-xs font-semibold text-neutral-600 hover:bg-neutral-50 transition-colors cursor-pointer"
+                    className="px-4 py-2 border border-red-200 text-red-600 rounded-lg text-xs font-semibold hover:bg-red-50 transition-colors cursor-pointer"
                   >
-                    Cancel
+                    Reset
                   </button>
-                  <button
-                    onClick={() => {
-                      const tempDateObj = new Date(2026, tempMonth, tempDay);
-                      // Format to match booking dates e.g. "Mon, 11 May" or "Saturday, May 9"
-                      // Since bookings data has dates like "Mon, 11 May" or "Saturday, May 9",
-                      // we can check if it matches in the filter. We will format to a unified standard for matching
-                      const formatted = tempDateObj.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short" });
-                      // formatted is "Mon, May 11" or similar. Let's store date object parts
-                      setSelectedDate(tempDateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" }));
-                      setIsDatePickerOpen(false);
-                    }}
-                    className="px-4 py-2 bg-[#8EBAC5] hover:opacity-90 text-[#141B34] font-semibold rounded-lg text-xs transition-colors cursor-pointer"
-                  >
-                    Filter
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsDatePickerOpen(false);
+                      }}
+                      className="px-4 py-2 border border-[#D5D2C9] rounded-lg text-xs font-semibold text-neutral-600 hover:bg-neutral-50 transition-colors cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const tempDateObj = new Date(2026, tempMonth, tempDay);
+                        setSelectedDate(tempDateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" }));
+                        setIsDatePickerOpen(false);
+                      }}
+                      className="px-4 py-2 bg-[#2E9DA7] hover:opacity-90 text-white font-semibold rounded-lg text-xs transition-colors cursor-pointer"
+                    >
+                      Filter
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
