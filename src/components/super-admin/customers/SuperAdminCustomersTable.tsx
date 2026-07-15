@@ -175,6 +175,7 @@ export default function SuperAdminCustomersTable({
                       >
                         <button
                           onClick={() => {
+                            onSelectCustomer?.(c.id);
                             setOpenDropdownId(null);
                             setDropdownCoords(null);
                           }}
