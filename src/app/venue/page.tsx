@@ -1051,7 +1051,11 @@ function VenueDetailsContent() {
                         {mockVenueDetails.location}
                       </span>
                       <span className="w-1.5 h-1.5 rounded-full bg-[#808080] shrink-0" />
-                      <a href="#" className="font-inter font-normal text-[15.8px] text-[#2366C5] hover:underline whitespace-nowrap shrink-0">
+                      <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}
+                        className="font-inter font-normal text-[15.8px] text-[#2366C5] hover:underline whitespace-nowrap shrink-0"
+                      >
                         Get Directions
                       </a>
                     </div>
@@ -1142,7 +1146,11 @@ function VenueDetailsContent() {
                             {mockVenueDetails.location}
                           </span>
                           <span className="w-1.5 h-1.5 rounded-full bg-[#808080] shrink-0" />
-                          <a href="#" className="font-inter font-normal text-[15.8px] text-[#2366C5] hover:underline whitespace-nowrap shrink-0">
+                          <a 
+                            href="#" 
+                            onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}
+                            className="font-inter font-normal text-[15.8px] text-[#2366C5] hover:underline whitespace-nowrap shrink-0"
+                          >
                             Get Directions
                           </a>
                         </div>
@@ -1220,7 +1228,11 @@ function VenueDetailsContent() {
                             {mockVenueDetails.location}
                           </span>
                           <span className="w-1.5 h-1.5 rounded-full bg-[#808080] shrink-0" />
-                          <a href="#" className="font-inter font-normal text-[15.8px] text-[#2366C5] hover:underline whitespace-nowrap shrink-0">
+                          <a 
+                            href="#" 
+                            onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}
+                            className="font-inter font-normal text-[15.8px] text-[#2366C5] hover:underline whitespace-nowrap shrink-0"
+                          >
                             Get Directions
                           </a>
                         </div>
