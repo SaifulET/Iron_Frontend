@@ -173,11 +173,11 @@ export default function Navbar({
 
                 {showLangDropdown && (
                   <div className="absolute right-0 mt-2 w-32 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 overflow-hidden py-1">
-                    {["English", "Bengali", "Greek", "German"].map((lang) => (
+                    {["English", "Greek"].map((lang) => (
                       <button
                         key={lang}
                         onClick={() => {
-                          setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
+                          setSelectedLanguage(lang === "English" ? "ENG" : "GRE");
                           setShowLangDropdown(false);
                         }}
                         className="w-full text-left px-4 py-2 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
@@ -231,11 +231,11 @@ export default function Navbar({
 
                       {showLangDropdown && (
                         <div className="absolute left-0 mt-2 w-32 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 overflow-hidden py-1">
-                          {["English", "Bengali", "Greek", "German"].map((lang) => (
+                          {["English", "Greek"].map((lang) => (
                             <button
                               key={lang}
                               onClick={() => {
-                                setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
+                                setSelectedLanguage(lang === "English" ? "ENG" : "GRE");
                                 setShowLangDropdown(false);
                               }}
                               className="w-full text-left px-3 py-1.5 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
@@ -431,11 +431,11 @@ export default function Navbar({
               </button>
               {showLangDropdown && (
                 <div className="absolute right-0 mt-2 w-28 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 overflow-hidden py-1">
-                  {["English", "Bengali", "Greek", "German"].map((lang) => (
+                  {["English", "Greek"].map((lang) => (
                     <button
                       key={lang}
                       onClick={() => {
-                        setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
+                        setSelectedLanguage(lang === "English" ? "ENG" : "GRE");
                         setShowLangDropdown(false);
                       }}
                       className="w-full text-left px-3 py-1.5 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
@@ -584,11 +584,11 @@ export default function Navbar({
 
             {showLangDropdown && (
               <div className="absolute left-0 mt-2 w-32 bg-white border border-[#E8E6FF] rounded-xl shadow-lg z-50 overflow-hidden py-1">
-                {["English", "Bengali", "Greek", "German"].map((lang) => (
+                {["English", "Greek"].map((lang) => (
                   <button
                     key={lang}
                     onClick={() => {
-                      setSelectedLanguage(lang === "English" ? "ENG" : lang === "Bengali" ? "BEN" : lang.substring(0, 3).toUpperCase());
+                      setSelectedLanguage(lang === "English" ? "ENG" : "GRE");
                       setShowLangDropdown(false);
                     }}
                     className="w-full text-left px-3 py-1.5 text-xs text-[#1C1B1C] hover:bg-[#F5F3FF] transition-colors"
