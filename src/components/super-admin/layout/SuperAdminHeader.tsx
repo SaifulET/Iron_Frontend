@@ -2,7 +2,9 @@
 
 import React from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Search01Icon, BellIcon } from "@hugeicons/core-free-icons";
+import { Search01Icon } from "@hugeicons/core-free-icons";
+
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 interface SuperAdminHeaderProps {
   isCollapsed: boolean;
@@ -30,15 +32,7 @@ export default function SuperAdminHeader({ isCollapsed }: SuperAdminHeaderProps)
       {/* Right Controls */}
       <div className="flex items-center gap-4">
         {/* Notification Bell Button */}
-        <div className="relative w-9 h-9">
-          <button className="w-full h-full flex items-center justify-center bg-white border border-[#E8E8E6] rounded-lg text-[#5F5E5A] hover:bg-gray-50">
-            <HugeiconsIcon icon={BellIcon} className="w-[18px] h-[18px]" />
-          </button>
-          {/* Notification Badge */}
-          <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[17px] bg-[#E24B4A] border-2 border-white rounded-full flex items-center justify-center text-[9px] font-semibold text-white px-1">
-            5
-          </span>
-        </div>
+        <NotificationBell />
 
         {/* User Initials Avatar */}
         <div className="w-8 h-8 rounded-full bg-[#EEF2FF] flex items-center justify-center text-[#4338CA] text-xs font-bold font-sans">
