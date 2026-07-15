@@ -196,18 +196,6 @@ export default function SuperAdminBookings() {
         </h2>
 
         <div className="flex items-center gap-3">
-          <select
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="bg-white border border-[#E2E8F0] rounded-lg pl-3 pr-8 py-1.5 text-[13px] font-medium text-[#314158] focus:outline-none focus:ring-1 focus:ring-[#2E9DA7]"
-          >
-            <option value="All">Status</option>
-            <option value="Upcoming">Upcoming</option>
-            <option value="Completed">Completed</option>
-            <option value="Cancelled">Cancelled</option>
-            <option value="No-Shows">No-Shows</option>
-          </select>
-
           <button
             onClick={handleExport}
             className="flex items-center gap-2 bg-[#111111] hover:bg-black text-white px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors"
