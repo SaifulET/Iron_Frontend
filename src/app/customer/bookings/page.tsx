@@ -24,6 +24,7 @@ export default function BookingsPage() {
   // Reschedule Modal State
   const [rescheduleBookingId, setRescheduleBookingId] = useState<string | null>(null);
   const [cancelBookingId, setCancelBookingId] = useState<string | null>(null);
+  const [showCancelSuccessMsg, setShowCancelSuccessMsg] = useState(false);
 
   // Collapsible Policy State (stores boolean for each booking ID)
   const [openPolicies, setOpenPolicies] = useState<Record<string, boolean>>({});
@@ -94,6 +95,7 @@ export default function BookingsPage() {
       })
     );
     setCancelBookingId(null);
+    setShowCancelSuccessMsg(true);
   };
 
   const getCancelFees = (booking: any) => {
@@ -291,18 +293,18 @@ export default function BookingsPage() {
                 )}
               </p>
 
-              <div className="flex gap-4 w-full">
+              <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 w-full">
                 <button
                   type="button"
                   onClick={() => setCancelBookingId(null)}
-                  className="flex-1 py-3.5 border border-[#C6C6CB] rounded-full text-base font-semibold text-[#020305] hover:bg-neutral-50 transition-colors"
+                  className="w-full sm:flex-1 py-3 sm:py-3.5 border border-[#C6C6CB] rounded-full text-sm sm:text-base font-semibold text-[#020305] hover:bg-neutral-50 transition-colors"
                 >
                   Close
                 </button>
                 <button
                   type="button"
                   onClick={() => handleConfirmCancel(booking.id)}
-                  className="flex-1 py-3.5 bg-[#0D0D0D] hover:bg-black text-white rounded-full text-base font-semibold transition-colors"
+                  className="w-full sm:flex-1 py-3 sm:py-3.5 bg-[#0D0D0D] hover:bg-black text-white rounded-full text-xs xs:text-sm sm:text-base font-semibold transition-colors whitespace-nowrap px-4"
                 >
                   {isOutsideWindow ? `Cancel & pay ${fees.additionalCharge}` : "Yes"}
                 </button>
@@ -311,6 +313,36 @@ export default function BookingsPage() {
           </div>
         );
       })()}
+
+      {/* Cancellation Success Modal Overlay */}
+      {showCancelSuccessMsg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 font-manrope">
+          <div className="bg-white rounded-[24px] shadow-2xl p-8 max-w-[440px] w-full flex flex-col items-center select-none text-center">
+            {/* Green check circle */}
+            <div className="w-16 h-16 bg-[#EEFDF4] rounded-full flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-[#30AE5A]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            
+            <h2 className="font-bold text-[28px] leading-9 text-[#020305] mb-2">
+              Cancellation Confirmed
+            </h2>
+            
+            <p className="text-sm text-[#4E5F78] leading-6 mb-8 px-2">
+              Your booking has been successfully cancelled. The changes are updated in your bookings list.
+            </p>
+            
+            <button
+              type="button"
+              onClick={() => setShowCancelSuccessMsg(false)}
+              className="w-full py-3.5 bg-[#0D0D0D] hover:bg-black text-white rounded-full text-base font-semibold transition-colors cursor-pointer"
+            >
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
