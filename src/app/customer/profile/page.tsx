@@ -66,7 +66,13 @@ export default function ProfilePage() {
       const saved = localStorage.getItem("profileData");
       if (saved) {
         try {
-          setProfileData(JSON.parse(saved));
+          const parsed = JSON.parse(saved);
+          if (parsed.countryCode === "+1" && parsed.phoneNumber === "99 123 456") {
+            parsed.countryCode = "+357";
+            parsed.countryIso = "cy";
+            localStorage.setItem("profileData", JSON.stringify(parsed));
+          }
+          setProfileData(parsed);
         } catch (e) {
           console.error("Error parsing profileData", e);
         }

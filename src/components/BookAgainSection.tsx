@@ -22,7 +22,7 @@ export default function BookAgainSection({
         <h2 className="text-2xl md:text-[28px] font-medium tracking-tight text-[#1C1B1C]">
           Book Again
         </h2>
-        <a href="#" className="text-sm md:text-base font-medium text-[#1C1B1C] hover:underline transition-all">
+        <a href="/explore" className="text-sm md:text-base font-medium text-[#1C1B1C] hover:underline transition-all">
           See all
         </a>
       </div>

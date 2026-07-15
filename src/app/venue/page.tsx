@@ -473,7 +473,7 @@ function VenueDetailsContent() {
                 <section id="services" className="scroll-mt-24 flex flex-col gap-6">
                   {/* Category Filter Badges */}
                   <div className="flex flex-wrap gap-2 mb-2">
-                    {["Featured", "Packages", "Hair", "Beard", "Color", "Hair Treatment", "NAILS", "Facial", "Waxing & Trimming"].map((cat, idx) => (
+                    {["All", "Featured", "Packages", "Hair", "Beard", "Color", "Hair Treatment", "NAILS", "Facial", "Waxing & Trimming"].map((cat, idx) => (
                       <button
                         key={idx}
                         onClick={() => setSelectedCategory(cat)}
@@ -491,7 +491,7 @@ function VenueDetailsContent() {
                   <div className="flex flex-col gap-4">
 
                     {/* Service 1: Wedding Pic (Selected state) */}
-                    {(selectedCategory === "Featured" || selectedCategory === "Hair") && (
+                    {(selectedCategory === "All" || selectedCategory === "Featured" || selectedCategory === "Hair") && (
                       <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center shadow-sm transition-all ${service1Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
                         <div className="flex flex-col gap-1.5">
                           <h4 className="font-inter font-medium text-lg text-[#0D0D0D]">Wedding Pic</h4>
@@ -511,7 +511,7 @@ function VenueDetailsContent() {
                     )}
 
                     {/* Service 2: Wedding Pic (Counter variant) */}
-                    {(selectedCategory === "Hair Treatment" || selectedCategory === "Hair") && (
+                    {(selectedCategory === "All" || selectedCategory === "Hair Treatment" || selectedCategory === "Hair") && (
                       <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center shadow-sm transition-all ${service2Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
                         <div className="flex flex-col gap-1.5">
                           <h4 className="font-inter font-medium text-lg text-[#0D0D0D]">Wedding Pic</h4>
@@ -555,7 +555,7 @@ function VenueDetailsContent() {
                     )}
 
                     {/* Service 3: Wedding Pic (Person counter variant) */}
-                    {(selectedCategory === "Color" || selectedCategory === "NAILS") && (
+                    {(selectedCategory === "All" || selectedCategory === "Color" || selectedCategory === "NAILS") && (
                       <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center shadow-sm transition-all ${service3Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
                         <div className="flex flex-col gap-1.5">
                           <h4 className="font-inter font-medium text-lg text-[#0D0D0D]">Wedding Pic</h4>
@@ -599,7 +599,7 @@ function VenueDetailsContent() {
                     )}
 
                     {/* Service 4: Wedding Pic */}
-                    {(selectedCategory === "Facial" || selectedCategory === "Waxing & Trimming" || selectedCategory === "Beard") && (
+                    {(selectedCategory === "All" || selectedCategory === "Facial" || selectedCategory === "Waxing & Trimming" || selectedCategory === "Beard") && (
                       <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center shadow-sm transition-all ${service4Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
                         <div className="flex flex-col gap-1.5">
                           <h4 className="font-inter font-medium text-lg text-[#0D0D0D]">Wedding Pic</h4>
@@ -642,7 +642,7 @@ function VenueDetailsContent() {
                     )}
 
                     {/* Service 5: Wedding Pic, Video graphy */}
-                    {(selectedCategory === "Featured" || selectedCategory === "Packages") && (
+                    {(selectedCategory === "All" || selectedCategory === "Featured" || selectedCategory === "Packages") && (
                       <div className="w-full bg-white border border-[#E5E5E5] rounded-xl p-5 flex justify-between items-center shadow-sm">
                         <div className="flex flex-col gap-1.5">
                           <h4 className="font-inter font-medium text-lg text-[#0D0D0D]">Wedding Pic, Video graphy</h4>
@@ -664,7 +664,10 @@ function VenueDetailsContent() {
                     )}
 
                     {/* See all button */}
-                    <button className="self-start bg-[#FFFFFF] border border-[#C6C6CB] rounded-full px-6 py-2.5 text-sm font-semibold hover:bg-neutral-50 transition-colors cursor-pointer">
+                    <button 
+                      onClick={() => setSelectedCategory("All")}
+                      className="self-start bg-[#FFFFFF] border border-[#C6C6CB] rounded-full px-6 py-2.5 text-sm font-semibold hover:bg-neutral-50 transition-colors cursor-pointer"
+                    >
                       See all
                     </button>
 
@@ -1020,7 +1023,7 @@ function VenueDetailsContent() {
                 {/* Continue Button */}
                 <button
                   onClick={() => setBookingStep("addons")}
-                  className="w-full h-12 bg-[#8EBAC5] text-white font-poppins font-semibold text-base rounded-[12px] hover:opacity-95 transition-opacity cursor-pointer flex items-center justify-center gap-2 shadow-sm mt-2"
+                  className="w-full h-12 bg-[#2E9DA7] text-white font-poppins font-semibold text-base rounded-[12px] hover:opacity-95 transition-opacity cursor-pointer flex items-center justify-center gap-2 shadow-sm mt-2"
                 >
                   <span>Continue →</span>
                 </button>
@@ -1111,7 +1114,7 @@ function VenueDetailsContent() {
                   <>
                     <button
                       onClick={() => setBookingStep("addons")}
-                      className="w-full h-12 bg-[#8EBAC5] border border-[#D5D7DA] text-white font-poppins font-medium text-base rounded-[12px] hover:opacity-90 transition-opacity cursor-pointer flex items-center justify-center shadow-sm"
+                      className="w-full h-12 bg-[#2E9DA7] border border-[#D5D7DA] text-white font-poppins font-medium text-base rounded-[12px] hover:opacity-90 transition-opacity cursor-pointer flex items-center justify-center shadow-sm"
                     >
                       <span className="w-[78px] h-[24px] flex items-center justify-center">Book now</span>
                     </button>
@@ -1326,7 +1329,10 @@ function VenueDetailsContent() {
                 <h4 className="font-semibold text-2xl md:text-[28px] tracking-tight text-[#1C1B1C]">
                   {title}
                 </h4>
-                <span className="text-sm md:text-base font-medium text-[#1C1B1C] cursor-pointer hover:underline">
+                <span 
+                  onClick={() => router.push("/explore")}
+                  className="text-sm md:text-base font-medium text-[#1C1B1C] cursor-pointer hover:underline"
+                >
                   See all
                 </span>
               </div>
