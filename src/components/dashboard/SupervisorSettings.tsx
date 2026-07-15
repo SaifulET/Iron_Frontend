@@ -25,6 +25,11 @@ export default function SupervisorSettings() {
   const [personalRole, setPersonalRole] = useState("Supervisor");
   const [personalPhone, setPersonalPhone] = useState("1234556666");
 
+  // Initial Unsaved tracking states
+  const [initialName, setInitialName] = useState("Hohb doe");
+  const [initialEmail, setInitialEmail] = useState("supervisor@msplan.com");
+  const [initialPhone, setInitialPhone] = useState("1234556666");
+
   const [profileImage, setProfileImage] = useState<string>("/businessDashboard/downLogo.png");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,8 +39,38 @@ export default function SupervisorSettings() {
       if (savedImage) {
         setProfileImage(savedImage);
       }
+      const savedName = localStorage.getItem("supervisor_personalName");
+      const savedEmail = localStorage.getItem("supervisor_personalEmail");
+      const savedPhone = localStorage.getItem("supervisor_personalPhone");
+      if (savedName) {
+        setPersonalName(savedName);
+        setInitialName(savedName);
+      }
+      if (savedEmail) {
+        setPersonalEmail(savedEmail);
+        setInitialEmail(savedEmail);
+      }
+      if (savedPhone) {
+        setPersonalPhone(savedPhone);
+        setInitialPhone(savedPhone);
+      }
     }
   }, []);
+
+  const handleSave = () => {
+    localStorage.setItem("supervisor_personalName", personalName);
+    localStorage.setItem("supervisor_personalEmail", personalEmail);
+    localStorage.setItem("supervisor_personalPhone", personalPhone);
+    setInitialName(personalName);
+    setInitialEmail(personalEmail);
+    setInitialPhone(personalPhone);
+  };
+
+  const handleCancel = () => {
+    setPersonalName(initialName);
+    setPersonalEmail(initialEmail);
+    setPersonalPhone(initialPhone);
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -203,6 +238,7 @@ export default function SupervisorSettings() {
                     type="email"
                     value={personalEmail}
                     onChange={setPersonalEmail}
+                    disabled={true}
                   />
 
                   <div className="flex flex-col gap-1">
@@ -257,6 +293,28 @@ export default function SupervisorSettings() {
                     )}
                   </div>
                 </div>
+
+                {/* Save and Cancel buttons */}
+                {(personalName !== initialName ||
+                  personalEmail !== initialEmail ||
+                  personalPhone !== initialPhone) && (
+                  <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-[#EFEFED]">
+                    <button
+                      type="button"
+                      onClick={handleCancel}
+                      className="px-4 py-2 border border-[#D5D2C9] rounded-lg text-xs font-semibold text-neutral-600 hover:bg-neutral-50 transition-colors cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      className="px-4 py-2 bg-[#2E9DA7] text-white rounded-lg text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                )}
 
               </div>
             </div>

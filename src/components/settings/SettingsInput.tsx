@@ -27,7 +27,7 @@ export const SettingsInput: React.FC<SettingsInputProps> = ({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       disabled={disabled}
-      className="h-10 border border-[#D3D1C7] rounded-[8px] px-3.5 text-[14px] text-[#1A1A1A] font-poppins focus:outline-none disabled:bg-neutral-100"
+      className="h-10 border border-[#D3D1C7] rounded-[8px] px-3.5 text-[14px] text-[#1A1A1A] font-poppins focus:outline-none disabled:bg-neutral-50 disabled:text-neutral-500 disabled:cursor-not-allowed"
     />
   </div>
 );

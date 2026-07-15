@@ -238,6 +238,7 @@ export default function DashboardSettings() {
                     type="email"
                     value={personalEmail}
                     onChange={setPersonalEmail}
+                    disabled={true}
                   />
 
                   <div className="flex flex-col gap-1">
