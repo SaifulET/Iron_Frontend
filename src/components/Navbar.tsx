@@ -114,7 +114,7 @@ export default function Navbar({
 
         {/* Left Side: Logo */}
         <div className="flex items-center">
-          <div className="cursor-pointer shrink-0" onClick={() => router.push("/")}>
+          <div className="cursor-pointer shrink-0" onClick={() => { sessionStorage.removeItem("scrollToHowItWorks"); router.push("/"); }}>
             {isLoggedIn ? (
               <img src="/image/smallBlacklogo.svg" alt="Bookly" className="h-8 md:h-[44px] w-9 object-contain" />
             ) : (
@@ -145,7 +145,10 @@ export default function Navbar({
             <>
               {/* Login button */}
               <button
-                onClick={() => router.push("/select-role")}
+                onClick={() => {
+                  sessionStorage.removeItem("scrollToHowItWorks");
+                  router.push("/select-role");
+                }}
                 className="border-2 border-[#ACAAB4] hover:bg-neutral-50 text-[#1C1B1C] px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer active:scale-95"
               >
                 Login
@@ -497,6 +500,7 @@ export default function Navbar({
                 <button
                   onClick={() => {
                     setShowMobileMenu(false);
+                    sessionStorage.removeItem("scrollToHowItWorks");
                     router.push("/select-role");
                   }}
                   className="w-full text-center border-2 border-[#ACAAB4] hover:bg-neutral-50 text-[#1C1B1C] py-2.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer"

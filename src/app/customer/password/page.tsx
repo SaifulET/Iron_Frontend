@@ -9,7 +9,6 @@ import { SquareLock01Icon } from "@hugeicons/core-free-icons";
 import AuthLayout from "@/components/AuthLayout";
 import AuthCard from "@/components/AuthCard";
 import { InputField } from "@/components/InputField";
-import SuccessModal from "@/components/SuccessModal";
 
 function PasswordPageContent() {
   const router = useRouter();
@@ -18,8 +17,6 @@ function PasswordPageContent() {
 
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
-
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!password) {
@@ -27,7 +24,8 @@ function PasswordPageContent() {
       return;
     }
     setPasswordError("");
-    setIsSuccessOpen(true);
+    localStorage.setItem("isLoggedIn", "true");
+    router.push("/");
   };
 
   return (
@@ -66,18 +64,6 @@ function PasswordPageContent() {
           </button>
         </form>
       </AuthCard>
-
-      {/* Login success modal */}
-      <SuccessModal
-        isOpen={isSuccessOpen}
-        onClose={() => setIsSuccessOpen(false)}
-        onContinue={() => {
-          setIsSuccessOpen(false);
-          localStorage.setItem("isLoggedIn", "true");
-          // Redirect to main select screen or a mock landing page
-          router.push("/");
-        }}
-      />
     </AuthLayout>
   );
 }

@@ -152,22 +152,9 @@ export default function LandingPage() {
         }
       };
 
-      const handleHashScroll = () => {
-        if (window.location.hash === "#how-it-works") {
-          scrollToHowItWorks();
-          const intervals = [100, 300, 600, 1000, 1500];
-          intervals.forEach((delay) => {
-            setTimeout(scrollToHowItWorks, delay);
-          });
-        }
-      };
-
       checkScrollFlag();
-      handleHashScroll();
-      window.addEventListener("hashchange", handleHashScroll);
       window.addEventListener("popstate", checkScrollFlag);
       return () => {
-        window.removeEventListener("hashchange", handleHashScroll);
         window.removeEventListener("popstate", checkScrollFlag);
       };
     }
