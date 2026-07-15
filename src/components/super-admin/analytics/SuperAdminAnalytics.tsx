@@ -9,7 +9,11 @@ import SuperAdminCitiesAnalytics from "./SuperAdminCitiesAnalytics";
 
 type AnalyticsTab = "Overview" | "Bookings" | "Businesses" | "Customers" | "Cities";
 
-export default function SuperAdminAnalytics() {
+interface SuperAdminAnalyticsProps {
+  setActiveTab?: (tab: string) => void;
+}
+
+export default function SuperAdminAnalytics({ setActiveTab }: SuperAdminAnalyticsProps) {
   const [activeSubTab, setActiveSubTab] = useState<AnalyticsTab>("Overview");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -154,7 +158,7 @@ export default function SuperAdminAnalytics() {
       {activeSubTab === "Bookings" && <SuperAdminBookingsAnalytics />}
       {activeSubTab === "Businesses" && <SuperAdminBusinessesAnalytics />}
       {activeSubTab === "Customers" && <SuperAdminCustomersAnalytics />}
-      {activeSubTab === "Cities" && <SuperAdminCitiesAnalytics />}
+      {activeSubTab === "Cities" && <SuperAdminCitiesAnalytics setActiveTab={setActiveTab} />}
     </div>
   );
 }

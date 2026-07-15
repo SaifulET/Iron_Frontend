@@ -2,7 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 
-export default function SuperAdminCitiesAnalytics() {
+interface SuperAdminCitiesAnalyticsProps {
+  setActiveTab?: (tab: string) => void;
+}
+
+export default function SuperAdminCitiesAnalytics({ setActiveTab }: SuperAdminCitiesAnalyticsProps) {
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
@@ -72,7 +76,10 @@ export default function SuperAdminCitiesAnalytics() {
                 <span className="w-12 text-right text-gray-900 font-semibold">
                   {data.volume}
                 </span>
-                <button className="px-3 py-1 border border-[#2E9DA7] text-[#195156] hover:bg-[#2E9DA7]/10 transition-colors text-xs font-semibold rounded-lg">
+                <button
+                  onClick={() => setActiveTab?.("Bookings")}
+                  className="px-3 py-1 border border-[#2E9DA7] text-[#195156] hover:bg-[#2E9DA7]/10 transition-colors text-xs font-semibold rounded-lg cursor-pointer"
+                >
                   View Details
                 </button>
               </div>

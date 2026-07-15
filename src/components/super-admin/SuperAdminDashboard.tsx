@@ -63,7 +63,7 @@ export default function SuperAdminDashboard() {
         ) : activeTab === "Finance" ? (
           <SuperAdminFinance />
         ) : activeTab === "Analytics" ? (
-          <SuperAdminAnalytics />
+          <SuperAdminAnalytics setActiveTab={setActiveTab} />
         ) : activeTab === "Support" ? (
           <SuperAdminSupport />
         ) : activeTab === "Settings" ? (
