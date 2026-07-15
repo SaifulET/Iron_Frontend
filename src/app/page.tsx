@@ -126,6 +126,53 @@ export default function LandingPage() {
     };
   }, []);
 
+  // Handle direct navigation with hash on mount and hashchange
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const scrollToHowItWorks = () => {
+        const element = document.getElementById("how-it-works");
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+          return true;
+        }
+        return false;
+      };
+
+      const checkScrollFlag = () => {
+        if (sessionStorage.getItem("scrollToHowItWorks") === "true") {
+          sessionStorage.removeItem("scrollToHowItWorks");
+          scrollToHowItWorks();
+          const intervals = [100, 300, 600, 1000, 1500];
+          intervals.forEach((delay) => {
+            setTimeout(scrollToHowItWorks, delay);
+          });
+        }
+      };
+
+      const handleHashScroll = () => {
+        if (window.location.hash === "#how-it-works") {
+          scrollToHowItWorks();
+          const intervals = [100, 300, 600, 1000, 1500];
+          intervals.forEach((delay) => {
+            setTimeout(scrollToHowItWorks, delay);
+          });
+        }
+      };
+
+      checkScrollFlag();
+      handleHashScroll();
+      window.addEventListener("hashchange", handleHashScroll);
+      window.addEventListener("popstate", checkScrollFlag);
+      return () => {
+        window.removeEventListener("hashchange", handleHashScroll);
+        window.removeEventListener("popstate", checkScrollFlag);
+      };
+    }
+  }, []);
+
   // State variables
   const [showBanner, setShowBanner] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("ENG");
@@ -998,7 +1045,7 @@ export default function LandingPage() {
       </section>
 
       {/* 10. Book in 3 Simple Steps Section */}
-      <section ref={stepsContainerRef} className="w-full px-4 md:px-8 xl:px-[68px] mt-[72px]">
+      <section ref={stepsContainerRef} id="how-it-works" className="w-full px-4 md:px-8 xl:px-[68px] mt-[72px] scroll-mt-36">
         <div className="w-full flex flex-col items-center gap-10 md:gap-[40px]">
           {/* Header Container */}
           <div className="flex flex-col items-center gap-4 text-center max-w-[730px]">

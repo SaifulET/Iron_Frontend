@@ -36,6 +36,22 @@ export default function Navbar({
   isBusinessPage = false
 }: NavbarProps) {
   const router = useRouter();
+  const handleHowItWorksClick = (e: React.MouseEvent) => {
+    if (typeof window !== "undefined") {
+      if (window.location.pathname === "/") {
+        e.preventDefault();
+        const element = document.getElementById("how-it-works");
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        }
+      } else {
+        sessionStorage.setItem("scrollToHowItWorks", "true");
+      }
+    }
+  };
   const [showLangDropdown, setShowLangDropdown] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -113,9 +129,13 @@ export default function Navbar({
             <Link href="/explore" className="text-xs font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase">
               Explore
             </Link>
-            <a href="#" className="text-xs font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase">
+            <Link 
+              href="/#how-it-works" 
+              onClick={handleHowItWorksClick}
+              className="text-xs font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase"
+            >
               How it Works
-            </a>
+            </Link>
           </nav>
         )}
 
@@ -458,13 +478,16 @@ export default function Navbar({
               >
                 Explore
               </Link>
-              <a
-                href="#"
-                onClick={() => setShowMobileMenu(false)}
+              <Link
+                href="/#how-it-works"
+                onClick={(e) => {
+                  setShowMobileMenu(false);
+                  handleHowItWorksClick(e);
+                }}
                 className="text-sm font-semibold tracking-wider text-[#757575] hover:text-[#1C1B1C] transition-colors uppercase py-2 border-b border-neutral-100"
               >
                 How it Works
-              </a>
+              </Link>
             </>
           )}
 
