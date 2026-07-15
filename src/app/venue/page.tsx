@@ -68,19 +68,21 @@ function VenueDetailsContent() {
   // Scroll to section helper
   const scrollToSection = (sectionId: string) => {
     setActiveTab(sectionId as any);
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const offset = 100; // Offset for navbar
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const offset = 100; // Offset for navbar
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
-    }
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    }, 100);
   };
 
   // Scroll listener scroll spy for active tab based on closest section to header threshold
