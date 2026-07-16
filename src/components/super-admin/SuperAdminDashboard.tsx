@@ -16,6 +16,8 @@ import SuperAdminContent from "./content/SuperAdminContent";
 export default function SuperAdminDashboard() {
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [sharedViewingBusinessId, setSharedViewingBusinessId] = useState<string | null>(null);
+  const [sharedViewingBusinessTab, setSharedViewingBusinessTab] = useState<string>("Overview");
 
   useEffect(() => {
     const handleResize = () => {
@@ -55,13 +57,22 @@ export default function SuperAdminDashboard() {
         {activeTab === "Dashboard" ? (
           <SuperAdminDashboardContent setActiveTab={setActiveTab} />
         ) : activeTab === "Businesses" ? (
-          <SuperAdminBusinesses />
+          <SuperAdminBusinesses
+            viewingBusinessId={sharedViewingBusinessId}
+            setViewingBusinessId={setSharedViewingBusinessId}
+            initialDetailTab={sharedViewingBusinessTab}
+            setInitialDetailTab={setSharedViewingBusinessTab}
+          />
         ) : activeTab === "Customers" ? (
           <SuperAdminCustomers />
         ) : activeTab === "Bookings" ? (
           <SuperAdminBookings />
         ) : activeTab === "Finance" ? (
-          <SuperAdminFinance />
+          <SuperAdminFinance
+            setActiveTab={setActiveTab}
+            setSharedViewingBusinessId={setSharedViewingBusinessId}
+            setSharedViewingBusinessTab={setSharedViewingBusinessTab}
+          />
         ) : activeTab === "Analytics" ? (
           <SuperAdminAnalytics setActiveTab={setActiveTab} />
         ) : activeTab === "Support" ? (

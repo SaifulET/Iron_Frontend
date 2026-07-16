@@ -6,7 +6,17 @@ import SuperAdminFinanceStats from "./SuperAdminFinanceStats";
 import SuperAdminFinancePending from "./SuperAdminFinancePending";
 import SuperAdminFinanceLog from "./SuperAdminFinanceLog";
 
-export default function SuperAdminFinance() {
+interface SuperAdminFinanceProps {
+  setActiveTab?: (tab: string) => void;
+  setSharedViewingBusinessId?: (id: string | null) => void;
+  setSharedViewingBusinessTab?: (tab: string) => void;
+}
+
+export default function SuperAdminFinance({
+  setActiveTab,
+  setSharedViewingBusinessId,
+  setSharedViewingBusinessTab
+}: SuperAdminFinanceProps) {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [appliedFromDate, setAppliedFromDate] = useState("");
@@ -129,8 +139,13 @@ export default function SuperAdminFinance() {
       {/* Cards stats grid */}
       <SuperAdminFinanceStats />
 
-      {/* Pending Payouts Section */}
-      <SuperAdminFinancePending fromDate={appliedFromDate} toDate={appliedToDate} />
+      <SuperAdminFinancePending
+        fromDate={appliedFromDate}
+        toDate={appliedToDate}
+        setActiveTab={setActiveTab}
+        setSharedViewingBusinessId={setSharedViewingBusinessId}
+        setSharedViewingBusinessTab={setSharedViewingBusinessTab}
+      />
 
       {/* Transaction Log list */}
       <SuperAdminFinanceLog />

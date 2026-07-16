@@ -23,11 +23,17 @@ interface PendingPayout {
 interface SuperAdminFinancePendingProps {
   fromDate?: string;
   toDate?: string;
+  setActiveTab?: (tab: string) => void;
+  setSharedViewingBusinessId?: (id: string | null) => void;
+  setSharedViewingBusinessTab?: (tab: string) => void;
 }
 
 export default function SuperAdminFinancePending({
   fromDate,
-  toDate
+  toDate,
+  setActiveTab,
+  setSharedViewingBusinessId,
+  setSharedViewingBusinessTab
 }: SuperAdminFinancePendingProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedPayout, setSelectedPayout] = useState<PendingPayout | null>(null);
@@ -238,19 +244,37 @@ export default function SuperAdminFinancePending({
 
                     {/* Action Column */}
                     <td className="p-4 whitespace-nowrap text-right">
-                      {p.status === "Pending" ? (
+                      <div className="flex items-center justify-end gap-2">
                         <button
-                          onClick={() => setSelectedPayout(p)}
-                          className="px-4 py-1.5 border border-[#111827] rounded-full text-xs font-semibold text-[#111827] hover:bg-[#111827] hover:text-white transition-colors cursor-pointer"
+                          onClick={() => {
+                            let bId = "1";
+                            if (p.businessName.toLowerCase().includes("topcut")) {
+                              bId = "2";
+                            } else if (p.businessName.toLowerCase().includes("luna")) {
+                              bId = "3";
+                            }
+                            setSharedViewingBusinessId?.(bId);
+                            setSharedViewingBusinessTab?.("Finance");
+                            setActiveTab?.("Businesses");
+                          }}
+                          className="px-4 py-1.5 border border-[#E5E7EB] rounded-lg text-xs font-semibold text-[#111827] hover:bg-gray-50 transition-colors cursor-pointer"
                         >
-                          Send SEPA
+                          View
                         </button>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-4 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-xs font-semibold text-gray-400">
-                          <HugeiconsIcon icon={Tick01Icon} className="w-3.5 h-3.5 text-gray-400" />
-                          <span>Sent</span>
-                        </span>
-                      )}
+                        {p.status === "Pending" ? (
+                          <button
+                            onClick={() => setSelectedPayout(p)}
+                            className="px-4 py-1.5 border border-[#E5E7EB] rounded-lg text-xs font-semibold text-[#111827] hover:bg-gray-50 transition-colors cursor-pointer"
+                          >
+                            Send SEPA
+                          </button>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-4 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs font-semibold text-gray-400">
+                            <HugeiconsIcon icon={Tick01Icon} className="w-3.5 h-3.5 text-gray-400" />
+                            <span>Sent</span>
+                          </span>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );

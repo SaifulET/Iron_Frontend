@@ -21,12 +21,23 @@ interface BusinessItem {
   memberSince: string;
 }
 
-export default function SuperAdminBusinesses() {
+interface SuperAdminBusinessesProps {
+  viewingBusinessId?: string | null;
+  setViewingBusinessId?: (id: string | null) => void;
+  initialDetailTab?: string;
+  setInitialDetailTab?: (tab: string) => void;
+}
+
+export default function SuperAdminBusinesses({
+  viewingBusinessId = null,
+  setViewingBusinessId = () => {},
+  initialDetailTab = "Overview",
+  setInitialDetailTab = () => {}
+}: SuperAdminBusinessesProps) {
   const [activeStatusFilter, setActiveStatusFilter] = useState<"All" | "Approved" | "Pending" | "Warning" | "Suspended">("All");
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedType, setSelectedType] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [viewingBusinessId, setViewingBusinessId] = useState<string | null>(null);
 
   const [businesses, setBusinesses] = useState<BusinessItem[]>([
     {
@@ -152,10 +163,15 @@ export default function SuperAdminBusinesses() {
       return (
         <SuperAdminBusinessDetail
           businessId={viewingBusinessId}
-          onBack={() => setViewingBusinessId(null)}
+          initialTab={initialDetailTab}
+          onBack={() => {
+            setViewingBusinessId(null);
+            setInitialDetailTab("Overview");
+          }}
           onSuspend={(id) => {
             toggleStatus(id, "Suspended");
             setViewingBusinessId(null);
+            setInitialDetailTab("Overview");
           }}
         />
       );

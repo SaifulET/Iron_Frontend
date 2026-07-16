@@ -19,14 +19,16 @@ interface SuperAdminBusinessDetailProps {
   businessId: string;
   onBack: () => void;
   onSuspend: (id: string) => void;
+  initialTab?: string;
 }
 
 export default function SuperAdminBusinessDetail({
   businessId,
   onBack,
   onSuspend,
+  initialTab = "Overview"
 }: SuperAdminBusinessDetailProps) {
-  const [activeSubTab, setActiveSubTab] = useState("Overview");
+  const [activeSubTab, setActiveSubTab] = useState(initialTab);
   const [isFoundingPartner, setIsFoundingPartner] = useState(true);
 
   return (
