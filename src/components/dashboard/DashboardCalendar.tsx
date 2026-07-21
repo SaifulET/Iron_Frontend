@@ -3,7 +3,7 @@ import NotificationBell from "@/components/notifications/NotificationBell";
 import WaiveChargeModal from "./WaiveChargeModal";
 import { NoShowModal, CompleteModal, CancelBookingModal } from "./CalendarActionModals";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Calendar03Icon,
@@ -38,19 +38,19 @@ interface Booking {
   isCancelled?: boolean;
 }
 
-export default function DashboardCalendar({ 
-  onNewBookingClick, 
+export default function DashboardCalendar({
+  onNewBookingClick,
   onViewBookingClick,
   isStaffDashboard = false,
   staffName = "Basel"
 }: DashboardCalendarProps) {
   const [openDropdownCardId, setOpenDropdownCardId] = useState<string | null>(null);
 
-  const [viewMode, setViewMode] = useState("Today");
+  const [viewMode, setViewMode] = useState("Weekly");
   const [isViewDropdownOpen, setIsViewDropdownOpen] = useState(false);
 
   const [currentDate, setCurrentDate] = useState(new Date(2026, 5, 21)); // June 21, 2026
-  
+
   const [selectedStaffFilter, setSelectedStaffFilter] = useState(isStaffDashboard ? staffName : "All Staff");
   const [isStaffDropdownOpen, setIsStaffDropdownOpen] = useState(false);
 
@@ -60,6 +60,12 @@ export default function DashboardCalendar({
   const [noShowBookingId, setNoShowBookingId] = useState<string | null>(null);
   const [completeBookingId, setCompleteBookingId] = useState<string | null>(null);
   const [cancelBookingId, setCancelBookingId] = useState<string | null>(null);
+
+  // Drag to scroll states
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragActive, setIsDragActive] = useState(false);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [dragScrollLeft, setDragScrollLeft] = useState(0);
 
   // Stateful bookings list
   const [bookings, setBookings] = useState<Booking[]>([
@@ -285,14 +291,14 @@ export default function DashboardCalendar({
     );
   };
 
-  const staffColumns = isStaffDashboard 
+  const staffColumns = isStaffDashboard
     ? [{ name: staffName, hasBorder: true }]
     : [
-        { name: "John", hasBorder: true },
-        { name: "Maria", hasBorder: false },
-        { name: "Marilana", hasBorder: false },
-        { name: "Julie", hasBorder: false }
-      ];
+      { name: "John", hasBorder: true },
+      { name: "Maria", hasBorder: false },
+      { name: "Marilana", hasBorder: false },
+      { name: "Julie", hasBorder: false }
+    ];
 
   return (
     <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FCF8F8] relative">
@@ -302,7 +308,7 @@ export default function DashboardCalendar({
         <div className="flex items-center gap-4">
           {/* Today View Toggle Dropdown */}
           <div className="relative">
-            <button 
+            <button
               onClick={() => {
                 setIsViewDropdownOpen(!isViewDropdownOpen);
                 setIsStaffDropdownOpen(false);
@@ -315,7 +321,7 @@ export default function DashboardCalendar({
             {isViewDropdownOpen && (
               <div className="absolute left-0 mt-1.5 z-50 w-32 bg-white rounded-lg shadow-xl border border-neutral-200 flex flex-col py-1 text-xs select-none">
                 {["Today", "Weekly", "Monthly"].map((mode) => (
-                  <button 
+                  <button
                     key={mode}
                     onClick={() => {
                       setViewMode(mode);
@@ -332,7 +338,7 @@ export default function DashboardCalendar({
 
           {/* Date Navigator */}
           <div className="flex items-center border border-[#C6C6CB] rounded-lg bg-white h-9 overflow-hidden">
-            <button 
+            <button
               onClick={handlePrevDate}
               className="px-3 h-full border-r border-[#C6C6CB] hover:bg-neutral-50 transition-all text-neutral-600 flex items-center justify-center cursor-pointer"
             >
@@ -344,7 +350,7 @@ export default function DashboardCalendar({
               <HugeiconsIcon icon={Calendar03Icon} className="w-4 h-4 text-[#0C0C0C]" />
               <span className="font-poppins text-xs font-semibold text-[#1C1B1C] whitespace-nowrap">{formatDate(currentDate)}</span>
             </div>
-            <button 
+            <button
               onClick={handleNextDate}
               className="px-3 h-full border-l border-[#C6C6CB] hover:bg-neutral-50 transition-all text-neutral-600 flex items-center justify-center cursor-pointer"
             >
@@ -360,7 +366,7 @@ export default function DashboardCalendar({
           {/* Staff filter dropdown */}
           {!isStaffDashboard && (
             <div className="relative">
-              <button 
+              <button
                 onClick={() => {
                   setIsStaffDropdownOpen(!isStaffDropdownOpen);
                   setIsViewDropdownOpen(false);
@@ -373,7 +379,7 @@ export default function DashboardCalendar({
               {isStaffDropdownOpen && (
                 <div className="absolute right-0 mt-1.5 z-50 w-40 bg-white rounded-lg shadow-xl border border-neutral-200 flex flex-col py-1 text-xs select-none">
                   {["All Staff", "John", "Maria", "Marilana", "Julie"].map((staff) => (
-                    <button 
+                    <button
                       key={staff}
                       onClick={() => {
                         setSelectedStaffFilter(staff);
@@ -406,121 +412,222 @@ export default function DashboardCalendar({
       </div>
 
       {/* Horizontal Scroll Wrapper for Headers & Grid on Mobile */}
-      <div className="flex-1 flex flex-col overflow-x-auto w-full">
-        <div className="min-w-[800px] flex-1 flex flex-col min-h-0">
+      <div 
+        ref={scrollContainerRef}
+        onMouseDown={(e) => {
+          if (!scrollContainerRef.current) return;
+          setIsDragActive(true);
+          setDragStartX(e.pageX - scrollContainerRef.current.offsetLeft);
+          setDragScrollLeft(scrollContainerRef.current.scrollLeft);
+        }}
+        onMouseLeave={() => setIsDragActive(false)}
+        onMouseUp={() => setIsDragActive(false)}
+        onMouseMove={(e) => {
+          if (!isDragActive || !scrollContainerRef.current) return;
+          e.preventDefault();
+          const x = e.pageX - scrollContainerRef.current.offsetLeft;
+          const walk = (x - dragStartX) * 1.5; // drag scroll speed multiplier
+          scrollContainerRef.current.scrollLeft = dragScrollLeft - walk;
+        }}
+        className={`flex-1 flex flex-col overflow-x-auto overflow-y-hidden w-full touch-pan-x select-none ${isDragActive ? "cursor-grabbing" : "cursor-grab"}`}
+      >
+        <div className="min-w-[1000px] flex-1 flex flex-col min-h-0">
           {/* Calendar Headers (Resource Columns - Sticky) */}
           <div className="bg-[#FCF8F8] border-b border-[#C6C6CB] flex items-center shrink-0 select-none">
-            {/* Left corner time placeholder */}
-            <div className="w-16 h-20 border-r border-[#C6C6CB] shrink-0"></div>
+            {/* Left corner placeholder (Time / Staff header) */}
+            <div className="w-20 sm:w-24 h-14 sm:h-16 border-r border-[#C6C6CB] shrink-0 flex items-center justify-center font-poppins text-xs font-semibold text-[#45474B]">
+              {viewMode === "Weekly" ? "Staff" : ""}
+            </div>
 
-            {/* Staff list */}
-            <div className={`flex-1 grid divide-x divide-[#C6C6CB] ${selectedStaffFilter === "All Staff" ? "grid-cols-4" : "grid-cols-1"}`}>
-              {staffColumns
-                .filter(staff => selectedStaffFilter === "All Staff" || staff.name === selectedStaffFilter)
-                .map((staff, index) => (
-                  <div key={index} className="flex flex-col items-center justify-center py-3.5 gap-1.5">
-                    <div className={`p-[1px] rounded-full ${staff.hasBorder ? "border-2 border-[#0CC0DF]" : "border border-neutral-200"}`}>
-                      <img
-                        src="/calederions/calendrImage.jpg"
-                        alt={staff.name}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                    </div>
-                    <div className="flex items-center gap-1 cursor-pointer">
-                      <span className="font-poppins text-xs font-semibold text-[#020305]">{staff.name}</span>
-                    </div>
+            {/* Header Columns */}
+            {viewMode === "Weekly" ? (
+              // Weekly View: 7 Days of the week (Mon - Sun)
+              <div className="flex-1 grid grid-cols-7 divide-x divide-[#C6C6CB]">
+                {[
+                  { day: "Monday", shortDay: "Mon", date: 20 },
+                  { day: "Tuesday", shortDay: "Tue", date: 21, isToday: true },
+                  { day: "Wednesday", shortDay: "Wed", date: 22 },
+                  { day: "Thursday", shortDay: "Thu", date: 23 },
+                  { day: "Friday", shortDay: "Fri", date: 24 },
+                  { day: "Saturday", shortDay: "Sat", date: 25 },
+                  { day: "Sunday", shortDay: "Sun", date: 26 },
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center justify-center py-3 gap-2 px-1">
+                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${item.isToday ? "bg-[#020305] text-white" : "text-[#1C1B1C]"}`}>
+                      {item.date}
+                    </span>
+                    <span className={`font-poppins text-xs font-medium ${item.isToday ? "text-[#020305] font-bold" : "text-[#45474B]"} truncate`}>
+                      <span className="hidden sm:inline">{item.day}</span>
+                      <span className="inline sm:hidden">{item.shortDay}</span>
+                    </span>
                   </div>
                 ))}
-            </div>
+              </div>
+            ) : (
+              // Today / Daily View: Staff Columns
+              <div className={`flex-1 grid divide-x divide-[#C6C6CB] ${selectedStaffFilter === "All Staff" ? "grid-cols-4" : "grid-cols-1"}`}>
+                {staffColumns
+                  .filter(staff => selectedStaffFilter === "All Staff" || staff.name === selectedStaffFilter)
+                  .map((staff, index) => (
+                    <div key={index} className="flex flex-col items-center justify-center py-3.5 gap-1.5">
+                      <div className={`p-[1px] rounded-full ${staff.hasBorder ? "border-2 border-[#0CC0DF]" : "border border-neutral-200"}`}>
+                        <img
+                          src="/calederions/calendrImage.jpg"
+                          alt={staff.name}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      </div>
+                      <div className="flex items-center gap-1 cursor-pointer">
+                        <span className="font-poppins text-xs font-semibold text-[#020305]">{staff.name}</span>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
           </div>
 
           {/* Scrollable Grid Area */}
           <div className="flex-1 overflow-y-auto relative bg-[#FCF8F8] select-none min-h-0">
-            {/* Grid Container */}
-            <div className="flex w-full h-[1600px] relative">
-              {/* Backdrop overlay to close dropdown on clicking outside */}
-              {openDropdownCardId && (
-                <div
-                  className="fixed inset-0 z-30 bg-transparent cursor-default"
-                  onClick={() => setOpenDropdownCardId(null)}
-                />
-              )}
-              {/* Background Horizontal Grid Lines */}
-              <div className="absolute left-16 right-0 top-0 bottom-0 pointer-events-none flex flex-col">
-                {Array.from({ length: 10 }).map((_, idx) => (
-                  <div key={idx} className="h-40 w-full flex flex-col">
-                    {/* Dashed half hour line */}
-                    <div className="h-20 border-b border-dashed border-[#C6C6CB]/20"></div>
-                    {/* Solid hour line */}
-                    <div className="h-20 border-b border-[#C6C6CB]/40"></div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Time Column (Left Side Axis) */}
-              <div className="w-16 border-r border-[#C6C6CB] bg-[#FCF8F8] flex flex-col shrink-0 relative z-10">
-                {["8:00", "9:00", "10:00", "11:00", "12:00", "1:00", "2:00", "3:00", "4:00", "5:00"].map((time, idx) => (
-                  <div key={idx} className="h-40 flex justify-center items-start pt-2">
-                    <span className="font-poppins text-[11px] font-semibold text-[#45474B]">{time}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Columns for Staff */}
-              <div className={`flex-1 grid divide-x divide-[#C6C6CB] relative ${selectedStaffFilter === "All Staff" ? "grid-cols-4" : "grid-cols-1"}`}>
+            {viewMode === "Weekly" ? (
+              /* WEEKLY VIEW: Staff rows on Left, 7 Day columns */
+              <div className="flex flex-col w-full relative">
+                {/* Backdrop overlay */}
+                {openDropdownCardId && (
+                  <div
+                    className="fixed inset-0 z-30 bg-transparent cursor-default"
+                    onClick={() => setOpenDropdownCardId(null)}
+                  />
+                )}
                 {staffColumns
                   .filter(staff => selectedStaffFilter === "All Staff" || staff.name === selectedStaffFilter)
-                  .map((staff) => (
-                    <div key={staff.name} className="relative h-full">
-                      {bookings
-                        .filter(b => b.staff === staff.name)
-                        .map(b => (
-                          <div
-                            key={b.id}
-                            onClick={() => setOpenDropdownCardId(openDropdownCardId === b.id ? null : b.id)}
-                            className={`absolute left-[3%] right-[3%] ${b.colorClass} border-l-4 ${b.borderColor} rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === b.id ? "z-40" : "z-20"}`}
-                            style={{ top: `${b.top}px`, height: `${b.height}px` }}
-                          >
-                            <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none cursor-pointer">
-                              <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
-                                <path d="M2 10a2 2 0 110-4 2 2 0 010 4zm0-6a2 2 0 110-4 2 2 0 010 4zm0 12a2 2 0 110-4 2 2 0 010 4z" />
-                              </svg>
-                            </button>
-                            <div>
-                              <div className="flex justify-between items-center pr-4">
-                                <span className="text-[9px] font-medium text-[#45474B] leading-none">{b.time}</span>
-                                {b.isPending ? (
-                                  <div className="flex items-center gap-1">
-                                    <span className="border border-[#D44343] rounded px-1 py-0.5 text-[8px] font-semibold text-[#D44343] leading-none bg-white/40">
-                                      Pending !
-                                    </span>
-                                    <span className="text-[9px] font-medium text-[#45474B]">90:00</span>
+                  .map((staff) => {
+                    const staffBookings = bookings.filter(b => b.staff === staff.name);
+                    return (
+                      <div key={staff.name} className="flex border-b border-[#C6C6CB] min-h-[140px] relative">
+                        {/* Left Staff Row Header */}
+                        <div className="w-20 sm:w-24 border-r border-[#C6C6CB] bg-[#FCF8F8] p-3 flex flex-col items-center justify-center gap-1 shrink-0 z-10">
+                          <img
+                            src="/calederions/calendrImage.jpg"
+                            alt={staff.name}
+                            className="w-9 h-9 rounded-full object-cover border border-neutral-200"
+                          />
+                          <span className="font-poppins text-xs font-semibold text-[#020305] text-center leading-tight">
+                            {staff.name}
+                          </span>
+                        </div>
+
+                        {/* 7 Days Columns */}
+                        <div className="flex-1 grid grid-cols-7 divide-x divide-[#C6C6CB] relative">
+                          {[20, 21, 22, 23, 24, 25, 26].map((dateNum, dayIdx) => (
+                            <div key={dayIdx} className="p-2 relative min-h-[140px] flex flex-col gap-1.5">
+                              {/* Tuesday (21) bookings demo matching design */}
+                              {dateNum === 21 && staffBookings.map((b) => (
+                                <div
+                                  key={b.id}
+                                  onClick={() => setOpenDropdownCardId(openDropdownCardId === b.id ? null : b.id)}
+                                  className={`bg-[#0CC0DF]/20 border-l-4 border-[#0CC0DF] rounded px-2 py-1.5 text-xs cursor-pointer hover:brightness-95 transition-all relative ${openDropdownCardId === b.id ? "z-40" : "z-20"}`}
+                                >
+                                  <div className="font-semibold text-[#020305] text-[11px] truncate flex items-center justify-between">
+                                    <span>{b.time.split(" - ")[0]} {b.client}</span>
                                   </div>
-                                ) : b.isCancelled ? (
-                                  <span className="bg-white/50 px-1 py-0.5 rounded text-[8px] font-semibold text-[#45474B] leading-none flex items-center gap-0.5">
-                                    <span>{b.status}</span>
-                                    <span className="text-[#FB3535] font-bold">x</span>
-                                  </span>
-                                ) : (
-                                  <span className="bg-white/50 px-1 py-0.5 rounded text-[8px] font-semibold text-[#45474B] leading-none flex items-center gap-0.5">
-                                    <span>{b.status}</span>
-                                    {b.status.includes("Completed") && (
-                                      <HugeiconsIcon icon={Tick01Icon} className="w-2 h-2 text-[#10B981]" />
-                                    )}
-                                  </span>
-                                )}
-                              </div>
-                              <h4 className="font-poppins text-xs font-semibold text-[#020305] mt-1.5 truncate">{b.client}</h4>
-                              <p className="text-[10px] text-[#45474B] truncate mt-0.5">{b.service}</p>
+                                  <div className="text-[10px] text-[#45474B] truncate">{b.service.split("·")[0]}</div>
+                                  {renderDropdown(b.id)}
+                                </div>
+                              ))}
                             </div>
-                            <span className="text-[10px] font-medium text-[#45474B]">{b.price}</span>
-                            {renderDropdown(b.id)}
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            ) : (
+              /* DAILY / TODAY VIEW */
+              <div className="flex w-full h-[1600px] relative">
+                {/* Backdrop overlay to close dropdown on clicking outside */}
+                {openDropdownCardId && (
+                  <div
+                    className="fixed inset-0 z-30 bg-transparent cursor-default"
+                    onClick={() => setOpenDropdownCardId(null)}
+                  />
+                )}
+                {/* Background Horizontal Grid Lines */}
+                <div className="absolute left-16 right-0 top-0 bottom-0 pointer-events-none flex flex-col">
+                  {Array.from({ length: 10 }).map((_, idx) => (
+                    <div key={idx} className="h-40 w-full flex flex-col">
+                      {/* Dashed half hour line */}
+                      <div className="h-20 border-b border-dashed border-[#C6C6CB]/20"></div>
+                      {/* Solid hour line */}
+                      <div className="h-20 border-b border-[#C6C6CB]/40"></div>
                     </div>
                   ))}
+                </div>
+
+                {/* Time Column (Left Side Axis) */}
+                <div className="w-16 border-r border-[#C6C6CB] bg-[#FCF8F8] flex flex-col shrink-0 relative z-10">
+                  {["8:00", "9:00", "10:00", "11:00", "12:00", "1:00", "2:00", "3:00", "4:00", "5:00"].map((time, idx) => (
+                    <div key={idx} className="h-40 flex justify-center items-start pt-2">
+                      <span className="font-poppins text-[11px] font-semibold text-[#45474B]">{time}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Columns for Staff */}
+                <div className={`flex-1 grid divide-x divide-[#C6C6CB] relative ${selectedStaffFilter === "All Staff" ? "grid-cols-4" : "grid-cols-1"}`}>
+                  {staffColumns
+                    .filter(staff => selectedStaffFilter === "All Staff" || staff.name === selectedStaffFilter)
+                    .map((staff) => (
+                      <div key={staff.name} className="relative h-full">
+                        {bookings
+                          .filter(b => b.staff === staff.name)
+                          .map(b => (
+                            <div
+                              key={b.id}
+                              onClick={() => setOpenDropdownCardId(openDropdownCardId === b.id ? null : b.id)}
+                              className={`absolute left-[3%] right-[3%] ${b.colorClass} border-l-4 ${b.borderColor} rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === b.id ? "z-40" : "z-20"}`}
+                              style={{ top: `${b.top}px`, height: `${b.height}px` }}
+                            >
+                              <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none cursor-pointer">
+                                <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
+                                  <path d="M2 10a2 2 0 110-4 2 2 0 010 4zm0-6a2 2 0 110-4 2 2 0 010 4zm0 12a2 2 0 110-4 2 2 0 010 4z" />
+                                </svg>
+                              </button>
+                              <div>
+                                <div className="flex justify-between items-center pr-4">
+                                  <span className="text-[9px] font-medium text-[#45474B] leading-none">{b.time}</span>
+                                  {b.isPending ? (
+                                    <div className="flex items-center gap-1">
+                                      <span className="border border-[#D44343] rounded px-1 py-0.5 text-[8px] font-semibold text-[#D44343] leading-none bg-white/40">
+                                        Pending !
+                                      </span>
+                                      <span className="text-[9px] font-medium text-[#45474B]">90:00</span>
+                                    </div>
+                                  ) : b.isCancelled ? (
+                                    <span className="bg-white/50 px-1 py-0.5 rounded text-[8px] font-semibold text-[#45474B] leading-none flex items-center gap-0.5">
+                                      <span>{b.status}</span>
+                                      <span className="text-[#FB3535] font-bold">x</span>
+                                    </span>
+                                  ) : (
+                                    <span className="bg-white/50 px-1 py-0.5 rounded text-[8px] font-semibold text-[#45474B] leading-none flex items-center gap-0.5">
+                                      <span>{b.status}</span>
+                                      {b.status.includes("Completed") && (
+                                        <HugeiconsIcon icon={Tick01Icon} className="w-2 h-2 text-[#10B981]" />
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+                                <h4 className="font-poppins text-xs font-semibold text-[#020305] mt-1.5 truncate">{b.client}</h4>
+                                <p className="text-[10px] text-[#45474B] truncate mt-0.5">{b.service}</p>
+                              </div>
+                              <span className="text-[10px] font-medium text-[#45474B]">{b.price}</span>
+                              {renderDropdown(b.id)}
+                            </div>
+                          ))}
+                      </div>
+                    ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -553,7 +660,7 @@ export default function DashboardCalendar({
             {/* Modal Header */}
             <div className="px-6 py-4 bg-[#FCF8F8] border-b border-neutral-200 flex justify-between items-center">
               <h3 className="font-poppins text-base font-bold text-[#020305]">Booking Details</h3>
-              <button 
+              <button
                 onClick={() => setViewingBooking(null)}
                 className="text-neutral-400 hover:text-neutral-700 text-lg font-bold cursor-pointer transition-colors"
               >
@@ -592,7 +699,7 @@ export default function DashboardCalendar({
             </div>
             {/* Modal Footer */}
             <div className="px-6 py-4 bg-[#FCF8F8] border-t border-neutral-200 flex justify-end">
-              <button 
+              <button
                 onClick={() => setViewingBooking(null)}
                 className="bg-[#020305] text-white text-xs font-semibold px-5 py-2.5 rounded-lg hover:bg-neutral-800 transition-colors shadow-sm cursor-pointer"
               >

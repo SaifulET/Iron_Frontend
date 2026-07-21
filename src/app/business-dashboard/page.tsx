@@ -74,7 +74,7 @@ interface Client {
 }
 
 export default function BusinessDashboard() {
-  const [activeTab, setActiveTab] = useState("Dashboard");
+  const [activeTab, setActiveTab] = useState("Calendar");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showFooterMenu, setShowFooterMenu] = useState(true);
   const footerMenuRef = useRef<HTMLDivElement>(null);
