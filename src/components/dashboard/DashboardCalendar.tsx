@@ -64,6 +64,8 @@ export default function DashboardCalendar({
   // Drag to scroll states
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [datePickerSelectedMonth, setDatePickerSelectedMonth] = useState(6); // Defaults to July (6)
+  const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
+  const [disabledSlots, setDisabledSlots] = useState<string[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isDragActive, setIsDragActive] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
@@ -598,24 +600,77 @@ export default function DashboardCalendar({
 
                         {/* 7 Days Columns */}
                         <div className="flex-1 grid grid-cols-7 divide-x divide-[#C6C6CB] relative">
-                          {[20, 21, 22, 23, 24, 25, 26].map((dateNum, dayIdx) => (
-                            <div key={dayIdx} className="p-2 relative min-h-[140px] flex flex-col gap-1.5">
-                              {/* Tuesday (21) bookings demo matching design */}
-                              {dateNum === 21 && staffBookings.map((b) => (
-                                <div
-                                  key={b.id}
-                                  onClick={() => setOpenDropdownCardId(openDropdownCardId === b.id ? null : b.id)}
-                                  className={`bg-[#0CC0DF]/20 border-l-4 border-[#0CC0DF] rounded px-2 py-1.5 text-xs cursor-pointer hover:brightness-95 transition-all relative ${openDropdownCardId === b.id ? "z-40" : "z-20"}`}
-                                >
-                                  <div className="font-semibold text-[#020305] text-[11px] truncate flex items-center justify-between">
-                                    <span>{b.time.split(" - ")[0]} {b.client}</span>
+                          {[20, 21, 22, 23, 24, 25, 26].map((dateNum, dayIdx) => {
+                            const slotKey = `${staff.name}-${dateNum}`;
+                            const isSelected = selectedSlots.includes(slotKey);
+                            const isDisabled = disabledSlots.includes(slotKey);
+                            const hasBooking = dateNum === 21 && staffBookings.length > 0;
+
+                            return (
+                              <div 
+                                key={dayIdx} 
+                                onClick={(e) => {
+                                  if (hasBooking) return;
+                                  
+                                  // Check if target slot is a deselect operation
+                                  const isDeselect = selectedSlots.includes(slotKey);
+                                  if (isDeselect) {
+                                    setSelectedSlots(prev => prev.filter(k => k !== slotKey));
+                                    return;
+                                  }
+
+                                  // If there are already selected slots, enforce status exclusivity
+                                  if (selectedSlots.length > 0) {
+                                    const firstKey = selectedSlots[0];
+                                    const firstIsDisabled = disabledSlots.includes(firstKey);
+                                    if (isDisabled !== firstIsDisabled) {
+                                      // Block mixed state selections silently
+                                      return;
+                                    }
+                                  }
+
+                                  setSelectedSlots(prev => [...prev, slotKey]);
+                                }}
+                                className={`p-2 relative min-h-[140px] flex flex-col gap-1.5 transition-all cursor-pointer ${
+                                  isSelected 
+                                    ? "bg-[#2E9DA7]/15 border-2 border-[#2E9DA7]" 
+                                    : isDisabled 
+                                      ? "bg-[#F1F5F9] border-2 border-dashed border-[#CBD5E1] text-[#94A3B8]" 
+                                      : "hover:bg-neutral-50"
+                                }`}
+                              >
+                                {isDisabled && !isSelected && (
+                                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+                                    <span className="text-[10px] font-bold tracking-wider text-[#94A3B8] uppercase">Disabled</span>
                                   </div>
-                                  <div className="text-[10px] text-[#45474B] truncate">{b.service.split("·")[0]}</div>
-                                  {renderDropdown(b.id)}
-                                </div>
-                              ))}
-                            </div>
-                          ))}
+                                )}
+                                {/* Tuesday (21) bookings demo matching design */}
+                                {dateNum === 21 && staffBookings.map((b) => (
+                                  <div
+                                    key={b.id}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setOpenDropdownCardId(openDropdownCardId === b.id ? null : b.id);
+                                    }}
+                                    className={`bg-[#0CC0DF]/20 border-l-4 border-[#0CC0DF] rounded px-2 py-1.5 text-xs cursor-pointer hover:brightness-95 transition-all relative ${openDropdownCardId === b.id ? "z-40" : "z-20"}`}
+                                  >
+                                    <div className="font-semibold text-[#020305] text-[11px] truncate flex items-center justify-between">
+                                      <span>{b.time.split(" - ")[0]} {b.client}</span>
+                                    </div>
+                                    <div className="text-[10px] text-[#45474B] truncate">{b.service.split("·")[0]}</div>
+                                    {renderDropdown(b.id)}
+                                  </div>
+                                ))}
+
+                                {/* Checkbox / Label indicator if selected */}
+                                {isSelected && !hasBooking && (
+                                  <div className="absolute top-2 right-2 w-4 h-4 bg-[#2E9DA7] text-white flex items-center justify-center rounded text-[10px] font-bold">
+                                    ✓
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     );
@@ -658,12 +713,69 @@ export default function DashboardCalendar({
                     <div className="flex-1 grid divide-x divide-[#C6C6CB] relative w-full" style={{ gridTemplateColumns: `repeat(${activeStaffList.length}, minmax(0, 1fr))` }}>
                       {activeStaffList.map((staff) => (
                         <div key={staff.name} className="relative h-full">
+                          {/* Render click-capturable empty slots behind the bookings */}
+                          <div className="absolute inset-0 z-0 flex flex-col">
+                            {Array.from({ length: 10 }).map((_, hourIdx) => (
+                              <div key={hourIdx} className="h-40 flex flex-col border-b border-[#C6C6CB]/20">
+                                {[0, 1].map((halfIdx) => {
+                                  const slotKey = `${staff.name}-today-${hourIdx}-${halfIdx}`;
+                                  const isSelected = selectedSlots.includes(slotKey);
+                                  const isDisabled = disabledSlots.includes(slotKey);
+                                  return (
+                                    <div
+                                      key={halfIdx}
+                                      onClick={() => {
+                                        // Check if target slot is a deselect operation
+                                        const isDeselect = selectedSlots.includes(slotKey);
+                                        if (isDeselect) {
+                                          setSelectedSlots(prev => prev.filter(k => k !== slotKey));
+                                          return;
+                                        }
+
+                                        // Enforce status exclusivity
+                                        if (selectedSlots.length > 0) {
+                                          const firstKey = selectedSlots[0];
+                                          // Note: Today view slot keys contain "-today-" substring, check if first key is in disabled list
+                                          const firstIsDisabled = disabledSlots.includes(firstKey);
+                                          if (isDisabled !== firstIsDisabled) {
+                                            return;
+                                          }
+                                        }
+
+                                        setSelectedSlots(prev => [...prev, slotKey]);
+                                      }}
+                                      className={`h-20 w-full relative transition-all cursor-pointer flex items-center justify-center ${
+                                        isSelected 
+                                          ? "bg-[#2E9DA7]/15 border border-[#2E9DA7]" 
+                                          : isDisabled
+                                            ? "bg-[#F1F5F9] border-b border-dashed border-[#CBD5E1] text-[#94A3B8]"
+                                            : "hover:bg-neutral-50/50"
+                                      }`}
+                                    >
+                                      {isDisabled && !isSelected && (
+                                        <span className="text-[9px] font-bold tracking-wider text-[#94A3B8] uppercase pointer-events-none">Disabled</span>
+                                      )}
+                                      {isSelected && (
+                                        <div className="absolute top-2 right-2 w-4 h-4 bg-[#2E9DA7] text-white flex items-center justify-center rounded text-[10px] font-bold">
+                                          ✓
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            ))}
+                          </div>
+
                           {bookings
                             .filter(b => b.staff === staff.name)
                             .map(b => (
                               <div
                                 key={b.id}
-                                onClick={() => setOpenDropdownCardId(openDropdownCardId === b.id ? null : b.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setOpenDropdownCardId(openDropdownCardId === b.id ? null : b.id);
+                                }}
                                 className={`absolute left-[3%] right-[3%] ${b.colorClass} border-l-4 ${b.borderColor} rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === b.id ? "z-40" : "z-20"}`}
                                 style={{ top: `${b.top}px`, height: `${b.height}px` }}
                               >
@@ -715,25 +827,59 @@ export default function DashboardCalendar({
       </div>
 
       {/* Slots selected bottom bar */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white border border-[#C6C6CB] rounded-xl px-4 py-3 shadow-xl flex flex-col sm:flex-row items-center justify-between w-[calc(100%-32px)] sm:w-[640px] min-h-[94px] h-auto gap-4 sm:gap-0 z-30 select-none">
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="w-[31px] h-10 rounded-full bg-[#CFE1FE] flex items-center justify-center shrink-0">
-            <img src="/calederions/edit.svg" alt="Edit Icon" className="w-5 h-5 object-contain" />
+      {selectedSlots.length > 0 && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white border border-[#C6C6CB] rounded-xl px-4 py-3 shadow-xl flex flex-col sm:flex-row items-center justify-between w-[calc(100%-32px)] sm:w-[640px] min-h-[94px] h-auto gap-4 sm:gap-0 z-30 select-none animate-fadeIn">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="w-[31px] h-10 rounded-full bg-[#CFE1FE] flex items-center justify-center shrink-0">
+              <img src="/calederions/edit.svg" alt="Edit Icon" className="w-5 h-5 object-contain" />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-poppins text-sm font-semibold text-[#020305]">{selectedSlots.length} {selectedSlots.length === 1 ? "slot" : "slots"} selected</span>
+              <span className="text-xs text-[#45474B] font-poppins">
+                {Array.from(new Set(selectedSlots.map(k => k.split("-")[0]))).join(", ")}'s schedule
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="font-poppins text-sm font-semibold text-[#020305]">2 slots selected</span>
-            <span className="text-xs text-[#45474B] font-poppins">John's schedule</span>
+          <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
+            {(() => {
+              // If any of the selected slots are currently disabled, show Activate button
+              const hasDisabledSelected = selectedSlots.some(key => disabledSlots.includes(key));
+              
+              if (hasDisabledSelected) {
+                return (
+                  <button 
+                    onClick={() => {
+                      setDisabledSlots(prev => prev.filter(k => !selectedSlots.includes(k)));
+                      setSelectedSlots([]);
+                    }}
+                    className="bg-[#2E9DA7] text-white text-xs sm:text-sm font-medium px-4 sm:px-[36.2px] h-[44px] sm:h-[50px] rounded-lg hover:bg-[#20848f] transition-colors shadow-md flex-1 sm:flex-initial cursor-pointer"
+                  >
+                    Activate Selected Slots ({selectedSlots.length})
+                  </button>
+                );
+              }
+
+              return (
+                <button 
+                  onClick={() => {
+                    setDisabledSlots(prev => [...prev, ...selectedSlots]);
+                    setSelectedSlots([]);
+                  }}
+                  className="bg-[#020305] text-white text-xs sm:text-sm font-medium px-4 sm:px-[36.2px] h-[44px] sm:h-[50px] rounded-lg hover:bg-neutral-800 transition-colors shadow-md flex-1 sm:flex-initial cursor-pointer"
+                >
+                  Disable Selected Slots ({selectedSlots.length})
+                </button>
+              );
+            })()}
+            <button 
+              onClick={() => setSelectedSlots([])}
+              className="text-[#45474B] hover:text-neutral-900 text-xs sm:text-sm font-medium transition-colors shrink-0 cursor-pointer"
+            >
+              Cancel
+            </button>
           </div>
         </div>
-        <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
-          <button className="bg-[#020305] text-white text-xs sm:text-sm font-medium px-4 sm:px-[36.2px] h-[44px] sm:h-[50px] rounded-lg hover:bg-neutral-800 transition-colors shadow-md flex-1 sm:flex-initial cursor-pointer">
-            Disable Selected Slots (2)
-          </button>
-          <button className="text-[#45474B] hover:text-neutral-900 text-xs sm:text-sm font-medium transition-colors shrink-0 cursor-pointer">
-            Cancel
-          </button>
-        </div>
-      </div>
+      )}
 
       {/* Premium Booking Details Modal */}
       {viewingBooking && (
