@@ -62,6 +62,8 @@ export default function DashboardCalendar({
   const [cancelBookingId, setCancelBookingId] = useState<string | null>(null);
 
   // Drag to scroll states
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [datePickerSelectedMonth, setDatePickerSelectedMonth] = useState(6); // Defaults to July (6)
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isDragActive, setIsDragActive] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
@@ -305,7 +307,7 @@ export default function DashboardCalendar({
       {/* Calendar Toolbar */}
       <div className="flex flex-col sm:flex-row gap-4 py-3 sm:py-0 sm:h-16 border-b border-[#C6C6CB] bg-[#FCF8F8] px-6 items-center justify-between shrink-0 select-none">
         {/* Left side: Today & Date picker */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 relative">
           {/* Today View Toggle Dropdown */}
           <div className="relative">
             <button
@@ -337,7 +339,7 @@ export default function DashboardCalendar({
           </div>
 
           {/* Date Navigator */}
-          <div className="flex items-center border border-[#C6C6CB] rounded-lg bg-white h-9 overflow-hidden">
+          <div className="flex items-center border border-[#C6C6CB] rounded-lg bg-white h-9 overflow-hidden relative">
             <button
               onClick={handlePrevDate}
               className="px-3 h-full border-r border-[#C6C6CB] hover:bg-neutral-50 transition-all text-neutral-600 flex items-center justify-center cursor-pointer"
@@ -346,7 +348,10 @@ export default function DashboardCalendar({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <div className="flex items-center gap-2 px-4 h-full">
+            <div 
+              onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+              className="flex items-center gap-2 px-4 h-full cursor-pointer hover:bg-neutral-50 transition-all select-none"
+            >
               <HugeiconsIcon icon={Calendar03Icon} className="w-4 h-4 text-[#0C0C0C]" />
               <span className="font-poppins text-xs font-semibold text-[#1C1B1C] whitespace-nowrap">{formatDate(currentDate)}</span>
             </div>
@@ -878,6 +883,216 @@ export default function DashboardCalendar({
           }
         }}
       />
+
+      {/* DatePicker Dropdown/Modal overlay */}
+      {isDatePickerOpen && (
+        <>
+          {/* Backdrop close capture */}
+          <div 
+            className="fixed inset-0 z-40 bg-black/40 sm:bg-transparent"
+            onClick={() => setIsDatePickerOpen(false)}
+          />
+
+          {/* DatePicker Layout wrapper:
+              - Mobile: Fixed full-screen modal with vertical scroll stacked months
+              - Desktop: Absolute popover positioned below the Date Navigator container
+          */}
+          <div className="fixed inset-0 sm:absolute sm:inset-auto sm:top-[45px] sm:left-0 z-50 bg-white sm:rounded-2xl shadow-[0px_8px_30px_rgba(0,0,0,0.12)] border border-neutral-100 p-6 flex flex-col font-sans h-screen sm:h-auto overflow-y-auto w-full sm:w-[680px]">
+            {/* Header / Top Weeks buttons */}
+            <div className="flex justify-between items-center pb-4 border-b border-neutral-100 sm:border-none">
+              <div className="flex gap-2 overflow-x-auto pb-1 w-full no-scrollbar">
+                {["In 1 week", "In 2 weeks", "In 3 weeks", "In 4 weeks", "In 5 weeks"].map((label, idx) => (
+                  <button 
+                    key={label}
+                    onClick={() => {
+                      const futureDate = new Date();
+                      futureDate.setDate(futureDate.getDate() + (idx + 1) * 7);
+                      setCurrentDate(futureDate);
+                      setIsDatePickerOpen(false);
+                    }}
+                    className="px-4 py-1.5 border border-neutral-200 hover:border-neutral-800 rounded-full text-xs font-semibold whitespace-nowrap text-[#1C1B1C] transition-colors cursor-pointer"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <button 
+                onClick={() => setIsDatePickerOpen(false)} 
+                className="text-neutral-600 hover:text-neutral-900 font-medium text-lg px-2 sm:hidden cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Desktop View: Double Side-by-Side Month Calendars (with dynamic arrow paging) */}
+            {(() => {
+              const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+              
+              const m1Index = datePickerSelectedMonth; // Left month index
+              const m2Index = (datePickerSelectedMonth + 1) % 12; // Right month index
+              const m1Year = 2026;
+              const m2Year = m2Index === 0 ? 2027 : 2026;
+
+              const getDaysInMonth = (month: number, year: number) => new Date(year, month + 1, 0).getDate();
+              const getFirstDayOffset = (month: number, year: number) => {
+                let day = new Date(year, month, 1).getDay(); // 0 is Sun, 1 is Mon
+                return day === 0 ? 6 : day - 1; // convert to Mon-Sun offset
+              };
+
+              const m1Days = getDaysInMonth(m1Index, m1Year);
+              const m1Offset = getFirstDayOffset(m1Index, m1Year);
+
+              const m2Days = getDaysInMonth(m2Index, m2Year);
+              const m2Offset = getFirstDayOffset(m2Index, m2Year);
+
+              return (
+                <div className="hidden sm:flex gap-8 mt-4">
+                  {/* Left Month Calendar */}
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center mb-3">
+                      <button 
+                        onClick={() => setDatePickerSelectedMonth(prev => prev === 0 ? 11 : prev - 1)}
+                        className="text-neutral-600 hover:text-neutral-900 font-bold p-1 px-2 hover:bg-neutral-100 rounded cursor-pointer"
+                      >
+                        &larr;
+                      </button>
+                      <span className="font-semibold text-sm text-[#1C1B1C]">{monthsList[m1Index]} {m1Year}</span>
+                      <span className="w-8"></span>
+                    </div>
+                    <div className="grid grid-cols-7 gap-1 text-center text-xs">
+                      {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => (
+                        <span key={d} className="font-semibold text-[#45474B] py-1">{d}</span>
+                      ))}
+                      {/* Offset buffer days */}
+                      {Array.from({ length: m1Offset }).map((_, i) => (
+                        <span key={`b1-${i}`} className="py-1.5"></span>
+                      ))}
+                      {Array.from({ length: m1Days }).map((_, d) => {
+                        const dayNum = d + 1;
+                        const isSelected = currentDate.getDate() === dayNum && currentDate.getMonth() === m1Index && currentDate.getFullYear() === m1Year;
+                        return (
+                          <button
+                            key={`m1-d-${dayNum}`}
+                            onClick={() => {
+                              setCurrentDate(new Date(m1Year, m1Index, dayNum));
+                              setViewMode("Today");
+                              setIsDatePickerOpen(false);
+                            }}
+                            className={`py-1.5 rounded-full font-medium hover:bg-neutral-100 transition-colors cursor-pointer ${
+                              isSelected ? "bg-[#020305] text-white" : "text-[#1C1B1C]"
+                            }`}
+                          >
+                            {dayNum}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Right Month Calendar */}
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="w-8"></span>
+                      <span className="font-semibold text-sm text-[#1C1B1C]"> {monthsList[m2Index]} {m2Year}</span>
+                      <button 
+                        onClick={() => setDatePickerSelectedMonth(prev => (prev + 1) % 12)}
+                        className="text-neutral-600 hover:text-neutral-900 font-bold p-1 px-2 hover:bg-neutral-100 rounded cursor-pointer"
+                      >
+                        &rarr;
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-7 gap-1 text-center text-xs">
+                      {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => (
+                        <span key={d} className="font-semibold text-[#45474B] py-1">{d}</span>
+                      ))}
+                      {/* Offset buffer days */}
+                      {Array.from({ length: m2Offset }).map((_, i) => (
+                        <span key={`b2-${i}`} className="py-1.5"></span>
+                      ))}
+                      {Array.from({ length: m2Days }).map((_, d) => {
+                        const dayNum = d + 1;
+                        const isSelected = currentDate.getDate() === dayNum && currentDate.getMonth() === m2Index && currentDate.getFullYear() === m2Year;
+                        return (
+                          <button
+                            key={`m2-d-${dayNum}`}
+                            onClick={() => {
+                              setCurrentDate(new Date(m2Year, m2Index, dayNum));
+                              setViewMode("Today");
+                              setIsDatePickerOpen(false);
+                            }}
+                            className={`py-1.5 rounded-full font-medium hover:bg-neutral-100 transition-colors cursor-pointer ${
+                              isSelected ? "bg-[#020305] text-white" : "text-[#1C1B1C]"
+                            }`}
+                          >
+                            {dayNum}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Mobile View: Vertical scroll calendar stack (scrolling next months automatically) */}
+            {(() => {
+              const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+              // Generate next 12 months for seamless scroll view
+              const generatedMonths = Array.from({ length: 12 }, (_, i) => {
+                const now = new Date();
+                now.setMonth(now.getMonth() + i);
+                return {
+                  monthIndex: now.getMonth(),
+                  year: now.getFullYear()
+                };
+              });
+
+              return (
+                <div className="flex sm:hidden flex-col gap-6 mt-4 pb-20 overflow-y-auto flex-1">
+                  {generatedMonths.map(({ monthIndex, year }) => {
+                    const daysCount = new Date(year, monthIndex + 1, 0).getDate();
+                    const firstDay = new Date(year, monthIndex, 1).getDay();
+                    const offset = firstDay === 0 ? 6 : firstDay - 1;
+
+                    return (
+                      <div key={`${year}-${monthIndex}`} className="border-b border-neutral-100 pb-4">
+                        <span className="font-bold text-sm text-[#1C1B1C] block mb-3">{monthsList[monthIndex]} {year}</span>
+                        <div className="grid grid-cols-7 gap-1.5 text-center text-xs">
+                          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => (
+                            <span key={d} className="font-semibold text-[#45474B] py-1">{d}</span>
+                          ))}
+                          {Array.from({ length: offset }).map((_, i) => (
+                            <span key={`mob-b-${i}`} className="py-2"></span>
+                          ))}
+                          {Array.from({ length: daysCount }).map((_, d) => {
+                            const dayNum = d + 1;
+                            const isSelected = currentDate.getDate() === dayNum && currentDate.getMonth() === monthIndex && currentDate.getFullYear() === year;
+                            return (
+                              <button
+                                key={`mob-d-${dayNum}`}
+                                onClick={() => {
+                                  setCurrentDate(new Date(year, monthIndex, dayNum));
+                                  setViewMode("Today");
+                                  setIsDatePickerOpen(false);
+                                }}
+                                className={`py-2 rounded-full font-medium hover:bg-neutral-100 transition-colors cursor-pointer ${
+                                  isSelected ? "bg-[#020305] text-white" : "text-[#1C1B1C]"
+                                }`}
+                              >
+                                {dayNum}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+          </div>
+        </>
+      )}
     </main>
   );
 }
