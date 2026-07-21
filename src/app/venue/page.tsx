@@ -34,6 +34,11 @@ function VenueDetailsContent() {
   const [hasSavedCard, setHasSavedCard] = useState(true);
   const [isReplacingCard, setIsReplacingCard] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
+  
+  // Promo code discount states
+  const [promoDiscountPercent, setPromoDiscountPercent] = useState<number>(0);
+  const [promoDeductedAmount, setPromoDeductedAmount] = useState<number>(0);
+  const [promoCode, setPromoCode] = useState<string>("");
 
   // Lock screen body scroll when bookingStep is active
   React.useEffect(() => {
@@ -1469,6 +1474,10 @@ function VenueDetailsContent() {
                   isReplacingCard={isReplacingCard}
                   setIsReplacingCard={setIsReplacingCard}
                   setBookingStep={setBookingStep}
+                  setPromoDiscountPercent={setPromoDiscountPercent}
+                  setPromoDeductedAmount={setPromoDeductedAmount}
+                  promoCode={promoCode}
+                  setPromoCode={setPromoCode}
                 />
               )}
 
@@ -1487,21 +1496,24 @@ function VenueDetailsContent() {
 
             {/* Right Side: Sticky Checkout Summary Card */}
             {bookingStep !== "confirmed" && (
-              <CheckoutSummaryAside
-                bookingStep={bookingStep}
-                selectedDayNum={selectedDayNum}
-                selectedTimeSlot={selectedTimeSlot}
-                selectedList={selectedList}
-                totalDurationText={totalDurationText}
-                totalPriceText={totalPriceText}
-                selectedAddons={selectedAddons}
-                selectedProfessional={selectedProfessional}
-                totalPrice={totalPrice}
-                isReturningCustomer={isReturningCustomer}
-                showPolicy={showPolicy}
-                setShowPolicy={setShowPolicy}
-                setBookingStep={setBookingStep}
-              />
+               <CheckoutSummaryAside
+                 bookingStep={bookingStep}
+                 selectedDayNum={selectedDayNum}
+                 selectedTimeSlot={selectedTimeSlot}
+                 selectedList={selectedList}
+                 totalDurationText={totalDurationText}
+                 totalPriceText={totalPriceText}
+                 selectedAddons={selectedAddons}
+                 selectedProfessional={selectedProfessional}
+                 totalPrice={totalPrice}
+                 isReturningCustomer={isReturningCustomer}
+                 showPolicy={showPolicy}
+                 setShowPolicy={setShowPolicy}
+                 setBookingStep={setBookingStep}
+                 promoDiscountPercent={promoDiscountPercent}
+                 promoDeductedAmount={promoDeductedAmount}
+                 promoCode={promoCode}
+               />
             )}
 
           {showCopiedToast && (

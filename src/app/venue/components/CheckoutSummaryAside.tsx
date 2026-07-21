@@ -19,6 +19,9 @@ interface CheckoutSummaryAsideProps {
   showPolicy: boolean;
   setShowPolicy: (val: boolean) => void;
   setBookingStep: (step: any) => void;
+  promoDiscountPercent: number;
+  promoDeductedAmount: number;
+  promoCode: string;
 }
 
 export default function CheckoutSummaryAside({
@@ -35,6 +38,9 @@ export default function CheckoutSummaryAside({
   showPolicy,
   setShowPolicy,
   setBookingStep,
+  promoDiscountPercent,
+  promoDeductedAmount,
+  promoCode,
 }: CheckoutSummaryAsideProps) {
   return (
     <aside className="w-full lg:w-[537px] bg-white border border-neutral-200 rounded-xl p-4 sm:p-8 flex flex-col gap-5 lg:sticky lg:top-28">
@@ -120,6 +126,17 @@ export default function CheckoutSummaryAside({
           <span>€{totalPrice + (selectedAddons.length * 90)}</span>
         </div>
 
+        {/* Promo code discount if applied */}
+        {promoCode && (
+          <>
+            <div className="border-t border-[#E5E5E5] w-full" />
+            <div className="flex justify-between items-center py-2.5 text-emerald-600 font-semibold">
+              <span>Promo code ({promoCode}) - {promoDiscountPercent}%</span>
+              <span>-€{promoDeductedAmount}</span>
+            </div>
+          </>
+        )}
+
         {/* Divider Line 563 */}
         <div className="border-t border-[#E5E5E5] w-full" />
 
@@ -147,7 +164,7 @@ export default function CheckoutSummaryAside({
               </div>
             </div>
           )}
-          <span>{isReturningCustomer ? "-" : `€${Math.round((totalPrice + (selectedAddons.length * 90)) * 0.2)}`}</span>
+          <span>{isReturningCustomer ? "-" : `€${Math.max(0, Math.round(((totalPrice + (selectedAddons.length * 90)) - promoDeductedAmount) * 0.2))}`}</span>
         </div>
 
         {/* Divider Line 564 */}
@@ -156,7 +173,7 @@ export default function CheckoutSummaryAside({
         {/* Balance due at venue */}
         <div className="flex justify-between items-center text-base font-semibold py-2.5">
           <span>Balance due at venue</span>
-          <span>€{isReturningCustomer ? (totalPrice + (selectedAddons.length * 90)) : Math.round((totalPrice + (selectedAddons.length * 90)) * 0.8)}</span>
+          <span>€{isReturningCustomer ? Math.max(0, (totalPrice + (selectedAddons.length * 90)) - promoDeductedAmount) : Math.max(0, Math.round(((totalPrice + (selectedAddons.length * 90)) - promoDeductedAmount) * 0.8))}</span>
         </div>
       </div>
 
@@ -212,10 +229,10 @@ export default function CheckoutSummaryAside({
             ) : (
               <>
                 <p>
-                  Your booking deposit of €{Math.round((totalPrice + (selectedAddons.length * 90)) * 0.2)} is charged now to secure your appointment and will be deducted from your total service cost.
+                  Your booking deposit of €{Math.max(0, Math.round(((totalPrice + (selectedAddons.length * 90)) - promoDeductedAmount) * 0.2))} is charged now to secure your appointment and will be deducted from your total service cost.
                 </p>
                 <p>
-                  You will pay the remaining €{Math.round((totalPrice + (selectedAddons.length * 90)) * 0.8)} at the venue by cash or card.
+                  You will pay the remaining €{Math.max(0, Math.round(((totalPrice + (selectedAddons.length * 90)) - promoDeductedAmount) * 0.8))} at the venue by cash or card.
                 </p>
                 <p>
                   Payment is processed securely via Stripe.

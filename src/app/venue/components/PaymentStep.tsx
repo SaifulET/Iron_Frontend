@@ -10,6 +10,10 @@ interface PaymentStepProps {
   isReplacingCard: boolean;
   setIsReplacingCard: (val: boolean) => void;
   setBookingStep: (step: any) => void;
+  setPromoDiscountPercent: (val: number) => void;
+  setPromoDeductedAmount: (val: number) => void;
+  promoCode: string;
+  setPromoCode: (val: string) => void;
 }
 
 export default function PaymentStep({
@@ -18,6 +22,10 @@ export default function PaymentStep({
   isReplacingCard,
   setIsReplacingCard,
   setBookingStep,
+  setPromoDiscountPercent,
+  setPromoDeductedAmount,
+  promoCode,
+  setPromoCode,
 }: PaymentStepProps) {
   return (
     <div className="flex flex-col w-full lg:w-[714px] font-manrope">
@@ -148,8 +156,50 @@ export default function PaymentStep({
         </div>
       )}
 
+      {/* Promo Code Application Section */}
+      <div className="flex flex-col gap-2.5 w-full mt-6 bg-white border border-[#ECEBEF] rounded-xl p-5 shadow-sm font-sans">
+        <span className="text-[11px] font-bold text-[#16123E] tracking-widest uppercase">Promo Code</span>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            id="promo-code-input"
+            defaultValue={promoCode}
+            placeholder="Enter promo code"
+            className="flex-grow border border-[#ECEBEF] rounded-lg px-4 py-2 text-sm font-medium text-[#16123E] placeholder-[#5E598B] bg-white outline-none focus:border-[#2E9DA7]"
+          />
+          <button
+            onClick={() => {
+              const inputEl = document.getElementById("promo-code-input") as HTMLInputElement;
+              const feedbackEl = document.getElementById("promo-feedback");
+              if (inputEl && inputEl.value.trim().toUpperCase() === "BOOKLY20") {
+                setPromoDiscountPercent(20);
+                setPromoDeductedAmount(18);
+                setPromoCode("BOOKLY20");
+                if (feedbackEl) {
+                  feedbackEl.classList.add("hidden");
+                  feedbackEl.innerHTML = "";
+                }
+              } else {
+                setPromoDiscountPercent(0);
+                setPromoDeductedAmount(0);
+                setPromoCode("");
+                if (feedbackEl) {
+                  feedbackEl.classList.remove("hidden");
+                  feedbackEl.innerHTML = `<span class="text-xs text-red-600 font-medium">✗ Invalid promo code</span>`;
+                }
+              }
+            }}
+            className="bg-[#2E9DA7] text-white px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            Apply
+          </button>
+        </div>
+        {/* Dynamic Promo Code Feedback container */}
+        <div id="promo-feedback" className="hidden mt-2"></div>
+      </div>
+
       {/* Special requests textarea */}
-      <div className="flex flex-col gap-2 w-full mt-8">
+      <div className="flex flex-col gap-2 w-full mt-6">
         <div className="border border-[#E8E8E4] rounded-lg p-4 bg-white shadow-sm w-full">
           <textarea
             rows={3}
