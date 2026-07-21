@@ -27,11 +27,17 @@ export default function SuperAdminFinanceStats() {
       value: "€1,240",
       subtitle: "7 businesses awaiting SEPA",
       valueColor: "text-[#D97706]"
+    },
+    {
+      title: "Discounted money",
+      value: "€4,120",
+      subtitle: "124 times promo code applied",
+      valueColor: "text-[#0CC0DF]"
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 w-full">
       {cards.map((c, idx) => (
         <div
           key={idx}
