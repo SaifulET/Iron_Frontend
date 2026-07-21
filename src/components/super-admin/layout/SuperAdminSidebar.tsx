@@ -12,7 +12,8 @@ import {
   Analytics01Icon,
   HeadsetIcon,
   Settings01Icon,
-  ArrowDown01Icon
+  ArrowDown01Icon,
+  DiscountIcon
 } from "@hugeicons/core-free-icons";
 
 interface SuperAdminSidebarProps {
@@ -34,6 +35,7 @@ export default function SuperAdminSidebar({
     { name: "Customers", icon: UserGroup03Icon },
     { name: "Bookings", icon: Calendar01Icon },
     { name: "Finance", icon: SaveMoneyDollarIcon },
+    { name: "Promo Code", icon: DiscountIcon },
     { name: "Content", icon: PencilEdit01Icon },
     { name: "Analytics", icon: Analytics01Icon },
     { name: "Support", icon: HeadsetIcon },

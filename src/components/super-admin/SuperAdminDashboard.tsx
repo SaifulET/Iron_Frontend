@@ -12,6 +12,7 @@ import SuperAdminAnalytics from "./analytics/SuperAdminAnalytics";
 import SuperAdminSupport from "./support/SuperAdminSupport";
 import SuperAdminSettings from "./settings/SuperAdminSettings";
 import SuperAdminContent from "./content/SuperAdminContent";
+import SuperAdminPromoCode from "./promo-code/SuperAdminPromoCode";
 
 export default function SuperAdminDashboard() {
   const [activeTab, setActiveTab] = useState("Dashboard");
@@ -73,6 +74,8 @@ export default function SuperAdminDashboard() {
             setSharedViewingBusinessId={setSharedViewingBusinessId}
             setSharedViewingBusinessTab={setSharedViewingBusinessTab}
           />
+        ) : activeTab === "Promo Code" ? (
+          <SuperAdminPromoCode />
         ) : activeTab === "Analytics" ? (
           <SuperAdminAnalytics setActiveTab={setActiveTab} />
         ) : activeTab === "Support" ? (
