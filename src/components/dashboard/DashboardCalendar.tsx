@@ -412,7 +412,7 @@ export default function DashboardCalendar({
       </div>
 
       {/* Horizontal Scroll Wrapper for Headers & Grid on Mobile */}
-      <div 
+      <div
         ref={scrollContainerRef}
         onMouseDown={(e) => {
           if (!scrollContainerRef.current) return;
@@ -429,13 +429,16 @@ export default function DashboardCalendar({
           const walk = (x - dragStartX) * 1.5; // drag scroll speed multiplier
           scrollContainerRef.current.scrollLeft = dragScrollLeft - walk;
         }}
-        className={`flex-1 flex flex-col overflow-x-auto overflow-y-hidden w-full touch-pan-x select-none ${isDragActive ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`flex-1 flex flex-col ${viewMode === "Monthly" ? "overflow-hidden" : "overflow-x-auto overflow-y-hidden"} w-full touch-pan-x select-none ${isDragActive ? "cursor-grabbing" : "cursor-grab"}`}
       >
-        <div className="min-w-[1000px] flex-1 flex flex-col min-h-0">
+        <div className={`${viewMode === "Monthly" ? "w-full min-w-0" : "min-w-[1000px]"} flex-1 flex flex-col min-h-0`}>
           {/* Calendar Headers (Resource Columns - Sticky) */}
           <div className="bg-[#FCF8F8] border-b border-[#C6C6CB] flex items-center shrink-0 select-none">
             {/* Left corner placeholder (Time / Staff header) */}
-            <div className="w-20 sm:w-24 h-14 sm:h-16 border-r border-[#C6C6CB] shrink-0 flex items-center justify-center font-poppins text-xs font-semibold text-[#45474B]">
+            <div 
+              className="h-14 sm:h-16 border-r border-[#C6C6CB] shrink-0 flex items-center justify-center font-poppins text-xs font-semibold text-[#45474B]"
+              style={{ width: viewMode === "Weekly" ? "80px" : "64px" }}
+            >
               {viewMode === "Weekly" ? "Staff" : ""}
             </div>
 
@@ -465,30 +468,99 @@ export default function DashboardCalendar({
               </div>
             ) : (
               // Today / Daily View: Staff Columns
-              <div className={`flex-1 grid divide-x divide-[#C6C6CB] ${selectedStaffFilter === "All Staff" ? "grid-cols-4" : "grid-cols-1"}`}>
-                {staffColumns
-                  .filter(staff => selectedStaffFilter === "All Staff" || staff.name === selectedStaffFilter)
-                  .map((staff, index) => (
-                    <div key={index} className="flex flex-col items-center justify-center py-3.5 gap-1.5">
-                      <div className={`p-[1px] rounded-full ${staff.hasBorder ? "border-2 border-[#0CC0DF]" : "border border-neutral-200"}`}>
-                        <img
-                          src="/calederions/calendrImage.jpg"
-                          alt={staff.name}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
+              (() => {
+                const activeStaffList = staffColumns.filter(staff => selectedStaffFilter === "All Staff" || staff.name === selectedStaffFilter);
+                return (
+                  <div className="flex-1 grid divide-x divide-[#C6C6CB]" style={{ gridTemplateColumns: `repeat(${activeStaffList.length}, minmax(0, 1fr))` }}>
+                    {activeStaffList.map((staff, index) => (
+                      <div key={index} className="flex flex-col items-center justify-center py-3.5 gap-1.5">
+                        <div className={`p-[1px] rounded-full ${staff.hasBorder ? "border-2 border-[#0CC0DF]" : "border border-neutral-200"}`}>
+                          <img
+                            src="/calederions/calendrImage.jpg"
+                            alt={staff.name}
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
+                        </div>
+                        <div className="flex items-center gap-1 cursor-pointer">
+                          <span className="font-poppins text-xs font-semibold text-[#020305]">{staff.name}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1 cursor-pointer">
-                        <span className="font-poppins text-xs font-semibold text-[#020305]">{staff.name}</span>
-                      </div>
-                    </div>
-                  ))}
-              </div>
+                    ))}
+                  </div>
+                );
+              })()
             )}
           </div>
 
           {/* Scrollable Grid Area */}
           <div className="flex-1 overflow-y-auto relative bg-[#FCF8F8] select-none min-h-0">
-            {viewMode === "Weekly" ? (
+            {viewMode === "Monthly" ? (
+              /* MONTHLY VIEW: Calendar Dates Grid */
+              <div className="p-4 bg-[#FCF8F8] min-h-[500px]">
+                <div className="grid grid-cols-7 gap-2 bg-[#C6C6CB]/20 p-2 rounded-xl border border-[#C6C6CB]/40">
+                  {/* Month header titles */}
+                  {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((dayName) => (
+                    <div key={dayName} className="py-2 text-center text-xs font-semibold font-poppins text-[#45474B] uppercase tracking-wider">
+                      <span className="hidden sm:inline">{dayName}</span>
+                      <span className="inline sm:hidden">{dayName.substring(0, 3)}</span>
+                    </div>
+                  ))}
+
+                  {/* Days cells */}
+                  {[
+                    // June buffer days
+                    { day: 29, month: "June", disabled: true },
+                    { day: 30, month: "June", disabled: true },
+                    // July days
+                    ...Array.from({ length: 31 }, (_, i) => ({ day: i + 1, month: "July", disabled: false })),
+                    // August buffer days
+                    { day: 1, month: "August", disabled: true },
+                    { day: 2, month: "August", disabled: true },
+                  ].map((dateItem, idx) => {
+                    const isSelected = viewingBooking === null && dateItem.day === 21 && dateItem.month === "July";
+                    const isToday = dateItem.day === 21 && dateItem.month === "July";
+
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => {
+                          if (!dateItem.disabled) {
+                            // Switch view mode to "Today" showing that specific day's tasks according to employee columns
+                            const selectedYear = 2026;
+                            const selectedMonthIndex = dateItem.month === "June" ? 5 : dateItem.month === "July" ? 6 : 7;
+                            setCurrentDate(new Date(selectedYear, selectedMonthIndex, dateItem.day));
+                            setViewMode("Today");
+                          }
+                        }}
+                        className={`min-h-[100px] p-2 border border-[#C6C6CB]/30 rounded-lg flex flex-col justify-between transition-all duration-150 cursor-pointer hover:border-[#020305] hover:shadow-sm ${dateItem.disabled ? "opacity-35 bg-neutral-50/50" : "bg-white"
+                          } ${isToday ? "ring-2 ring-[#020305]/20 border-[#020305]" : ""}`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className={`text-xs font-bold font-poppins ${isToday ? "bg-[#020305] text-white w-6 h-6 rounded-full flex items-center justify-center" : "text-[#1C1B1C]"}`}>
+                            {dateItem.day}
+                          </span>
+                          {dateItem.day === 1 && (
+                            <span className="text-[10px] font-semibold text-[#45474B] uppercase">{dateItem.month}</span>
+                          )}
+                        </div>
+
+                        {/* Booking indicator / summary inside cell */}
+                        {!dateItem.disabled && dateItem.day === 21 && (
+                          <div className="mt-1.5 flex flex-col gap-1">
+                            <div className="bg-[#BBEBFF] text-[#195156] text-[10px] font-semibold px-1.5 py-0.5 rounded truncate">
+                              8:00 John Doe
+                            </div>
+                            <div className="bg-[#BBEBFF] text-[#195156] text-[10px] font-semibold px-1.5 py-0.5 rounded truncate">
+                              13:00 Jane Doe
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : viewMode === "Weekly" ? (
               /* WEEKLY VIEW: Staff rows on Left, 7 Day columns */
               <div className="flex flex-col w-full relative">
                 {/* Backdrop overlay */}
@@ -505,7 +577,10 @@ export default function DashboardCalendar({
                     return (
                       <div key={staff.name} className="flex border-b border-[#C6C6CB] min-h-[140px] relative">
                         {/* Left Staff Row Header */}
-                        <div className="w-20 sm:w-24 border-r border-[#C6C6CB] bg-[#FCF8F8] p-3 flex flex-col items-center justify-center gap-1 shrink-0 z-10">
+                        <div 
+                          className="border-r border-[#C6C6CB] bg-[#FCF8F8] p-3 flex flex-col items-center justify-center gap-1 shrink-0 z-10"
+                          style={{ width: "80px" }}
+                        >
                           <img
                             src="/calederions/calendrImage.jpg"
                             alt={staff.name}
@@ -552,7 +627,7 @@ export default function DashboardCalendar({
                   />
                 )}
                 {/* Background Horizontal Grid Lines */}
-                <div className="absolute left-16 right-0 top-0 bottom-0 pointer-events-none flex flex-col">
+                <div className="absolute left-[65px] right-0 top-0 bottom-0 pointer-events-none flex flex-col z-0">
                   {Array.from({ length: 10 }).map((_, idx) => (
                     <div key={idx} className="h-40 w-full flex flex-col">
                       {/* Dashed half hour line */}
@@ -564,7 +639,7 @@ export default function DashboardCalendar({
                 </div>
 
                 {/* Time Column (Left Side Axis) */}
-                <div className="w-16 border-r border-[#C6C6CB] bg-[#FCF8F8] flex flex-col shrink-0 relative z-10">
+                <div className="border-r border-[#C6C6CB] bg-[#FCF8F8] flex flex-col shrink-0 relative z-10" style={{ width: "64px" }}>
                   {["8:00", "9:00", "10:00", "11:00", "12:00", "1:00", "2:00", "3:00", "4:00", "5:00"].map((time, idx) => (
                     <div key={idx} className="h-40 flex justify-center items-start pt-2">
                       <span className="font-poppins text-[11px] font-semibold text-[#45474B]">{time}</span>
@@ -572,60 +647,62 @@ export default function DashboardCalendar({
                   ))}
                 </div>
 
-                {/* Columns for Staff */}
-                <div className={`flex-1 grid divide-x divide-[#C6C6CB] relative ${selectedStaffFilter === "All Staff" ? "grid-cols-4" : "grid-cols-1"}`}>
-                  {staffColumns
-                    .filter(staff => selectedStaffFilter === "All Staff" || staff.name === selectedStaffFilter)
-                    .map((staff) => (
-                      <div key={staff.name} className="relative h-full">
-                        {bookings
-                          .filter(b => b.staff === staff.name)
-                          .map(b => (
-                            <div
-                              key={b.id}
-                              onClick={() => setOpenDropdownCardId(openDropdownCardId === b.id ? null : b.id)}
-                              className={`absolute left-[3%] right-[3%] ${b.colorClass} border-l-4 ${b.borderColor} rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === b.id ? "z-40" : "z-20"}`}
-                              style={{ top: `${b.top}px`, height: `${b.height}px` }}
-                            >
-                              <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none cursor-pointer">
-                                <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
-                                  <path d="M2 10a2 2 0 110-4 2 2 0 010 4zm0-6a2 2 0 110-4 2 2 0 010 4zm0 12a2 2 0 110-4 2 2 0 010 4z" />
-                                </svg>
-                              </button>
-                              <div>
-                                <div className="flex justify-between items-center pr-4">
-                                  <span className="text-[9px] font-medium text-[#45474B] leading-none">{b.time}</span>
-                                  {b.isPending ? (
-                                    <div className="flex items-center gap-1">
-                                      <span className="border border-[#D44343] rounded px-1 py-0.5 text-[8px] font-semibold text-[#D44343] leading-none bg-white/40">
-                                        Pending !
+                {(() => {
+                  const activeStaffList = staffColumns.filter(staff => selectedStaffFilter === "All Staff" || staff.name === selectedStaffFilter);
+                  return (
+                    <div className="flex-1 grid divide-x divide-[#C6C6CB] relative w-full" style={{ gridTemplateColumns: `repeat(${activeStaffList.length}, minmax(0, 1fr))` }}>
+                      {activeStaffList.map((staff) => (
+                        <div key={staff.name} className="relative h-full">
+                          {bookings
+                            .filter(b => b.staff === staff.name)
+                            .map(b => (
+                              <div
+                                key={b.id}
+                                onClick={() => setOpenDropdownCardId(openDropdownCardId === b.id ? null : b.id)}
+                                className={`absolute left-[3%] right-[3%] ${b.colorClass} border-l-4 ${b.borderColor} rounded-md p-2 shadow-sm flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform ${openDropdownCardId === b.id ? "z-40" : "z-20"}`}
+                                style={{ top: `${b.top}px`, height: `${b.height}px` }}
+                              >
+                                <button className="absolute right-2 top-2 text-neutral-500 hover:text-neutral-900 select-none cursor-pointer">
+                                  <svg className="w-1 h-3" fill="currentColor" viewBox="0 0 4 16">
+                                    <path d="M2 10a2 2 0 110-4 2 2 0 010 4zm0-6a2 2 0 110-4 2 2 0 010 4zm0 12a2 2 0 110-4 2 2 0 010 4z" />
+                                  </svg>
+                                </button>
+                                <div>
+                                  <div className="flex justify-between items-center pr-4">
+                                    <span className="text-[9px] font-medium text-[#45474B] leading-none">{b.time}</span>
+                                    {b.isPending ? (
+                                      <div className="flex items-center gap-1">
+                                        <span className="border border-[#D44343] rounded px-1 py-0.5 text-[8px] font-semibold text-[#D44343] leading-none bg-white/40">
+                                          Pending !
+                                        </span>
+                                        <span className="text-[9px] font-medium text-[#45474B]">90:00</span>
+                                      </div>
+                                    ) : b.isCancelled ? (
+                                      <span className="bg-white/50 px-1 py-0.5 rounded text-[8px] font-semibold text-[#45474B] leading-none flex items-center gap-0.5">
+                                        <span>{b.status}</span>
+                                        <span className="text-[#FB3535] font-bold">x</span>
                                       </span>
-                                      <span className="text-[9px] font-medium text-[#45474B]">90:00</span>
-                                    </div>
-                                  ) : b.isCancelled ? (
-                                    <span className="bg-white/50 px-1 py-0.5 rounded text-[8px] font-semibold text-[#45474B] leading-none flex items-center gap-0.5">
-                                      <span>{b.status}</span>
-                                      <span className="text-[#FB3535] font-bold">x</span>
-                                    </span>
-                                  ) : (
-                                    <span className="bg-white/50 px-1 py-0.5 rounded text-[8px] font-semibold text-[#45474B] leading-none flex items-center gap-0.5">
-                                      <span>{b.status}</span>
-                                      {b.status.includes("Completed") && (
-                                        <HugeiconsIcon icon={Tick01Icon} className="w-2 h-2 text-[#10B981]" />
-                                      )}
-                                    </span>
-                                  )}
+                                    ) : (
+                                      <span className="bg-white/50 px-1 py-0.5 rounded text-[8px] font-semibold text-[#45474B] leading-none flex items-center gap-0.5">
+                                        <span>{b.status}</span>
+                                        {b.status.includes("Completed") && (
+                                          <HugeiconsIcon icon={Tick01Icon} className="w-2 h-2 text-[#10B981]" />
+                                        )}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <h4 className="font-poppins text-xs font-semibold text-[#020305] mt-1.5 truncate">{b.client}</h4>
+                                  <p className="text-[10px] text-[#45474B] truncate mt-0.5">{b.service}</p>
                                 </div>
-                                <h4 className="font-poppins text-xs font-semibold text-[#020305] mt-1.5 truncate">{b.client}</h4>
-                                <p className="text-[10px] text-[#45474B] truncate mt-0.5">{b.service}</p>
+                                <span className="text-[10px] font-medium text-[#45474B]">{b.price}</span>
+                                {renderDropdown(b.id)}
                               </div>
-                              <span className="text-[10px] font-medium text-[#45474B]">{b.price}</span>
-                              {renderDropdown(b.id)}
-                            </div>
-                          ))}
-                      </div>
-                    ))}
-                </div>
+                            ))}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
             )}
           </div>
