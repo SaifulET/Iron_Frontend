@@ -15,7 +15,11 @@ interface PromoLogItem {
   business: string;
 }
 
-export default function SuperAdminPromoCode() {
+interface SuperAdminPromoCodeProps {
+  onClientClick?: (email: string) => void;
+}
+
+export default function SuperAdminPromoCode({ onClientClick }: SuperAdminPromoCodeProps) {
   const [activeTab, setActiveTab] = useState<"All" | "Active" | "Expired" | "Deactivated">("All");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingCode, setEditingCode] = useState<PromoCodeItem | null>(null);
@@ -353,7 +357,12 @@ export default function SuperAdminPromoCode() {
                         {log.clientName.split(" ").map((n) => n[0]).join("")}
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-semibold text-gray-800">{log.clientName}</span>
+                        <span 
+                          onClick={() => onClientClick && onClientClick(log.clientEmail)}
+                          className="font-semibold text-gray-800 hover:text-[#2E9DA7] hover:underline cursor-pointer"
+                        >
+                          {log.clientName}
+                        </span>
                         <span className="text-xs text-gray-400 font-normal">{log.clientEmail}</span>
                       </div>
                     </div>

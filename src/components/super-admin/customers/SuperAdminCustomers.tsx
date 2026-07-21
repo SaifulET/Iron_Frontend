@@ -18,10 +18,21 @@ interface CustomerItem {
   status: "Active" | "Doormat" | "Suspended";
 }
 
-export default function SuperAdminCustomers() {
+interface SuperAdminCustomersProps {
+  viewingCustomerId?: string | null;
+  setViewingCustomerId?: (id: string | null) => void;
+}
+
+export default function SuperAdminCustomers({ viewingCustomerId = null, setViewingCustomerId }: SuperAdminCustomersProps) {
   const [activeStatusFilter, setActiveStatusFilter] = useState<"All" | "Active" | "Doormat" | "Suspended">("All");
   const [selectedStatusDropdown, setSelectedStatusDropdown] = useState("All");
-  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
+  
+  const selectedCustomerId = viewingCustomerId;
+  const setSelectedCustomerId = (id: string | null) => {
+    if (setViewingCustomerId) {
+      setViewingCustomerId(id);
+    }
+  };
 
   const [customers, setCustomers] = useState<CustomerItem[]>([
     {

@@ -19,6 +19,7 @@ export default function SuperAdminDashboard() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [sharedViewingBusinessId, setSharedViewingBusinessId] = useState<string | null>(null);
   const [sharedViewingBusinessTab, setSharedViewingBusinessTab] = useState<string>("Overview");
+  const [sharedViewingCustomerId, setSharedViewingCustomerId] = useState<string | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -65,7 +66,10 @@ export default function SuperAdminDashboard() {
             setInitialDetailTab={setSharedViewingBusinessTab}
           />
         ) : activeTab === "Customers" ? (
-          <SuperAdminCustomers />
+          <SuperAdminCustomers 
+            viewingCustomerId={sharedViewingCustomerId}
+            setViewingCustomerId={setSharedViewingCustomerId}
+          />
         ) : activeTab === "Bookings" ? (
           <SuperAdminBookings />
         ) : activeTab === "Finance" ? (
@@ -75,7 +79,13 @@ export default function SuperAdminDashboard() {
             setSharedViewingBusinessTab={setSharedViewingBusinessTab}
           />
         ) : activeTab === "Promo Code" ? (
-          <SuperAdminPromoCode />
+          <SuperAdminPromoCode 
+            onClientClick={(clientEmail) => {
+              // Redirect to customers tab and load the details page
+              setSharedViewingCustomerId("1"); // Use matching customer ID (e.g. ID "1") for demo details
+              setActiveTab("Customers");
+            }}
+          />
         ) : activeTab === "Analytics" ? (
           <SuperAdminAnalytics setActiveTab={setActiveTab} />
         ) : activeTab === "Support" ? (
