@@ -456,7 +456,7 @@ function VenueDetailsContent() {
         <div className="w-full flex flex-col lg:flex-row gap-10 mt-6 relative items-start">
 
           {/* Left Column (Tabs and Details) */}
-          <div className="flex-grow w-full lg:max-w-[868px] flex flex-col gap-8">
+          <div className="flex-grow w-full lg:max-w-[868px] flex flex-col gap-8 order-2 lg:order-1">
 
             {/* Tabs Navigation */}
             <div className={`flex border-b border-[#ACAAB4] w-full justify-between ${isMobile ? "sticky top-0 bg-[#FCFAF9] z-20" : ""}`}>
@@ -499,28 +499,32 @@ function VenueDetailsContent() {
 
                     {/* Service 1: Wedding Pic (Selected state) */}
                     {(selectedCategory === "All" || selectedCategory === "Featured" || selectedCategory === "Hair") && (
-                      <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center shadow-sm transition-all ${service1Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
-                        <div className="flex flex-col gap-1.5">
+                      <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center gap-4 shadow-sm transition-all ${service1Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
+                        <div className="flex flex-col gap-1.5 min-w-0 flex-1">
                           <h4 className="font-inter font-medium text-lg text-[#0D0D0D]">Wedding Pic</h4>
                           <span className="text-sm text-[#767676]">1 hr 30 min</span>
                           <span className="font-semibold text-lg text-[#0D0D0D] mt-1">€90</span>
                         </div>
                         <button
                           onClick={() => setService1Selected(!service1Selected)}
-                          className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm ${service1Selected
-                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 flex items-center justify-center p-0 rounded-full"
-                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2 shrink-0"
+                          className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm shrink-0 ${service1Selected
+                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
+                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
                             }`}
                         >
-                          {service1Selected ? "✓" : "Book"}
+                          {service1Selected ? (
+                            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : "Book"}
                         </button>
                       </div>
                     )}
 
                     {/* Service 2: Wedding Pic (Counter variant) */}
                     {(selectedCategory === "All" || selectedCategory === "Hair Treatment" || selectedCategory === "Hair") && (
-                      <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center shadow-sm transition-all ${service2Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
-                        <div className="flex flex-col gap-1.5">
+                      <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center gap-4 shadow-sm transition-all ${service2Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
+                        <div className="flex flex-col gap-1.5 min-w-0 flex-1">
                           <h4 className="font-inter font-medium text-lg text-[#0D0D0D]">Wedding Pic</h4>
                           <span className="text-sm text-[#767676]">max 4 hours • €35 per hour</span>
 
@@ -551,20 +555,24 @@ function VenueDetailsContent() {
                         </div>
                         <button
                           onClick={() => setService2Selected(!service2Selected)}
-                          className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm ${service2Selected
-                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 flex items-center justify-center p-0 rounded-full"
-                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2 shrink-0"
+                          className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm shrink-0 ${service2Selected
+                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
+                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
                             }`}
                         >
-                          {service2Selected ? "✓" : "Book"}
+                          {service2Selected ? (
+                            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : "Book"}
                         </button>
                       </div>
                     )}
 
                     {/* Service 3: Wedding Pic (Person counter variant) */}
                     {(selectedCategory === "All" || selectedCategory === "Color" || selectedCategory === "NAILS") && (
-                      <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center shadow-sm transition-all ${service3Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
-                        <div className="flex flex-col gap-1.5">
+                      <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center gap-4 shadow-sm transition-all ${service3Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
+                        <div className="flex flex-col gap-1.5 min-w-0 flex-1">
                           <h4 className="font-inter font-medium text-lg text-[#0D0D0D]">Wedding Pic</h4>
                           <span className="text-sm text-[#767676]">1 hr 30 min • €30 per person • min 2 person • max 4 person</span>
 
@@ -595,20 +603,24 @@ function VenueDetailsContent() {
                         </div>
                         <button
                           onClick={() => setService3Selected(!service3Selected)}
-                          className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm ${service3Selected
-                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 flex items-center justify-center p-0 rounded-full"
-                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2 shrink-0"
+                          className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm shrink-0 ${service3Selected
+                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
+                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
                             }`}
                         >
-                          {service3Selected ? "✓" : "Book"}
+                          {service3Selected ? (
+                            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : "Book"}
                         </button>
                       </div>
                     )}
 
                     {/* Service 4: Wedding Pic */}
                     {(selectedCategory === "All" || selectedCategory === "Facial" || selectedCategory === "Waxing & Trimming" || selectedCategory === "Beard") && (
-                      <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center shadow-sm transition-all ${service4Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
-                        <div className="flex flex-col gap-1.5">
+                      <div className={`w-full bg-white border rounded-xl p-5 flex justify-between items-center gap-4 shadow-sm transition-all ${service4Selected ? "border-[#2BB54F]" : "border-[#E5E5E5]"}`}>
+                        <div className="flex flex-col gap-1.5 min-w-0 flex-1">
                           <h4 className="font-inter font-medium text-lg text-[#0D0D0D]">Wedding Pic</h4>
                           <span className="text-sm text-[#767676]">max 4 hours • €35 per hour</span>
 
@@ -638,12 +650,16 @@ function VenueDetailsContent() {
                         </div>
                         <button
                           onClick={() => setService4Selected(!service4Selected)}
-                          className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm ${service4Selected
-                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 flex items-center justify-center p-0 rounded-full"
-                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2 shrink-0"
+                          className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm shrink-0 ${service4Selected
+                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
+                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
                             }`}
                         >
-                          {service4Selected ? "✓" : "Book"}
+                          {service4Selected ? (
+                            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : "Book"}
                         </button>
                       </div>
                     )}
@@ -984,7 +1000,7 @@ function VenueDetailsContent() {
           </div>
 
           {/* Right Column: Sticky Venue Summary Card */}
-          <aside className="w-full lg:max-w-[422px] lg:mx-0 bg-[#FFFFFF] shadow-[0px_-1px_4px_rgba(0,0,0,0.25),0px_4px_12px_rgba(0,0,0,0.2)] rounded-[12px] p-6 sm:p-12 flex flex-col gap-10 lg:sticky lg:top-24 select-none">
+          <aside className="w-full lg:max-w-[422px] lg:mx-0 bg-[#FFFFFF] shadow-[0px_-1px_4px_rgba(0,0,0,0.25),0px_4px_12px_rgba(0,0,0,0.2)] rounded-[12px] p-6 sm:p-12 flex flex-col gap-10 lg:sticky lg:top-24 select-none order-1 lg:order-2">
 
             {isLoggedIn && selectedList.length > 0 ? (
               /* checkout / book a visit state */
