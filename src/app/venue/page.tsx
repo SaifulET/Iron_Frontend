@@ -34,7 +34,7 @@ function VenueDetailsContent() {
   const [hasSavedCard, setHasSavedCard] = useState(true);
   const [isReplacingCard, setIsReplacingCard] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
-  
+
   // Promo code discount states
   const [promoDiscountPercent, setPromoDiscountPercent] = useState<number>(0);
   const [promoDeductedAmount, setPromoDeductedAmount] = useState<number>(0);
@@ -107,7 +107,7 @@ function VenueDetailsContent() {
           const rect = el.getBoundingClientRect();
           // Distance from the top of the element to our threshold
           const distance = Math.abs(rect.top - threshold);
-          
+
           // Section must have started entering the screen or been scrolled past (rect.top <= threshold + margin)
           if (rect.top <= threshold + 200) {
             if (distance < closestDistance) {
@@ -132,10 +132,34 @@ function VenueDetailsContent() {
   // Dynamic user logged in state toggle (checkbox/button for demo representation)
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("ENG");
-  
+
   const heroScrollRef = React.useRef<HTMLDivElement>(null);
   const [showLeftHeroArrow, setShowLeftHeroArrow] = useState(false);
   const [showRightHeroArrow, setShowRightHeroArrow] = useState(true);
+  const [isMobileSummaryExpanded, setIsMobileSummaryExpanded] = useState(false);
+  const [showStickyFooter, setShowStickyFooter] = useState(false);
+
+  React.useEffect(() => {
+    if (!isMobile) {
+      setShowStickyFooter(false);
+      return;
+    }
+
+    const handleScroll = () => {
+      const asideEl = document.getElementById("booking-aside");
+      if (asideEl) {
+        const rect = asideEl.getBoundingClientRect();
+        // Show sticky footer if the booking card is scrolled out of viewport
+        setShowStickyFooter(rect.height > 0 && rect.bottom < 100);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Initial check
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMobile, /* selectedList.length implicitly handled by total price/state updates */]);
+
   const [isFavorite, setIsFavorite] = useState(false);
   const [showCopiedToast, setShowCopiedToast] = useState(false);
   const [sortBy, setSortBy] = useState<"Latest" | "Highest Rated" | "Lowest Rated">("Latest");
@@ -335,16 +359,15 @@ function VenueDetailsContent() {
         <div className="w-full relative group">
           {/* Inner Image Container (rounded and overflow-hidden) */}
           <div className="w-full h-[320px] sm:h-[450px] relative rounded-2xl overflow-hidden shadow-md border border-neutral-100">
-            <div 
+            <div
               ref={heroScrollRef}
               onScroll={handleHeroScroll}
               onMouseDown={handleHeroMouseDown}
               onMouseMove={handleHeroMouseMove}
               onMouseUp={handleHeroMouseUpOrLeave}
               onMouseLeave={handleHeroMouseUpOrLeave}
-              className={`w-full h-full flex flex-nowrap overflow-x-auto scrollbar-hide select-none ${
-                isDragActive ? "cursor-grabbing" : "cursor-grab snap-x snap-mandatory scroll-smooth"
-              }`}
+              className={`w-full h-full flex flex-nowrap overflow-x-auto scrollbar-hide select-none ${isDragActive ? "cursor-grabbing" : "cursor-grab snap-x snap-mandatory scroll-smooth"
+                }`}
             >
               {heroImages.map((img, idx) => (
                 <div key={idx} className="w-full h-full shrink-0 snap-start relative">
@@ -359,7 +382,7 @@ function VenueDetailsContent() {
               ))}
             </div>
             {/* See all images button */}
-            <button 
+            <button
               onClick={() => scrollToSection("gallery")}
               className="absolute right-4 bottom-4 bg-[#FFFFFF] border border-[#D3D3D3] rounded-xl px-4 py-2 flex items-center justify-center gap-1.5 shadow-md hover:bg-neutral-50 transition-colors cursor-pointer z-10 text-[14.2px] font-medium font-inter text-[#0D0D0D]"
             >
@@ -428,25 +451,24 @@ function VenueDetailsContent() {
 
           {/* Share (Download) and Favorite buttons */}
           <div className="flex items-center gap-3 self-end sm:self-start">
-            <button 
+            <button
               onClick={handleShare}
               className="w-12 h-12 rounded-full bg-white border border-[#D3D3D3] flex items-center justify-center shadow-sm hover:bg-neutral-50 transition-colors cursor-pointer text-[#1C1B1C]"
               title="Share / Copy Link"
             >
               <img src="/Icons/downloadIcon.svg" alt="Download/Share" className="w-5 h-5 object-contain" />
             </button>
-            <button 
+            <button
               onClick={() => setIsFavorite(!isFavorite)}
-              className={`w-12 h-12 rounded-full border flex items-center justify-center shadow-sm transition-all cursor-pointer ${
-                isFavorite 
-                  ? "bg-[#FFEBEB] border-[#FFC1C1] text-[#DE350B]" 
-                  : "bg-white border-[#D3D3D3] text-[#1C1B1C] hover:bg-neutral-50"
-              }`}
+              className={`w-12 h-12 rounded-full border flex items-center justify-center shadow-sm transition-all cursor-pointer ${isFavorite
+                ? "bg-[#FFEBEB] border-[#FFC1C1] text-[#DE350B]"
+                : "bg-white border-[#D3D3D3] text-[#1C1B1C] hover:bg-neutral-50"
+                }`}
               title="Add to Favorites"
             >
-              <HugeiconsIcon 
-                icon={FavouriteIcon} 
-                className={`w-5 h-5 transition-colors ${isFavorite ? "text-[#DE350B] fill-[#DE350B]" : "text-neutral-800"}`} 
+              <HugeiconsIcon
+                icon={FavouriteIcon}
+                className={`w-5 h-5 transition-colors ${isFavorite ? "text-[#DE350B] fill-[#DE350B]" : "text-neutral-800"}`}
               />
             </button>
           </div>
@@ -508,8 +530,8 @@ function VenueDetailsContent() {
                         <button
                           onClick={() => setService1Selected(!service1Selected)}
                           className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm shrink-0 ${service1Selected
-                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
-                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
+                            ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
+                            : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
                             }`}
                         >
                           {service1Selected ? (
@@ -556,8 +578,8 @@ function VenueDetailsContent() {
                         <button
                           onClick={() => setService2Selected(!service2Selected)}
                           className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm shrink-0 ${service2Selected
-                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
-                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
+                            ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
+                            : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
                             }`}
                         >
                           {service2Selected ? (
@@ -604,8 +626,8 @@ function VenueDetailsContent() {
                         <button
                           onClick={() => setService3Selected(!service3Selected)}
                           className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm shrink-0 ${service3Selected
-                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
-                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
+                            ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
+                            : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
                             }`}
                         >
                           {service3Selected ? (
@@ -651,8 +673,8 @@ function VenueDetailsContent() {
                         <button
                           onClick={() => setService4Selected(!service4Selected)}
                           className={`text-sm font-semibold rounded-full border transition-all cursor-pointer shadow-sm shrink-0 ${service4Selected
-                              ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
-                              : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
+                            ? "bg-[#2BB54F] border-[#2BB54F] text-white w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center p-0 rounded-full aspect-square"
+                            : "bg-[#FCFAF9] border-[#B3B3B3] text-[#0D0D0D] hover:bg-neutral-50 px-5 py-2"
                             }`}
                         >
                           {service4Selected ? (
@@ -687,7 +709,7 @@ function VenueDetailsContent() {
                     )}
 
                     {/* See all button */}
-                    <button 
+                    <button
                       onClick={() => setSelectedCategory("All")}
                       className="self-start bg-[#FFFFFF] border border-[#C6C6CB] rounded-full px-6 py-2.5 text-sm font-semibold hover:bg-neutral-50 transition-colors cursor-pointer"
                     >
@@ -805,7 +827,7 @@ function VenueDetailsContent() {
                         <div className="flex items-center justify-center px-2 py-0.5 w-[65px] h-6 rounded-full shrink-0">
                           <span className="font-poppins text-sm text-[#4E5F78]">Sort by</span>
                         </div>
-                        <button 
+                        <button
                           onClick={() => setShowSortDropdown(!showSortDropdown)}
                           className="flex items-center justify-center gap-1 px-3 py-0.5 min-w-[100px] h-7 border border-[#111111] rounded-full bg-white cursor-pointer hover:bg-neutral-50 transition-colors text-sm font-poppins text-[#111111] relative z-10 whitespace-nowrap"
                         >
@@ -814,7 +836,7 @@ function VenueDetailsContent() {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                           </svg>
                         </button>
-                        
+
                         {showSortDropdown && (
                           <>
                             {/* Backdrop to close dropdown when clicking outside */}
@@ -1000,7 +1022,7 @@ function VenueDetailsContent() {
           </div>
 
           {/* Right Column: Sticky Venue Summary Card */}
-          <aside className="w-full lg:max-w-[422px] lg:mx-0 bg-[#FFFFFF] shadow-[0px_-1px_4px_rgba(0,0,0,0.25),0px_4px_12px_rgba(0,0,0,0.2)] rounded-[12px] p-6 sm:p-12 flex flex-col gap-10 lg:sticky lg:top-24 select-none order-1 lg:order-2">
+          <aside id="booking-aside" className="w-full lg:max-w-[422px] lg:mx-0 bg-[#FFFFFF] shadow-[0px_-1px_4px_rgba(0,0,0,0.25),0px_4px_12px_rgba(0,0,0,0.2)] rounded-[12px] p-6 sm:p-12 flex flex-col gap-10 lg:sticky lg:top-24 select-none order-1 lg:order-2">
 
             {isLoggedIn && selectedList.length > 0 ? (
               /* checkout / book a visit state */
@@ -1074,8 +1096,8 @@ function VenueDetailsContent() {
                         {mockVenueDetails.location}
                       </span>
                       <span className="w-1.5 h-1.5 rounded-full bg-[#808080] shrink-0" />
-                      <a 
-                        href="#" 
+                      <a
+                        href="#"
                         onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}
                         className="font-inter font-normal text-[15.8px] text-[#2366C5] hover:underline whitespace-nowrap shrink-0"
                       >
@@ -1140,7 +1162,13 @@ function VenueDetailsContent() {
                   /* SS 1: User Logged In Card State */
                   <>
                     <button
-                      onClick={() => setBookingStep("addons")}
+                      onClick={() => {
+                        if (selectedList.length === 0) {
+                          scrollToSection("services");
+                        } else {
+                          setBookingStep("addons");
+                        }
+                      }}
                       className="w-full h-12 bg-[#2E9DA7] border border-[#D5D7DA] text-white font-poppins font-medium text-base rounded-[12px] hover:opacity-90 transition-opacity cursor-pointer flex items-center justify-center shadow-sm"
                     >
                       <span className="w-[78px] h-[24px] flex items-center justify-center">Book now</span>
@@ -1169,8 +1197,8 @@ function VenueDetailsContent() {
                             {mockVenueDetails.location}
                           </span>
                           <span className="w-1.5 h-1.5 rounded-full bg-[#808080] shrink-0" />
-                          <a 
-                            href="#" 
+                          <a
+                            href="#"
                             onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}
                             className="font-inter font-normal text-[15.8px] text-[#2366C5] hover:underline whitespace-nowrap shrink-0"
                           >
@@ -1218,7 +1246,13 @@ function VenueDetailsContent() {
                   /* SS 2: User Not Logged In Card State (With blurred footer & Lock icon overlay) */
                   <>
                     <button
-                      onClick={() => setBookingStep("addons")}
+                      onClick={() => {
+                        if (selectedList.length === 0) {
+                          scrollToSection("services");
+                        } else {
+                          setBookingStep("addons");
+                        }
+                      }}
                       className="w-full h-12 bg-[#0D0D0D] border border-[#0D0D0D] text-white font-poppins font-medium text-base rounded-[12px] hover:opacity-95 transition-opacity cursor-pointer flex items-center justify-center gap-2 shadow-sm"
                     >
                       <img src="/image/smallBlacklogo.svg" alt="Bookly" className="w-5 h-5 object-contain invert brightness-0" />
@@ -1251,8 +1285,8 @@ function VenueDetailsContent() {
                             {mockVenueDetails.location}
                           </span>
                           <span className="w-1.5 h-1.5 rounded-full bg-[#808080] shrink-0" />
-                          <a 
-                            href="#" 
+                          <a
+                            href="#"
                             onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}
                             className="font-inter font-normal text-[15.8px] text-[#2366C5] hover:underline whitespace-nowrap shrink-0"
                           >
@@ -1364,7 +1398,7 @@ function VenueDetailsContent() {
                 <h4 className="font-semibold text-2xl md:text-[28px] tracking-tight text-[#1C1B1C]">
                   {title}
                 </h4>
-                <span 
+                <span
                   onClick={() => router.push("/explore")}
                   className="text-sm md:text-base font-medium text-[#1C1B1C] cursor-pointer hover:underline"
                 >
@@ -1431,19 +1465,19 @@ function VenueDetailsContent() {
                 <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-medium font-poppins overflow-x-auto scrollbar-hide whitespace-nowrap max-w-[calc(100%-100px)] sm:max-w-none pr-4">
                   <span className="text-[#ACAAB4] cursor-pointer" onClick={() => setBookingStep(null)}>Services</span>
                   <HugeiconsIcon icon={ArrowRight01Icon} size={14} className="text-[#ACAAB4]" />
-                  
+
                   <span className={bookingStep === "addons" ? "text-black font-semibold" : "text-[#ACAAB4]"}>Add-ons</span>
                   <HugeiconsIcon icon={ArrowRight01Icon} size={14} className={bookingStep === "addons" ? "text-black" : "text-[#ACAAB4]"} />
-                  
+
                   <span className={bookingStep === "professionals" ? "text-black font-semibold" : "text-[#ACAAB4]"}>Professionals</span>
                   <HugeiconsIcon icon={ArrowRight01Icon} size={14} className={bookingStep === "professionals" ? "text-black" : "text-[#ACAAB4]"} />
-                  
+
                   <span className={bookingStep === "time" ? "text-black font-semibold" : "text-[#ACAAB4]"}>Time</span>
                   <HugeiconsIcon icon={ArrowRight01Icon} size={14} className={bookingStep === "time" ? "text-black" : "text-[#ACAAB4]"} />
-                  
+
                   <span className={bookingStep === "payment" ? "text-black font-semibold" : "text-[#ACAAB4]"}>Payment</span>
                   <HugeiconsIcon icon={ArrowRight01Icon} size={14} className={bookingStep === "payment" ? "text-black" : "text-[#ACAAB4]"} />
-                  
+
                   <span className="text-[#ACAAB4]">Confirm</span>
                 </div>
 
@@ -1461,9 +1495,9 @@ function VenueDetailsContent() {
 
           {/* Modal Main Content Container */}
           <div className={`flex-1 w-full max-w-[1440px] mx-auto px-4 md:px-16 py-10 flex flex-col ${bookingStep === "confirmed" ? "items-center justify-center" : "lg:flex-row gap-16 items-start"} relative`}>
-            
+
             {/* Left Side: Step Content */}
-            <div className="flex-grow w-full lg:max-w-[700px] flex flex-col gap-10">
+            <div className="flex-grow w-full lg:max-w-[700px] flex flex-col gap-10 order-last lg:order-first">
               {bookingStep === "addons" && (
                 <AddonsStep selectedAddons={selectedAddons} setSelectedAddons={setSelectedAddons} />
               )}
@@ -1512,31 +1546,225 @@ function VenueDetailsContent() {
 
             {/* Right Side: Sticky Checkout Summary Card */}
             {bookingStep !== "confirmed" && (
-               <CheckoutSummaryAside
-                 bookingStep={bookingStep}
-                 selectedDayNum={selectedDayNum}
-                 selectedTimeSlot={selectedTimeSlot}
-                 selectedList={selectedList}
-                 totalDurationText={totalDurationText}
-                 totalPriceText={totalPriceText}
-                 selectedAddons={selectedAddons}
-                 selectedProfessional={selectedProfessional}
-                 totalPrice={totalPrice}
-                 isReturningCustomer={isReturningCustomer}
-                 showPolicy={showPolicy}
-                 setShowPolicy={setShowPolicy}
-                 setBookingStep={setBookingStep}
-                 promoDiscountPercent={promoDiscountPercent}
-                 promoDeductedAmount={promoDeductedAmount}
-                 promoCode={promoCode}
-               />
+              <CheckoutSummaryAside
+                bookingStep={bookingStep}
+                selectedDayNum={selectedDayNum}
+                selectedTimeSlot={selectedTimeSlot}
+                selectedList={selectedList}
+                totalDurationText={totalDurationText}
+                totalPriceText={totalPriceText}
+                selectedAddons={selectedAddons}
+                selectedProfessional={selectedProfessional}
+                totalPrice={totalPrice}
+                isReturningCustomer={isReturningCustomer}
+                showPolicy={showPolicy}
+                setShowPolicy={setShowPolicy}
+                setBookingStep={setBookingStep}
+                promoDiscountPercent={promoDiscountPercent}
+                promoDeductedAmount={promoDeductedAmount}
+                promoCode={promoCode}
+              />
             )}
 
-          {showCopiedToast && (
-            <div className="fixed bottom-6 right-6 bg-[#1C1B1C] text-white px-4 py-2 rounded-xl shadow-lg z-50 font-inter text-sm flex items-center gap-2">
-              <span>✓ Link copied to clipboard!</span>
+            {showCopiedToast && (
+              <div className="fixed bottom-6 right-6 bg-[#1C1B1C] text-white px-4 py-2 rounded-xl shadow-lg z-50 font-inter text-sm flex items-center gap-2">
+                <span>✓ Link copied to clipboard!</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Sticky Bottom Drawer for Mobile Summary */}
+      {showStickyFooter && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-white border-t border-neutral-200 shadow-[0px_-4px_16px_rgba(0,0,0,0.15)] transition-all duration-300">
+          {/* Expanded Summary Area */}
+          {isMobileSummaryExpanded && (
+            <div className="p-6 max-h-[75vh] overflow-y-auto border-b border-neutral-100 flex flex-col gap-6 bg-white font-inter">
+              {/* Title & Close */}
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-1">
+                  <h2 className="font-semibold text-2xl text-[#0D0D0D]">
+                    {selectedList.length > 0 ? "Book a visit" : mockVenueDetails.name}
+                  </h2>
+                  {selectedList.length > 0 && (
+                    <span className="text-[11px] font-bold text-[#757575] uppercase tracking-wider">YOUR SERVICES</span>
+                  )}
+                  {selectedList.length === 0 && (
+                    <div className="flex items-center gap-1.5 text-sm text-[#0d0d0d] font-semibold mt-1">
+                      <span>5.0</span>
+                      <img src="/Icons/rattingfull.svg" alt="star" className="w-4 h-4 object-contain" />
+                      <span className="font-normal text-[#757575]">({mockVenueDetails.reviewsCount} Reviews)</span>
+                    </div>
+                  )}
+                </div>
+                <button 
+                  onClick={() => setIsMobileSummaryExpanded(false)}
+                  className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 hover:text-black font-bold text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {selectedList.length > 0 ? (
+                /* Selected Services Items List */
+                <div className="flex flex-col gap-4">
+                  {selectedList.map((item) => (
+                    <div key={item.id} className="flex justify-between items-center py-2 border-b border-neutral-100">
+                      <div className="flex flex-col gap-1 min-w-0">
+                        <span className="font-semibold text-sm text-[#0D0D0D] truncate">{item.name}</span>
+                        <span className="text-xs text-[#757575]">{item.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-3 shrink-0">
+                        <span className="font-semibold text-sm text-[#0D0D0D]">{item.priceText}</span>
+                        <button
+                          onClick={() => item.onRemove()}
+                          className="text-neutral-400 hover:text-neutral-600 p-1 cursor-pointer font-bold text-xs"
+                          aria-label="Remove service"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Divider and Total */}
+                  <div className="border-t border-neutral-100 pt-4 flex justify-between items-center">
+                    <span className="font-semibold text-sm text-[#757575]">Total ({totalDurationText})</span>
+                    <div className="flex items-center gap-3">
+                      <span className="font-bold text-sm text-[#0D0D0D]">{totalPriceText}</span>
+                      <span className="w-5" />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {/* Business Details */}
+              <div className="border-t border-neutral-100 pt-6 flex flex-col gap-5 w-full">
+                {/* Clock status */}
+                <div className="flex items-center gap-3 w-full h-[24px]">
+                  <div className="w-6 h-6 relative shrink-0">
+                    <HugeiconsIcon icon={Clock04Icon} className="w-6 h-6 object-contain filter opacity-60" />
+                  </div>
+                  <span className="font-inter font-normal text-[15.9px] text-[#B7570B] whitespace-nowrap">
+                    {mockVenueDetails.openStatus}
+                  </span>
+                </div>
+
+                {/* Address and Get Directions */}
+                <div className="flex items-center gap-2 w-full">
+                  <div className="w-6 h-6 relative shrink-0">
+                    <HugeiconsIcon icon={Location05Icon} className="w-6 h-6 object-contain filter opacity-60" />
+                  </div>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="font-inter font-normal text-[15.8px] text-[#767676] truncate shrink">
+                      {mockVenueDetails.location}
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#808080] shrink-0" />
+                    <a 
+                      href="#" 
+                      onClick={(e) => { e.preventDefault(); scrollToSection("about"); setIsMobileSummaryExpanded(false); }}
+                      className="font-inter font-normal text-[15.8px] text-[#2366C5] hover:underline whitespace-nowrap shrink-0"
+                    >
+                      Get Directions
+                    </a>
+                  </div>
+                </div>
+
+                {/* Phone */}
+                {(!isLoggedIn && selectedList.length === 0) ? (
+                  /* Blurred contacts or Lock overlay on mobile expansion when logged out and nothing selected */
+                  <div className="relative w-full h-[120px] border border-neutral-100 rounded-xl bg-white overflow-hidden mt-2">
+                    <div className="flex flex-col gap-3 p-4 filter blur-[3px] select-none pointer-events-none opacity-50">
+                      <div className="flex items-center gap-2">
+                        <img src="/Icons/phone.svg" alt="Phone" className="w-5 h-5 object-contain" />
+                        <span>{mockVenueDetails.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <img src="/Icons/FacebookGray.svg" alt="Facebook" className="w-5 h-5 object-contain" />
+                        <span>Facebook</span>
+                      </div>
+                    </div>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-white/70">
+                      <p className="text-xs text-[#0D0D0D] font-inter font-semibold max-w-[180px]">
+                        Log in or create an account to contact this business
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-3 w-full h-[24px]">
+                      <div className="w-6 h-6 relative shrink-0">
+                        <img src="/Icons/phone.svg" alt="Phone" className="w-6 h-6 object-contain filter opacity-60" />
+                      </div>
+                      <span className="font-inter font-normal text-[15.9px] text-[#767676]">
+                        {mockVenueDetails.phone}
+                      </span>
+                    </div>
+
+                    {/* Social links */}
+                    <div className="flex flex-col gap-5 pt-2">
+                      <a href={mockVenueDetails.facebookUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:opacity-85 transition-opacity">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0">
+                          <img src="/Icons/FacebookGray.svg" alt="Facebook" className="w-4 h-4 object-contain" />
+                        </div>
+                        <span className="font-poppins font-normal text-base text-[#767676]">Facebook</span>
+                      </a>
+
+                      <a href={mockVenueDetails.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:opacity-85 transition-opacity">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0">
+                          <img src="/Icons/instagram.svg" alt="Instagram" className="w-4 h-4 object-contain" />
+                        </div>
+                        <span className="font-poppins font-normal text-base text-[#767676]">Instagram</span>
+                      </a>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           )}
+
+          {/* Bottom Bar */}
+          <div className="p-4 flex items-center justify-between gap-4">
+            <button
+              onClick={() => setIsMobileSummaryExpanded(!isMobileSummaryExpanded)}
+              className="flex flex-col items-start justify-center min-w-0 cursor-pointer"
+            >
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-lg text-[#0D0D0D]">
+                  {selectedList.length > 0 ? totalPriceText : "Book a visit"}
+                </span>
+                <svg
+                  className={`w-5 h-5 text-neutral-500 transition-transform duration-300 ${isMobileSummaryExpanded ? "rotate-180" : ""}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                </svg>
+              </div>
+              <span className="text-xs text-[#757575] truncate">
+                {selectedList.length > 0 
+                  ? `${selectedList.length} ${selectedList.length === 1 ? "service" : "services"} • ${totalDurationText}`
+                  : "Tap to view details"
+                }
+              </span>
+            </button>
+
+            <button
+              onClick={() => {
+                if (selectedList.length === 0) {
+                  scrollToSection("services");
+                  setIsMobileSummaryExpanded(false);
+                } else {
+                  setBookingStep("addons");
+                }
+              }}
+              className="flex-1 max-w-[200px] h-12 bg-[#2E9DA7] text-white font-poppins font-semibold text-base rounded-[12px] hover:opacity-95 transition-opacity cursor-pointer flex items-center justify-center gap-2 shadow-sm"
+            >
+              <span>{selectedList.length > 0 ? "Continue →" : "Book now"}</span>
+            </button>
           </div>
         </div>
       )}
