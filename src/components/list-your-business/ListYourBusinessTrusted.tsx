@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Carousel from "@/components/Carousel";
+import Carousel from "@/components/landing-page/Carousel";
 import TrustedBusinessCard, { TrustedBusiness } from "@/components/TrustedBusinessCard";
 
 interface ListYourBusinessTrustedProps {

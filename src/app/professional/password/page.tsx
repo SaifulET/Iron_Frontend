@@ -6,10 +6,10 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { SquareLock01Icon } from "@hugeicons/core-free-icons";
 
 // Components
-import AuthLayout from "@/components/AuthLayout";
-import AuthCard from "@/components/AuthCard";
-import { InputField } from "@/components/InputField";
-import SuccessModal from "@/components/SuccessModal";
+import AuthLayout from "@/components/auth/AuthLayout";
+import AuthCard from "@/components/auth/AuthCard";
+import { InputField } from "@/components/auth/InputField";
+import SuccessModal from "@/components/auth/SuccessModal";
 
 function PasswordPageContent() {
   const router = useRouter();

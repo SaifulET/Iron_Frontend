@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import Image from "next/image";
 
 import { Suspense } from "react";
-import BlogDetailBody from "@/components/BlogDetailBody";
+import BlogDetailBody from "@/components/blog/BlogDetailBody";
 
 function BlogDetailContent() {
   const router = useRouter();

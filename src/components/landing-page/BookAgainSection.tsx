@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import ServiceCard, { Recommendation } from "./ServiceCard";
+import ServiceCard, { Recommendation } from "@/components/ServiceCard";
 import Carousel from "./Carousel";
 
 interface BookAgainSectionProps {

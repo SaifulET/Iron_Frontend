@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import AddToHomeScreenButton from "@/components/AddToHomeScreenButton";
+import AddToHomeScreenButton from "@/components/landing-page/AddToHomeScreenButton";
 
 export default function ListYourBusinessAddHome() {
   return (

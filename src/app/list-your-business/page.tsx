@@ -10,13 +10,13 @@ import EdgeSoftOrbsTop from "@/components/EdgeSoftOrbsTop";
 import { TrustedBusiness } from "@/components/TrustedBusinessCard";
 
 // Sub-page split components
-import ListYourBusinessNavbar from "@/components/ListYourBusinessNavbar";
-import ListYourBusinessHero from "@/components/ListYourBusinessHero";
-import ListYourBusinessOneFee from "@/components/ListYourBusinessOneFee";
-import ListYourBusinessFeatures from "@/components/ListYourBusinessFeatures";
-import ListYourBusinessBuiltForCyprus from "@/components/ListYourBusinessBuiltForCyprus";
-import ListYourBusinessTrusted from "@/components/ListYourBusinessTrusted";
-import ListYourBusinessAddHome from "@/components/ListYourBusinessAddHome";
+import ListYourBusinessNavbar from "@/components/list-your-business/ListYourBusinessNavbar";
+import ListYourBusinessHero from "@/components/list-your-business/ListYourBusinessHero";
+import ListYourBusinessOneFee from "@/components/list-your-business/ListYourBusinessOneFee";
+import ListYourBusinessFeatures from "@/components/list-your-business/ListYourBusinessFeatures";
+import ListYourBusinessBuiltForCyprus from "@/components/list-your-business/ListYourBusinessBuiltForCyprus";
+import ListYourBusinessTrusted from "@/components/list-your-business/ListYourBusinessTrusted";
+import ListYourBusinessAddHome from "@/components/list-your-business/ListYourBusinessAddHome";
 
 export default function ListYourBusinessPage() {
   const router = useRouter();

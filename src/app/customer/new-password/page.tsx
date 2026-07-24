@@ -7,9 +7,9 @@ import { SquareLock01Icon, ArrowLeft02Icon } from "@hugeicons/core-free-icons";
 import Image from "next/image";
 
 // Components
-import AuthLayout from "@/components/AuthLayout";
-import AuthCard from "@/components/AuthCard";
-import { InputField } from "@/components/InputField";
+import AuthLayout from "@/components/auth/AuthLayout";
+import AuthCard from "@/components/auth/AuthCard";
+import { InputField } from "@/components/auth/InputField";
 
 function NewPasswordContent() {
   const router = useRouter();

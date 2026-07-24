@@ -7,11 +7,11 @@ import Link from "next/link";
 import { Mail01Icon, SquareLock01Icon } from "@hugeicons/core-free-icons";
 
 // Components
-import AuthLayout from "@/components/AuthLayout";
-import AuthCard from "@/components/AuthCard";
-import { InputField, SelectField, PhoneInputField } from "@/components/InputField";
-import SuccessModal from "@/components/SuccessModal";
-import PhoneVerificationStep2 from "@/components/PhoneVerificationStep2";
+import AuthLayout from "@/components/auth/AuthLayout";
+import AuthCard from "@/components/auth/AuthCard";
+import { InputField, SelectField, PhoneInputField } from "@/components/auth/InputField";
+import SuccessModal from "@/components/auth/SuccessModal";
+import PhoneVerificationStep2 from "@/components/auth/PhoneVerificationStep2";
 
 function ProfessionalSignupContent() {
   const router = useRouter();

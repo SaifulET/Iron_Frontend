@@ -9,7 +9,7 @@ import BlogFormModal from "./BlogFormModal";
 import FaqFormModal from "./FaqFormModal";
 import NewBlogPostPage from "./NewBlogPostPage";
 import StaticPageEditorPage from "./StaticPageEditorPage";
-import BlogDetailBody from "@/components/BlogDetailBody";
+import BlogDetailBody from "@/components/blog/BlogDetailBody";
 
 export default function SuperAdminContent() {
   const [activeTab, setActiveTab] = useState<"Blog" | "Static Pages" | "FAQ — Customers" | "FAQ — Businesses">("Blog");

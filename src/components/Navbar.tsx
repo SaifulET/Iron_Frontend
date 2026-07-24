@@ -19,6 +19,7 @@ import {
   ArrowRight02Icon,
   Setting07Icon
 } from "@hugeicons/core-free-icons";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
 
 interface NavbarProps {
   isLoggedIn: boolean;
@@ -36,6 +37,7 @@ export default function Navbar({
   isBusinessPage = false
 }: NavbarProps) {
   const router = useRouter();
+  const { installPWA } = usePWAInstall();
   const handleHowItWorksClick = (e: React.MouseEvent) => {
     if (typeof window !== "undefined") {
       if (window.location.pathname === "/") {
@@ -342,7 +344,13 @@ export default function Navbar({
                     <div className="border-t border-[#ACAAB4] w-full"></div>
 
                     {/* 8. Add to Home Screen */}
-                    <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+                    <button 
+                      className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" 
+                      onClick={() => {
+                        setShowUserDropdown(false);
+                        installPWA();
+                      }}
+                    >
                       <HugeiconsIcon icon={Home01Icon} className="w-5 h-5 text-[#141B34]" />
                       <span className="font-medium text-base text-[#1C1B1C]">Add to Home Screen</span>
                     </button>
@@ -689,7 +697,13 @@ export default function Navbar({
           <div className="border-t border-[#ACAAB4] w-full"></div>
 
           {/* 8. Add to Home Screen */}
-          <button className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" onClick={() => setShowUserDropdown(false)}>
+          <button 
+            className="flex items-center gap-3 cursor-pointer text-left w-full hover:opacity-85" 
+            onClick={() => {
+              setShowUserDropdown(false);
+              installPWA();
+            }}
+          >
             <HugeiconsIcon icon={Home01Icon} className="w-5 h-5 text-[#141B34]" />
             <span className="font-medium text-base text-[#1C1B1C]">Add to Home Screen</span>
           </button>

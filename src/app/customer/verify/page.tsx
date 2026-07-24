@@ -6,7 +6,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft02Icon } from "@hugeicons/core-free-icons";
 
 // Components
-import AuthLayout from "@/components/AuthLayout";
+import AuthLayout from "@/components/auth/AuthLayout";
 
 function VerifyPageContent() {
   const router = useRouter();

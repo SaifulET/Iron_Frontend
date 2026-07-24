@@ -6,8 +6,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { User02Icon, Building03Icon } from "@hugeicons/core-free-icons";
 
 // Components
-import AuthLayout from "@/components/AuthLayout";
-import RoleCard from "@/components/RoleCard";
+import AuthLayout from "@/components/auth/AuthLayout";
+import RoleCard from "@/components/select-role/RoleCard";
 
 export default function SelectRolePage() {
   const router = useRouter();

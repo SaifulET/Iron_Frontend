@@ -12,9 +12,9 @@ import {
   PartyIcon,
   Car04Icon,
 } from "@hugeicons/core-free-icons";
-import BusinessFormStep1 from "@/components/BusinessFormStep1";
-import CategorySelectorStep2 from "@/components/CategorySelectorStep2";
-import SuccessPendingApprovalStep3 from "@/components/SuccessPendingApprovalStep3";
+import BusinessFormStep1 from "@/components/business-form/BusinessFormStep1";
+import CategorySelectorStep2 from "@/components/business-form/CategorySelectorStep2";
+import SuccessPendingApprovalStep3 from "@/components/business-form/SuccessPendingApprovalStep3";
 
 function BusinessFormContent() {
   const router = useRouter();

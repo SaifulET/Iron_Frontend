@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/landing-page/SearchBar";
 
 // Imports
 import { bookingsList } from "./mockBookings";

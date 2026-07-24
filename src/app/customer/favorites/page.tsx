@@ -10,7 +10,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EdgeSoftOrbsTop from "@/components/EdgeSoftOrbsTop";
 import ServiceCard, { Recommendation } from "@/components/ServiceCard";
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/landing-page/SearchBar";
 
 export default function FavoritesPage() {
   const router = useRouter();

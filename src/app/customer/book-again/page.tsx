@@ -8,7 +8,7 @@ import { Refresh01Icon, ArrowLeft02Icon, ArrowRight02Icon } from "@hugeicons/cor
 // Components
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import AddToHomeScreenButton from "@/components/AddToHomeScreenButton";
+import AddToHomeScreenButton from "@/components/landing-page/AddToHomeScreenButton";
 import EdgeSoftOrbsTop from "@/components/EdgeSoftOrbsTop";
 
 interface VisitedService {

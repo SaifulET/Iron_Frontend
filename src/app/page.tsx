@@ -6,17 +6,17 @@ import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Car04Icon, Clock01Icon, DashboardSquare02Icon, FootballIcon, HealtcareIcon, Location01Icon, Location05Icon, PartyIcon, SailboatOffshoreIcon, Search01Icon, StarIcon, WellnessIcon, SquareLock01Icon, User02Icon, File01Icon, FavouriteIcon, CreditCardPosIcon, Home01Icon, HeadsetIcon, ProfileIcon, Logout01Icon, ArrowDown01Icon, ArrowRight02Icon } from "@hugeicons/core-free-icons";
 import ServiceCard, { Recommendation } from "@/components/ServiceCard";
-import Carousel from "@/components/Carousel";
+import Carousel from "@/components/landing-page/Carousel";
 import TrustedBusinessCard, { TrustedBusiness } from "@/components/TrustedBusinessCard";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import AddToHomeScreenButton from "@/components/AddToHomeScreenButton";
-import BusinessMockup from "@/components/BusinessMockup";
+import WhyChooseUs from "@/components/landing-page/WhyChooseUs";
+import AddToHomeScreenButton from "@/components/landing-page/AddToHomeScreenButton";
+import BusinessMockup from "@/components/landing-page/BusinessMockup";
 import FaqSection from "@/components/FaqSection";
 import Footer from "@/components/Footer";
 import EdgeSoftOrbsTop from "@/components/EdgeSoftOrbsTop";
 import Navbar from "@/components/Navbar";
-import BookAgainSection from "@/components/BookAgainSection";
-import SearchBar from "@/components/SearchBar";
+import BookAgainSection from "@/components/landing-page/BookAgainSection";
+import SearchBar from "@/components/landing-page/SearchBar";
 
 function useInView() {
   const ref = useRef<HTMLDivElement | null>(null);

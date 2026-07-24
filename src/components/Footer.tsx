@@ -2,8 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
 
 export default function Footer() {
+  const { installPWA } = usePWAInstall();
   return (
     <footer className="w-full bg-transparent mt-[120px] md:mt-[200px] lg:mt-[300px] xl:mt-[400px] pb-14 font-poppins">
       {/* Centered Content Wrapper */}
@@ -29,7 +31,10 @@ export default function Footer() {
             </div>
 
             {/* Add to Home screen Widget */}
-            <div className="box-border flex flex-row items-center justify-between py-[12px] px-[24px] gap-[20px] h-[48px] border border-[#4E5F78] rounded-[999px] cursor-pointer hover:bg-neutral-50 transition-colors mt-2">
+            <div 
+              onClick={installPWA}
+              className="box-border flex flex-row items-center justify-between py-[12px] px-[24px] gap-[20px] h-[48px] border border-[#4E5F78] rounded-[999px] cursor-pointer hover:bg-neutral-50 transition-colors mt-2"
+            >
               <span className="font-poppins font-normal text-[18px] sm:text-[20px] leading-[24px] text-[#1C1B1C]">
                 Add to Home screen
               </span>

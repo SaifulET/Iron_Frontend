@@ -8,7 +8,7 @@ import { Camera01Icon, Calendar02Icon, ArrowDown01Icon } from "@hugeicons/core-f
 // Components
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import AddToHomeScreenButton from "@/components/AddToHomeScreenButton";
+import AddToHomeScreenButton from "@/components/landing-page/AddToHomeScreenButton";
 import EdgeSoftOrbsTop from "@/components/EdgeSoftOrbsTop";
 
 import { countries } from "@/components/CountryData";

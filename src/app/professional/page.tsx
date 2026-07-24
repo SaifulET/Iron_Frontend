@@ -6,8 +6,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Building03Icon, Car01Icon } from "@hugeicons/core-free-icons";
 
 // Components
-import AuthLayout from "@/components/AuthLayout";
-import RoleCard from "@/components/RoleCard";
+import AuthLayout from "@/components/auth/AuthLayout";
+import RoleCard from "@/components/select-role/RoleCard";
 
 export default function ProfessionalVisitTypePage() {
   const router = useRouter();

@@ -6,10 +6,10 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Mail01Icon } from "@hugeicons/core-free-icons";
 
 // Components
-import AuthLayout from "@/components/AuthLayout";
-import AuthCard from "@/components/AuthCard";
-import { InputField } from "@/components/InputField";
-import SocialButton from "@/components/SocialButton";
+import AuthLayout from "@/components/auth/AuthLayout";
+import AuthCard from "@/components/auth/AuthCard";
+import { InputField } from "@/components/auth/InputField";
+import SocialButton from "@/components/auth/SocialButton";
 
 function ProfessionalAuthContent() {
   const router = useRouter();

@@ -9,7 +9,7 @@ import { mockVenueDetails, ServiceItem } from "./mockVenue";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft01Icon, ArrowLeft02Icon, ArrowRight01Icon, ArrowRight02Icon, Clock04Icon, Location05Icon, SquareLock01Icon, InformationCircleIcon, Location01Icon, Cancel01Icon, FavouriteIcon } from "@hugeicons/core-free-icons";
 import ServiceCard, { Recommendation } from "@/components/ServiceCard";
-import Carousel from "@/components/Carousel";
+import Carousel from "@/components/landing-page/Carousel";
 import AddonsStep from "./components/AddonsStep";
 import ProfessionalsStep from "./components/ProfessionalsStep";
 import TimeStep from "./components/TimeStep";

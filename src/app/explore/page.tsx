@@ -9,7 +9,7 @@ import FilterSidebar from "@/components/explore/FilterSidebar";
 import MobileFilterDrawer from "@/components/explore/MobileFilterDrawer";
 import ResultsList from "@/components/explore/ResultsList";
 
-const ExploreMap = dynamic(() => import("@/components/ExploreMap"), {
+const ExploreMap = dynamic(() => import("@/components/explore/ExploreMap"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full min-h-[500px] bg-neutral-100 rounded-2xl flex items-center justify-center border border-[#E5E5E5]/50">

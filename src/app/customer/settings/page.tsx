@@ -9,7 +9,7 @@ import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EdgeSoftOrbsTop from "@/components/EdgeSoftOrbsTop";
-import SuccessModal from "@/components/SuccessModal";
+import SuccessModal from "@/components/auth/SuccessModal";
 import { countries, Country } from "@/components/CountryData";
 
 export default function SettingsPage() {

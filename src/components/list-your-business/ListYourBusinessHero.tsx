@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import BusinessMockup from "@/components/BusinessMockup";
+import BusinessMockup from "@/components/landing-page/BusinessMockup";
 
 interface ListYourBusinessHeroProps {
   onListBusinessClick: () => void;

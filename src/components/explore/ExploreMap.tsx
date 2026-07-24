@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
-import { Recommendation } from "./ServiceCard";
+import { Recommendation } from "@/components/ServiceCard";
 
 interface ExploreMapProps {
   services: Recommendation[];
